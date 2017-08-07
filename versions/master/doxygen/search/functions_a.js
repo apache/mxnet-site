@@ -1,9 +1,11 @@
 var searchData=
 [
-  ['makeunique',['MakeUnique',['../namespacemxnet_1_1common.html#ad56ff4f856437bba25d38027aecfe766',1,'mxnet::common::MakeUnique(Args &amp;&amp;... args)'],['../namespacemxnet_1_1common.html#a39b3453302aa3aa56230fbc88005861d',1,'mxnet::common::MakeUnique(size_t n)'],['../namespacemxnet_1_1common.html#adb63438b723f69cdf56f7919275f4596',1,'mxnet::common::MakeUnique(Args &amp;&amp;... args)=delete']]],
+  ['makeunique',['MakeUnique',['../namespacemxnet_1_1common.html#a9d9abe40c84b9924e51d5d57b3f0b7d6',1,'mxnet::common::MakeUnique(Args &amp;&amp;...args)'],['../namespacemxnet_1_1common.html#a39b3453302aa3aa56230fbc88005861d',1,'mxnet::common::MakeUnique(size_t n)'],['../namespacemxnet_1_1common.html#a6ca270747bb7ab942c61d364f14f3042',1,'mxnet::common::MakeUnique(Args &amp;&amp;...args)=delete']]],
   ['mxautogradbackward',['MXAutogradBackward',['../c__api_8h.html#a133d10a566764530bf3172e52afbe561',1,'c_api.h']]],
+  ['mxautogradbackwardex',['MXAutogradBackwardEx',['../c__api_8h.html#a57a5d1ed585f9f431a31f921b4ca00ab',1,'c_api.h']]],
   ['mxautogradcomputegradient',['MXAutogradComputeGradient',['../c__api_8h.html#a4ea5441aa16bff2121855a5afb7be84e',1,'c_api.h']]],
   ['mxautogradmarkvariables',['MXAutogradMarkVariables',['../c__api_8h.html#a53f3bbc41e275485d1d6cd21f40abb7f',1,'c_api.h']]],
+  ['mxautogradsetisrecording',['MXAutogradSetIsRecording',['../c__api_8h.html#a75939e5be09a150d4d8905c9fd6e986e',1,'c_api.h']]],
   ['mxautogradsetistraining',['MXAutogradSetIsTraining',['../c__api_8h.html#a9cf2b0aa3ff66119fe793f6ed82b61b8',1,'c_api.h']]],
   ['mxcreatecachedop',['MXCreateCachedOp',['../c__api_8h.html#a46d056bad70ea014110923da41524cfc',1,'c_api.h']]],
   ['mxcustomopregister',['MXCustomOpRegister',['../c__api_8h.html#a92233cd9477ce12458bbd2b3e628dec9',1,'c_api.h']]],
@@ -18,6 +20,7 @@ var searchData=
   ['mxdataiternext',['MXDataIterNext',['../c__api_8h.html#a8be0adeef4b87243a5eda12f17e64e67',1,'c_api.h']]],
   ['mxdumpprofile',['MXDumpProfile',['../c__api_8h.html#a51716c7a38d1b02d26da4d84d6307025',1,'c_api.h']]],
   ['mxexecutorbackward',['MXExecutorBackward',['../c__api_8h.html#ad8f92bb15e11058abe12959cfc4dcbb3',1,'c_api.h']]],
+  ['mxexecutorbackwardex',['MXExecutorBackwardEx',['../c__api_8h.html#a3a211f3e0c6270271ce4fe79228dd0c2',1,'c_api.h']]],
   ['mxexecutorbind',['MXExecutorBind',['../c__api_8h.html#a10a6deacde18b7d52b44eee0ddddf0e1',1,'c_api.h']]],
   ['mxexecutorbindex',['MXExecutorBindEX',['../c__api_8h.html#a8139e691c88ebcf082f9e954598e0e86',1,'c_api.h']]],
   ['mxexecutorbindx',['MXExecutorBindX',['../c__api_8h.html#ad1646370458f8a3ddb9e4f3365c5e510',1,'c_api.h']]],
