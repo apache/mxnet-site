@@ -16,6 +16,7 @@ var searchData=
   ['get_5fstream',['get_stream',['../structmxnet_1_1RunContext.html#a8bcd2fc6392f95a1fdc3d98f74dbfcb9',1,'mxnet::RunContext::get_stream()'],['../structmxnet_1_1OpContext.html#aa700c5c28e024b42d41e15f46615f1b8',1,'mxnet::OpContext::get_stream()']]],
   ['get_5fvar',['get_var',['../classmxnet_1_1OpStatePtr.html#a77a1636269466569c0b6e32941ed7264',1,'mxnet::OpStatePtr']]],
   ['get_5fwith_5fshape',['get_with_shape',['../classmxnet_1_1TBlob.html#abbdbdc8d02c15e854cc7f5fe5dc09f61',1,'mxnet::TBlob']]],
+  ['getenvallowtensorcore',['GetEnvAllowTensorCore',['../cuda__utils_8h.html#a464dee13053e3b0b1006c6307069196c',1,'cuda_utils.h']]],
   ['getexecnummatchcolor',['GetExecNumMatchColor',['../namespacemxnet_1_1common.html#a56555edcc52c5b25bed90bd05e00b5fa',1,'mxnet::common']]],
   ['getfcompute',['GetFCompute',['../namespacemxnet_1_1common.html#a1abcb76ccd9022ebacdacd69c821cdc2',1,'mxnet::common']]],
   ['getnumthreadpergpu',['GetNumThreadPerGPU',['../namespacemxnet_1_1common.html#abc7580a95e3de5cf38d5bc2617c6d541',1,'mxnet::common']]],

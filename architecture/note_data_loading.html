@@ -1,34 +1,50 @@
 <!DOCTYPE html>
 
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta content="IE=edge" http-equiv="X-UA-Compatible">
-<meta content="width=device-width, initial-scale=1" name="viewport">
-<title>Designing Efficient Data Loaders for Deep Learning — mxnet  documentation</title>
-<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet">
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-<link href="../_static/basic.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/mxnet.css" rel="stylesheet" type="text/css">
-<script type="text/javascript">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+
+    <title>Designing Efficient Data Loaders for Deep Learning &mdash; mxnet  documentation</title>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+    <link rel="stylesheet" href="../_static/mxnet.css" type="text/css">
+    
+    <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
         VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
+        SOURCELINK_SUFFIX: ''
       };
     </script>
-<script src="../_static/jquery-1.11.1.js" type="text/javascript"></script>
-<script src="../_static/underscore.js" type="text/javascript"></script>
-<script src="../_static/searchtools_custom.js" type="text/javascript"></script>
-<script src="../_static/doctools.js" type="text/javascript"></script>
-<script src="../_static/selectlang.js" type="text/javascript"></script>
-<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-<script type="text/javascript"> jQuery(function() { Search.loadIndex("/searchindex.js"); Search.init();}); </script>
-<script>
+
+    <script type="text/javascript" src="../_static/jquery-1.11.1.js"></script>
+    
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    
+    <script type="text/javascript" src="../_static/searchtools_custom.js"></script>
+    
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/selectlang.js"></script>
+    
+
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> jQuery(function() { Search.loadIndex("/searchindex.js"); Search.init();}); </script>
+
+    <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
       Date();a=s.createElement(o),
@@ -39,20 +55,20 @@
       ga('send', 'pageview');
 
     </script>
-<!-- -->
-<!-- <script type="text/javascript" src="../_static/jquery.js"></script> -->
-<!-- -->
-<!-- <script type="text/javascript" src="../_static/underscore.js"></script> -->
-<!-- -->
-<!-- <script type="text/javascript" src="../_static/doctools.js"></script> -->
-<!-- -->
-<!-- <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
-<!-- -->
-<link href="../genindex.html" rel="index" title="Index"/>
-<link href="../search.html" rel="search" title="Search"/>
-<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png">
-</link></link></link></link></meta></meta></meta></head>
-<body role="document"><!-- Previous Navbar Layout
+
+    <!-- -->
+    <!-- <script type="text/javascript" src="../_static/jquery.js"></script> -->
+    <!-- -->
+    <!-- <script type="text/javascript" src="../_static/underscore.js"></script> -->
+    <!-- -->
+    <!-- <script type="text/javascript" src="../_static/doctools.js"></script> -->
+    <!-- -->
+    <!-- <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+    <!-- --> 
+
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png">
+  </head>
+  <body role="document"><!-- Previous Navbar Layout
 <div class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-header">
@@ -127,100 +143,125 @@
   </div>
 </div>
 Previous Navbar Layout End -->
+
 <div class="navbar navbar-fixed-top">
-<div class="container" id="navContainer">
-<div class="innder" id="header-inner">
-<h1 id="logo-wrap">
-<a href="../" id="logo"><img src="http://data.mxnet.io/theme/mxnet.png"/></a>
-</h1>
-<nav class="nav-bar" id="main-nav">
-<a class="main-nav-link" href="../get_started/install.html">Install</a>
-<a class="main-nav-link" href="../tutorials/index.html">Tutorials</a>
-<a class="main-nav-link" href="../how_to/index.html">How To</a>
-<span id="dropdown-menu-position-anchor">
-<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
-<ul class="dropdown-menu" id="package-dropdown-menu">
-<li><a class="main-nav-link" href="../api/python/index.html">Python</a></li>
-<li><a class="main-nav-link" href="../api/scala/index.html">Scala</a></li>
-<li><a class="main-nav-link" href="../api/r/index.html">R</a></li>
-<li><a class="main-nav-link" href="../api/julia/index.html">Julia</a></li>
-<li><a class="main-nav-link" href="../api/c++/index.html">C++</a></li>
-<li><a class="main-nav-link" href="../api/perl/index.html">Perl</a></li>
-</ul>
-</span>
-<a class="main-nav-link" href="../architecture/index.html">Architecture</a>
-<!-- <a class="main-nav-link" href="../community/index.html">Community</a> -->
-<a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a>
-<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.10)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/>0.10</a></li><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></span></nav>
-<script> function getRootPath(){ return "../" } </script>
-<div class="burgerIcon dropdown">
-<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
-<ul class="dropdown-menu dropdown-menu-right" id="burgerMenu">
-<li><a href="../get_started/install.html">Install</a></li>
-<li><a href="../tutorials/index.html">Tutorials</a></li>
-<li><a href="../how_to/index.html">How To</a></li>
-<li class="dropdown-submenu">
-<a href="#" tabindex="-1">API</a>
-<ul class="dropdown-menu">
-<li><a href="../api/python/index.html" tabindex="-1">Python</a>
-</li>
-<li><a href="../api/scala/index.html" tabindex="-1">Scala</a>
-</li>
-<li><a href="../api/r/index.html" tabindex="-1">R</a>
-</li>
-<li><a href="../api/julia/index.html" tabindex="-1">Julia</a>
-</li>
-<li><a href="../api/c++/index.html" tabindex="-1">C++</a>
-</li>
-<li><a href="../api/perl/index.html" tabindex="-1">Perl</a>
-</li>
-</ul>
-</li>
-<li><a href="../architecture/index.html">Architecture</a></li>
-<li><a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a></li>
-<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.10)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/>0.10</a></li><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></li></ul>
-</div>
-<div class="plusIcon dropdown">
-<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
-<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
-</div>
-<div id="search-input-wrap">
-<form action="../search.html" autocomplete="off" class="" method="get" role="search">
-<div class="form-group inner-addon left-addon">
-<i class="glyphicon glyphicon-search"></i>
-<input class="form-control" name="q" placeholder="Search" type="text">
-</input></div>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default"/>
+  <div class="container" id="navContainer">
+    <div id="header-inner" class="innder">
+      <h1 id="logo-wrap">
+        <a href="../" id="logo"><img src="http://data.mxnet.io/theme/mxnet.png"></a>
+      </h1>
+      <nav id="main-nav" class='nav-bar'>
+        <a class="main-nav-link" href="../get_started/install.html">Install</a>
+        
+        <a class="main-nav-link" href="../tutorials/index.html">Tutorials</a>
+        
+        <a class="main-nav-link" href="../how_to/index.html">How To</a>
+        
+
+        
+        <span id="dropdown-menu-position-anchor">
+          <a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">API <span class="caret"></span></a>
+          <ul id="package-dropdown-menu" class="dropdown-menu">
+            <li><a class="main-nav-link" href="../api/python/index.html">Python</a></li>
+            <li><a class="main-nav-link" href="../api/scala/index.html">Scala</a></li>
+            <li><a class="main-nav-link" href="../api/r/index.html">R</a></li>
+            <li><a class="main-nav-link" href="../api/julia/index.html">Julia</a></li>
+            <li><a class="main-nav-link" href="../api/c++/index.html">C++</a></li>
+            <li><a class="main-nav-link" href="../api/perl/index.html">Perl</a></li>
+          </ul>
+          
+        </span>
+
+        <a class="main-nav-link" href="../architecture/index.html">Architecture</a>
+		<!-- <a class="main-nav-link" href="../community/index.html">Community</a> -->
+        <a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a>
+      </nav>
+      <script> function getRootPath(){ return "../" } </script>
+      <div class="burgerIcon dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">☰</a>
+          <ul id="burgerMenu" class="dropdown-menu dropdown-menu-right">
+              <li><a href="../get_started/install.html">Install</a></li>
+              
+              <li><a href="../tutorials/index.html">Tutorials</a></li>
+              
+              <li><a href="../how_to/index.html">How To</a></li>
+              
+              
+              <li class="dropdown-submenu">
+                <a href="#" tabindex="-1">API</a>
+                <ul class="dropdown-menu">
+                  
+                    <li><a tabindex="-1" href="../api/python/index.html">Python</a>
+                    </li>
+                  
+                    <li><a tabindex="-1" href="../api/scala/index.html">Scala</a>
+                    </li>
+                  
+                    <li><a tabindex="-1" href="../api/r/index.html">R</a>
+                    </li>
+                  
+                    <li><a tabindex="-1" href="../api/julia/index.html">Julia</a>
+                    </li>
+                  
+                    <li><a tabindex="-1" href="../api/c++/index.html">C++</a>
+                    </li>
+                  
+                    <li><a tabindex="-1" href="../api/perl/index.html">Perl</a>
+                    </li>
+                  
+                </ul>
+              </li>
+              
+              <li><a href="../architecture/index.html">Architecture</a></li>
+		      <li><a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a></li>
+          </ul>
+      </div>
+      <div class="plusIcon dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+        <ul id="plusMenu" class="dropdown-menu dropdown-menu-right"></ul>
+      </div>
+      <div id="search-input-wrap">
+          
+<form class="" role="search" action="../search.html" method="get" autocomplete="off">
+  <div class="form-group inner-addon left-addon">
+    <i class="glyphicon glyphicon-search"></i>
+    <input type="text" name="q" class="form-control" placeholder="Search">
+  </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+  
 </form>
-<div id="search-preview"></div>
-</div>
-<div id="searchIcon">
-<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
-</div>
-<!-- <div id="lang-select-wrap"> -->
-<!--   <label id="lang-select-label"> -->
-<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
-<!--     <span></span> -->
-<!--   </label> -->
-<!--   <select id="lang-select"> -->
-<!--     <option value="en">Eng</option> -->
-<!--     <option value="zh">中文</option> -->
-<!--   </select> -->
-<!-- </div> -->
-<!--     <a id="mobile-nav-toggle">
+          <div id="search-preview"></div>
+      </div>
+      <div id='searchIcon'>
+          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+      </div>
+      <!-- <div id="lang-select-wrap"> -->
+      <!--   <label id="lang-select-label"> -->
+      <!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+      <!--     <span></span> -->
+      <!--   </label> -->
+      <!--   <select id="lang-select"> -->
+      <!--     <option value="en">Eng</option> -->
+      <!--     <option value="zh">中文</option> -->
+      <!--   </select> -->
+      <!-- </div> -->
+  <!--     <a id="mobile-nav-toggle">
         <span class="mobile-nav-toggle-bar"></span>
         <span class="mobile-nav-toggle-bar"></span>
         <span class="mobile-nav-toggle-bar"></span>
       </a> -->
+    </div>
+  </div>
 </div>
-</div>
-</div>
-<div class="container">
-<div class="row">
-<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
-<div class="sphinxsidebarwrapper">
-<ul>
+
+    
+    <div class="container">
+      <div class="row">
+        <div class="sphinxsidebar leftsidebar" role="navigation" aria-label="main navigation">
+          <div class="sphinxsidebarwrapper">
+            
+  <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/python/index.html">Python Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/r/index.html">R Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/julia/index.html">Julia Documents</a></li>
@@ -231,10 +272,12 @@ Previous Navbar Layout End -->
 <li class="toctree-l1"><a class="reference internal" href="index.html">System Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 </ul>
-</div>
-</div>
-<div class="content">
-<div class="section" id="designing-efficient-data-loaders-for-deep-learning">
+
+          </div>
+        </div>
+        <div class="content">
+          
+  <div class="section" id="designing-efficient-data-loaders-for-deep-learning">
 <span id="designing-efficient-data-loaders-for-deep-learning"></span><h1>Designing Efficient Data Loaders for Deep Learning<a class="headerlink" href="#designing-efficient-data-loaders-for-deep-learning" title="Permalink to this headline">¶</a></h1>
 <p>Data loading is an important component of any machine learning system.
 When we work with tiny datasets, we can get away with loading an entire dataset into GPU memory.
@@ -248,7 +291,7 @@ and to present a clean and flexible interface.</p>
 <p>We organize this design note as follows:</p>
 <ul class="simple">
 <li><strong>IO Design Insight:</strong>  Guiding principles in data loading design.</li>
-<li><strong>Data Format:</strong> Our solution using dmlc-core’s binary recordIO implementation.</li>
+<li><strong>Data Format:</strong> Our solution using dmlc-core&#8217;s binary recordIO implementation.</li>
 <li><strong>Data Loading:</strong> Our method to reduce IO cost by utilizing the threaded iterator provided by dmlc-core.</li>
 <li><strong>Interface Design:</strong> Our approach to facilitate writing MXNet data iterators in just a few lines of Python.</li>
 <li><strong>Future Extension:</strong> Prospective ideas for making data loading more flexible.</li>
@@ -276,7 +319,7 @@ When working with large datasets like ImageNet, this process can be time-consumi
 In these cases, there are several heuristics we ought to follow:</p>
 <ul class="simple">
 <li>Pack the dataset into small numbers of files. A dataset may contain millions of data instances. Packed data distributes easily from machine to machine.</li>
-<li>Do the packing once. We don’t want to repack data every time run-time settings, like the number of machines, are changed.</li>
+<li>Do the packing once. We don&#8217;t want to repack data every time run-time settings, like the number of machines, are changed.</li>
 <li>Process the packing in parallel to save time.</li>
 <li>Be able to access arbitrary parts of the data easily. This is crucial for distributed machine learning when data parallelism is introduced. Things may get tricky when the data has been packed into several physical data files. The desired behavior could be: the packed data can be logically separated into arbitrary numbers of partitions, no matter how many physical data files there are. For example, if we pack 1000 images into 4 physical files, then each file contains 250 images. If we then use 10 machines to train a DNN, we should be able to load approximately 100 images per machine. Some machines may need images from different physical files.</li>
 </ul>
@@ -302,8 +345,8 @@ To achieve our goals, we need to pack binary data into a splittable format.
 In MXNet, we rely on the binary recordIO format implemented in dmlc-core.</p>
 <div class="section" id="binary-record">
 <span id="binary-record"></span><h3>Binary Record<a class="headerlink" href="#binary-record" title="Permalink to this headline">¶</a></h3>
-<p><img alt="baserecordio" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/baserecordio.jpg"/>
-In MXNet’s binary RecordIO, we store each data instance as a record.
+<p><img alt="baserecordio" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/baserecordio.jpg" />
+In MXNet&#8217;s binary RecordIO, we store each data instance as a record.
 <strong>kMagic</strong> is a <em>magic number</em> indicating the start of a record.
 <strong>Lrecord</strong> encodes length and a continue flag.
 In lrecord,</p>
@@ -332,8 +375,8 @@ the dataset would occupy more than <strong>200G</strong>.
 But after compressing the images using JPEG,
 they only occupy about <strong>35G</strong> of disk space.
 This significantly reduces the cost owing to reading from disk.</p>
-<p>Here’s an example of binary recordIO:
-<img alt="baserecordio" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/ImageRecordIO.jpg"/>
+<p>Here&#8217;s an example of binary recordIO:
+<img alt="baserecordio" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/ImageRecordIO.jpg" />
 We first resize the image into 256 * 256,
 then compress into JPEG format.
 After that, we save a header that indicates the index and label
@@ -351,8 +394,8 @@ we can achieve the above goal using the InputSplit
 functionality provided by dmlc-core.</p>
 <p>InputSplit takes the following parameters:</p>
 <ul class="simple">
-<li>FileSystem <em>filesys</em>: dmlc-core wrapper around the IO operations for different file systems, like hdfs, s3, local. User shouldn’t need to worry about the difference between file systems anymore.</li>
-<li>Char <em>uri</em>: The URI of files. Note that it could be a list of files because we may pack the data into several physical parts. File URIs are separated by ‘;’.</li>
+<li>FileSystem <em>filesys</em>: dmlc-core wrapper around the IO operations for different file systems, like hdfs, s3, local. User shouldn&#8217;t need to worry about the difference between file systems anymore.</li>
+<li>Char <em>uri</em>: The URI of files. Note that it could be a list of files because we may pack the data into several physical parts. File URIs are separated by &#8216;;&#8217;.</li>
 <li>Unsigned <em>nsplit</em>: The number of logical splits. <em>nsplit</em> could be different from the number of physical files.</li>
 <li>Unsigned <em>rank</em>: Which split to load in this process.</li>
 </ul>
@@ -360,15 +403,15 @@ functionality provided by dmlc-core.</p>
 <ul class="simple">
 <li>Determine the size of each partition.</li>
 </ul>
-<p><img alt="beforepartition" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/beforepartition.jpg"/></p>
+<p><img alt="beforepartition" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/beforepartition.jpg" /></p>
 <ul class="simple">
 <li>Approximately partition the records according to file size. Note that the boundary of each part may be located in the middle of a record.</li>
 </ul>
-<p><img alt="approxipartition" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/approximatepartition.jpg"/></p>
+<p><img alt="approxipartition" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/approximatepartition.jpg" /></p>
 <ul class="simple">
 <li>Set the beginning of partitions in such a way as to avoid splitting records across partitions.</li>
 </ul>
-<p><img alt="afterpartition" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/afterpartition.jpg"/></p>
+<p><img alt="afterpartition" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/afterpartition.jpg" /></p>
 <p>By conducting the above operations,
 we now identify the records belong to each part,
 and the physical data files needed by each logical part.
@@ -376,15 +419,15 @@ InputSplit greatly simplifies data parallelism,
 where each process only reads part of the data.</p>
 <p>Since our partitioning scheme does not depend on the number of physical data files,
 we can process a huge dataset like ImageNet_22K in parallel fashion as illustrated below.
-We don’t need to consider distributed loading issue at the preparation time,
+We don&#8217;t need to consider distributed loading issue at the preparation time,
 just select the most efficient physical file number
 according to the dataset size and computing resources available.
-<img alt="parallelprepare" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/parallelprepare.jpg"/></p>
+<img alt="parallelprepare" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/parallelprepare.jpg" /></p>
 </div>
 </div>
 <div class="section" id="data-loading-and-preprocessing">
 <span id="data-loading-and-preprocessing"></span><h2>Data Loading and Preprocessing<a class="headerlink" href="#data-loading-and-preprocessing" title="Permalink to this headline">¶</a></h2>
-<p>When the speed of loading and preprocessing can’t keep up
+<p>When the speed of loading and preprocessing can&#8217;t keep up
 with the speed of training or evaluation,
 IO can bottleneck the speed of the whole system.
 In this section, we will introduce a few tricks
@@ -398,11 +441,11 @@ the IO speed of <strong>3000</strong> images/sec <strong>with a normal HDD</stro
 we sometimes must load and preprocess the data
 while simultaneously training for the following reasons:</p>
 <ul class="simple">
-<li>When the whole size of the dataset exceeds available RAM size, we can’t load it in advance;</li>
+<li>When the whole size of the dataset exceeds available RAM size, we can&#8217;t load it in advance;</li>
 <li>Sometimes, to make models robust to things like translations, rotations, and small amounts of color shift of noise, we introduce randomness into the training process. In these cases we must re-preprocess the data each time we revisit an example.</li>
 </ul>
 <p>In service of efficiency, we also address multi-threading techniques. Taking Imagenet training as an example, after loading a bunch of image records, we can start multiple threads to simultaneously perform image decoding and image augmentation. We depict this process in the following illustration:
-<img alt="process" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/process.jpg"/></p>
+<img alt="process" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/process.jpg" /></p>
 </div>
 <div class="section" id="hide-io-cost-using-threadediter">
 <span id="hide-io-cost-using-threadediter"></span><h3>Hide IO Cost Using Threadediter<a class="headerlink" href="#hide-io-cost-using-threadediter" title="Permalink to this headline">¶</a></h3>
@@ -414,10 +457,10 @@ using <em>threadediter</em> provided by dmlc-core.
 The key of <em>threadediter</em> is to start a stand-alone thread that acts as a data provider,
 while the main thread acts as a data consumer as illustrated below.</p>
 <p>The threadediter maintains a buffer of a certain size
-and automatically fills the buffer when it’s not full.
+and automatically fills the buffer when it&#8217;s not full.
 And after the consumer finishes consuming part of the data in the buffer,
 threadediter will reuse the space to save the next part of data.
-<img alt="threadediter" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/threadediter.png"/></p>
+<img alt="threadediter" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/threadediter.png" /></p>
 </div>
 </div>
 <div class="section" id="mxnet-io-python-interface">
@@ -429,13 +472,13 @@ Defining a data iterator is very similar to defining a symbolic operator in MXNe
 <p>The following example code demonstrates a Cifar data iterator.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">dataiter</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ImageRecordIter</span><span class="p">(</span>
     <span class="c1"># Dataset Parameter, indicating the data file, please check the data is already there</span>
-    <span class="n">path_imgrec</span><span class="o">=</span><span class="s2">"data/cifar/train.rec"</span><span class="p">,</span>
+    <span class="n">path_imgrec</span><span class="o">=</span><span class="s2">&quot;data/cifar/train.rec&quot;</span><span class="p">,</span>
     <span class="c1"># Dataset Parameter, indicating the image size after preprocessing</span>
     <span class="n">data_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">),</span>
     <span class="c1"># Batch Parameter, tells how many images in a batch</span>
     <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="c1"># Augmentation Parameter, when offers mean_img, each image will subtract the mean value at each pixel</span>
-    <span class="n">mean_img</span><span class="o">=</span><span class="s2">"data/cifar/cifar10_mean.bin"</span><span class="p">,</span>
+    <span class="n">mean_img</span><span class="o">=</span><span class="s2">&quot;data/cifar/cifar10_mean.bin&quot;</span><span class="p">,</span>
     <span class="c1"># Augmentation Parameter, randomly crop a patch of the data_shape from the original image</span>
     <span class="n">rand_crop</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
     <span class="c1"># Augmentation Parameter, randomly mirror the image horizontally</span>
@@ -457,7 +500,7 @@ Defining a data iterator is very similar to defining a symbolic operator in MXNe
 <li><strong>Auxiliary Param:</strong> Provides options to help with debugging.</li>
 </ul>
 <p>Usually, <strong>Dataset Param</strong> and <strong>Batch Param</strong> MUST be given,
-otherwise the data batch can’t be created.
+otherwise the data batch can&#8217;t be created.
 Other parameters can be given as needed.
 Ideally, we should separate the MX Data IO into modules,
 some of which might be useful to expose to users, for example:</p>
@@ -475,16 +518,18 @@ for applications including image segmentation, object localization, and speech r
 More detail will be provided when such applications have been running on MXNet.</p>
 </div>
 </div>
+
 <div class="container">
 <div class="footer">
-<p> © 2015-2017 DMLC. All rights reserved. </p>
+  <p> © 2015-2017 DMLC. All rights reserved. </p>
 </div>
 </div>
-</div>
-<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
-<div class="sphinxsidebarwrapper">
-<h3><a href="../index.html">Table Of Contents</a></h3>
-<ul>
+        </div>
+        
+      <div class="sphinxsidebar rightsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
 <li><a class="reference internal" href="#">Designing Efficient Data Loaders for Deep Learning</a><ul>
 <li><a class="reference internal" href="#design-insight">Design Insight</a><ul>
 <li><a class="reference internal" href="#data-preparation">Data Preparation</a></li>
@@ -506,19 +551,21 @@ More detail will be provided when such applications have been running on MXNet.<
 </ul>
 </li>
 </ul>
-</div>
-</div>
-</div> <!-- pagename != index -->
-<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="../_static/js/sidebar.js" type="text/javascript"></script>
-<script src="../_static/js/search.js" type="text/javascript"></script>
-<script src="../_static/js/navbar.js" type="text/javascript"></script>
-<script src="../_static/js/clipboard.min.js" type="text/javascript"></script>
-<script src="../_static/js/copycode.js" type="text/javascript"></script>
-<script type="text/javascript">
+
+        </div>
+      </div>
+    </div> <!-- pagename != index -->
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../_static/js/sidebar.js"></script>
+    <script type="text/javascript" src="../_static/js/search.js"></script>
+    <script type="text/javascript" src="../_static/js/navbar.js"></script>
+    <script type="text/javascript" src="../_static/js/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/js/copycode.js"></script>
+    <script type="text/javascript">
         $('body').ready(function () {
             $('body').css('visibility', 'visible');
         });
     </script>
-</div></body>
+  </body>
 </html>
