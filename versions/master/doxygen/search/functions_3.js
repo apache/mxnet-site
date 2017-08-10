@@ -5,8 +5,6 @@ var searchData=
   ['checkandalloc',['CheckAndAlloc',['../classmxnet_1_1NDArray.html#a35c2a2c797f601fbc5d560481b11720a',1,'mxnet::NDArray']]],
   ['checkcontiguous',['CheckContiguous',['../classmxnet_1_1TBlob.html#aa6cfdf8823a601602b6b56011af4b874',1,'mxnet::TBlob']]],
   ['clear',['Clear',['../classmxnet_1_1common_1_1LazyAllocArray.html#a3af1ab75feb0ba07db5af7e6ef5717b1',1,'mxnet::common::LazyAllocArray::Clear()'],['../classmxnet_1_1autograd_1_1AGNodeEntry.html#a8edff5e8fa169924abe520edcae76c45',1,'mxnet::autograd::AGNodeEntry::clear()']]],
-  ['computecapabilitymajor',['ComputeCapabilityMajor',['../cuda__utils_8h.html#aa79f548df23452162de37663f171e99d',1,'cuda_utils.h']]],
-  ['computecapabilityminor',['ComputeCapabilityMinor',['../cuda__utils_8h.html#a7c16e8770e4f399cabed1fc231ffd9b6',1,'cuda_utils.h']]],
   ['context',['Context',['../structmxnet_1_1Context.html#a290642a21363bef82bcb32cf7f98b884',1,'mxnet::Context']]],
   ['copy',['Copy',['../classmxnet_1_1NDArray.html#a4a00e2868ad8b9ccb0a48079635b110f',1,'mxnet::NDArray::Copy()'],['../classmxnet_1_1OperatorProperty.html#ab38f2f877555ba34b548efd2575cac99',1,'mxnet::OperatorProperty::Copy()']]],
   ['copyfromto',['CopyFromTo',['../namespacemxnet.html#aeee0e64a5e59bb0c222cbf44f4266f7a',1,'mxnet']]],

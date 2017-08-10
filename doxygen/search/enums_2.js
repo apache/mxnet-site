@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['exectype',['ExecType',['../namespacemxnet.html#ad7801fb2dd68294d4c7a9e289bc071ad',1,'mxnet']]]
+  ['exectype',['ExecType',['../classmxnet_1_1Operator.html#a89a284fada5cc1801ca1c0390b8ae17a',1,'mxnet::Operator']]]
 ];

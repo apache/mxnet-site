@@ -4,8 +4,6 @@ var searchData=
   ['mxautogradbackward',['MXAutogradBackward',['../c__api_8h.html#a133d10a566764530bf3172e52afbe561',1,'c_api.h']]],
   ['mxautogradbackwardex',['MXAutogradBackwardEx',['../c__api_8h.html#a57a5d1ed585f9f431a31f921b4ca00ab',1,'c_api.h']]],
   ['mxautogradcomputegradient',['MXAutogradComputeGradient',['../c__api_8h.html#a4ea5441aa16bff2121855a5afb7be84e',1,'c_api.h']]],
-  ['mxautogradisrecording',['MXAutogradIsRecording',['../c__api_8h.html#a7464b4247cc7c8d3756edfc07bee833b',1,'c_api.h']]],
-  ['mxautogradistraining',['MXAutogradIsTraining',['../c__api_8h.html#ac0ccb3977d0f8a7ae076bd55a5f15115',1,'c_api.h']]],
   ['mxautogradmarkvariables',['MXAutogradMarkVariables',['../c__api_8h.html#a53f3bbc41e275485d1d6cd21f40abb7f',1,'c_api.h']]],
   ['mxautogradsetisrecording',['MXAutogradSetIsRecording',['../c__api_8h.html#a75939e5be09a150d4d8905c9fd6e986e',1,'c_api.h']]],
   ['mxautogradsetistraining',['MXAutogradSetIsTraining',['../c__api_8h.html#a9cf2b0aa3ff66119fe793f6ed82b61b8',1,'c_api.h']]],
