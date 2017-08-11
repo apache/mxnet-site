@@ -1175,19 +1175,21 @@ original image and (width, height) are the dimensions of the cropped image.</li>
 <col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data_shape</strong> (<em>tuple of int</em>) – shape for output data</li>
-<li><strong>resize</strong> (<em>int</em>) – resize shorter edge if larger than 0 at the begining</li>
-<li><strong>rand_resize</strong> (<em>float</em>) – [0, 1], probability to apply random resizing</li>
-<li><strong>rand_gray</strong> (<em>float</em>) – [0, 1], probability to convert to grayscale for all channels</li>
-<li><strong>rand_mirror</strong> (<em>bool</em>) – whether apply horizontal flip to image with probability 0.5</li>
-<li><strong>mean</strong> (<em>np.ndarray or None</em>) – mean pixel values for [r, g, b]</li>
-<li><strong>std</strong> (<em>np.ndarray or None</em>) – standard deviations for [r, g, b]</li>
-<li><strong>brightness</strong> (<em>float</em>) – brightness jittering range (percent)</li>
-<li><strong>contrast</strong> (<em>float</em>) – contrast jittering range</li>
-<li><strong>saturation</strong> (<em>float</em>) – saturation jittering range</li>
-<li><strong>hue</strong> (<em>float</em>) – hue jittering range</li>
-<li><strong>pca_noise</strong> (<em>float</em>) – pca noise level</li>
-<li><strong>inter_method</strong> (<em>int, default=2(Area-based)</em>) – <p>interpolation method for all resizing operations</p>
+<li><strong>data_shape</strong> (<em>tuple of int</em>) – Shape for output data</li>
+<li><strong>resize</strong> (<em>int</em>) – Resize shorter edge if larger than 0 at the begining</li>
+<li><strong>rand_crop</strong> (<em>bool</em>) – Whether to enable random cropping other than center crop</li>
+<li><strong>rand_resize</strong> (<em>bool</em>) – Whether to enable random sized cropping, require rand_crop to be enabled</li>
+<li><strong>rand_gray</strong> (<em>float</em>) – [0, 1], probability to convert to grayscale for all channels, the number
+of channels will not be reduced to 1</li>
+<li><strong>rand_mirror</strong> (<em>bool</em>) – Whether to apply horizontal flip to image with probability 0.5</li>
+<li><strong>mean</strong> (<em>np.ndarray or None</em>) – Mean pixel values for [r, g, b]</li>
+<li><strong>std</strong> (<em>np.ndarray or None</em>) – Standard deviations for [r, g, b]</li>
+<li><strong>brightness</strong> (<em>float</em>) – Brightness jittering range (percent)</li>
+<li><strong>contrast</strong> (<em>float</em>) – Contrast jittering range (percent)</li>
+<li><strong>saturation</strong> (<em>float</em>) – Saturation jittering range (percent)</li>
+<li><strong>hue</strong> (<em>float</em>) – Hue jittering range (percent)</li>
+<li><strong>pca_noise</strong> (<em>float</em>) – Pca noise level (percent)</li>
+<li><strong>inter_method</strong> (<em>int, default=2(Area-based)</em>) – <p>Interpolation method for all resizing operations</p>
 <p>Possible values:
 0: Nearest Neighbors Interpolation.
 1: Bilinear interpolation.
@@ -1229,7 +1231,7 @@ with Bicubic (slow) or Bilinear (faster but still looks OK).</p>
 <col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>aug_list</strong> (<em>list or None</em>) – augmenter list for generating distorted images</li>
+<li><strong>aug_list</strong> (<em>list or None</em>) – Augmenter list for generating distorted images</li>
 <li><strong>batch_size</strong> (<em>int</em>) – Number of examples per batch.</li>
 <li><strong>data_shape</strong> (<em>tuple</em>) – Data shape in (channels, height, width) format.
 For now, only RGB image with 3 channels is supported.</li>
@@ -1247,7 +1249,7 @@ Can be slow for HDD.</li>
 <li><strong>part_index</strong> (<em>int</em>) – Partition index.</li>
 <li><strong>num_parts</strong> (<em>int</em>) – Total number of partitions.</li>
 <li><strong>data_name</strong> (<em>str</em>) – Data name for provided symbols.</li>
-<li><strong>label_name</strong> (<em>str</em>) – name for detection labels</li>
+<li><strong>label_name</strong> (<em>str</em>) – Name for detection labels</li>
 <li><strong>kwargs</strong> – More arguments for creating augmenter. See mx.image.CreateDetAugmenter.</li>
 </ul>
 </td>
@@ -1263,8 +1265,8 @@ Can be slow for HDD.</li>
 <col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data_shape</strong> (<em>tuple or None</em>) – reshape the data_shape to the new shape if not None</li>
-<li><strong>label_shape</strong> (<em>tuple or None</em>) – reshape label shape to new shape if not None</li>
+<li><strong>data_shape</strong> (<em>tuple or None</em>) – Reshape the data_shape to the new shape if not None</li>
+<li><strong>label_shape</strong> (<em>tuple or None</em>) – Reshape label shape to new shape if not None</li>
 </ul>
 </td>
 </tr>
@@ -1482,27 +1484,27 @@ specified constraints. After max_attempts failures, return the original image.</
 </dd></dl>
 <dl class="method">
 <dt id="mxnet.image.CreateDetAugmenter">
-<code class="descclassname">image.</code><code class="descname">CreateDetAugmenter</code><span class="sig-paren">(</span><em>data_shape</em>, <em>resize=0</em>, <em>rand_crop=0</em>, <em>rand_pad=0</em>, <em>rand_gray=0</em>, <em>rand_mirror=False</em>, <em>mean=None</em>, <em>std=None</em>, <em>brightness=0</em>, <em>contrast=0</em>, <em>saturation=0</em>, <em>pca_noise=0</em>, <em>hue=0</em>, <em>inter_method=2</em>, <em>min_object_covered=0.1</em>, <em>aspect_ratio_range=(0.75</em>, <em>1.33)</em>, <em>area_range=(0.05</em>, <em>3.0)</em>, <em>min_eject_coverage=0.3</em>, <em>max_attempts=50</em>, <em>pad_val=(128</em>, <em>128</em>, <em>128)</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.image.CreateDetAugmenter" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">image.</code><code class="descname">CreateDetAugmenter</code><span class="sig-paren">(</span><em>data_shape</em>, <em>resize=0</em>, <em>rand_crop=0</em>, <em>rand_pad=0</em>, <em>rand_gray=0</em>, <em>rand_mirror=False</em>, <em>mean=None</em>, <em>std=None</em>, <em>brightness=0</em>, <em>contrast=0</em>, <em>saturation=0</em>, <em>pca_noise=0</em>, <em>hue=0</em>, <em>inter_method=2</em>, <em>min_object_covered=0.1</em>, <em>aspect_ratio_range=(0.75</em>, <em>1.33)</em>, <em>area_range=(0.05</em>, <em>3.0)</em>, <em>min_eject_coverage=0.3</em>, <em>max_attempts=50</em>, <em>pad_val=(127</em>, <em>127</em>, <em>127)</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.image.CreateDetAugmenter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create augmenters for detection.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data_shape</strong> (<em>tuple of int</em>) – shape for output data</li>
-<li><strong>resize</strong> (<em>int</em>) – resize shorter edge if larger than 0 at the begining</li>
+<li><strong>data_shape</strong> (<em>tuple of int</em>) – Shape for output data</li>
+<li><strong>resize</strong> (<em>int</em>) – Resize shorter edge if larger than 0 at the begining</li>
 <li><strong>rand_crop</strong> (<em>float</em>) – [0, 1], probability to apply random cropping</li>
 <li><strong>rand_pad</strong> (<em>float</em>) – [0, 1], probability to apply random padding</li>
 <li><strong>rand_gray</strong> (<em>float</em>) – [0, 1], probability to convert to grayscale for all channels</li>
-<li><strong>rand_mirror</strong> (<em>bool</em>) – whether apply horizontal flip to image with probability 0.5</li>
-<li><strong>mean</strong> (<em>np.ndarray or None</em>) – mean pixel values for [r, g, b]</li>
-<li><strong>std</strong> (<em>np.ndarray or None</em>) – standard deviations for [r, g, b]</li>
-<li><strong>brightness</strong> (<em>float</em>) – brightness jittering range (percent)</li>
-<li><strong>contrast</strong> (<em>float</em>) – contrast jittering range</li>
-<li><strong>saturation</strong> (<em>float</em>) – saturation jittering range</li>
-<li><strong>hue</strong> (<em>float</em>) – hue jittering range</li>
-<li><strong>pca_noise</strong> (<em>float</em>) – pca noise level</li>
-<li><strong>inter_method</strong> (<em>int, default=2(Area-based)</em>) – <p>interpolation method for all resizing operations</p>
+<li><strong>rand_mirror</strong> (<em>bool</em>) – Whether to apply horizontal flip to image with probability 0.5</li>
+<li><strong>mean</strong> (<em>np.ndarray or None</em>) – Mean pixel values for [r, g, b]</li>
+<li><strong>std</strong> (<em>np.ndarray or None</em>) – Standard deviations for [r, g, b]</li>
+<li><strong>brightness</strong> (<em>float</em>) – Brightness jittering range (percent)</li>
+<li><strong>contrast</strong> (<em>float</em>) – Contrast jittering range (percent)</li>
+<li><strong>saturation</strong> (<em>float</em>) – Saturation jittering range (percent)</li>
+<li><strong>hue</strong> (<em>float</em>) – Hue jittering range (percent)</li>
+<li><strong>pca_noise</strong> (<em>float</em>) – Pca noise level (percent)</li>
+<li><strong>inter_method</strong> (<em>int, default=2(Area-based)</em>) – <p>Interpolation method for all resizing operations</p>
 <p>Possible values:
 0: Nearest Neighbors Interpolation.
 1: Bilinear interpolation.
@@ -1531,7 +1533,7 @@ within this range.</li>
 image within in this range.</li>
 <li><strong>max_attempts</strong> (<em>int</em>) – Number of attempts at generating a cropped/padded region of the image of the
 specified constraints. After max_attempts failures, return the original image.</li>
-<li><strong>pad_val</strong> (<em>float</em>) – pixel value to be filled when padding is enabled. pad_val will automatically
+<li><strong>pad_val</strong> (<em>float</em>) – Pixel value to be filled when padding is enabled. pad_val will automatically
 be subtracted by mean and divided by std if applicable.</li>
 </ul>
 </td>

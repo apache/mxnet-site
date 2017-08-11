@@ -88,199 +88,217 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">c_lapack_api.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="c__lapack__api_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#ifndef MXNET_C_LAPACK_API_H_</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MXNET_C_LAPACK_API_H_</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">// Manually maintained list of LAPACK interfaces that can be used</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">// within MXNET. Conventions:</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment">//    - Interfaces must be compliant with lapacke.h in terms of signature and</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment">//      naming conventions so wrapping a function &quot;foo&quot; which has the</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment">//      signature</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment">//         lapack_int LAPACKE_foo(int, char, lapack_int, float* , lapack_int)</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment">//      within lapacke.h should result in a wrapper with the following signature</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment">//         int MXNET_LAPACK_foo(int, char, int, float* , int)</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment">//      Note that function signatures in lapacke.h will always have as first</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="comment">//      argument the storage order (row/col-major). All wrappers have to support</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="comment">//      that argument. The underlying fortran functions will always assume a</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="comment">//      column-major layout. It is the responsibility of the wrapper function</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="comment">//      to handle the (usual) case that it is called with data in row-major</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">//      format, either by doing appropriate transpositions explicitly or using</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">//      transposition options of the underlying fortran function.</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">//    - It is ok to assume that matrices are stored in contiguous memory</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">//      (which removes the need to do special handling for lda/ldb parameters</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">//      and enables us to save additional matrix transpositions around</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">//      the fortran calls).</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">//    - It is desired to add some basic checking in the C++-wrappers in order</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">//      to catch simple mistakes when calling these wrappers.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">//    - Must support compilation without lapack-package but issue runtime error in this case.</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;dmlc/logging.h&gt;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &quot;mshadow/tensor.h&quot;</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">using namespace </span>mshadow;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="comment">// Fortran signatures</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">   40</a></span>&#160;<span class="preprocessor">  #define MXNET_LAPACK_FSIGNATURE1(func, dtype) \</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">    void func##_(char* uplo, int* n, dtype* a, int* lda, int *info);</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a>(spotrf, <span class="keywordtype">float</span>)</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a>(dpotrf, <span class="keywordtype">double</span>)</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a>(spotri, <span class="keywordtype">float</span>)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a>(dpotri, <span class="keywordtype">double</span>)</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#ac9fe022dd825c3bd86d3b175d0a1c02b">dposv_</a>(<span class="keywordtype">char</span> *uplo, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span> *nrhs,</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">double</span> *b, <span class="keywordtype">int</span> *ldb, <span class="keywordtype">int</span> *info);</div>
+<a href="c__lapack__api_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment"> * Licensed to the Apache Software Foundation (ASF) under one</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment"> * or more contributor license agreements.  See the NOTICE file</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment"> * distributed with this work for additional information</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="comment"> * regarding copyright ownership.  The ASF licenses this file</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment"> * to you under the Apache License, Version 2.0 (the</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"> * &quot;License&quot;); you may not use this file except in compliance</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment"> * with the License.  You may obtain a copy of the License at</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment"> *   http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> *</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * Unless required by applicable law or agreed to in writing,</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> * software distributed under the License is distributed on an</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * KIND, either express or implied.  See the License for the</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * specific language governing permissions and limitations</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * under the License.</span></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="preprocessor">#ifndef MXNET_C_LAPACK_API_H_</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MXNET_C_LAPACK_API_H_</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// Manually maintained list of LAPACK interfaces that can be used</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// within MXNET. Conventions:</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">//    - Interfaces must be compliant with lapacke.h in terms of signature and</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">//      naming conventions so wrapping a function &quot;foo&quot; which has the</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">//      signature</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">//         lapack_int LAPACKE_foo(int, char, lapack_int, float* , lapack_int)</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">//      within lapacke.h should result in a wrapper with the following signature</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="comment">//         int MXNET_LAPACK_foo(int, char, int, float* , int)</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">//      Note that function signatures in lapacke.h will always have as first</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">//      argument the storage order (row/col-major). All wrappers have to support</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">//      that argument. The underlying fortran functions will always assume a</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">//      column-major layout. It is the responsibility of the wrapper function</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">//      to handle the (usual) case that it is called with data in row-major</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">//      format, either by doing appropriate transpositions explicitly or using</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">//      transposition options of the underlying fortran function.</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">//    - It is ok to assume that matrices are stored in contiguous memory</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">//      (which removes the need to do special handling for lda/ldb parameters</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">//      and enables us to save additional matrix transpositions around</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">//      the fortran calls).</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">//    - It is desired to add some basic checking in the C++-wrappers in order</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">//      to catch simple mistakes when calling these wrappers.</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">//    - Must support compilation without lapack-package but issue runtime error in this case.</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#a960d4d5f204ab766924726b650c7105c">sposv_</a>(<span class="keywordtype">char</span> *uplo, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span> *nrhs,</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">float</span> *b, <span class="keywordtype">int</span> *ldb, <span class="keywordtype">int</span> *info);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a220562c35966392841ae49fefe2dee5e">   55</a></span>&#160;<span class="preprocessor">#define MXNET_LAPACK_ROW_MAJOR 101</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a49f324c038a0a1447ed094c679739ee7">   56</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MXNET_LAPACK_COL_MAJOR 102</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a2fa12bf140fecda6aac9336a61923713">   58</a></span>&#160;<span class="preprocessor">#define CHECK_LAPACK_CONTIGUOUS(a, b) \</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">  CHECK_EQ(a, b) &lt;&lt; &quot;non contiguous memory for array in lapack call&quot;;</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#include &lt;dmlc/logging.h&gt;</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#include &quot;mshadow/tensor.h&quot;</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keyword">using namespace </span>mshadow;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="comment">// Fortran signatures</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">   58</a></span>&#160;<span class="preprocessor">  #define MXNET_LAPACK_FSIGNATURE1(func, dtype) \</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">    void func##_(char* uplo, int* n, dtype* a, int* lda, int *info);</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a0c95bf8b79e51085d846c7a09ec22720">   61</a></span>&#160;<span class="preprocessor">#define CHECK_LAPACK_UPLO(a) \</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">  CHECK(a == &#39;U&#39; || a == &#39;L&#39;) &lt;&lt; &quot;neither L nor U specified as triangle in lapack call&quot;;</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#af111a2f312a185185d0937bd091637e4">   64</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">char</span> <a class="code" href="c__lapack__api_8h.html#af111a2f312a185185d0937bd091637e4">loup</a>(<span class="keywordtype">char</span> uplo, <span class="keywordtype">bool</span> invert) { <span class="keywordflow">return</span> invert ? (uplo == <span class="charliteral">&#39;U&#39;</span> ? <span class="charliteral">&#39;L&#39;</span> : <span class="charliteral">&#39;U&#39;</span>) : uplo; }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a>(spotrf, <span class="keywordtype">float</span>)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a>(dpotrf, <span class="keywordtype">double</span>)</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a>(spotri, <span class="keywordtype">float</span>)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a>(dpotri, <span class="keywordtype">double</span>)</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> xpu, <span class="keyword">typename</span> DType&gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#ae6920bb50ceca504aefa6082a6158b98">flip</a>(<span class="keywordtype">int</span> m, <span class="keywordtype">int</span> n, DType *b, <span class="keywordtype">int</span> ldb, DType *a, <span class="keywordtype">int</span> lda);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">   84</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">flip&lt;cpu, float&gt;</a>(<span class="keywordtype">int</span> m, <span class="keywordtype">int</span> n,</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keywordtype">float</span> *b, <span class="keywordtype">int</span> ldb, <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> lda) {</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; m; ++i)</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; n; ++j)</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      b[j * ldb + i] = a[i * lda + j];</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">   92</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">flip&lt;cpu, double&gt;</a>(<span class="keywordtype">int</span> m, <span class="keywordtype">int</span> n,</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;  <span class="keywordtype">double</span> *b, <span class="keywordtype">int</span> ldb, <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> lda) {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; m; ++i)</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; n; ++j)</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      b[j * ldb + i] = a[i * lda + j];</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#if MXNET_USE_LAPACK</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">  #define MXNET_LAPACK_CWRAPPER1(func, dtype) \</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">  inline int MXNET_LAPACK_##func(int matrix_layout, char uplo, int n, dtype* a, int lda ) { \</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">    CHECK_LAPACK_CONTIGUOUS(n, lda); \</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">    CHECK_LAPACK_UPLO(uplo); \</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">    char o(loup(uplo, (matrix_layout == MXNET_LAPACK_ROW_MAJOR))); \</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">    int ret(0); \</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">    func##_(&amp;o, &amp;n, a, &amp;lda, &amp;ret); \</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">    return ret; \</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">  }</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor"></span>  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(spotrf, <span class="keywordtype">float</span>)</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(dpotrf, <span class="keywordtype">double</span>)</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(spotri, <span class="keywordtype">float</span>)</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(dpotri, <span class="keywordtype">double</span>)</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  inline <span class="keywordtype">int</span> mxnet_lapack_sposv(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n, <span class="keywordtype">int</span> nrhs,</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> lda, <span class="keywordtype">float</span> *b, <span class="keywordtype">int</span> ldb) {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordtype">int</span> info;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">if</span> (matrix_layout == <a class="code" href="c__lapack__api_8h.html#a220562c35966392841ae49fefe2dee5e">MXNET_LAPACK_ROW_MAJOR</a>) {</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <span class="comment">// Transpose b to b_t of shape (nrhs, n)</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      <span class="keywordtype">float</span> *b_t = <span class="keyword">new</span> <span class="keywordtype">float</span>[nrhs * n];</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">flip&lt;cpu, float&gt;</a>(n, nrhs, b_t, n, b, ldb);</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;      <a class="code" href="c__lapack__api_8h.html#a960d4d5f204ab766924726b650c7105c">sposv_</a>(&amp;uplo, &amp;n, &amp;nrhs, a, &amp;lda, b_t, &amp;n, &amp;info);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">flip&lt;cpu, float&gt;</a>(nrhs, n, b, ldb, b_t, n);</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keyword">delete</span> [] b_t;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;      <span class="keywordflow">return</span> info;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <a class="code" href="c__lapack__api_8h.html#a960d4d5f204ab766924726b650c7105c">sposv_</a>(&amp;uplo, &amp;n, &amp;nrhs, a, &amp;lda, b, &amp;ldb, &amp;info);</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordflow">return</span> info;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  }</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <span class="keyword">inline</span> <span class="keywordtype">int</span> mxnet_lapack_dposv(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n, <span class="keywordtype">int</span> nrhs,</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> lda, <span class="keywordtype">double</span> *b, <span class="keywordtype">int</span> ldb) {</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">int</span> info;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordflow">if</span> (matrix_layout == <a class="code" href="c__lapack__api_8h.html#a220562c35966392841ae49fefe2dee5e">MXNET_LAPACK_ROW_MAJOR</a>) {</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;      <span class="comment">// Transpose b to b_t of shape (nrhs, n)</span></div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;      <span class="keywordtype">double</span> *b_t = <span class="keyword">new</span> <span class="keywordtype">double</span>[nrhs * n];</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">flip&lt;cpu, double&gt;</a>(n, nrhs, b_t, n, b, ldb);</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ac9fe022dd825c3bd86d3b175d0a1c02b">dposv_</a>(&amp;uplo, &amp;n, &amp;nrhs, a, &amp;lda, b_t, &amp;n, &amp;info);</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">flip&lt;cpu, double&gt;</a>(nrhs, n, b, ldb, b_t, n);</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;      <span class="keyword">delete</span> [] b_t;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;      <span class="keywordflow">return</span> info;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    }</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <a class="code" href="c__lapack__api_8h.html#ac9fe022dd825c3bd86d3b175d0a1c02b">dposv_</a>(&amp;uplo, &amp;n, &amp;nrhs, a, &amp;lda, b, &amp;ldb, &amp;info);</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordflow">return</span> info;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;  }</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  <span class="comment">// use pragma message instead of warning</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">  #pragma message(&quot;Warning: lapack usage not enabled, linalg-operators will not be available.&quot; \</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">     &quot; Ensure that lapack library is installed and build with USE_LAPACK=1 to get lapack&quot; \</span></div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor">     &quot; functionalities.&quot;)</span></div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  <span class="comment">// Define compilable stubs.</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">  156</a></span>&#160;<span class="preprocessor">  #define MXNET_LAPACK_CWRAPPER1(func, dtype) \</span></div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="preprocessor">  inline int MXNET_LAPACK_##func(int matrix_layout, char uplo, int n, dtype* a, int lda ) { \</span></div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="preprocessor">    LOG(FATAL) &lt;&lt; &quot;MXNet build without lapack. Function &quot; &lt;&lt; #func &lt;&lt; &quot; is not available.&quot;; \</span></div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="preprocessor">    return 1; \</span></div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="preprocessor">  }</span></div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a0c98356495b08e7d69a4cafd8b034ab4">  162</a></span>&#160;<span class="preprocessor">  #define MXNET_LAPACK_UNAVAILABLE(func) \</span></div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="preprocessor">  inline int mxnet_lapack_##func(...) { \</span></div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">    LOG(FATAL) &lt;&lt; &quot;MXNet build without lapack. Function &quot; &lt;&lt; #func &lt;&lt; &quot; is not available.&quot;; \</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor">    return 1; \</span></div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">  }</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#ac9fe022dd825c3bd86d3b175d0a1c02b">dposv_</a>(<span class="keywordtype">char</span> *uplo, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span> *nrhs,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">double</span> *b, <span class="keywordtype">int</span> *ldb, <span class="keywordtype">int</span> *info);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;  <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#a960d4d5f204ab766924726b650c7105c">sposv_</a>(<span class="keywordtype">char</span> *uplo, <span class="keywordtype">int</span> *n, <span class="keywordtype">int</span> *nrhs,</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> *lda, <span class="keywordtype">float</span> *b, <span class="keywordtype">int</span> *ldb, <span class="keywordtype">int</span> *info);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a220562c35966392841ae49fefe2dee5e">   73</a></span>&#160;<span class="preprocessor">#define MXNET_LAPACK_ROW_MAJOR 101</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a49f324c038a0a1447ed094c679739ee7">   74</a></span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define MXNET_LAPACK_COL_MAJOR 102</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a2fa12bf140fecda6aac9336a61923713">   76</a></span>&#160;<span class="preprocessor">#define CHECK_LAPACK_CONTIGUOUS(a, b) \</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">  CHECK_EQ(a, b) &lt;&lt; &quot;non contiguous memory for array in lapack call&quot;;</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a0c95bf8b79e51085d846c7a09ec22720">   79</a></span>&#160;<span class="preprocessor">#define CHECK_LAPACK_UPLO(a) \</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">  CHECK(a == &#39;U&#39; || a == &#39;L&#39;) &lt;&lt; &quot;neither L nor U specified as triangle in lapack call&quot;;</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#af111a2f312a185185d0937bd091637e4">   82</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">char</span> <a class="code" href="c__lapack__api_8h.html#af111a2f312a185185d0937bd091637e4">loup</a>(<span class="keywordtype">char</span> uplo, <span class="keywordtype">bool</span> invert) { <span class="keywordflow">return</span> invert ? (uplo == <span class="charliteral">&#39;U&#39;</span> ? <span class="charliteral">&#39;L&#39;</span> : <span class="charliteral">&#39;U&#39;</span>) : uplo; }</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> xpu, <span class="keyword">typename</span> DType&gt;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#ae6920bb50ceca504aefa6082a6158b98">flip</a>(<span class="keywordtype">int</span> m, <span class="keywordtype">int</span> n, DType *b, <span class="keywordtype">int</span> ldb, DType *a, <span class="keywordtype">int</span> lda);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">  102</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">flip&lt;cpu, float&gt;</a>(<span class="keywordtype">int</span> m, <span class="keywordtype">int</span> n,</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keywordtype">float</span> *b, <span class="keywordtype">int</span> ldb, <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> lda) {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; m; ++i)</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; n; ++j)</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      b[j * ldb + i] = a[i * lda + j];</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00110"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">  110</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">flip&lt;cpu, double&gt;</a>(<span class="keywordtype">int</span> m, <span class="keywordtype">int</span> n,</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;  <span class="keywordtype">double</span> *b, <span class="keywordtype">int</span> ldb, <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> lda) {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; m; ++i)</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; n; ++j)</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      b[j * ldb + i] = a[i * lda + j];</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#if MXNET_USE_LAPACK</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">  #define MXNET_LAPACK_CWRAPPER1(func, dtype) \</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">  inline int MXNET_LAPACK_##func(int matrix_layout, char uplo, int n, dtype* a, int lda ) { \</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">    CHECK_LAPACK_CONTIGUOUS(n, lda); \</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;<span class="preprocessor">    CHECK_LAPACK_UPLO(uplo); \</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">    char o(loup(uplo, (matrix_layout == MXNET_LAPACK_ROW_MAJOR))); \</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="preprocessor">    int ret(0); \</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">    func##_(&amp;o, &amp;n, a, &amp;lda, &amp;ret); \</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">    return ret; \</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">  }</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor"></span>  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(spotrf, <span class="keywordtype">float</span>)</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(dpotrf, <span class="keywordtype">double</span>)</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(spotri, <span class="keywordtype">float</span>)</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(dpotri, <span class="keywordtype">double</span>)</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;  inline <span class="keywordtype">int</span> mxnet_lapack_sposv(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n, <span class="keywordtype">int</span> nrhs,</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> lda, <span class="keywordtype">float</span> *b, <span class="keywordtype">int</span> ldb) {</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordtype">int</span> info;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">if</span> (matrix_layout == <a class="code" href="c__lapack__api_8h.html#a220562c35966392841ae49fefe2dee5e">MXNET_LAPACK_ROW_MAJOR</a>) {</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      <span class="comment">// Transpose b to b_t of shape (nrhs, n)</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;      <span class="keywordtype">float</span> *b_t = <span class="keyword">new</span> <span class="keywordtype">float</span>[nrhs * n];</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">flip&lt;cpu, float&gt;</a>(n, nrhs, b_t, n, b, ldb);</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;      <a class="code" href="c__lapack__api_8h.html#a960d4d5f204ab766924726b650c7105c">sposv_</a>(&amp;uplo, &amp;n, &amp;nrhs, a, &amp;lda, b_t, &amp;n, &amp;info);</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">flip&lt;cpu, float&gt;</a>(nrhs, n, b, ldb, b_t, n);</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;      <span class="keyword">delete</span> [] b_t;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;      <span class="keywordflow">return</span> info;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    }</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <a class="code" href="c__lapack__api_8h.html#a960d4d5f204ab766924726b650c7105c">sposv_</a>(&amp;uplo, &amp;n, &amp;nrhs, a, &amp;lda, b, &amp;ldb, &amp;info);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">return</span> info;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  }</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  <span class="keyword">inline</span> <span class="keywordtype">int</span> mxnet_lapack_dposv(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n, <span class="keywordtype">int</span> nrhs,</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> lda, <span class="keywordtype">double</span> *b, <span class="keywordtype">int</span> ldb) {</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordtype">int</span> info;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordflow">if</span> (matrix_layout == <a class="code" href="c__lapack__api_8h.html#a220562c35966392841ae49fefe2dee5e">MXNET_LAPACK_ROW_MAJOR</a>) {</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      <span class="comment">// Transpose b to b_t of shape (nrhs, n)</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      <span class="keywordtype">double</span> *b_t = <span class="keyword">new</span> <span class="keywordtype">double</span>[nrhs * n];</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">flip&lt;cpu, double&gt;</a>(n, nrhs, b_t, n, b, ldb);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ac9fe022dd825c3bd86d3b175d0a1c02b">dposv_</a>(&amp;uplo, &amp;n, &amp;nrhs, a, &amp;lda, b_t, &amp;n, &amp;info);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;      <a class="code" href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">flip&lt;cpu, double&gt;</a>(nrhs, n, b, ldb, b_t, n);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;      <span class="keyword">delete</span> [] b_t;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;      <span class="keywordflow">return</span> info;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    }</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <a class="code" href="c__lapack__api_8h.html#ac9fe022dd825c3bd86d3b175d0a1c02b">dposv_</a>(&amp;uplo, &amp;n, &amp;nrhs, a, &amp;lda, b, &amp;ldb, &amp;info);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordflow">return</span> info;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  }</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(spotrf, <span class="keywordtype">float</span>)</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(dpotrf, <span class="keywordtype">double</span>)</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(spotri, <span class="keywordtype">float</span>)</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(dpotri, <span class="keywordtype">double</span>)</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a0c98356495b08e7d69a4cafd8b034ab4">MXNET_LAPACK_UNAVAILABLE</a>(sposv)</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a0c98356495b08e7d69a4cafd8b034ab4">MXNET_LAPACK_UNAVAILABLE</a>(dposv)</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> DType&gt;</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="c__lapack__api_8h.html#a78608e9c2fdb06c8456ac2bf14d8cb21">MXNET_LAPACK_posv</a>(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n, <span class="keywordtype">int</span> nrhs,</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  DType *a, <span class="keywordtype">int</span> lda, DType *b, <span class="keywordtype">int</span> ldb);</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00183"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#ad475995bc48dc06a96aaaf3542b1f0f0">  183</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="c__lapack__api_8h.html#ad475995bc48dc06a96aaaf3542b1f0f0">MXNET_LAPACK_posv&lt;float&gt;</a>(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n,</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  <span class="keywordtype">int</span> nrhs, <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> lda, <span class="keywordtype">float</span> *b, <span class="keywordtype">int</span> ldb) {</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;  <span class="keywordflow">return</span> mxnet_lapack_sposv(matrix_layout, uplo, n, nrhs, a, lda, b, ldb);</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;}</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a name="l00189"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a3d0a26827fd974f10b7696f4be07a6e3">  189</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="c__lapack__api_8h.html#a3d0a26827fd974f10b7696f4be07a6e3">MXNET_LAPACK_posv&lt;double&gt;</a>(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n,</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;  <span class="keywordtype">int</span> nrhs, <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> lda, <span class="keywordtype">double</span> *b, <span class="keywordtype">int</span> ldb) {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;  <span class="keywordflow">return</span> mxnet_lapack_dposv(matrix_layout, uplo, n, nrhs, a, lda, b, ldb);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;}</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="comment">// use pragma message instead of warning</span></div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;<span class="preprocessor">  #pragma message(&quot;Warning: lapack usage not enabled, linalg-operators will not be available.&quot; \</span></div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;<span class="preprocessor">     &quot; Ensure that lapack library is installed and build with USE_LAPACK=1 to get lapack&quot; \</span></div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;<span class="preprocessor">     &quot; functionalities.&quot;)</span></div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;  <span class="comment">// Define compilable stubs.</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">  174</a></span>&#160;<span class="preprocessor">  #define MXNET_LAPACK_CWRAPPER1(func, dtype) \</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;<span class="preprocessor">  inline int MXNET_LAPACK_##func(int matrix_layout, char uplo, int n, dtype* a, int lda ) { \</span></div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="preprocessor">    LOG(FATAL) &lt;&lt; &quot;MXNet build without lapack. Function &quot; &lt;&lt; #func &lt;&lt; &quot; is not available.&quot;; \</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor">    return 1; \</span></div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="preprocessor">  }</span></div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00180"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a0c98356495b08e7d69a4cafd8b034ab4">  180</a></span>&#160;<span class="preprocessor">  #define MXNET_LAPACK_UNAVAILABLE(func) \</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="preprocessor">  inline int mxnet_lapack_##func(...) { \</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;<span class="preprocessor">    LOG(FATAL) &lt;&lt; &quot;MXNet build without lapack. Function &quot; &lt;&lt; #func &lt;&lt; &quot; is not available.&quot;; \</span></div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="preprocessor">    return 1; \</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor">  }</span></div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(spotrf, <span class="keywordtype">float</span>)</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(dpotrf, <span class="keywordtype">double</span>)</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(spotri, <span class="keywordtype">float</span>)</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;  <a class="code" href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a>(dpotri, <span class="keywordtype">double</span>)</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a0c98356495b08e7d69a4cafd8b034ab4">MXNET_LAPACK_UNAVAILABLE</a>(sposv)</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;  <a class="code" href="c__lapack__api_8h.html#a0c98356495b08e7d69a4cafd8b034ab4">MXNET_LAPACK_UNAVAILABLE</a>(dposv)</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor">#endif  // MXNET_C_LAPACK_API_H_</span></div>
-<div class="ttc" id="c__lapack__api_8h_html_a3d0a26827fd974f10b7696f4be07a6e3"><div class="ttname"><a href="c__lapack__api_8h.html#a3d0a26827fd974f10b7696f4be07a6e3">MXNET_LAPACK_posv&lt; double &gt;</a></div><div class="ttdeci">int MXNET_LAPACK_posv&lt; double &gt;(int matrix_layout, char uplo, int n, int nrhs, double *a, int lda, double *b, int ldb)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:189</div></div>
-<div class="ttc" id="c__lapack__api_8h_html_a56f112686aa64bf8a42204a3ff87ea46"><div class="ttname"><a href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a></div><div class="ttdeci">#define MXNET_LAPACK_FSIGNATURE1(func, dtype)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:40</div></div>
-<div class="ttc" id="c__lapack__api_8h_html_ad4dda6fa4cdd0998eea0028721b91206"><div class="ttname"><a href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">flip&lt; cpu, double &gt;</a></div><div class="ttdeci">void flip&lt; cpu, double &gt;(int m, int n, double *b, int ldb, double *a, int lda)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:92</div></div>
-<div class="ttc" id="c__lapack__api_8h_html_af111a2f312a185185d0937bd091637e4"><div class="ttname"><a href="c__lapack__api_8h.html#af111a2f312a185185d0937bd091637e4">loup</a></div><div class="ttdeci">char loup(char uplo, bool invert)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:64</div></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> DType&gt;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="c__lapack__api_8h.html#a78608e9c2fdb06c8456ac2bf14d8cb21">MXNET_LAPACK_posv</a>(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n, <span class="keywordtype">int</span> nrhs,</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;  DType *a, <span class="keywordtype">int</span> lda, DType *b, <span class="keywordtype">int</span> ldb);</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00201"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#ad475995bc48dc06a96aaaf3542b1f0f0">  201</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="c__lapack__api_8h.html#ad475995bc48dc06a96aaaf3542b1f0f0">MXNET_LAPACK_posv&lt;float&gt;</a>(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n,</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;  <span class="keywordtype">int</span> nrhs, <span class="keywordtype">float</span> *a, <span class="keywordtype">int</span> lda, <span class="keywordtype">float</span> *b, <span class="keywordtype">int</span> ldb) {</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  <span class="keywordflow">return</span> mxnet_lapack_sposv(matrix_layout, uplo, n, nrhs, a, lda, b, ldb);</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;}</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;<span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a name="l00207"></a><span class="lineno"><a class="line" href="c__lapack__api_8h.html#a3d0a26827fd974f10b7696f4be07a6e3">  207</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="c__lapack__api_8h.html#a3d0a26827fd974f10b7696f4be07a6e3">MXNET_LAPACK_posv&lt;double&gt;</a>(<span class="keywordtype">int</span> matrix_layout, <span class="keywordtype">char</span> uplo, <span class="keywordtype">int</span> n,</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;  <span class="keywordtype">int</span> nrhs, <span class="keywordtype">double</span> *a, <span class="keywordtype">int</span> lda, <span class="keywordtype">double</span> *b, <span class="keywordtype">int</span> ldb) {</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  <span class="keywordflow">return</span> mxnet_lapack_dposv(matrix_layout, uplo, n, nrhs, a, lda, b, ldb);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;}</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="preprocessor">#endif  // MXNET_C_LAPACK_API_H_</span></div>
+<div class="ttc" id="c__lapack__api_8h_html_a3d0a26827fd974f10b7696f4be07a6e3"><div class="ttname"><a href="c__lapack__api_8h.html#a3d0a26827fd974f10b7696f4be07a6e3">MXNET_LAPACK_posv&lt; double &gt;</a></div><div class="ttdeci">int MXNET_LAPACK_posv&lt; double &gt;(int matrix_layout, char uplo, int n, int nrhs, double *a, int lda, double *b, int ldb)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:207</div></div>
+<div class="ttc" id="c__lapack__api_8h_html_a56f112686aa64bf8a42204a3ff87ea46"><div class="ttname"><a href="c__lapack__api_8h.html#a56f112686aa64bf8a42204a3ff87ea46">MXNET_LAPACK_FSIGNATURE1</a></div><div class="ttdeci">#define MXNET_LAPACK_FSIGNATURE1(func, dtype)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:58</div></div>
+<div class="ttc" id="c__lapack__api_8h_html_ad4dda6fa4cdd0998eea0028721b91206"><div class="ttname"><a href="c__lapack__api_8h.html#ad4dda6fa4cdd0998eea0028721b91206">flip&lt; cpu, double &gt;</a></div><div class="ttdeci">void flip&lt; cpu, double &gt;(int m, int n, double *b, int ldb, double *a, int lda)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:110</div></div>
+<div class="ttc" id="c__lapack__api_8h_html_af111a2f312a185185d0937bd091637e4"><div class="ttname"><a href="c__lapack__api_8h.html#af111a2f312a185185d0937bd091637e4">loup</a></div><div class="ttdeci">char loup(char uplo, bool invert)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:82</div></div>
 <div class="ttc" id="c__lapack__api_8h_html_ac9fe022dd825c3bd86d3b175d0a1c02b"><div class="ttname"><a href="c__lapack__api_8h.html#ac9fe022dd825c3bd86d3b175d0a1c02b">dposv_</a></div><div class="ttdeci">void dposv_(char *uplo, int *n, int *nrhs, double *a, int *lda, double *b, int *ldb, int *info)</div></div>
-<div class="ttc" id="c__lapack__api_8h_html_a220562c35966392841ae49fefe2dee5e"><div class="ttname"><a href="c__lapack__api_8h.html#a220562c35966392841ae49fefe2dee5e">MXNET_LAPACK_ROW_MAJOR</a></div><div class="ttdeci">#define MXNET_LAPACK_ROW_MAJOR</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:55</div></div>
+<div class="ttc" id="c__lapack__api_8h_html_a220562c35966392841ae49fefe2dee5e"><div class="ttname"><a href="c__lapack__api_8h.html#a220562c35966392841ae49fefe2dee5e">MXNET_LAPACK_ROW_MAJOR</a></div><div class="ttdeci">#define MXNET_LAPACK_ROW_MAJOR</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:73</div></div>
 <div class="ttc" id="c__lapack__api_8h_html_ae6920bb50ceca504aefa6082a6158b98"><div class="ttname"><a href="c__lapack__api_8h.html#ae6920bb50ceca504aefa6082a6158b98">flip</a></div><div class="ttdeci">void flip(int m, int n, DType *b, int ldb, DType *a, int lda)</div><div class="ttdoc">Transpose matrix data in memory. </div></div>
-<div class="ttc" id="c__lapack__api_8h_html_ad475995bc48dc06a96aaaf3542b1f0f0"><div class="ttname"><a href="c__lapack__api_8h.html#ad475995bc48dc06a96aaaf3542b1f0f0">MXNET_LAPACK_posv&lt; float &gt;</a></div><div class="ttdeci">int MXNET_LAPACK_posv&lt; float &gt;(int matrix_layout, char uplo, int n, int nrhs, float *a, int lda, float *b, int ldb)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:183</div></div>
-<div class="ttc" id="c__lapack__api_8h_html_a0c98356495b08e7d69a4cafd8b034ab4"><div class="ttname"><a href="c__lapack__api_8h.html#a0c98356495b08e7d69a4cafd8b034ab4">MXNET_LAPACK_UNAVAILABLE</a></div><div class="ttdeci">#define MXNET_LAPACK_UNAVAILABLE(func)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:162</div></div>
-<div class="ttc" id="c__lapack__api_8h_html_ad308cb2cd9a08c654b38c62f0ea0c902"><div class="ttname"><a href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">flip&lt; cpu, float &gt;</a></div><div class="ttdeci">void flip&lt; cpu, float &gt;(int m, int n, float *b, int ldb, float *a, int lda)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:84</div></div>
+<div class="ttc" id="c__lapack__api_8h_html_ad475995bc48dc06a96aaaf3542b1f0f0"><div class="ttname"><a href="c__lapack__api_8h.html#ad475995bc48dc06a96aaaf3542b1f0f0">MXNET_LAPACK_posv&lt; float &gt;</a></div><div class="ttdeci">int MXNET_LAPACK_posv&lt; float &gt;(int matrix_layout, char uplo, int n, int nrhs, float *a, int lda, float *b, int ldb)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:201</div></div>
+<div class="ttc" id="c__lapack__api_8h_html_a0c98356495b08e7d69a4cafd8b034ab4"><div class="ttname"><a href="c__lapack__api_8h.html#a0c98356495b08e7d69a4cafd8b034ab4">MXNET_LAPACK_UNAVAILABLE</a></div><div class="ttdeci">#define MXNET_LAPACK_UNAVAILABLE(func)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:180</div></div>
+<div class="ttc" id="c__lapack__api_8h_html_ad308cb2cd9a08c654b38c62f0ea0c902"><div class="ttname"><a href="c__lapack__api_8h.html#ad308cb2cd9a08c654b38c62f0ea0c902">flip&lt; cpu, float &gt;</a></div><div class="ttdeci">void flip&lt; cpu, float &gt;(int m, int n, float *b, int ldb, float *a, int lda)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:102</div></div>
 <div class="ttc" id="c__lapack__api_8h_html_a960d4d5f204ab766924726b650c7105c"><div class="ttname"><a href="c__lapack__api_8h.html#a960d4d5f204ab766924726b650c7105c">sposv_</a></div><div class="ttdeci">void sposv_(char *uplo, int *n, int *nrhs, float *a, int *lda, float *b, int *ldb, int *info)</div></div>
-<div class="ttc" id="c__lapack__api_8h_html_aa5297300313445fa46d2d1d2fb38970c"><div class="ttname"><a href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a></div><div class="ttdeci">#define MXNET_LAPACK_CWRAPPER1(func, dtype)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:156</div></div>
+<div class="ttc" id="c__lapack__api_8h_html_aa5297300313445fa46d2d1d2fb38970c"><div class="ttname"><a href="c__lapack__api_8h.html#aa5297300313445fa46d2d1d2fb38970c">MXNET_LAPACK_CWRAPPER1</a></div><div class="ttdeci">#define MXNET_LAPACK_CWRAPPER1(func, dtype)</div><div class="ttdef"><b>Definition:</b> c_lapack_api.h:174</div></div>
 <div class="ttc" id="c__lapack__api_8h_html_a78608e9c2fdb06c8456ac2bf14d8cb21"><div class="ttname"><a href="c__lapack__api_8h.html#a78608e9c2fdb06c8456ac2bf14d8cb21">MXNET_LAPACK_posv</a></div><div class="ttdeci">int MXNET_LAPACK_posv(int matrix_layout, char uplo, int n, int nrhs, DType *a, int lda, DType *b, int ldb)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 8 2017 07:19:50 for mxnet by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Aug 10 2017 23:53:14 for mxnet by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

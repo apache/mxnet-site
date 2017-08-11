@@ -620,6 +620,47 @@ in Python and then deploy with symbolic graph in C++ and Scala.</p>
 <p>Model zoo provides pre-defined and pre-trained models to help bootstrap machine learning applications.</p>
 <div class="section" id="vision">
 <span id="id2"></span><h3>Vision<a class="headerlink" href="#vision" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="module-mxnet.gluon.model_zoo.vision"></span><p>Module for pre-defined neural network models.</p>
+<p>This module contains definitions for the following model architectures:
+-  <a class="reference external" href="https://arxiv.org/abs/1404.5997">AlexNet</a>
+-  <a class="reference external" href="https://arxiv.org/abs/1608.06993">DenseNet</a>
+-  <a class="reference external" href="http://arxiv.org/abs/1512.00567">Inception V3</a>
+-  <a class="reference external" href="https://arxiv.org/abs/1512.03385">ResNet V1</a>
+-  <a class="reference external" href="https://arxiv.org/abs/1512.03385">ResNet V2</a>
+-  <a class="reference external" href="https://arxiv.org/abs/1602.07360">SqueezeNet</a>
+-  <a class="reference external" href="https://arxiv.org/abs/1409.1556">VGG</a></p>
+<p>You can construct a model with random weights by calling its constructor:
+.. code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mxnet.gluon.models</span> <span class="kn">as</span> <span class="nn">models</span>
+<span class="n">resnet18</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18_v1</span><span class="p">()</span>
+<span class="n">alexnet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">alexnet</span><span class="p">()</span>
+<span class="n">squeezenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">squeezenet1_0</span><span class="p">()</span>
+<span class="n">densenet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">densenet_161</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We provide pre-trained models for all the models except ResNet V2.
+These can constructed by passing
+<code class="docutils literal"><span class="pre">pretrained=True</span></code>:
+.. code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mxnet.gluon.models</span> <span class="kn">as</span> <span class="nn">models</span>
+<span class="n">resnet18</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">resnet18_v1</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">alexnet</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">alexnet</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Pretrained models are converted from torchvision.
+All pre-trained models expect input images normalized in the same way,
+i.e. mini-batches of 3-channel RGB images of shape (N x 3 x H x W),
+where N is the batch size, and H and W are expected to be at least 224.
+The images have to be loaded in to a range of [0, 1] and then normalized
+using <code class="docutils literal"><span class="pre">mean</span> <span class="pre">=</span> <span class="pre">[0.485,</span> <span class="pre">0.456,</span> <span class="pre">0.406]</span></code> and <code class="docutils literal"><span class="pre">std</span> <span class="pre">=</span> <span class="pre">[0.229,</span> <span class="pre">0.224,</span> <span class="pre">0.225]</span></code>.
+The transformation should preferrably happen at preprocessing. You can use
+<code class="docutils literal"><span class="pre">mx.image.color_normalize</span></code> for such transformation:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">/</span><span class="mi">255</span>
+<span class="n">normalized</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">color_normalize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span>
+                                      <span class="n">mean</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">]),</span>
+                                      <span class="n">std</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">]))</span>
+</pre></div>
+</div>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%"/>
@@ -869,7 +910,7 @@ in Python and then deploy with symbolic graph in C++ and Scala.</p>
 <script src="../../_static/js/auto_module_index.js" type="text/javascript"></script><dl class="class">
 <dt id="mxnet.gluon.Parameter">
 <em class="property">class </em><code class="descclassname">mxnet.gluon.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>grad_req='write'</em>, <em>shape=None</em>, <em>dtype=<type 'numpy.float32'></em>, <em>lr_mult=1.0</em>, <em>wd_mult=1.0</em>, <em>init=None</em>, <em>allow_deferred_init=False</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.Parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>A Container holding parameters (weights) of <a href="#id40"><span class="problematic" id="id41">`</span></a>Block`s.</p>
+<dd><p>A Container holding parameters (weights) of <a href="#id44"><span class="problematic" id="id45">`</span></a>Block`s.</p>
 <p><cite>Parameter</cite> holds a copy of the parameter on each <cite>Context</cite> after
 it is initialized with <cite>Parameter.initialize(...)</cite>. If <cite>grad_req</cite> is
 not <cite>null</cite>, it will also hold a gradient array on each <cite>Context</cite>:</p>
@@ -1271,7 +1312,7 @@ present in this Block.</dd>
 <dl class="method">
 <dt id="mxnet.gluon.Block.register_child">
 <code class="descname">register_child</code><span class="sig-paren">(</span><em>block</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.Block.register_child" title="Permalink to this definition">¶</a></dt>
-<dd><p>Registers block as a child of self. <a href="#id46"><span class="problematic" id="id47">`</span></a>Block`s assigned to self as
+<dd><p>Registers block as a child of self. <a href="#id50"><span class="problematic" id="id51">`</span></a>Block`s assigned to self as
 attributes will be registered automatically.</p>
 </dd></dl>
 <dl class="method">
@@ -1283,7 +1324,7 @@ attributes will be registered automatically.</p>
 <dl class="method">
 <dt id="mxnet.gluon.Block.hybridize">
 <code class="descname">hybridize</code><span class="sig-paren">(</span><em>active=True</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.Block.hybridize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Activates or deactivates <a href="#id48"><span class="problematic" id="id49">`</span></a>HybridBlock`s recursively. Has no effect on
+<dd><p>Activates or deactivates <a href="#id52"><span class="problematic" id="id53">`</span></a>HybridBlock`s recursively. Has no effect on
 non-hybrid children.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
@@ -1406,7 +1447,7 @@ that are not inputs.</li>
 <dl class="class">
 <dt id="mxnet.gluon.nn.Sequential">
 <em class="property">class </em><code class="descclassname">mxnet.gluon.nn.</code><code class="descname">Sequential</code><span class="sig-paren">(</span><em>prefix=None</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.nn.Sequential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stacks <a href="#id58"><span class="problematic" id="id59">`</span></a>Block`s sequentially.</p>
+<dd><p>Stacks <a href="#id62"><span class="problematic" id="id63">`</span></a>Block`s sequentially.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
 <span class="c1"># use net's name_scope to give child Blocks appropriate names.</span>
@@ -1424,7 +1465,7 @@ that are not inputs.</li>
 <dl class="class">
 <dt id="mxnet.gluon.nn.HybridSequential">
 <em class="property">class </em><code class="descclassname">mxnet.gluon.nn.</code><code class="descname">HybridSequential</code><span class="sig-paren">(</span><em>prefix=None</em>, <em>params=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.nn.HybridSequential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stacks <a href="#id60"><span class="problematic" id="id61">`</span></a>HybridBlock`s sequentially.</p>
+<dd><p>Stacks <a href="#id64"><span class="problematic" id="id65">`</span></a>HybridBlock`s sequentially.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
 <span class="c1"># use net's name_scope to give child Blocks appropriate names.</span>
@@ -2461,15 +2502,20 @@ input has shape <cite>(sequence_length, batch_size, input_size)</cite></dd>
 output has shape <cite>(sequence_length, batch_size, num_hidden)</cite>.
 If <cite>bidirectional</cite> is True, output shape will instead be
 <cite>(sequence_length, batch_size, 2*num_hidden)</cite></dd>
-<dt>Recurrent state shape:</dt>
-<dd>The recurrent state’s shape is <cite>(num_layers, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, state shape will instead be
-<cite>(2*num_layers, batch_size, num_hidden)</cite></dd>
+<dt>Recurrent state:</dt>
+<dd>The recurrent state is an NDArray with shape <cite>(num_layers, batch_size, num_hidden)</cite>.
+If <cite>bidirectional</cite> is True, the recurrent state shape will instead be
+<cite>(2*num_layers, batch_size, num_hidden)</cite>
+If input recurrent state is None, zeros are used as default begin states,
+and the output recurrent state is omitted.</dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">layer</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">RNN</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">layer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 <span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="c1"># by default zeros are used as begin state</span>
+<span class="gp">>>> </span><span class="n">output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="c1"># manually specify begin state.</span>
 <span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">output</span><span class="p">,</span> <span class="n">hn</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">h0</span><span class="p">)</span>
 </pre></div>
@@ -2533,16 +2579,21 @@ input has shape <cite>(sequence_length, batch_size, input_size)</cite></dd>
 output has shape <cite>(sequence_length, batch_size, num_hidden)</cite>.
 If <cite>bidirectional</cite> is True, output shape will instead be
 <cite>(sequence_length, batch_size, 2*num_hidden)</cite></dd>
-<dt>Recurrent state shape:</dt>
+<dt>Recurrent state:</dt>
 <dd>The recurrent state is a list of two NDArrays. Both has shape
 <cite>(num_layers, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, state shape will instead be
-<cite>(2*num_layers, batch_size, num_hidden)</cite>.</dd>
+If <cite>bidirectional</cite> is True, each recurrent state will instead have shape
+<cite>(2*num_layers, batch_size, num_hidden)</cite>.
+If input recurrent state is None, zeros are used as default begin states,
+and the output recurrent state is omitted.</dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">layer</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">layer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 <span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="c1"># by default zeros are used as begin state</span>
+<span class="gp">>>> </span><span class="n">output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="c1"># manually specify begin state.</span>
 <span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">c0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">output</span><span class="p">,</span> <span class="n">hn</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="p">[</span><span class="n">h0</span><span class="p">,</span> <span class="n">c0</span><span class="p">])</span>
@@ -2601,15 +2652,20 @@ input has shape <cite>(sequence_length, batch_size, input_size)</cite></dd>
 output has shape <cite>(sequence_length, batch_size, num_hidden)</cite>.
 If <cite>bidirectional</cite> is True, output shape will instead be
 <cite>(sequence_length, batch_size, 2*num_hidden)</cite></dd>
-<dt>Recurrent state shape:</dt>
-<dd>The recurrent state’s shape is <cite>(num_layers, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, state shape will instead be
-<cite>(2*num_layers, batch_size, num_hidden)</cite></dd>
+<dt>Recurrent state:</dt>
+<dd>The recurrent state is an NDArray with shape <cite>(num_layers, batch_size, num_hidden)</cite>.
+If <cite>bidirectional</cite> is True, the recurrent state shape will instead be
+<cite>(2*num_layers, batch_size, num_hidden)</cite>
+If input recurrent state is None, zeros are used as default begin states,
+and the output recurrent state is omitted.</dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">layer</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">GRU</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">layer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 <span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="c1"># by default zeros are used as begin state</span>
+<span class="gp">>>> </span><span class="n">output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="c1"># manually specify begin state.</span>
 <span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">output</span><span class="p">,</span> <span class="n">hn</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">h0</span><span class="p">)</span>
 </pre></div>
@@ -3130,7 +3186,7 @@ shuffle, sampler, and last_batch if batch_sampler is specified.</li>
 <span class="target" id="module-mxnet.gluon.data.vision"></span><p>Dataset container.</p>
 <dl class="class">
 <dt id="mxnet.gluon.data.vision.MNIST">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">MNIST</code><span class="sig-paren">(</span><em>root</em>, <em>train=True</em>, <em>transform=<function <lambda>></em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.data.vision.MNIST" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">MNIST</code><span class="sig-paren">(</span><em>root='~/.mxnet/datasets/'</em>, <em>train=True</em>, <em>transform=<function <lambda>></em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.data.vision.MNIST" title="Permalink to this definition">¶</a></dt>
 <dd><p>MNIST handwritten digits dataset from <a href="#id119"><span class="problematic" id="id120">`http://yann.lecun.com/exdb/mnist`_</span></a>.</p>
 <p>Each sample is an image (in 3D NDArray) with shape (28, 28, 1).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -3151,7 +3207,7 @@ shuffle, sampler, and last_batch if batch_sampler is specified.</li>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.data.vision.CIFAR10">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">CIFAR10</code><span class="sig-paren">(</span><em>root</em>, <em>train=True</em>, <em>transform=<function <lambda>></em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.data.vision.CIFAR10" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">CIFAR10</code><span class="sig-paren">(</span><em>root='~/.mxnet/datasets/'</em>, <em>train=True</em>, <em>transform=<function <lambda>></em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.data.vision.CIFAR10" title="Permalink to this definition">¶</a></dt>
 <dd><p>CIFAR10 image classification dataset from <a href="#id121"><span class="problematic" id="id122">`https://www.cs.toronto.edu/~kriz/cifar.html`_</span></a>.</p>
 <p>Each sample is an image (in 3D NDArray) with shape (32, 32, 1).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -3170,48 +3226,9 @@ shuffle, sampler, and last_batch if batch_sampler is specified.</li>
 </tbody>
 </table>
 </dd></dl>
-<span class="target" id="module-mxnet.gluon.model_zoo.vision"></span><p>Module for pre-defined neural network models.
-This module contains definitions for the following model architectures:
--  <a class="reference external" href="https://arxiv.org/abs/1404.5997">AlexNet</a>
--  <a class="reference external" href="https://arxiv.org/abs/1608.06993">DenseNet</a>
--  <a class="reference external" href="http://arxiv.org/abs/1512.00567">Inception V3</a>
--  <a class="reference external" href="https://arxiv.org/abs/1512.03385">ResNet V1</a>
--  <a class="reference external" href="https://arxiv.org/abs/1512.03385">ResNet V2</a>
--  <a class="reference external" href="https://arxiv.org/abs/1602.07360">SqueezeNet</a>
--  <a class="reference external" href="https://arxiv.org/abs/1409.1556">VGG</a>
-You can construct a model with random weights by calling its constructor:
-.. code:: python</p>
-<blockquote>
-<div>import mxnet.gluon.models as models
-resnet18 = models.resnet18_v1()
-alexnet = models.alexnet()
-squeezenet = models.squeezenet1_0()
-densenet = models.densenet_161()</div></blockquote>
-<p>We provide pre-trained models for all the models except ResNet V2.
-These can constructed by passing
-<code class="docutils literal"><span class="pre">pretrained=True</span></code>:
-.. code:: python</p>
-<blockquote>
-<div>import mxnet.gluon.models as models
-resnet18 = models.resnet18_v1(pretrained=True)
-alexnet = models.alexnet(pretrained=True)</div></blockquote>
-<p>Pretrained model is converted from torchvision.
-All pre-trained models expect input images normalized in the same way,
-i.e. mini-batches of 3-channel RGB images of shape (N x 3 x H x W),
-where N is the batch size, and H and W are expected to be at least 224.
-The images have to be loaded in to a range of [0, 1] and then normalized
-using <code class="docutils literal"><span class="pre">mean</span> <span class="pre">=</span> <span class="pre">[0.485,</span> <span class="pre">0.456,</span> <span class="pre">0.406]</span></code> and <code class="docutils literal"><span class="pre">std</span> <span class="pre">=</span> <span class="pre">[0.229,</span> <span class="pre">0.224,</span> <span class="pre">0.225]</span></code>.
-The transformation should preferrably happen at preprocessing. You can use
-<code class="docutils literal"><span class="pre">mx.image.color_normalize</span></code> for such transformation:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">/</span><span class="mi">255</span>
-<span class="n">normalized</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">color_normalize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span>
-                                      <span class="n">mean</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">]),</span>
-                                      <span class="n">std</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">]))</span>
-</pre></div>
-</div>
-<dl class="function">
+<dl class="method">
 <dt id="mxnet.gluon.model_zoo.vision.get_model">
-<code class="descclassname">mxnet.gluon.model_zoo.vision.</code><code class="descname">get_model</code><span class="sig-paren">(</span><em>name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.get_model" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">vision.</code><code class="descname">get_model</code><span class="sig-paren">(</span><em>name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.get_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a pre-defined model by name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>

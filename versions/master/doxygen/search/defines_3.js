@@ -1,6 +1,7 @@
 var searchData=
 [
   ['mxnet_5fapi',['MXNET_API',['../base_8h.html#a91a09948aaaffa1eb64508db79009a05',1,'base.h']]],
+  ['mxnet_5fcuda_5fallow_5ftensor_5fcore_5fdefault',['MXNET_CUDA_ALLOW_TENSOR_CORE_DEFAULT',['../cuda__utils_8h.html#aa7ba00b841d6b7ba443b0e58dac9ab88',1,'cuda_utils.h']]],
   ['mxnet_5fdll',['MXNET_DLL',['../c__api_8h.html#a5b0e47dde55f9b2f58b99fab92d1e0ac',1,'MXNET_DLL():&#160;c_api.h'],['../c__predict__api_8h.html#a5b0e47dde55f9b2f58b99fab92d1e0ac',1,'MXNET_DLL():&#160;c_predict_api.h']]],
   ['mxnet_5fgpu_5fnot_5fenabled_5ferror',['MXNET_GPU_NOT_ENABLED_ERROR',['../base_8h.html#a8e6134b0829b92e4ba36e3ef1ac506ec',1,'base.h']]],
   ['mxnet_5flapack_5fcol_5fmajor',['MXNET_LAPACK_COL_MAJOR',['../c__lapack__api_8h.html#a49f324c038a0a1447ed094c679739ee7',1,'c_lapack_api.h']]],
