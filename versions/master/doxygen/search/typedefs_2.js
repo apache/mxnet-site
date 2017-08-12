@@ -4,6 +4,8 @@ var searchData=
   ['callbackoncomplete',['CallbackOnComplete',['../classmxnet_1_1Engine.html#a16b757432556f835d27f1b5e1dbe1b06',1,'mxnet::Engine']]],
   ['controller',['Controller',['../classmxnet_1_1KVStore.html#a50db5cb1a140fb84c8e31def54270ae3',1,'mxnet::KVStore']]],
   ['cpu',['cpu',['../namespacemxnet.html#a850af9d76d9d4beaeb5234c1434973e3',1,'mxnet']]],
+  ['customfunctionbwdfunc',['CustomFunctionBwdFunc',['../c__api_8h.html#ad71379747c8a269676425aa012323227',1,'c_api.h']]],
+  ['customfunctiondelfunc',['CustomFunctionDelFunc',['../c__api_8h.html#a5de746fbeeb2f6ca3cf7745ad393d7cb',1,'c_api.h']]],
   ['customopbwddepfunc',['CustomOpBwdDepFunc',['../c__api_8h.html#ae8feb033b715209653ea91e089d060b0',1,'c_api.h']]],
   ['customopcreatefunc',['CustomOpCreateFunc',['../c__api_8h.html#a201e319981a60877ab9d6f7cf3b3f62d',1,'c_api.h']]],
   ['customopdelfunc',['CustomOpDelFunc',['../c__api_8h.html#a557fa6ce86e94109ce7797b2cce33e23',1,'c_api.h']]],
