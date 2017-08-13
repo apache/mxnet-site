@@ -5,6 +5,7 @@ var searchData=
   ['backwardinputs',['BackwardInputs',['../classmxnet_1_1OperatorProperty.html#a9f488509e132094ce7e79125ce853042',1,'mxnet::OperatorProperty']]],
   ['backwardresource',['BackwardResource',['../classmxnet_1_1OperatorProperty.html#ade7720a3e0ebba67d89978925a77609b',1,'mxnet::OperatorProperty']]],
   ['barrier',['Barrier',['../classmxnet_1_1KVStore.html#a4f9275fb7a11589fae1dcc5a8a3354ac',1,'mxnet::KVStore']]],
+  ['barrier_5fbefore_5fexit_5f',['barrier_before_exit_',['../classmxnet_1_1KVStore.html#aa8ba7abf8334326cab19eb568cb31cfa',1,'mxnet::KVStore']]],
   ['base_2eh',['base.h',['../base_8h.html',1,'']]],
   ['beforefirst',['BeforeFirst',['../classmxnet_1_1IIterator.html#a37fc8b163cd0158686183cc0f319529a',1,'mxnet::IIterator']]],
   ['binaryfunction',['BinaryFunction',['../namespacemxnet_1_1op.html#a97e7c6f5bbc6cdf02d443df6a36167e0',1,'mxnet::op']]],

@@ -26,7 +26,6 @@ var searchData=
   ['dmlc',['dmlc',['../namespacedmlc.html',1,'']]],
   ['dmlc_5fdeclare_5ftraits',['DMLC_DECLARE_TRAITS',['../namespacedmlc.html#a7272c846fa03dee55916aadce0165a46',1,'dmlc']]],
   ['dmlc_5fdeclare_5ftype_5fname',['DMLC_DECLARE_TYPE_NAME',['../namespacedmlc.html#a2bb53a09f94357722a2099ff7309f9f3',1,'dmlc::DMLC_DECLARE_TYPE_NAME(mxnet::TShape,&quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#ad2dedf41507bf76166d85fe447fa95de',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; int &gt;,&quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#aa4d7485dc06589628bb4488ec9e8b1c9',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; dmlc::optional&lt; int &gt;&gt;,&quot;Shape(tuple)&quot;)']]],
-  ['dposv_5f',['dposv_',['../c__lapack__api_8h.html#ac9fe022dd825c3bd86d3b175d0a1c02b',1,'c_lapack_api.h']]],
   ['dptr',['dptr',['../structmxnet_1_1Storage_1_1Handle.html#a428e25a6317e50c8b55307c96f8ec595',1,'mxnet::Storage::Handle::dptr()'],['../classmxnet_1_1TBlob.html#a3449ca0a9130e87c343130b041b68c53',1,'mxnet::TBlob::dptr()']]],
   ['dptr_5f',['dptr_',['../classmxnet_1_1TBlob.html#a4e5f4953be2c16724ecff0afc5ea2e10',1,'mxnet::TBlob']]],
   ['dtype',['dtype',['../classmxnet_1_1NDArray.html#a1b6038a196c14d038bd3e6d6bbe36ad2',1,'mxnet::NDArray']]],

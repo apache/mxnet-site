@@ -10,6 +10,8 @@ var searchData=
   ['kcpupinned',['kCPUPinned',['../structmxnet_1_1Context.html#a611c227b5e04a2777c3e4507bb76f60eaa2e12b86e0f957dc14d45863eaa47f34',1,'mxnet::Context']]],
   ['kcpuprioritized',['kCPUPrioritized',['../namespacemxnet.html#a998b74220fab2b012cf8a179650e1b3bac41ceb98eeb9b2e208e3e242a7357142',1,'mxnet']]],
   ['kcrossdevicecopy',['kCrossDeviceCopy',['../namespacemxnet.html#ad7801fb2dd68294d4c7a9e289bc071ada3864860a073c64d74d3fc8e765fa6cad',1,'mxnet']]],
+  ['kcustomfunctionbackward',['kCustomFunctionBackward',['../c__api_8h.html#a717cd8414c58e4069503725ba4dfcb33a215bf764504a913342cb45568f350757',1,'c_api.h']]],
+  ['kcustomfunctiondelete',['kCustomFunctionDelete',['../c__api_8h.html#a717cd8414c58e4069503725ba4dfcb33a4eb258b87107721a52d3677f4ab9d1dd',1,'c_api.h']]],
   ['kcustomopbackward',['kCustomOpBackward',['../c__api_8h.html#aa2395b69772d66cb5c6c4cbe47749792afe6891ef7e38df52ac25db00a2ef73c6',1,'c_api.h']]],
   ['kcustomopdelete',['kCustomOpDelete',['../c__api_8h.html#aa2395b69772d66cb5c6c4cbe47749792a2d5d86c1a9bac7de4ceb1c641a4dce4a',1,'c_api.h']]],
   ['kcustomopforward',['kCustomOpForward',['../c__api_8h.html#aa2395b69772d66cb5c6c4cbe47749792a3189c8e5988867480e3ee81e262bba4e',1,'c_api.h']]],

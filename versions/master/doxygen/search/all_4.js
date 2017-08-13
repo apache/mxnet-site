@@ -1,7 +1,6 @@
 var searchData=
 [
   ['c_5fapi_2eh',['c_api.h',['../c__api_8h.html',1,'']]],
-  ['c_5flapack_5fapi_2eh',['c_lapack_api.h',['../c__lapack__api_8h.html',1,'']]],
   ['c_5fpredict_5fapi_2eh',['c_predict_api.h',['../c__predict__api_8h.html',1,'']]],
   ['cachedophandle',['CachedOpHandle',['../c__api_8h.html#aac4a2be6e40b0869bcc390a573a7e489',1,'c_api.h']]],
   ['callbackoncomplete',['CallbackOnComplete',['../classmxnet_1_1engine_1_1CallbackOnComplete.html',1,'mxnet::engine']]],
@@ -9,8 +8,6 @@ var searchData=
   ['callbacks',['callbacks',['../structMXCallbackList.html#ad56325e57f5fffc2b920eb3f8f378199',1,'MXCallbackList']]],
   ['check',['Check',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html#a63affafc149cac4c39702c55cf94fdcf',1,'dmlc::parameter::FieldEntry&lt; mxnet::TShape &gt;']]],
   ['check_5fcuda_5ferror',['CHECK_CUDA_ERROR',['../cuda__utils_8h.html#afc69a418242c5b851993bc2307b1c897',1,'cuda_utils.h']]],
-  ['check_5flapack_5fcontiguous',['CHECK_LAPACK_CONTIGUOUS',['../c__lapack__api_8h.html#a2fa12bf140fecda6aac9336a61923713',1,'c_lapack_api.h']]],
-  ['check_5flapack_5fuplo',['CHECK_LAPACK_UPLO',['../c__lapack__api_8h.html#a0c95bf8b79e51085d846c7a09ec22720',1,'c_lapack_api.h']]],
   ['check_5fname',['check_name',['../structmxnet_1_1OperatorPropertyReg.html#ad959fdbefb6dd807ee1961a2fec7a038',1,'mxnet::OperatorPropertyReg']]],
   ['checkandalloc',['CheckAndAlloc',['../classmxnet_1_1NDArray.html#a35c2a2c797f601fbc5d560481b11720a',1,'mxnet::NDArray']]],
   ['checkcontiguous',['CheckContiguous',['../classmxnet_1_1TBlob.html#aa6cfdf8823a601602b6b56011af4b874',1,'mxnet::TBlob']]],
@@ -36,6 +33,11 @@ var searchData=
   ['cuda_5futils_2eh',['cuda_utils.h',['../cuda__utils_8h.html',1,'']]],
   ['curand_5fcall',['CURAND_CALL',['../cuda__utils_8h.html#a82d7233550780a8c186e79c24aed8406',1,'cuda_utils.h']]],
   ['curandgeterrorstring',['CurandGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#a97c06b2f4d26445a7386b0f54fae1feb',1,'mxnet::common::cuda']]],
+  ['cusolver_5fcall',['CUSOLVER_CALL',['../cuda__utils_8h.html#ab38940ff6950f84102baa4573675b670',1,'cuda_utils.h']]],
+  ['cusolvergeterrorstring',['CusolverGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#abf9bcb4cb696e9ae61b818510dac39c8',1,'mxnet::common::cuda']]],
+  ['customfunctionbwdfunc',['CustomFunctionBwdFunc',['../c__api_8h.html#ad71379747c8a269676425aa012323227',1,'c_api.h']]],
+  ['customfunctioncallbacks',['CustomFunctionCallbacks',['../c__api_8h.html#a717cd8414c58e4069503725ba4dfcb33',1,'c_api.h']]],
+  ['customfunctiondelfunc',['CustomFunctionDelFunc',['../c__api_8h.html#a5de746fbeeb2f6ca3cf7745ad393d7cb',1,'c_api.h']]],
   ['customopbwddepfunc',['CustomOpBwdDepFunc',['../c__api_8h.html#ae8feb033b715209653ea91e089d060b0',1,'c_api.h']]],
   ['customopcallbacks',['CustomOpCallbacks',['../c__api_8h.html#aa2395b69772d66cb5c6c4cbe47749792',1,'c_api.h']]],
   ['customopcreatefunc',['CustomOpCreateFunc',['../c__api_8h.html#a201e319981a60877ab9d6f7cf3b3f62d',1,'c_api.h']]],

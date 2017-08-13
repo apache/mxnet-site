@@ -1,6 +1,7 @@
 var searchData=
 [
   ['get',['get',['../classmxnet_1_1TBlob.html#acb2e058394548527844e219c7e3c480d',1,'mxnet::TBlob::get()'],['../classmxnet_1_1Engine.html#ae0a23da15ef63d9479c7468e1f2f825f',1,'mxnet::Engine::Get()'],['../classmxnet_1_1op_1_1SimpleOpRegistry.html#a374ec19d647f622c80a79fb3d541e7ec',1,'mxnet::op::SimpleOpRegistry::Get()'],['../classmxnet_1_1ResourceManager.html#a5712bb055045ba9fb45dd3cdb812abb8',1,'mxnet::ResourceManager::Get()'],['../classmxnet_1_1Storage.html#a96abc072908d72d3271360a7e3e4bbc2',1,'mxnet::Storage::Get()'],['../classmxnet_1_1common_1_1LazyAllocArray.html#ac4528ab581eda5b0aba35faa3687c201',1,'mxnet::common::LazyAllocArray::Get()'],['../classmxnet_1_1common_1_1ObjectPool.html#a82b4d0c3577560a4f6f62f482b125471',1,'mxnet::common::ObjectPool::Get()']]],
+  ['get_5fautograd_5fsymbol',['get_autograd_symbol',['../classmxnet_1_1NDArray.html#a5ef20369f37a4ff2ceb44adf213871dc',1,'mxnet::NDArray']]],
   ['get_5fctx',['get_ctx',['../structmxnet_1_1RunContext.html#a5da6c1a11d0e6ea09dbe718cf6a4ef8d',1,'mxnet::RunContext']]],
   ['get_5fgroup_5fsize',['get_group_size',['../classmxnet_1_1KVStore.html#a1fd19b2a123b6069b35e1e8b7fad9dc3',1,'mxnet::KVStore']]],
   ['get_5fhost_5fspace',['get_host_space',['../structmxnet_1_1Resource.html#a92724193fad2a6c5e2a63687e63e3d80',1,'mxnet::Resource']]],
