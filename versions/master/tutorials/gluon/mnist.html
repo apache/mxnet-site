@@ -240,12 +240,12 @@ Previous Navbar Layout End -->
 <p><strong>Figure 1:</strong> Sample images from the MNIST dataset.</p>
 <p>This tutorial uses MXNet’s new high-level interface, gluon package to implement MLP using
 imperative fashion.</p>
-<p>This is based on the Mnist tutorial with symbolic approach. You can find it <a class="reference external" href="http://mxnet.io/tutorials/python/mnist.html">here</a>.</p>
+<p>This is based on the Mnist tutorial with symbolic approach. You can find it <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/tutorials/python/mnist.html">here</a>.</p>
 <div class="section" id="prerequisites">
 <span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>To complete this tutorial, we need:</p>
 <ul class="simple">
-<li>MXNet. See the instructions for your operating system in <a class="reference external" href="http://mxnet.io/get_started/install.html">Setup and Installation</a>.</li>
+<li>MXNet. See the instructions for your operating system in <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/get_started/install.html">Setup and Installation</a>.</li>
 <li><a class="reference external" href="http://docs.python-requests.org/en/master/">Python Requests</a> and <a class="reference external" href="http://jupyter.org/index.html">Jupyter Notebook</a>.</li>
 </ul>
 <div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install requests jupyter
@@ -288,7 +288,7 @@ Data iterators take care of this by randomly shuffling the inputs. Note that we 
 <p>In an MLP, the outputs of most FC layers are fed into an activation function, which applies an element-wise non-linearity. This step is critical and it gives neural networks the ability to classify inputs that are not linearly separable. Common choices for activation functions are sigmoid, tanh, and <a class="reference external" href="https://en.wikipedia.org/wiki/Rectifier_%28neural_networks%29">rectified linear unit</a> (ReLU). In this example, we’ll use the ReLU activation function which has several desirable properties and is typically considered a default choice.</p>
 <p>The following code declares three fully connected layers with 128, 64 and 10 neurons each.
 The last fully connected layer often has its hidden size equal to the number of output classes in the dataset. Furthermore, these FC layers uses ReLU activation for performing an element-wise ReLU transformation on the FC layer output.</p>
-<p>To do this, we will use <a class="reference external" href="http://mxnet.io/api/python/gluon.html#mxnet.gluon.nn.Sequential">Sequential layer</a> type. This is simply a linear stack of neural network layers. <code class="docutils literal"><span class="pre">nn.Dense</span></code> layers are nothing but the fully connected layers we discussed above.</p>
+<p>To do this, we will use <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/api/python/gluon.html#mxnet.gluon.nn.Sequential">Sequential layer</a> type. This is simply a linear stack of neural network layers. <code class="docutils literal"><span class="pre">nn.Dense</span></code> layers are nothing but the fully connected layers we discussed above.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># define network</span>
 <span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
 <span class="k">with</span> <span class="n">net</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
@@ -299,11 +299,11 @@ The last fully connected layer often has its hidden size equal to the number of 
 </div>
 <div class="section" id="initialize-parameters-and-optimizer">
 <span id="initialize-parameters-and-optimizer"></span><h4>Initialize parameters and optimizer<a class="headerlink" href="#initialize-parameters-and-optimizer" title="Permalink to this headline">¶</a></h4>
-<p>The following source code initializes all parameters received from parameter dict using <a class="reference external" href="http://mxnet.io/api/python/optimization.html#mxnet.initializer.Xavier">Xavier</a> initializer
+<p>The following source code initializes all parameters received from parameter dict using <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/api/python/optimization.html#mxnet.initializer.Xavier">Xavier</a> initializer
 to train the MLP network we defined above.</p>
 <p>For our training, we will make use of the stochastic gradient descent (SGD) optimizer. In particular, we’ll be using mini-batch SGD. Standard SGD processes train data one example at a time. In practice, this is very slow and one can speed up the process by processing examples in small batches. In this case, our batch size will be 100, which is a reasonable choice. Another parameter we select here is the learning rate, which controls the step size the optimizer takes in search of a solution. We’ll pick a learning rate of 0.1, again a reasonable choice. Settings such as batch size and learning rate are what are usually referred to as hyper-parameters. What values we give them can have a great impact on training performance.</p>
-<p>We will use <a class="reference external" href="http://mxnet.io/api/python/gluon.html#trainer">Trainer</a> class to apply the
-<a class="reference external" href="http://mxnet.io/api/python/optimization.html#mxnet.optimizer.SGD">SGD optimizer</a> on the
+<p>We will use <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/api/python/gluon.html#trainer">Trainer</a> class to apply the
+<a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/api/python/optimization.html#mxnet.optimizer.SGD">SGD optimizer</a> on the
 initialized parameters.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ctx</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
 <span class="n">net</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Xavier</span><span class="p">(</span><span class="n">magnitude</span><span class="o">=</span><span class="mf">2.24</span><span class="p">),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
@@ -316,7 +316,7 @@ initialized parameters.</p>
 <p>Typically, one runs the training until convergence, which means that we have learned a good set of model parameters (weights + biases) from the train data. For the purpose of this tutorial, we’ll run training for 10 epochs and stop. An epoch is one full pass over the entire train data.</p>
 <p>We will take following steps for training:</p>
 <ul class="simple">
-<li>Define <a class="reference external" href="http://mxnet.io/api/python/metric.html#mxnet.metric.Accuracy">Accuracy evaluation metric</a> over training data.</li>
+<li>Define <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/api/python/metric.html#mxnet.metric.Accuracy">Accuracy evaluation metric</a> over training data.</li>
 <li>Loop over inputs for every epoch.</li>
 <li>Forward input through network to get output.</li>
 <li>Compute loss with output and label inside record scope.</li>
@@ -325,7 +325,7 @@ initialized parameters.</p>
 </ul>
 <p>Loss function takes (output, label) pairs and computes a scalar loss for each sample in the mini-batch. The scalars measure how far each output is from the label.
 There are many predefined loss functions in gluon.loss. Here we use
-<a class="reference external" href="http://mxnet.io/api/python/gluon.html#mxnet.gluon.loss.softmax_cross_entropy_loss">softmax_cross_entropy_loss</a> for digit classification. We will compute loss and do backward propagation inside
+<a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/api/python/gluon.html#mxnet.gluon.loss.softmax_cross_entropy_loss">softmax_cross_entropy_loss</a> for digit classification. We will compute loss and do backward propagation inside
 training scope which is defined by <code class="docutils literal"><span class="pre">autograd.record()</span></code>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">epoch</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="c1"># Use Accuracy as the evaluation metric.</span>
