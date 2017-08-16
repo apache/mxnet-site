@@ -909,7 +909,7 @@ The transformation should preferrably happen at preprocessing. You can use
 <span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
 <script src="../../_static/js/auto_module_index.js" type="text/javascript"></script><dl class="class">
 <dt id="mxnet.gluon.Parameter">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>grad_req='write'</em>, <em>shape=None</em>, <em>dtype=<type 'numpy.float32'></em>, <em>lr_mult=1.0</em>, <em>wd_mult=1.0</em>, <em>init=None</em>, <em>allow_deferred_init=False</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.Parameter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mxnet.gluon.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>grad_req='write'</em>, <em>shape=None</em>, <em>dtype=<type 'numpy.float32'></em>, <em>lr_mult=1.0</em>, <em>wd_mult=1.0</em>, <em>init=None</em>, <em>allow_deferred_init=False</em>, <em>differentiable=True</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.Parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Container holding parameters (weights) of <a href="#id44"><span class="problematic" id="id45">`</span></a>Block`s.</p>
 <p><cite>Parameter</cite> holds a copy of the parameter on each <cite>Context</cite> after
 it is initialized with <cite>Parameter.initialize(...)</cite>. If <cite>grad_req</cite> is
@@ -952,6 +952,14 @@ when updating this parameter with optimizer.</li>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="mxnet.gluon.model_zoo.vision.Parameter.grad_req">
+<code class="descname">grad_req</code><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.Parameter.grad_req" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>{‘write’, ‘add’, ‘null’}</em></p>
+<p>This can be set before or after initialization. Setting grad_req to null
+with <cite>x.grad_req = ‘null’</cite> saves memory and computation when you don’t
+need gradient w.r.t x.</p>
+</dd></dl>
 <dl class="method">
 <dt id="mxnet.gluon.Parameter.initialize">
 <code class="descname">initialize</code><span class="sig-paren">(</span><em>init=None</em>, <em>ctx=None</em>, <em>default_init=<mxnet.initializer.Uniform object></em>, <em>force_reinit=False</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.Parameter.initialize" title="Permalink to this definition">¶</a></dt>
@@ -1166,6 +1174,32 @@ Otherwise, <cite>Parameter.init</cite> takes precedence.</li>
 <dd>Assign Parameter to given context. If ctx is a list of Context, a
 copy will be made for each context.</dd>
 </dl>
+</dd></dl>
+<dl class="method">
+<dt id="mxnet.gluon.ParameterDict.setattr">
+<code class="descname">setattr</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.ParameterDict.setattr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an attribute to a new value for all Parameters.</p>
+<p>For example, set grad_req to null if you don’t need gradient w.r.t a
+model’s Parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">'grad_req'</span><span class="p">,</span> <span class="s1">'null'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or change the learning rate multiplier:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s1">'lr_mult'</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of the attribute.</li>
+<li><strong>value</strong> (<em>valid type for attribute name</em>) – The new value for the attribute.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 <dl class="method">
 <dt id="mxnet.gluon.ParameterDict.save">
@@ -3155,6 +3189,12 @@ as a Dataset.</li>
 <li><strong>batch_size</strong> (<em>int</em>) – Size of mini-batch.</li>
 <li><strong>shuffle</strong> (<em>bool</em>) – Whether to shuffle the samples.</li>
 <li><strong>sampler</strong> (<a class="reference internal" href="#mxnet.gluon.data.Sampler" title="mxnet.gluon.data.Sampler"><em>Sampler</em></a>) – The sampler to use. Either specify sampler or shuffle, not both.</li>
+<li><strong>last_batch</strong> (<em>{'keep', 'discard', 'rollover'}</em>) – <p>How to handle the last batch if batch_size does not evenly divide
+<cite>len(dataset)</cite>.</p>
+<p>keep - A batch with less samples than previous batches is returned.
+discard - The last batch is discarded if its incomplete.
+rollover - The remaining samples are rolled over to the next epoch.</p>
+</li>
 <li><strong>batch_sampler</strong> (<a class="reference internal" href="#mxnet.gluon.data.Sampler" title="mxnet.gluon.data.Sampler"><em>Sampler</em></a>) – A sampler that returns mini-batches. Do not specify batch_size,
 shuffle, sampler, and last_batch if batch_sampler is specified.</li>
 </ul>
