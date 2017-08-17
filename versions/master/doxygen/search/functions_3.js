@@ -18,6 +18,8 @@ var searchData=
   ['createoperatorex',['CreateOperatorEx',['../classmxnet_1_1OperatorProperty.html#a7985004f99a931b4a6ff69df733bae72',1,'mxnet::OperatorProperty']]],
   ['ctx',['ctx',['../classmxnet_1_1NDArray.html#a5e2eb64751872f537ae3cb25f949fff1',1,'mxnet::NDArray']]],
   ['cublasgeterrorstring',['CublasGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#a9feee613a4f16a954dd68e55345a72ac',1,'mxnet::common::cuda']]],
+  ['cudamax',['CudaMax',['../namespacemxnet_1_1common_1_1cuda.html#a6f3ee04eb382c57e10916108db3efd80',1,'mxnet::common::cuda']]],
+  ['cudamin',['CudaMin',['../namespacemxnet_1_1common_1_1cuda.html#a03888f252f813f6d052ae84bf8801498',1,'mxnet::common::cuda']]],
   ['curandgeterrorstring',['CurandGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#a97c06b2f4d26445a7386b0f54fae1feb',1,'mxnet::common::cuda']]],
   ['cusolvergeterrorstring',['CusolverGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#abf9bcb4cb696e9ae61b818510dac39c8',1,'mxnet::common::cuda']]]
 ];
