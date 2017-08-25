@@ -31,8 +31,11 @@ var searchData=
   ['shape',['shape',['../classmxnet_1_1NDArray.html#a2fc268d12168d39d9095829b3b9a3836',1,'mxnet::NDArray']]],
   ['signalforkill',['SignalForKill',['../classmxnet_1_1common_1_1LazyAllocArray.html#a000e31ad914a20415519a2b39a1d08c3',1,'mxnet::common::LazyAllocArray']]],
   ['simplebind',['SimpleBind',['../classmxnet_1_1Executor.html#ae1a319bca5e26ef58057f8410f46e484',1,'mxnet::Executor']]],
-  ['size',['size',['../classmxnet_1_1TBlob.html#a44c93b8a96203a1a85fa9d4b85e123c7',1,'mxnet::TBlob::size(index_t idx) const'],['../classmxnet_1_1TBlob.html#a7b45f281d954cc716267a7b3ec0f514c',1,'mxnet::TBlob::Size(void) const']]],
+  ['size',['Size',['../classmxnet_1_1TBlob.html#a7b45f281d954cc716267a7b3ec0f514c',1,'mxnet::TBlob::Size(void) const'],['../classmxnet_1_1TBlob.html#a44c93b8a96203a1a85fa9d4b85e123c7',1,'mxnet::TBlob::size(index_t idx) const']]],
   ['slice',['Slice',['../classmxnet_1_1NDArray.html#a0cfa7466a652feb2258bb990453a0a7d',1,'mxnet::NDArray']]],
+  ['smarch',['SMArch',['../cuda__utils_8h.html#a9779e3ad0efd0faec7fbe431c0db896d',1,'cuda_utils.h']]],
+  ['supportsfloat16compute',['SupportsFloat16Compute',['../cuda__utils_8h.html#afb4268417c1d8886a39142c85c8f188f',1,'cuda_utils.h']]],
+  ['supportstensorcore',['SupportsTensorCore',['../cuda__utils_8h.html#af7e22ce6d80d61e8ca37df23880ff1a9',1,'cuda_utils.h']]],
   ['synccopyfromcpu',['SyncCopyFromCPU',['../classmxnet_1_1NDArray.html#ac390edfdd8a7dd99f69ea373f4d18e1a',1,'mxnet::NDArray']]],
   ['synccopytocpu',['SyncCopyToCPU',['../classmxnet_1_1NDArray.html#afb3dbc357c53e1e0b980257f6c5e2cac',1,'mxnet::NDArray']]]
 ];

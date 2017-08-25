@@ -7,6 +7,7 @@ var searchData=
   ['req',['req',['../structmxnet_1_1Resource.html#ae841e25cf5ee4aed895ace7fa080edc4',1,'mxnet::Resource']]],
   ['request',['Request',['../classmxnet_1_1ResourceManager.html#a276e4e3ae229a118e50a03955f3f1a08',1,'mxnet::ResourceManager']]],
   ['requested',['requested',['../structmxnet_1_1OpContext.html#a833e95f95cf5e3af9c193b74b500fc5b',1,'mxnet::OpContext']]],
+  ['reset',['reset',['../classmxnet_1_1OpStatePtr.html#ae43213b3a65073a87bf489350a58d78e',1,'mxnet::OpStatePtr']]],
   ['reshape',['reshape',['../classmxnet_1_1TBlob.html#a3b89df7835e39c652889b5cdb39235fa',1,'mxnet::TBlob::reshape()'],['../classmxnet_1_1NDArray.html#a1d01269333b9226fffddc89ce3b7fb63',1,'mxnet::NDArray::Reshape()']]],
   ['resource',['Resource',['../structmxnet_1_1Resource.html',1,'mxnet::Resource'],['../structmxnet_1_1op_1_1EnvArguments.html#a6b62df4767fd50d6a1fd9ebd44193bef',1,'mxnet::op::EnvArguments::resource()'],['../structmxnet_1_1Resource.html#a76a2cc8f2a94b67b3533a048a80396aa',1,'mxnet::Resource::Resource()']]],
   ['resource_2eh',['resource.h',['../resource_8h.html',1,'']]],

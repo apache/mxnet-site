@@ -151,7 +151,7 @@ Previous Navbar Layout End -->
 <a class="main-nav-link" href="../architecture/index.html">Architecture</a>
 <!-- <a class="main-nav-link" href="../community/index.html">Community</a> -->
 <a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a>
-<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.11-RC)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/>0.11-RC</a></li><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></span></nav>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.11.0.rc3)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/>0.11.0.rc3</a></li><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></span></nav>
 <script> function getRootPath(){ return "../" } </script>
 <div class="burgerIcon dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
@@ -178,7 +178,7 @@ Previous Navbar Layout End -->
 </li>
 <li><a href="../architecture/index.html">Architecture</a></li>
 <li><a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a></li>
-<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.11-RC)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/>0.11-RC</a></li><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></li></ul>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.11.0.rc3)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/>0.11.0.rc3</a></li><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></li></ul>
 </div>
 <div class="plusIcon dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
@@ -273,21 +273,21 @@ followed by two LSTM layers.
 In the original example,
 the model is unrolled explicitly in time for a fixed length of 32.</p>
 <!-- In this tutorial, we show how to use bucketing to implement variable-length sequence training. -->
-To enable bucketing, MXNet needs to know how to construct a new unrolled symbolic architecture for a different sequence length. To achieve this, instead of constructing a model with a fixed `Symbol`, we use a callback function that generates a new `Symbol` on a *bucket key*.<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">BucketingModule</span><span class="p">(</span>
-        <span class="n">sym_gen</span>             <span class="o">=</span> <span class="n">sym_gen</span><span class="p">,</span>
-        <span class="n">default_bucket_key</span>  <span class="o">=</span> <span class="n">data_train</span><span class="o">.</span><span class="n">default_bucket_key</span><span class="p">,</span>
-        <span class="n">context</span>             <span class="o">=</span> <span class="n">contexts</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">sym_gen</span></code> must be a function that takes one argument, <code class="docutils literal"><span class="pre">bucket_key</span></code>, and returns a <code class="docutils literal"><span class="pre">Symbol</span></code> for this bucket. We’ll use the sequence length as the bucket key. A bucket key could be anything. For example, in neural translation, because different combinations of input-output sequence lengths correspond to different unrolling, the bucket key could be a pair of lengths.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">sym_gen</span><span class="p">(</span><span class="n">seq_len</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">lstm_unroll</span><span class="p">(</span><span class="n">num_lstm_layer</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">),</span>
-                       <span class="n">num_hidden</span><span class="o">=</span><span class="n">num_hidden</span><span class="p">,</span> <span class="n">num_embed</span><span class="o">=</span><span class="n">num_embed</span><span class="p">,</span>
-                       <span class="n">num_label</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab</span><span class="p">))</span>
-</pre></div>
-</div>
-<p>The data iterator needs to report the <code class="docutils literal"><span class="pre">default_bucket_key</span></code>, which allows MXNet to do some parameter initialization before reading the data. Now the model is capable of training with different buckets by sharing the parameters and intermediate computation buffers between bucket executors.</p>
-<p>To train, we still need to add some extra bits to our <code class="docutils literal"><span class="pre">DataIter</span></code>. Apart from reporting the <code class="docutils literal"><span class="pre">default_bucket_key</span></code> as mentioned previously, we also need to report the current <code class="docutils literal"><span class="pre">bucket_key</span></code> for each mini-batch. More specifically, the <code class="docutils literal"><span class="pre">DataBatch</span></code> object returned in each mini-batch by the <code class="docutils literal"><span class="pre">DataIter</span></code> should contain the following additional properties:</p>
+To enable bucketing, MXNet needs to know how to construct a new unrolled symbolic architecture for a different sequence length. To achieve this, instead of constructing a model with a fixed `Symbol`, we use a callback function that generates a new `Symbol` on a *bucket key*.
+```python
+model = mx.mod.BucketingModule(
+        sym_gen             = sym_gen,
+        default_bucket_key  = data_train.default_bucket_key,
+        context             = contexts)
+```
+`sym_gen` must be a function that takes one argument, `bucket_key`, and returns a `Symbol` for this bucket. We'll use the sequence length as the bucket key. A bucket key could be anything. For example, in neural translation, because different combinations of input-output sequence lengths correspond to different unrolling, the bucket key could be a pair of lengths.
+```python
+def sym_gen(seq_len):
+    return lstm_unroll(num_lstm_layer, seq_len, len(vocab),
+                       num_hidden=num_hidden, num_embed=num_embed,
+                       num_label=len(vocab))
+```
+The data iterator needs to report the `default_bucket_key`, which allows MXNet to do some parameter initialization before reading the data. Now the model is capable of training with different buckets by sharing the parameters and intermediate computation buffers between bucket executors.<p>To train, we still need to add some extra bits to our <code class="docutils literal"><span class="pre">DataIter</span></code>. Apart from reporting the <code class="docutils literal"><span class="pre">default_bucket_key</span></code> as mentioned previously, we also need to report the current <code class="docutils literal"><span class="pre">bucket_key</span></code> for each mini-batch. More specifically, the <code class="docutils literal"><span class="pre">DataBatch</span></code> object returned in each mini-batch by the <code class="docutils literal"><span class="pre">DataIter</span></code> should contain the following additional properties:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">bucket_key</span></code>: The bucket key that corresponds to this batch of data.
 In our example, it is the sequence length for this batch of data.
