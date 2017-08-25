@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['operator_20bool',['operator bool',['../classmxnet_1_1OpStatePtr.html#ae233fba51851ddd1704de60c9c860ee3',1,'mxnet::OpStatePtr']]],
   ['operator_21_3d',['operator!=',['../structmxnet_1_1Context.html#a7e84dc72147472e72b50e8545780fd1e',1,'mxnet::Context']]],
   ['operator_28_29',['operator()',['../classmxnet_1_1engine_1_1CallbackOnComplete.html#a71e8c5a29d9e103f6471f35f30e05727',1,'mxnet::engine::CallbackOnComplete']]],
   ['operator_2a',['operator*',['../namespacemxnet.html#af26b09fbcda865d34ec4fdad482d266a',1,'mxnet::operator*(const NDArray &amp;lhs, const NDArray &amp;rhs)'],['../namespacemxnet.html#a66510f6a344ee38bb89cb552e974b838',1,'mxnet::operator*(const NDArray &amp;lhs, const real_t &amp;rhs)']]],

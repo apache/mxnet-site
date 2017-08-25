@@ -7,6 +7,7 @@ var searchData=
   ['op_5fattr_5ftypes_2eh',['op_attr_types.h',['../op__attr__types_8h.html',1,'']]],
   ['opcontext',['OpContext',['../structmxnet_1_1OpContext.html',1,'mxnet']]],
   ['operator',['Operator',['../classmxnet_1_1Operator.html',1,'mxnet']]],
+  ['operator_20bool',['operator bool',['../classmxnet_1_1OpStatePtr.html#ae233fba51851ddd1704de60c9c860ee3',1,'mxnet::OpStatePtr']]],
   ['operator_21_3d',['operator!=',['../structmxnet_1_1Context.html#a7e84dc72147472e72b50e8545780fd1e',1,'mxnet::Context']]],
   ['operator_28_29',['operator()',['../classmxnet_1_1engine_1_1CallbackOnComplete.html#a71e8c5a29d9e103f6471f35f30e05727',1,'mxnet::engine::CallbackOnComplete']]],
   ['operator_2a',['operator*',['../namespacemxnet.html#af26b09fbcda865d34ec4fdad482d266a',1,'mxnet::operator*(const NDArray &amp;lhs, const NDArray &amp;rhs)'],['../namespacemxnet.html#a66510f6a344ee38bb89cb552e974b838',1,'mxnet::operator*(const NDArray &amp;lhs, const real_t &amp;rhs)']]],
@@ -27,6 +28,7 @@ var searchData=
   ['operatorpropertyreg',['OperatorPropertyReg',['../structmxnet_1_1OperatorPropertyReg.html',1,'mxnet']]],
   ['opreqtype',['OpReqType',['../namespacemxnet.html#a7cd7094ef222e9ae1f520c3b6a214398',1,'mxnet']]],
   ['oprhandle',['OprHandle',['../classmxnet_1_1Engine.html#a832436e413a075291aa1a631942c3f01',1,'mxnet::Engine::OprHandle()'],['../namespacemxnet_1_1engine.html#a2d9b14b658e3f3c4e03ca49cd38ace94',1,'mxnet::engine::OprHandle()']]],
+  ['opstateptr',['OpStatePtr',['../classmxnet_1_1OpStatePtr.html',1,'mxnet']]],
   ['outputgrad',['OutputGrad',['../structmxnet_1_1op_1_1OutputGrad.html',1,'mxnet::op']]],
   ['outputs',['outputs',['../classmxnet_1_1Executor.html#a16d0f1ab276e32242685702aa10b9a3d',1,'mxnet::Executor']]],
   ['outputvalue',['OutputValue',['../structmxnet_1_1op_1_1OutputValue.html',1,'mxnet::op']]]

@@ -1,21 +1,20 @@
 var searchData=
 [
-  ['data',['data',['../classmxnet_1_1NDArray.html#aebd03e900ec7664a99b780a0cb1efea6',1,'mxnet::NDArray']]],
-  ['data_5fndarray',['data_ndarray',['../classmxnet_1_1NDArray.html#af6d456d1e9f105fe913b696fe88efdc3',1,'mxnet::NDArray']]],
-  ['declarebackwarddependency',['DeclareBackwardDependency',['../classmxnet_1_1OperatorProperty.html#abf9e6a8d40750f3ee81fe30cbe3e2aae',1,'mxnet::OperatorProperty']]],
+  ['data',['data',['../classmxnet_1_1NDArray.html#ade5c291caf0e240892b1bffaf7e5c8b5',1,'mxnet::NDArray']]],
+  ['data_5fndarray',['data_ndarray',['../classmxnet_1_1NDArray.html#ae14d45e2bae697565a0723f4963db7e4',1,'mxnet::NDArray']]],
+  ['declarebackwarddependency',['DeclareBackwardDependency',['../classmxnet_1_1OperatorProperty.html#a8aa205ea6ce962bfa3fcbe73a8f3db5d',1,'mxnet::OperatorProperty']]],
   ['deduplicatevarhandle',['DeduplicateVarHandle',['../classmxnet_1_1Engine.html#a9d8ac1987a6844dba9b0463030fb3430',1,'mxnet::Engine']]],
   ['delete',['Delete',['../classmxnet_1_1common_1_1ObjectPool.html#a7dcdcbe9b6764cedc28a1de2fbc8dd6f',1,'mxnet::common::ObjectPool::Delete()'],['../structmxnet_1_1common_1_1ObjectPoolAllocatable.html#a68ed487cb6de6194a4798fdbbfd04597',1,'mxnet::common::ObjectPoolAllocatable::Delete()']]],
   ['deleteoperator',['DeleteOperator',['../classmxnet_1_1Engine.html#a3fd7c8b35a2f52805506cc242bf82ca7',1,'mxnet::Engine']]],
   ['deletevariable',['DeleteVariable',['../classmxnet_1_1Engine.html#a738e5192dab345ab0ec9888b095903cf',1,'mxnet::Engine']]],
   ['describe',['describe',['../classmxnet_1_1op_1_1SimpleOpRegEntry.html#a1cce9a6aaa175711b6be5b864b055f6a',1,'mxnet::op::SimpleOpRegEntry']]],
-  ['detach',['Detach',['../classmxnet_1_1NDArray.html#a34a3694141050a257dc6b40a6ad2c4ec',1,'mxnet::NDArray']]],
-  ['dev_5fid',['dev_id',['../classmxnet_1_1TBlob.html#a5dc3a399b0119175643da0d35fde7edd',1,'mxnet::TBlob']]],
-  ['dev_5fmask',['dev_mask',['../structmxnet_1_1Context.html#a4f6fd8608a4abc9673cb6da4654f84fe',1,'mxnet::Context::dev_mask()'],['../classmxnet_1_1TBlob.html#a613ad1f5ba31efcbecbd041e23cc61b2',1,'mxnet::TBlob::dev_mask()']]],
+  ['detach',['Detach',['../classmxnet_1_1NDArray.html#a76646c5c7e164bd7c81854521d3bee52',1,'mxnet::NDArray']]],
+  ['dev_5fid',['dev_id',['../classmxnet_1_1TBlob.html#a2caa6723ffda5908eb5c2e062ac77ebd',1,'mxnet::TBlob']]],
+  ['dev_5fmask',['dev_mask',['../structmxnet_1_1Context.html#a4182c1a2f910064d058832c57489d8f5',1,'mxnet::Context::dev_mask()'],['../classmxnet_1_1TBlob.html#ad8bcf56e13082fc0607e21f08b14758f',1,'mxnet::TBlob::dev_mask()']]],
   ['directfree',['DirectFree',['../classmxnet_1_1Storage.html#a098f8ebacd25f5203b2dc4c1796aec64',1,'mxnet::Storage']]],
-  ['dltensor',['dltensor',['../classmxnet_1_1TBlob.html#a519111d4450efa8e58cc10cfc1dbeca7',1,'mxnet::TBlob']]],
+  ['dltensor',['dltensor',['../classmxnet_1_1TBlob.html#a4b0a53821dec20c558a030ed3df14dda',1,'mxnet::TBlob']]],
   ['dmlc_5fdeclare_5ftraits',['DMLC_DECLARE_TRAITS',['../namespacedmlc.html#a7272c846fa03dee55916aadce0165a46',1,'dmlc']]],
-  ['dmlc_5fdeclare_5ftype_5fname',['DMLC_DECLARE_TYPE_NAME',['../namespacedmlc.html#a2bb53a09f94357722a2099ff7309f9f3',1,'dmlc::DMLC_DECLARE_TYPE_NAME(mxnet::TShape,&quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#ad2dedf41507bf76166d85fe447fa95de',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; int &gt;,&quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#aa4d7485dc06589628bb4488ec9e8b1c9',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; dmlc::optional&lt; int &gt;&gt;,&quot;Shape(tuple)&quot;)']]],
-  ['dptr',['dptr',['../classmxnet_1_1TBlob.html#a3449ca0a9130e87c343130b041b68c53',1,'mxnet::TBlob']]],
-  ['dtype',['dtype',['../classmxnet_1_1NDArray.html#a1b6038a196c14d038bd3e6d6bbe36ad2',1,'mxnet::NDArray']]],
-  ['dtype_5f',['dtype_',['../classmxnet_1_1NDArray.html#a3e095ff4cb510f9b3160513a89802259',1,'mxnet::NDArray::dtype_(dtype)'],['../classmxnet_1_1NDArray.html#af5d6ed79d0346407edfc969d4d51d15c',1,'mxnet::NDArray::dtype_(data.type_flag_)']]]
+  ['dmlc_5fdeclare_5ftype_5fname',['DMLC_DECLARE_TYPE_NAME',['../namespacedmlc.html#a89fdf041b602fe0f1c53e54b95fd307a',1,'dmlc::DMLC_DECLARE_TYPE_NAME(mxnet::TShape, &quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#a707f733f60ff1d7592676e9835af2277',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; int &gt;, &quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#a136a79c5af9aa9662eda4d4894a59e7f',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; dmlc::optional&lt; int &gt;&gt;, &quot;Shape(tuple)&quot;)']]],
+  ['dptr',['dptr',['../classmxnet_1_1TBlob.html#ad931186405f2b40a327278a8f5ff57cd',1,'mxnet::TBlob']]],
+  ['dtype',['dtype',['../classmxnet_1_1NDArray.html#a67b0f8eb36568b4c9fbd3da2a1c4b0a3',1,'mxnet::NDArray']]]
 ];

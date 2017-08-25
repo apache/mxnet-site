@@ -151,7 +151,7 @@ Previous Navbar Layout End -->
 <a class="main-nav-link" href="../../architecture/index.html">Architecture</a>
 <!-- <a class="main-nav-link" href="../../community/index.html">Community</a> -->
 <a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a>
-<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.11-RC)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/>0.11-RC</a></li><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></span></nav>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.11.0.rc3)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/>0.11.0.rc3</a></li><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></span></nav>
 <script> function getRootPath(){ return "../../" } </script>
 <div class="burgerIcon dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
@@ -178,7 +178,7 @@ Previous Navbar Layout End -->
 </li>
 <li><a href="../../architecture/index.html">Architecture</a></li>
 <li><a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a></li>
-<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.11-RC)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/>0.11-RC</a></li><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></li></ul>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.11.0.rc3)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/>0.11.0.rc3</a></li><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></li></ul>
 </div>
 <div class="plusIcon dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
@@ -678,14 +678,15 @@ it maked some changes on top of Xavier method.</p>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.initializer.LSTMBias">
-<em class="property">class </em><code class="descclassname">mxnet.initializer.</code><code class="descname">LSTMBias</code><span class="sig-paren">(</span><em>forget_bias</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.initializer.LSTMBias" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mxnet.initializer.</code><code class="descname">LSTMBias</code><span class="sig-paren">(</span><em>forget_bias=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.initializer.LSTMBias" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize all bias of an LSTMCell to 0.0 except for
 the forget gate whose bias is set to custom value.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"></col>
 <col class="field-body"></col>
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>forget_bias</strong> (<em>float</em><em>, </em><em>bias for the forget gate.</em>) – Jozefowicz et al. 2015 recommends setting this to 1.0.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>forget_bias</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – bias for the forget gate. Jozefowicz et al. 2015 recommends
+setting this to 1.0.</td>
 </tr>
 </tbody>
 </table>
@@ -1357,9 +1358,12 @@ By default include all labels.</li>
 <dt id="mxnet.metric.CrossEntropy">
 <em class="property">class </em><code class="descclassname">mxnet.metric.</code><code class="descname">CrossEntropy</code><span class="sig-paren">(</span><em>eps=1e-08</em>, <em>name='cross-entropy'</em>, <em>output_names=None</em>, <em>label_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.metric.CrossEntropy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes Cross Entropy loss.</p>
-<p>The cross entropy is given by</p>
+<p>The cross entropy over a batch of sample size <span class="math">\(N\)</span> is given by</p>
 <div class="math">
-\[-y\log \hat{y} + (1-y)\log (1-\hat{y})\]</div>
+\[-\sum_{n=1}^{N}\sum_{k=1}^{K}t_{nk}\log (y_{nk}),\]</div>
+<p>where <span class="math">\(t_{nk}=1\)</span> if and only if sample <span class="math">\(n\)</span> belongs to class <span class="math">\(k\)</span>.
+<span class="math">\(y_{nk}\)</span> denotes the probability of sample <span class="math">\(n\)</span> belonging to
+class <span class="math">\(k\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"></col>
 <col class="field-body"></col>
@@ -1389,6 +1393,55 @@ By default include all labels.</li>
 <dl class="method">
 <dt id="mxnet.metric.CrossEntropy.update">
 <code class="descname">update</code><span class="sig-paren">(</span><em>labels</em>, <em>preds</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.metric.CrossEntropy.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the internal evaluation result.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"></col>
+<col class="field-body"></col>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>labels</strong> (list of <cite>NDArray</cite>) – The labels of the data.</li>
+<li><strong>preds</strong> (list of <cite>NDArray</cite>) – Predicted values.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+</dd></dl>
+<dl class="class">
+<dt id="mxnet.metric.PearsonCorrelation">
+<em class="property">class </em><code class="descclassname">mxnet.metric.</code><code class="descname">PearsonCorrelation</code><span class="sig-paren">(</span><em>name='pearsonr'</em>, <em>output_names=None</em>, <em>label_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.metric.PearsonCorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes Pearson correlation.</p>
+<p>The pearson correlation is given by</p>
+<div class="math">
+\[\frac{cov(y, \hat{y})}{\sigma{y}\sigma{\hat{y}}}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"></col>
+<col class="field-body"></col>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of this metric instance for display.</li>
+<li><strong>output_names</strong> (<em>list of str</em><em>, or </em><em>None</em>) – Name of predictions that should be used when updating with update_dict.
+By default include all predictions.</li>
+<li><strong>label_names</strong> (<em>list of str</em><em>, or </em><em>None</em>) – Name of labels that should be used when updating with update_dict.
+By default include all labels.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">predicts</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]])]</span>
+<span class="gp">>>> </span><span class="n">labels</span>   <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])]</span>
+<span class="gp">>>> </span><span class="n">pr</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">PearsonCorrelation</span><span class="p">()</span>
+<span class="gp">>>> </span><span class="n">pr</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predicts</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="nb">print</span> <span class="n">pr</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="go">('pearson-correlation', 0.42163704544016178)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="mxnet.metric.PearsonCorrelation.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>labels</em>, <em>preds</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.metric.PearsonCorrelation.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the internal evaluation result.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"></col>
@@ -1530,7 +1583,7 @@ in the next step. By default, extra outputs are not allowed.</li>
 <div><span class="target" id="module-mxnet.optimizer"></span><p>Weight updating functions.</p>
 <dl class="class">
 <dt id="mxnet.optimizer.Optimizer">
-<em class="property">class </em><code class="descclassname">mxnet.optimizer.</code><code class="descname">Optimizer</code><span class="sig-paren">(</span><em>rescale_grad=1.0</em>, <em>param_idx2name=None</em>, <em>wd=0.0</em>, <em>clip_gradient=None</em>, <em>learning_rate=0.01</em>, <em>lr_scheduler=None</em>, <em>sym=None</em>, <em>begin_num_update=0</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.optimizer.Optimizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mxnet.optimizer.</code><code class="descname">Optimizer</code><span class="sig-paren">(</span><em>rescale_grad=1.0</em>, <em>param_idx2name=None</em>, <em>wd=0.0</em>, <em>clip_gradient=None</em>, <em>learning_rate=0.01</em>, <em>lr_scheduler=None</em>, <em>sym=None</em>, <em>begin_num_update=0</em>, <em>param_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.optimizer.Optimizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base class inherited by all optimizers.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"></col>
@@ -2321,7 +2374,7 @@ To use multi-GPU training, pass in a list of GPU contexts.</li>
 <li><strong>epoch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of batches in a epoch. In default, it is set to
 <code class="docutils literal"><span class="pre">ceil(num_train_examples</span> <span class="pre">/</span> <span class="pre">batch_size)</span></code>.</li>
 <li><strong>optimizer</strong> (<em>str</em><em> or </em><a class="reference internal" href="optimization.html#mxnet.optimizer.Optimizer" title="mxnet.optimizer.Optimizer"><em>Optimizer</em></a><em>, </em><em>optional</em>) – The name of the chosen optimizer, or an optimizer object, used for training.</li>
-<li><strong>initializier</strong> (<em>initializer function</em><em>, </em><em>optional</em>) – The initialization scheme used.</li>
+<li><strong>initializer</strong> (<em>initializer function</em><em>, </em><em>optional</em>) – The initialization scheme used.</li>
 <li><strong>eval_data</strong> (<a class="reference internal" href="io.html#mxnet.io.DataIter" title="mxnet.io.DataIter"><em>DataIter</em></a><em> or </em><em>numpy.ndarray pair</em>) – If <cite>eval_set</cite> is <code class="docutils literal"><span class="pre">numpy.ndarray</span></code> pair, it should
 be (<cite>valid_data</cite>, <cite>valid_label</cite>).</li>
 <li><strong>eval_metric</strong> (<a class="reference internal" href="#mxnet.metric.EvalMetric" title="mxnet.metric.EvalMetric"><em>metric.EvalMetric</em></a><em> or </em><em>str</em><em> or </em><em>callable</em>) – The evaluation metric. Can be the name of an evaluation metric
@@ -2331,7 +2384,7 @@ based on a minibatch.</li>
 This can be used to checkpoint model each epoch.</li>
 <li><strong>batch_end_callback</strong> (<em>callable</em><em>(</em><em>epoch</em><em>)</em><em></em>) – A callback that is invoked at end of each batch for print purposes.</li>
 <li><strong>kvstore</strong> (<a class="reference internal" href="kvstore.html#mxnet.kvstore.KVStore" title="mxnet.kvstore.KVStore"><em>KVStore</em></a><em> or </em><em>str</em><em>, </em><em>optional</em>) – The KVStore or a string kvstore type: ‘local’, ‘dist_sync’, ‘dis_async’.
-Defaults to ‘local’, often no need to change for single machiine.</li>
+Defaults to ‘local’, often no need to change for single machine.</li>
 <li><strong>logger</strong> (<em>logging logger</em><em>, </em><em>optional</em>) – When not specified, default logger will be used.</li>
 <li><strong>work_load_list</strong> (<em>list of float</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – The list of work load for different devices,
 in the same order as <cite>ctx</cite>.</li>

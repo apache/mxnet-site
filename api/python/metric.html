@@ -154,7 +154,7 @@ Previous Navbar Layout End -->
 <a class="main-nav-link" href="../../architecture/index.html">Architecture</a>
 <!-- <a class="main-nav-link" href="../../community/index.html">Community</a> -->
 <a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a>
-<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.11-RC)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/>0.11-RC</a></li><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></span></nav>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.11.0.rc3)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/>0.11.0.rc3</a></li><li><a class="main-nav-link" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></span></nav>
 <script> function getRootPath(){ return "../../" } </script>
 <div class="burgerIcon dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
@@ -181,7 +181,7 @@ Previous Navbar Layout End -->
 </li>
 <li><a href="../../architecture/index.html">Architecture</a></li>
 <li><a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a></li>
-<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.11-RC)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/>0.11-RC</a></li><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></li></ul>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.11.0.rc3)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/>0.11.0.rc3</a></li><li><a tabindex="-1" href=https://mxnet.incubator.apache.org/versions/master/index.html>master</a></li></ul></li></ul>
 </div>
 <div class="plusIcon dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
@@ -229,9 +229,12 @@ Previous Navbar Layout End -->
 <li class="toctree-l3"><a class="reference internal" href="ndarray.html">NDArray API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="symbol.html">Symbol API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="module.html">Module API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autograd.html">Autograd Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gluon.html">Gluon Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rnn.html">RNN Cell API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kvstore.html">KVStore API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="io.html">Data Loading API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image.html">Image API</a></li>
 <li class="toctree-l3"><a class="reference internal" href="optimization.html">Optimization: initialize and update weights</a></li>
 <li class="toctree-l3"><a class="reference internal" href="callback.html">Callback API</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Evaluation Metric API</a><ul>
@@ -915,9 +918,12 @@ By default include all labels.</li>
 <dt id="mxnet.metric.CrossEntropy">
 <em class="property">class </em><code class="descclassname">mxnet.metric.</code><code class="descname">CrossEntropy</code><span class="sig-paren">(</span><em>eps=1e-08</em>, <em>name='cross-entropy'</em>, <em>output_names=None</em>, <em>label_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.metric.CrossEntropy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes Cross Entropy loss.</p>
-<p>The cross entropy is given by</p>
+<p>The cross entropy over a batch of sample size <span class="math">\(N\)</span> is given by</p>
 <div class="math">
-\[-y\log \hat{y} + (1-y)\log (1-\hat{y})\]</div>
+\[-\sum_{n=1}^{N}\sum_{k=1}^{K}t_{nk}\log (y_{nk}),\]</div>
+<p>where <span class="math">\(t_{nk}=1\)</span> if and only if sample <span class="math">\(n\)</span> belongs to class <span class="math">\(k\)</span>.
+<span class="math">\(y_{nk}\)</span> denotes the probability of sample <span class="math">\(n\)</span> belonging to
+class <span class="math">\(k\)</span>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"></col>
 <col class="field-body"></col>
@@ -947,6 +953,55 @@ By default include all labels.</li>
 <dl class="method">
 <dt id="mxnet.metric.CrossEntropy.update">
 <code class="descname">update</code><span class="sig-paren">(</span><em>labels</em>, <em>preds</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.metric.CrossEntropy.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the internal evaluation result.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"></col>
+<col class="field-body"></col>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>labels</strong> (list of <cite>NDArray</cite>) – The labels of the data.</li>
+<li><strong>preds</strong> (list of <cite>NDArray</cite>) – Predicted values.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+</dd></dl>
+<dl class="class">
+<dt id="mxnet.metric.PearsonCorrelation">
+<em class="property">class </em><code class="descclassname">mxnet.metric.</code><code class="descname">PearsonCorrelation</code><span class="sig-paren">(</span><em>name='pearsonr'</em>, <em>output_names=None</em>, <em>label_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.metric.PearsonCorrelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes Pearson correlation.</p>
+<p>The pearson correlation is given by</p>
+<div class="math">
+\[\frac{cov(y, \hat{y})}{\sigma{y}\sigma{\hat{y}}}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"></col>
+<col class="field-body"></col>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>str</em>) – Name of this metric instance for display.</li>
+<li><strong>output_names</strong> (<em>list of str</em><em>, or </em><em>None</em>) – Name of predictions that should be used when updating with update_dict.
+By default include all predictions.</li>
+<li><strong>label_names</strong> (<em>list of str</em><em>, or </em><em>None</em>) – Name of labels that should be used when updating with update_dict.
+By default include all labels.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">predicts</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]])]</span>
+<span class="gp">>>> </span><span class="n">labels</span>   <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])]</span>
+<span class="gp">>>> </span><span class="n">pr</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">PearsonCorrelation</span><span class="p">()</span>
+<span class="gp">>>> </span><span class="n">pr</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predicts</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="nb">print</span> <span class="n">pr</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="go">('pearson-correlation', 0.42163704544016178)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="mxnet.metric.PearsonCorrelation.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>labels</em>, <em>preds</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.metric.PearsonCorrelation.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the internal evaluation result.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"></col>

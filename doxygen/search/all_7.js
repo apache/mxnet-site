@@ -1,7 +1,8 @@
 var searchData=
 [
   ['fcompute',['FCompute',['../namespacemxnet.html#ad77e2048b7e8db91a12e05b477aac13e',1,'mxnet']]],
-  ['fcreatelayerop',['FCreateLayerOp',['../namespacemxnet.html#ae9ab3d7ff6f974c949bcd92b7288c98f',1,'mxnet']]],
+  ['fcreateopstate',['FCreateOpState',['../namespacemxnet.html#acb83431b596f805fabcc4ba400c62e85',1,'mxnet']]],
+  ['fexectype',['FExecType',['../namespacemxnet.html#a666f1055e5401ecec0278e8ba5790732',1,'mxnet']]],
   ['fieldentry',['FieldEntry',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html#a0755f0abe443e4b57da234ec7b49fde0',1,'dmlc::parameter::FieldEntry&lt; mxnet::TShape &gt;']]],
   ['fieldentry_3c_20mxnet_3a_3atshape_20_3e',['FieldEntry&lt; mxnet::TShape &gt;',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html',1,'dmlc::parameter']]],
   ['find',['Find',['../classmxnet_1_1op_1_1SimpleOpRegistry.html#a8ee596c99eef39fbbfffca181bf7f26e',1,'mxnet::op::SimpleOpRegistry']]],
@@ -19,5 +20,7 @@ var searchData=
   ['fresh_5fout_5fgrad',['fresh_out_grad',['../classmxnet_1_1NDArray.html#ad9d2fa3ffbe963fb5960375da1b557a2',1,'mxnet::NDArray']]],
   ['fresourcerequest',['FResourceRequest',['../namespacemxnet.html#afaa687cbca9e992614be285711c1d72d',1,'mxnet']]],
   ['fromstring',['FromString',['../structmxnet_1_1Context.html#ac58071fc1c0647bcab7aca4a39ae6a29',1,'mxnet::Context']]],
+  ['fstatefulcompute',['FStatefulCompute',['../namespacemxnet.html#a9097a269dd76d833c014149ff3eaab9b',1,'mxnet']]],
+  ['fstatefulcomputeex',['FStatefulComputeEx',['../namespacemxnet.html#ab12f1853179b1456152a563edff844a9',1,'mxnet']]],
   ['functionhandle',['FunctionHandle',['../c__api_8h.html#a197f06e1d873d34572b679532c268d35',1,'c_api.h']]]
 ];
