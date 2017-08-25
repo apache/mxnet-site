@@ -1,11 +1,13 @@
 var searchData=
 [
   ['fcompute',['FCompute',['../namespacemxnet.html#ad77e2048b7e8db91a12e05b477aac13e',1,'mxnet']]],
+  ['fcomputeex',['FComputeEx',['../namespacemxnet.html#a294d2660c065f8d229c27e65f0461e10',1,'mxnet']]],
   ['fcreateopstate',['FCreateOpState',['../namespacemxnet.html#acb83431b596f805fabcc4ba400c62e85',1,'mxnet']]],
   ['fexectype',['FExecType',['../namespacemxnet.html#a666f1055e5401ecec0278e8ba5790732',1,'mxnet']]],
   ['fieldentry',['FieldEntry',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html#a0755f0abe443e4b57da234ec7b49fde0',1,'dmlc::parameter::FieldEntry&lt; mxnet::TShape &gt;']]],
   ['fieldentry_3c_20mxnet_3a_3atshape_20_3e',['FieldEntry&lt; mxnet::TShape &gt;',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html',1,'dmlc::parameter']]],
   ['find',['Find',['../classmxnet_1_1op_1_1SimpleOpRegistry.html#a8ee596c99eef39fbbfffca181bf7f26e',1,'mxnet::op::SimpleOpRegistry']]],
+  ['finferstoragetype',['FInferStorageType',['../namespacemxnet.html#a06b4dc167edc15f0750c026ee6d5c44a',1,'mxnet']]],
   ['flatto1d',['FlatTo1D',['../classmxnet_1_1TBlob.html#a95bf7032c2b90627510a89ac8bb2946f',1,'mxnet::TBlob']]],
   ['flatto2d',['FlatTo2D',['../classmxnet_1_1TBlob.html#a23cc57be3b2c40a269c8c9f242fa0532',1,'mxnet::TBlob']]],
   ['flatto3d',['FlatTo3D',['../classmxnet_1_1TBlob.html#ac5cd4953869cb66ed374854a34da40f8',1,'mxnet::TBlob::FlatTo3D(int axis, mshadow::Stream&lt; Device &gt; *stream=NULL) const '],['../classmxnet_1_1TBlob.html#ada83447eb80b913592e9ac2bf8c5740f',1,'mxnet::TBlob::FlatTo3D(int axis_begin, int axis_end, mshadow::Stream&lt; Device &gt; *stream=NULL) const ']]],

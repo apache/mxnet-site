@@ -10,11 +10,11 @@ var indexSectionsWithContent =
   0: ":_abcdefghiklmnoprstuvw~",
   1: "acdefghiklmnorstu",
   2: "dm",
-  3: "bceiklmnorstu",
+  3: "bcegiklmnorstu",
   4: "_abcdefgilmnoprstvw~",
   5: "abcdefiklnprstuv",
   6: "abcdefgikmnoprstuv",
-  7: "cdefnost",
+  7: "cdefnorst",
   8: "k",
   9: ":an",
   10: "acdmp"

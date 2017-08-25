@@ -1317,6 +1317,107 @@ the data type instead of <code class="docutils literal"><span class="pre">float<
 </table>
 </dd></dl>
 <dl class="function">
+<dt id="mxnet.io.LibSVMIter">
+<code class="descclassname">mxnet.io.</code><code class="descname">LibSVMIter</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.io.LibSVMIter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LibSVM file iterator. This iterator is experimental and
+should be used with care.</p>
+<p>The input data is similar to libsvm file format, except that the indices are expected to be
+zero-based instead of one-based. Details of the libsvm format are available at
+<cite>https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/</cite></p>
+<p>In this function, the <cite>data_shape</cite> parameter is used to set the shape of each line of the data.
+The dimension of both <cite>data_shape</cite> and <cite>label_shape</cite> are expected to be 1.</p>
+<p>When <cite>label_libsvm</cite> is set to <code class="docutils literal"><span class="pre">NULL</span></code>, both data and label are read from the same file specified
+by <cite>data_libsvm</cite>. Otherwise, data is read from <cite>data_libsvm</cite> and label from <cite>label_libsvm</cite>,
+in this case, if <cite>data_libsvm</cite> contains label, it will ignored.</p>
+<p>The <cite>LibSVMIter</cite> only support <cite>round_batch</cite> parameter set to <code class="docutils literal"><span class="pre">True</span></code> for now. So, if <cite>batch_size</cite>
+is 3 and there are 4 total rows in libsvm file, 2 more examples
+are consumed at the first round. If <cite>reset</cite> function is called after first round,
+the call is ignored and remaining examples are returned in the second round.</p>
+<p>If <code class="docutils literal"><span class="pre">data_libsvm</span> <span class="pre">=</span> <span class="pre">'data/'</span></code> is set, then all the files in this directory will be read.</p>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>// Contents of libsvm file ``data.t``.
+1.0 0:0.5 2:1.2
+-2.0
+-3.0 0:0.6 1:2.4 2:1.2
+4 2:-1.2
+
+// Creates a `LibSVMIter` with `batch_size`=3.
+LibSVMIter = mx.io.LibSVMIter(data_libsvm = 'data.t', data_shape = (3,),
+batch_size = 3)
+
+// The first batch (data and label)
+[[ 0.5         0.          1.2 ]
+ [ 0.          0.          0.  ]
+ [ 0.6         2.4         1.2 ]]
+
+[ 1. -2. -3.]
+
+// The second batch (data and label)
+[[ 0.          0.         -1.2 ]
+ [ 0.5         0.          1.2 ]
+ [ 0.          0.          0. ]]
+
+[ 4.  1. -2.]
+
+// Contents of libsvm file ``label.t``
+1.0
+-2.0 0:0.125
+-3.0 2:1.2
+4 1:1.0 2:-1.2
+
+// Creates a `LibSVMIter` with specified label file
+LibSVMIter = mx.io.LibSVMIter(data_libsvm = 'data.t', data_shape = (3,),
+label_libsvm = 'label.t', label_shape = (3,), batch_size = 3)
+
+// Two batches of data read from the above iterator are as follows(data and label):
+// The first batch
+[[ 0.5         0.          1.2       ]
+ [ 0.          0.          0.        ]
+ [ 0.6         2.4         1.2      ]]
+
+[[ 0.          0.          0.        ]
+ [ 0.125       0.          0.        ]
+ [ 0.          0.          1.2      ]]
+
+// The second batch
+[[ 0.          0.         -1.2       ]
+ [ 0.5         0.          1.2       ]
+ [ 0.          0.          0.        ]]
+
+[[ 0.          1.         -1.2       ]
+ [ 0.          0.          0.        ]
+ [ 0.125       0.          0.        ]]
+</pre></div>
+</div>
+<p>Defined in src/io/iter_libsvm.cc:L277</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_libsvm</strong> (<em>string, required</em>) – The input LibSVM file or a directory path.</li>
+<li><strong>data_shape</strong> (<em>Shape(tuple), required</em>) – The shape of one example.</li>
+<li><strong>label_libsvm</strong> (<em>string, optional, default='NULL'</em>) – The input LibSVM file or a directory path. If NULL, all labels will be read from <code class="docutils literal"><span class="pre">data_libsvm</span></code>.</li>
+<li><strong>label_shape</strong> (<em>Shape(tuple), optional, default=(1,)</em>) – The shape of one label.</li>
+<li><strong>num_parts</strong> (<em>int, optional, default='1'</em>) – partition the data into multiple parts</li>
+<li><strong>part_index</strong> (<em>int, optional, default='0'</em>) – the index of the part will read</li>
+<li><strong>batch_size</strong> (<em>int (non-negative), required</em>) – Batch size.</li>
+<li><strong>round_batch</strong> (<em>boolean, optional, default=True</em>) – Whether to use round robin to handle overflow batch or not.</li>
+<li><strong>prefetch_buffer</strong> (<em>long (non-negative), optional, default=4</em>) – Maximum number of batches to prefetch.</li>
+<li><strong>dtype</strong> (<em>{None, 'float16', 'float32', 'float64', 'int32', 'uint8'},optional, default='None'</em>) – Output data type. <code class="docutils literal"><span class="pre">None</span></code> means no change.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The result iterator.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mxnet.io.MXDataIter" title="mxnet.io.MXDataIter">MXDataIter</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
 <dt id="mxnet.io.MNISTIter">
 <code class="descclassname">mxnet.io.</code><code class="descname">MNISTIter</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.io.MNISTIter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterating on the MNIST dataset.</p>
