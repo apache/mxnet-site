@@ -5,5 +5,6 @@ var searchData=
   ['mx_5fuint',['mx_uint',['../c__api_8h.html#a796e7ef8260ef40b24af7d1082aa2d84',1,'mx_uint():&#160;c_api.h'],['../c__predict__api_8h.html#a796e7ef8260ef40b24af7d1082aa2d84',1,'mx_uint():&#160;c_predict_api.h']]],
   ['mxgenericcallback',['MXGenericCallback',['../c__api_8h.html#a581410d3cb679f2d0fc2f65fca91ec17',1,'c_api.h']]],
   ['mxkvstoreservercontroller',['MXKVStoreServerController',['../c__api_8h.html#a31f639b22167ac51b67381b16dfd5634',1,'c_api.h']]],
+  ['mxkvstorestrupdater',['MXKVStoreStrUpdater',['../c__api_8h.html#a38e5829512ef685f1dd1b1d1fac93c42',1,'c_api.h']]],
   ['mxkvstoreupdater',['MXKVStoreUpdater',['../c__api_8h.html#af59143cc01b560bb13f25a289b83f37b',1,'c_api.h']]]
 ];

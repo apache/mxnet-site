@@ -307,7 +307,7 @@ after data has been initialized successfully.</p>
 <col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>key</strong> (<em>str or sequence of str</em>) – The keys.</li>
+<li><strong>key</strong> (<em>str, int, or sequence of str or int</em>) – The keys.</li>
 <li><strong>value</strong> (<em>NDArray or sequence of NDArray</em>) – Values corresponding to the keys.</li>
 </ul>
 </td>
@@ -327,7 +327,7 @@ after data has been initialized successfully.</p>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># init a list of key-value pairs</span>
-<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'5'</span><span class="p">,</span> <span class="s1">'7'</span><span class="p">,</span> <span class="s1">'9'</span><span class="p">]</span>
+<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -346,7 +346,7 @@ to sync all workers.</p>
 <col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>key</strong> (<em>str or list of str</em>) – Keys.</li>
+<li><strong>key</strong> (<em>str, int, or sequence of str or int</em>) – Keys.</li>
 <li><strong>value</strong> (<em>NDArray or list of NDArray or list of list of NDArray</em>) – Values corresponding to the keys.</li>
 <li><strong>priority</strong> (<em>int, optional</em>) – The priority of the push operation.
 Higher priority push operations are likely to be executed before
@@ -377,6 +377,7 @@ other push actions.</li>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># push a list of keys.</span>
 <span class="gp">>>> </span><span class="c1"># single device</span>
+<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
@@ -386,6 +387,7 @@ other push actions.</li>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># multiple devices:</span>
+<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'7'</span><span class="p">,</span> <span class="s1">'8'</span><span class="p">,</span> <span class="s1">'9'</span><span class="p">]</span>
 <span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="p">[[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">gpu</span><span class="p">)</span> <span class="k">for</span> <span class="n">gpu</span> <span class="ow">in</span> <span class="n">gpus</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
@@ -411,7 +413,7 @@ for the same input key(s) are finished.</p>
 <col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>key</strong> (<em>int or list of int</em>) – Keys.</li>
+<li><strong>key</strong> (<em>str, int, or sequence of str or int</em>) – Keys.</li>
 <li><strong>out</strong> (<em>NDArray or list of NDArray or list of list of NDArray</em>) – Values corresponding to the keys.</li>
 <li><strong>priority</strong> (<em>int, optional</em>) – The priority of the pull operation.
 Higher priority pull operations are likely to be executed before
@@ -440,13 +442,14 @@ other pull actions.</li>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># pull a list of key-value pairs.</span>
 <span class="gp">>>> </span><span class="c1"># On single device</span>
-<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'5'</span><span class="p">,</span> <span class="s1">'7'</span><span class="p">,</span> <span class="s1">'9'</span><span class="p">]</span>
+<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
 <span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
 <span class="go">[[ 2.  2.  2.]</span>
 <span class="go">[ 2.  2.  2.]]</span>
 <span class="gp">>>> </span><span class="c1"># On multiple devices</span>
+<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'6'</span><span class="p">,</span> <span class="s1">'8'</span><span class="p">,</span> <span class="s1">'10'</span><span class="p">]</span>
 <span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="p">[[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">gpu</span><span class="p">)</span> <span class="k">for</span> <span class="n">gpu</span> <span class="ow">in</span> <span class="n">gpus</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
@@ -470,7 +473,7 @@ other pull actions.</li>
 <col class="field-body"/>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>key</strong> (<em>str or list of str</em>) – Keys.</li>
+<li><strong>key</strong> (<em>str, int, or sequence of str or int</em>) – Keys.</li>
 <li><strong>out</strong> (<em>NDArray or list of NDArray or list of list of NDArray</em>) – Values corresponding to the keys. The stype is expected to be row_sparse</li>
 <li><strong>priority</strong> (<em>int, optional</em>) – The priority of the pull operation.
 Higher priority pull operations are likely to be executed before
