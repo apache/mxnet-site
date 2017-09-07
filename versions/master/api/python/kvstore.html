@@ -308,7 +308,7 @@ after data has been initialized successfully.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>key</strong> (<em>str, int, or sequence of str or int</em>) – The keys.</li>
-<li><strong>value</strong> (<em>NDArray or sequence of NDArray</em>) – Values corresponding to the keys.</li>
+<li><strong>value</strong> (<em>NDArray, RowSparseNDArray or sequence of NDArray or RowSparseNDArray</em>) – Values corresponding to the keys.</li>
 </ul>
 </td>
 </tr>
@@ -327,8 +327,16 @@ after data has been initialized successfully.</p>
 </pre></div>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># init a list of key-value pairs</span>
-<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'5'</span><span class="p">,</span> <span class="s1">'7'</span><span class="p">,</span> <span class="s1">'9'</span><span class="p">]</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># init a row_sparse value</span>
+<span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s1">'4'</span><span class="p">,</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">tostype</span><span class="p">(</span><span class="s1">'row_sparse'</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="s1">'row_sparse'</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">row_sparse_pull</span><span class="p">(</span><span class="s1">'4'</span><span class="p">,</span> <span class="n">row_ids</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">out</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="k">print</span> <span class="n">b</span>
+<span class="go"><RowSparseNDArray 2x3 @cpu(0)></span>
 </pre></div>
 </div>
 </dd></dl>
@@ -347,7 +355,8 @@ to sync all workers.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>key</strong> (<em>str, int, or sequence of str or int</em>) – Keys.</li>
-<li><strong>value</strong> (<em>NDArray or list of NDArray or list of list of NDArray</em>) – Values corresponding to the keys.</li>
+<li><strong>value</strong> (<em>NDArray, RowSparseNDArray, list of NDArray or RowSparseNDArray,</em>) – or list of list of NDArray or RowSparseNDArray
+Values corresponding to the keys.</li>
 <li><strong>priority</strong> (<em>int, optional</em>) – The priority of the push operation.
 Higher priority push operations are likely to be executed before
 other push actions.</li>
@@ -377,7 +386,7 @@ other push actions.</li>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># push a list of keys.</span>
 <span class="gp">>>> </span><span class="c1"># single device</span>
-<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'4'</span><span class="p">,</span> <span class="s1">'5'</span><span class="p">,</span> <span class="s1">'6'</span><span class="p">]</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
@@ -396,6 +405,16 @@ other push actions.</li>
 <span class="go">[ 4.  4.  4.]]</span>
 </pre></div>
 </div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># push a row_sparse value</span>
+<span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="s1">'row_sparse'</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s1">'10'</span><span class="p">,</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="s1">'row_sparse'</span><span class="p">,</span> <span class="n">shape</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="s1">'10'</span><span class="p">,</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">tostype</span><span class="p">(</span><span class="s1">'row_sparse'</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="c1"># pull out the value</span>
+<span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">row_sparse_pull</span><span class="p">(</span><span class="s1">'10'</span><span class="p">,</span> <span class="n">row_ids</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">out</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="k">print</span> <span class="n">b</span>
+<span class="go"><RowSparseNDArray 2x3 @cpu(0)></span>
+</pre></div>
+</div>
 </dd></dl>
 <dl class="method">
 <dt id="mxnet.kvstore.KVStore.pull">
@@ -407,7 +426,7 @@ pull operation completes.</p>
 <p><cite>pull</cite> is executed asynchronously after all previous <cite>push</cite> and <cite>pull</cite> calls
 for the same input key(s) are finished.</p>
 <p>The returned values are gauranteed to be the latest values in the store.</p>
-<p>For row_sparse values, please use <cite>row_sparse_pull</cite> instead.</p>
+<p>For <cite>RowSparseNDArray</cite> values, please use <code class="docutils literal"><span class="pre">row_sparse_pull</span></code> instead.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -442,7 +461,7 @@ other pull actions.</li>
 </div>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="c1"># pull a list of key-value pairs.</span>
 <span class="gp">>>> </span><span class="c1"># On single device</span>
-<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="gp">>>> </span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'5'</span><span class="p">,</span> <span class="s1">'7'</span><span class="p">,</span> <span class="s1">'9'</span><span class="p">]</span>
 <span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">)]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="k">print</span> <span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
@@ -461,10 +480,7 @@ other pull actions.</li>
 <dl class="method">
 <dt id="mxnet.kvstore.KVStore.row_sparse_pull">
 <code class="descname">row_sparse_pull</code><span class="sig-paren">(</span><em>key</em>, <em>out=None</em>, <em>priority=0</em>, <em>row_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.kvstore.KVStore.row_sparse_pull" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Pulls a single row_sparse value or a sequence of row_sparse values from the store</dt>
-<dd>with specified row_ids.</dd>
-</dl>
+<dd><p>Pulls a single RowSparseNDArray value or a sequence of RowSparseNDArray values         from the store with specified row_ids.</p>
 <p><cite>row_sparse_pull</cite> is executed asynchronously after all previous
 <cite>push</cite>/<cite>pull</cite>/<cite>row_sparse_pull</cite> calls for the same input key(s) are finished.</p>
 <p>The returned values are guaranteed to be the latest values in the store.</p>
@@ -474,11 +490,11 @@ other pull actions.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>key</strong> (<em>str, int, or sequence of str or int</em>) – Keys.</li>
-<li><strong>out</strong> (<em>NDArray or list of NDArray or list of list of NDArray</em>) – Values corresponding to the keys. The stype is expected to be row_sparse</li>
+<li><strong>out</strong> (<em>RowSparseNDArray or list of RowSparseNDArray or list of list of RowSparseNDArray</em>) – Values corresponding to the keys. The stype is expected to be row_sparse</li>
 <li><strong>priority</strong> (<em>int, optional</em>) – The priority of the pull operation.
 Higher priority pull operations are likely to be executed before
 other pull actions.</li>
-<li><strong>row_ids</strong> (<em>NDArray or list of NDArray</em>) – The row_ids for which to pull for each value. Each row_id is an 1D-NDArray             whose values don’t have to be unique nor sorted.</li>
+<li><strong>row_ids</strong> (<em>NDArray or list of NDArray</em>) – The row_ids for which to pull for each value. Each row_id is an 1D NDArray             whose values don’t have to be unique nor sorted.</li>
 </ul>
 </td>
 </tr>
@@ -487,7 +503,7 @@ other pull actions.</li>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s1">'3'</span><span class="p">,</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">tostype</span><span class="p">(</span><span class="s1">'row_sparse'</span><span class="p">))</span>
-<span class="gp">>>> </span><span class="n">a</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">stype</span><span class="o">=</span><span class="s1">'row_sparse'</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="n">a</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="s1">'row_sparse'</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">row_ids</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int64'</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">kv</span><span class="o">.</span><span class="n">row_sparse_pull</span><span class="p">(</span><span class="s1">'3'</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">row_ids</span><span class="o">=</span><span class="n">row_ids</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
