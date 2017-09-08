@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['makeunique',['MakeUnique',['../namespacemxnet_1_1common.html#a9d9abe40c84b9924e51d5d57b3f0b7d6',1,'mxnet::common::MakeUnique(Args &amp;&amp;...args)'],['../namespacemxnet_1_1common.html#a39b3453302aa3aa56230fbc88005861d',1,'mxnet::common::MakeUnique(size_t n)'],['../namespacemxnet_1_1common.html#a6ca270747bb7ab942c61d364f14f3042',1,'mxnet::common::MakeUnique(Args &amp;&amp;...args)=delete']]],
+  ['makeunique',['MakeUnique',['../namespacemxnet_1_1common.html#ad56ff4f856437bba25d38027aecfe766',1,'mxnet::common::MakeUnique(Args &amp;&amp;... args)'],['../namespacemxnet_1_1common.html#a39b3453302aa3aa56230fbc88005861d',1,'mxnet::common::MakeUnique(size_t n)'],['../namespacemxnet_1_1common.html#adb63438b723f69cdf56f7919275f4596',1,'mxnet::common::MakeUnique(Args &amp;&amp;... args)=delete']]],
   ['mxautogradbackward',['MXAutogradBackward',['../c__api_8h.html#a133d10a566764530bf3172e52afbe561',1,'c_api.h']]],
   ['mxautogradbackwardex',['MXAutogradBackwardEx',['../c__api_8h.html#a57a5d1ed585f9f431a31f921b4ca00ab',1,'c_api.h']]],
   ['mxautogradcomputegradient',['MXAutogradComputeGradient',['../c__api_8h.html#a4ea5441aa16bff2121855a5afb7be84e',1,'c_api.h']]],
