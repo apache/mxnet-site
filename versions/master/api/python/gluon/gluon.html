@@ -482,6 +482,9 @@ in Python and then deploy with symbolic graph in C++ and Scala.</p>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.gluon.loss.KLDivLoss" title="mxnet.gluon.loss.KLDivLoss"><code class="xref py py-obj docutils literal"><span class="pre">KLDivLoss</span></code></a></td>
 <td>The Kullback-Leibler divergence loss.</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.loss.CTCLoss" title="mxnet.gluon.loss.CTCLoss"><code class="xref py py-obj docutils literal"><span class="pre">CTCLoss</span></code></a></td>
+<td>Connectionist Temporal Classification Loss.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -3024,6 +3027,65 @@ the same shape as loss. For example, if loss has
 shape (64, 10) and you want to weight each sample
 in the batch, <cite>sample_weight</cite> should have shape (64, 1).</li>
 <li><strong>batch_axis</strong> (<em>int, default 0</em>) – The axis that represents mini-batch.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="class">
+<dt id="mxnet.gluon.loss.CTCLoss">
+<em class="property">class </em><code class="descclassname">mxnet.gluon.loss.</code><code class="descname">CTCLoss</code><span class="sig-paren">(</span><em>layout='NTC'</em>, <em>label_layout='NT'</em>, <em>weight=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.loss.CTCLoss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connectionist Temporal Classification Loss.</p>
+<p>See <a class="reference external" href="http://www.cs.toronto.edu/~graves/icml_2006.pdf">“Connectionist Temporal Classification: Labelling Unsegmented
+Sequence Data with Recurrent Neural Networks”</a> paper for more information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layout</strong> (<em>str, default 'NTC'</em>) – Layout of the output sequence activation vector.</li>
+<li><strong>label_layout</strong> (<em>str, default 'NT'</em>) – Layout of the labels.</li>
+<li><strong>weight</strong> (<em>float or None</em>) – Global scalar weight for loss.</li>
+<li><strong>sample_weight</strong> (<em>Symbol or None</em>) – Per sample weighting. Must be broadcastable to
+the same shape as loss. For example, if loss has
+shape (64, 10) and you want to weight each sample
+in the batch, <cite>sample_weight</cite> should have shape (64, 1).
+This should be used as the fifth argument when calling this loss.</li>
+<li><strong>shapes</strong> (<em>Input</em>) – <p><cite>data</cite> is an activation tensor (i.e. before softmax).
+Its shape depends on <cite>layout</cite>. For <cite>layout=’TNC’</cite>, this
+input has shape <cite>(sequence_length, batch_size, alphabet_size)</cite>
+Note that the last dimension with index <cite>alphabet_size-1</cite> is reserved for special
+blank character.</p>
+<p><cite>label</cite> is the label index matrix with zero-indexed labels.
+Its shape depends on <cite>label_layout</cite>. For <cite>label_layout=’TN’</cite>, this
+input has shape <cite>(label_sequence_length, batch_size)</cite>. Padding mask of value <code class="docutils literal"><span class="pre">-1</span></code>
+is available for dealing with unaligned label lengths.
+When <cite>label_lengths</cite> is specified, label lengths are directly used and padding mask
+is not allowed in the label.
+When <cite>label_lengths</cite> is not specified, the first occurrence of <code class="docutils literal"><span class="pre">-1</span></code>
+in each sample marks the end of the label sequence of that sample.</p>
+<p>For example, suppose the vocabulary is <cite>[a, b, c]</cite>, and in one batch we have three
+sequences ‘ba’, ‘cbb’, and ‘abac’. We can index the labels as <cite>{‘a’: 0, ‘b’: 1, ‘c’: 2}</cite>.
+The alphabet size should be 4, and we reserve the channel index 3 for blank label
+in data tensor. The padding mask value for extra length is -1, so the resulting <cite>label</cite>
+tensor should be padded to be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p><cite>data_lengths</cite> is optional and defaults to None.
+When specified, it represents the actual lengths of data.
+The shape should be (batch_size,).
+If None, the data lengths are treated as being equal to the max sequence length.
+This should be used as the third argument when calling this loss.</p>
+<p><cite>label_lengths</cite> is optional and defaults to None.
+When specified, it represents the actual lengths of labels.
+The shape should be (batch_size,).
+If None, the label lengths are derived from the first occurrence of
+the value specified by <cite>padding_mask</cite>.
+This should be used as the fourth argument when calling this loss.</p>
+</li>
+<li><strong>shape</strong> (<em>Output</em>) – The CTC loss output has the shape (batch_size,).</li>
 </ul>
 </td>
 </tr>

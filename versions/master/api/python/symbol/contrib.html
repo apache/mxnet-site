@@ -308,32 +308,45 @@ so that feature contributors can receive feedback.</p>
 <script src="../../../_static/js/auto_module_index.js" type="text/javascript"></script><span class="target" id="module-mxnet.symbol.contrib"></span><p>Contrib Symbol API of MXNet.</p>
 <dl class="function">
 <dt id="mxnet.symbol.contrib.CTCLoss">
-<code class="descclassname">mxnet.symbol.contrib.</code><code class="descname">CTCLoss</code><span class="sig-paren">(</span><em>data=None</em>, <em>label=None</em>, <em>data_lengths=None</em>, <em>label_lengths=None</em>, <em>use_data_lengths=_Null</em>, <em>use_label_lengths=_Null</em>, <em>padding_mask=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.contrib.CTCLoss" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mxnet.symbol.contrib.</code><code class="descname">CTCLoss</code><span class="sig-paren">(</span><em>data=None</em>, <em>label=None</em>, <em>data_lengths=None</em>, <em>label_lengths=None</em>, <em>use_data_lengths=_Null</em>, <em>use_label_lengths=_Null</em>, <em>blank_label=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.contrib.CTCLoss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connectionist Temporal Classification Loss.</p>
 <p>The shapes of the inputs and outputs:</p>
 <ul class="simple">
-<li><strong>data</strong>: <em>(sequence_length, batch_size, alphabet_size + 1)</em></li>
-<li><strong>label</strong>: <em>(batch_size, label_sequence_length)</em></li>
-<li><strong>out</strong>: <em>(batch_size)</em>.</li>
+<li><strong>data</strong>: <cite>(sequence_length, batch_size, alphabet_size)</cite></li>
+<li><strong>label</strong>: <cite>(batch_size, label_sequence_length)</cite></li>
+<li><strong>out</strong>: <cite>(batch_size)</cite></li>
 </ul>
-<p><code class="docutils literal"><span class="pre">label</span></code> is a tensor of integers between 1 and <em>alphabet_size</em>. If a
-sequence of labels is shorter than <em>label_sequence_length</em>, use the special
-padding character 0 at the end of the sequence to conform it to the correct
-length. For example, if <em>label_sequence_length</em> = 4, and one has two sequences
-of labels [2, 1] and [3, 2, 2], the resulting <code class="docutils literal"><span class="pre">`label`</span></code> tensor should be
-padded to be:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<p>The <cite>data</cite> tensor consists of sequences of activation vectors (without applying softmax),
+with i-th channel in the last dimension corresponding to i-th label
+for i between 0 and alphabet_size-1 (i.e always 0-indexed).
+Alphabet size should include one additional value reserved for blank label.
+When <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"first"</span></code>, the <code class="docutils literal"><span class="pre">0</span></code>-th channel is be reserved for
+activation of blank label, or otherwise if it is “last”, <code class="docutils literal"><span class="pre">(alphabet_size-1)</span></code>-th channel should be
+reserved for blank label.</p>
+<p><code class="docutils literal"><span class="pre">label</span></code> is an index matrix of integers. When <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"first"</span></code>,
+the value 0 is then reserved for blank label, and should not be passed in this matrix. Otherwise,
+when <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"last"</span></code>, the value <cite>(alphabet_size-1)</cite> is reserved for blank label.</p>
+<p>If a sequence of labels is shorter than <em>label_sequence_length</em>, use the special
+padding value at the end of the sequence to conform it to the correct
+length. The padding value is <cite>0</cite> when <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"first"</span></code>, and <cite>-1</cite> otherwise.</p>
+<p>For example, suppose the vocabulary is <cite>[a, b, c]</cite>, and in one batch we have three sequences
+‘ba’, ‘cbb’, and ‘abac’. When <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"first"</span></code>, we can index the labels as
+<cite>{‘a’: 1, ‘b’: 2, ‘c’: 3}</cite>, and we reserve the 0-th channel for blank label in data tensor.
+The resulting <cite>label</cite> tensor should be padded to be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">data</span></code> tensor consists of sequences of activation vectors. The layer
-applies a softmax to each vector, which then becomes a vector of probabilities
-over the alphabet. Note that the 0th element of this vector is reserved for the
-special blank character.</p>
+<p>When <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"last"</span></code>, we can index the labels as
+<cite>{‘a’: 0, ‘b’: 1, ‘c’: 2}</cite>, and we reserve the channel index 3 for blank label in data tensor.
+The resulting <cite>label</cite> tensor should be padded to be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
+</pre></div>
+</div>
 <p><code class="docutils literal"><span class="pre">out</span></code> is a list of CTC loss values, one per example in the batch.</p>
 <p>See <em>Connectionist Temporal Classification: Labelling Unsegmented
 Sequence Data with Recurrent Neural Networks</em>, A. Graves <em>et al</em>. for more
-information.</p>
-<p>Defined in src/operator/contrib/ctc_loss.cc:L99</p>
+information on the definition and the algorithm.</p>
+<p>Defined in src/operator/contrib/ctc_loss.cc:L114</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -344,8 +357,8 @@ information.</p>
 <li><strong>data_lengths</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Lengths of data for each of the samples. Only required when use_data_lengths is true.</li>
 <li><strong>label_lengths</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Lengths of labels for each of the samples. Only required when use_label_lengths is true.</li>
 <li><strong>use_data_lengths</strong> (<em>boolean, optional, default=False</em>) – Whether the data lenghts are decided by <cite>data_lengths</cite>. If false, the lengths are equal to the max sequence length.</li>
-<li><strong>use_label_lengths</strong> (<em>boolean, optional, default=False</em>) – Whether the label lenghts are decided by <cite>label_lengths</cite>, or derived from <cite>padding_mask</cite>. If false, the lengths are derived from the first occurrence of the value of <cite>padding_mask</cite>.</li>
-<li><strong>padding_mask</strong> (<em>int or None, optional, default='0'</em>) – int or None. This is the label value to be considered padding. Only required when <cite>use_label_lengths</cite> is false. Labels before the first occurrence of <cite>padding_mask</cite> are included in calculation.</li>
+<li><strong>use_label_lengths</strong> (<em>boolean, optional, default=False</em>) – Whether the label lenghts are decided by <cite>label_lengths</cite>, or derived from <cite>padding_mask</cite>. If false, the lengths are derived from the first occurrence of the value of <cite>padding_mask</cite>. The value of <cite>padding_mask</cite> is <code class="docutils literal"><span class="pre">0</span></code> when first CTC label is reserved for blank, and <code class="docutils literal"><span class="pre">-1</span></code> when last label is reserved for blank. See <cite>blank_label</cite>.</li>
+<li><strong>blank_label</strong> (<em>{'first', 'last'},optional, default='first'</em>) – Set the label that is reserved for blank label.If “first”, 0-th label is reserved, and label values for tokens in the vocabulary are between <code class="docutils literal"><span class="pre">1</span></code> and <code class="docutils literal"><span class="pre">alphabet_size-1</span></code>, and the padding mask is <code class="docutils literal"><span class="pre">-1</span></code>. If “last”, last label value <code class="docutils literal"><span class="pre">alphabet_size-1</span></code> is reserved for blank label instead, and label values for tokens in the vocabulary are between <code class="docutils literal"><span class="pre">0</span></code> and <code class="docutils literal"><span class="pre">alphabet_size-2</span></code>, and the padding mask is <code class="docutils literal"><span class="pre">0</span></code>.</li>
 <li><strong>name</strong> (<em>string, optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>
@@ -699,32 +712,45 @@ Then the operator computs:</p>
 </dd></dl>
 <dl class="function">
 <dt id="mxnet.symbol.contrib.ctc_loss">
-<code class="descclassname">mxnet.symbol.contrib.</code><code class="descname">ctc_loss</code><span class="sig-paren">(</span><em>data=None</em>, <em>label=None</em>, <em>data_lengths=None</em>, <em>label_lengths=None</em>, <em>use_data_lengths=_Null</em>, <em>use_label_lengths=_Null</em>, <em>padding_mask=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.contrib.ctc_loss" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mxnet.symbol.contrib.</code><code class="descname">ctc_loss</code><span class="sig-paren">(</span><em>data=None</em>, <em>label=None</em>, <em>data_lengths=None</em>, <em>label_lengths=None</em>, <em>use_data_lengths=_Null</em>, <em>use_label_lengths=_Null</em>, <em>blank_label=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.contrib.ctc_loss" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connectionist Temporal Classification Loss.</p>
 <p>The shapes of the inputs and outputs:</p>
 <ul class="simple">
-<li><strong>data</strong>: <em>(sequence_length, batch_size, alphabet_size + 1)</em></li>
-<li><strong>label</strong>: <em>(batch_size, label_sequence_length)</em></li>
-<li><strong>out</strong>: <em>(batch_size)</em>.</li>
+<li><strong>data</strong>: <cite>(sequence_length, batch_size, alphabet_size)</cite></li>
+<li><strong>label</strong>: <cite>(batch_size, label_sequence_length)</cite></li>
+<li><strong>out</strong>: <cite>(batch_size)</cite></li>
 </ul>
-<p><code class="docutils literal"><span class="pre">label</span></code> is a tensor of integers between 1 and <em>alphabet_size</em>. If a
-sequence of labels is shorter than <em>label_sequence_length</em>, use the special
-padding character 0 at the end of the sequence to conform it to the correct
-length. For example, if <em>label_sequence_length</em> = 4, and one has two sequences
-of labels [2, 1] and [3, 2, 2], the resulting <code class="docutils literal"><span class="pre">`label`</span></code> tensor should be
-padded to be:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<p>The <cite>data</cite> tensor consists of sequences of activation vectors (without applying softmax),
+with i-th channel in the last dimension corresponding to i-th label
+for i between 0 and alphabet_size-1 (i.e always 0-indexed).
+Alphabet size should include one additional value reserved for blank label.
+When <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"first"</span></code>, the <code class="docutils literal"><span class="pre">0</span></code>-th channel is be reserved for
+activation of blank label, or otherwise if it is “last”, <code class="docutils literal"><span class="pre">(alphabet_size-1)</span></code>-th channel should be
+reserved for blank label.</p>
+<p><code class="docutils literal"><span class="pre">label</span></code> is an index matrix of integers. When <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"first"</span></code>,
+the value 0 is then reserved for blank label, and should not be passed in this matrix. Otherwise,
+when <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"last"</span></code>, the value <cite>(alphabet_size-1)</cite> is reserved for blank label.</p>
+<p>If a sequence of labels is shorter than <em>label_sequence_length</em>, use the special
+padding value at the end of the sequence to conform it to the correct
+length. The padding value is <cite>0</cite> when <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"first"</span></code>, and <cite>-1</cite> otherwise.</p>
+<p>For example, suppose the vocabulary is <cite>[a, b, c]</cite>, and in one batch we have three sequences
+‘ba’, ‘cbb’, and ‘abac’. When <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"first"</span></code>, we can index the labels as
+<cite>{‘a’: 1, ‘b’: 2, ‘c’: 3}</cite>, and we reserve the 0-th channel for blank label in data tensor.
+The resulting <cite>label</cite> tensor should be padded to be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal"><span class="pre">data</span></code> tensor consists of sequences of activation vectors. The layer
-applies a softmax to each vector, which then becomes a vector of probabilities
-over the alphabet. Note that the 0th element of this vector is reserved for the
-special blank character.</p>
+<p>When <cite>blank_label</cite> is <code class="docutils literal"><span class="pre">"last"</span></code>, we can index the labels as
+<cite>{‘a’: 0, ‘b’: 1, ‘c’: 2}</cite>, and we reserve the channel index 3 for blank label in data tensor.
+The resulting <cite>label</cite> tensor should be padded to be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
+</pre></div>
+</div>
 <p><code class="docutils literal"><span class="pre">out</span></code> is a list of CTC loss values, one per example in the batch.</p>
 <p>See <em>Connectionist Temporal Classification: Labelling Unsegmented
 Sequence Data with Recurrent Neural Networks</em>, A. Graves <em>et al</em>. for more
-information.</p>
-<p>Defined in src/operator/contrib/ctc_loss.cc:L99</p>
+information on the definition and the algorithm.</p>
+<p>Defined in src/operator/contrib/ctc_loss.cc:L114</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -735,8 +761,8 @@ information.</p>
 <li><strong>data_lengths</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Lengths of data for each of the samples. Only required when use_data_lengths is true.</li>
 <li><strong>label_lengths</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Lengths of labels for each of the samples. Only required when use_label_lengths is true.</li>
 <li><strong>use_data_lengths</strong> (<em>boolean, optional, default=False</em>) – Whether the data lenghts are decided by <cite>data_lengths</cite>. If false, the lengths are equal to the max sequence length.</li>
-<li><strong>use_label_lengths</strong> (<em>boolean, optional, default=False</em>) – Whether the label lenghts are decided by <cite>label_lengths</cite>, or derived from <cite>padding_mask</cite>. If false, the lengths are derived from the first occurrence of the value of <cite>padding_mask</cite>.</li>
-<li><strong>padding_mask</strong> (<em>int or None, optional, default='0'</em>) – int or None. This is the label value to be considered padding. Only required when <cite>use_label_lengths</cite> is false. Labels before the first occurrence of <cite>padding_mask</cite> are included in calculation.</li>
+<li><strong>use_label_lengths</strong> (<em>boolean, optional, default=False</em>) – Whether the label lenghts are decided by <cite>label_lengths</cite>, or derived from <cite>padding_mask</cite>. If false, the lengths are derived from the first occurrence of the value of <cite>padding_mask</cite>. The value of <cite>padding_mask</cite> is <code class="docutils literal"><span class="pre">0</span></code> when first CTC label is reserved for blank, and <code class="docutils literal"><span class="pre">-1</span></code> when last label is reserved for blank. See <cite>blank_label</cite>.</li>
+<li><strong>blank_label</strong> (<em>{'first', 'last'},optional, default='first'</em>) – Set the label that is reserved for blank label.If “first”, 0-th label is reserved, and label values for tokens in the vocabulary are between <code class="docutils literal"><span class="pre">1</span></code> and <code class="docutils literal"><span class="pre">alphabet_size-1</span></code>, and the padding mask is <code class="docutils literal"><span class="pre">-1</span></code>. If “last”, last label value <code class="docutils literal"><span class="pre">alphabet_size-1</span></code> is reserved for blank label instead, and label values for tokens in the vocabulary are between <code class="docutils literal"><span class="pre">0</span></code> and <code class="docutils literal"><span class="pre">alphabet_size-2</span></code>, and the padding mask is <code class="docutils literal"><span class="pre">0</span></code>.</li>
 <li><strong>name</strong> (<em>string, optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>
