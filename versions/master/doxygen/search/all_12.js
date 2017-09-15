@@ -55,6 +55,7 @@ var searchData=
   ['str_5fupdater_5f',['str_updater_',['../classmxnet_1_1KVStore.html#abf0f494ba57dd7b035ece0d96eb5575f',1,'mxnet::KVStore']]],
   ['stream',['stream',['../structmxnet_1_1RunContext.html#a5c4294a44199f4056915e32a7f70fe0e',1,'mxnet::RunContext']]],
   ['strupdater',['StrUpdater',['../classmxnet_1_1KVStore.html#abe6963a386cc6dc579029349a447d1cb',1,'mxnet::KVStore']]],
+  ['stype_5fstring',['stype_string',['../namespacemxnet_1_1common.html#ab379cd302d59005010ae29aff6e55009',1,'mxnet::common']]],
   ['supportsfloat16compute',['SupportsFloat16Compute',['../cuda__utils_8h.html#afb4268417c1d8886a39142c85c8f188f',1,'cuda_utils.h']]],
   ['supportstensorcore',['SupportsTensorCore',['../cuda__utils_8h.html#af7e22ce6d80d61e8ca37df23880ff1a9',1,'cuda_utils.h']]],
   ['symbolhandle',['SymbolHandle',['../c__api_8h.html#a301e9a7722b326126defdd39ccd99b37',1,'c_api.h']]],

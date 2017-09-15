@@ -40,6 +40,7 @@ var searchData=
   ['storage_5finitialized',['storage_initialized',['../classmxnet_1_1NDArray.html#a0f59c72c8caefcc069d5839d35288cd1',1,'mxnet::NDArray']]],
   ['storage_5fshape',['storage_shape',['../classmxnet_1_1NDArray.html#a72059301dd967ecdd0fca19eaa7024d9',1,'mxnet::NDArray']]],
   ['storage_5ftype',['storage_type',['../classmxnet_1_1NDArray.html#a4d8f894c0306ad693ccf29278a613732',1,'mxnet::NDArray']]],
+  ['stype_5fstring',['stype_string',['../namespacemxnet_1_1common.html#ab379cd302d59005010ae29aff6e55009',1,'mxnet::common']]],
   ['supportsfloat16compute',['SupportsFloat16Compute',['../cuda__utils_8h.html#afb4268417c1d8886a39142c85c8f188f',1,'cuda_utils.h']]],
   ['supportstensorcore',['SupportsTensorCore',['../cuda__utils_8h.html#af7e22ce6d80d61e8ca37df23880ff1a9',1,'cuda_utils.h']]],
   ['synccopyfromcpu',['SyncCopyFromCPU',['../classmxnet_1_1NDArray.html#a422c70b16646f8a273e9b4936fbe2e37',1,'mxnet::NDArray']]],
