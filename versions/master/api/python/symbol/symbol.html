@@ -3448,7 +3448,7 @@ executor.outputs
 <li>add_n(row_sparse, row_sparse, ..) = row_sparse</li>
 <li>otherwise, <code class="docutils literal"><span class="pre">add_n</span></code> generates output with default storage</li>
 </ul>
-<p>Defined in src/operator/tensor/elemwise_sum.cc:L121
+<p>Defined in src/operator/tensor/elemwise_sum.cc:L122
 This function support variable length of positional input.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
@@ -5256,7 +5256,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, m a
     <span class="n">w</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L167</p>
+<p>Defined in src/operator/optimizer_op.cc:L168</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -5298,7 +5298,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, m a
 <li>add_n(row_sparse, row_sparse, ..) = row_sparse</li>
 <li>otherwise, <code class="docutils literal"><span class="pre">add_n</span></code> generates output with default storage</li>
 </ul>
-<p>Defined in src/operator/tensor/elemwise_sum.cc:L121
+<p>Defined in src/operator/tensor/elemwise_sum.cc:L122
 This function support variable length of positional input.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
@@ -7352,6 +7352,57 @@ the input array into an output array of shape <code class="docutils literal"><sp
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>data</strong> (<a class="reference internal" href="#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – The input array.</li>
+<li><strong>name</strong> (<em>string, optional.</em>) – Name of the resulting symbol.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The result symbol.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol">Symbol</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
+<dt id="mxnet.symbol.ftrl_update">
+<code class="descclassname">mxnet.symbol.</code><code class="descname">ftrl_update</code><span class="sig-paren">(</span><em>weight=None</em>, <em>grad=None</em>, <em>z=None</em>, <em>n=None</em>, <em>lr=_Null</em>, <em>lamda1=_Null</em>, <em>beta=_Null</em>, <em>wd=_Null</em>, <em>rescale_grad=_Null</em>, <em>clip_gradient=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.ftrl_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update function for Ftrl optimizer.
+Referenced from <em>Ad Click Prediction: a View from the Trenches</em>, available at
+<a class="reference external" href="http://dl.acm.org/citation.cfm?id=2488200">http://dl.acm.org/citation.cfm?id=2488200</a>.</p>
+<p>It updates the weights using:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">rescaled_grad</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">grad</span> <span class="o">*</span> <span class="n">rescale_grad</span><span class="p">,</span> <span class="n">clip_gradient</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">+=</span> <span class="n">rescaled_grad</span> <span class="o">-</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="n">rescaled_grad</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">*</span> <span class="n">weight</span> <span class="o">/</span> <span class="n">learning_rate</span>
+<span class="n">n</span> <span class="o">+=</span> <span class="n">rescaled_grad</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">*</span> <span class="n">lamda1</span> <span class="o">-</span> <span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">beta</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">/</span> <span class="n">learning_rate</span> <span class="o">+</span> <span class="n">wd</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">></span> <span class="n">lamda1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If w, z and n are all of <code class="docutils literal"><span class="pre">row_sparse</span></code> storage type,
+only the row slices whose indices appear in grad.indices are updated (for w, z and n):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">grad</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
+    <span class="n">rescaled_grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">*</span> <span class="n">rescale_grad</span><span class="p">,</span> <span class="n">clip_gradient</span><span class="p">)</span>
+    <span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rescaled_grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+</span> <span class="n">rescaled_grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span> <span class="o">*</span> <span class="n">weight</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">/</span> <span class="n">learning_rate</span>
+    <span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rescaled_grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">w</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">*</span> <span class="n">lamda1</span> <span class="o">-</span> <span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">/</span> <span class="p">((</span><span class="n">beta</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span> <span class="o">/</span> <span class="n">learning_rate</span> <span class="o">+</span> <span class="n">wd</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">></span> <span class="n">lamda1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/optimizer_op.cc:L299</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>weight</strong> (<a class="reference internal" href="#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Weight</li>
+<li><strong>grad</strong> (<a class="reference internal" href="#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Gradient</li>
+<li><strong>z</strong> (<a class="reference internal" href="#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – z</li>
+<li><strong>n</strong> (<a class="reference internal" href="#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Square of grad</li>
+<li><strong>lr</strong> (<em>float, required</em>) – Learning rate</li>
+<li><strong>lamda1</strong> (<em>float, optional, default=0.01</em>) – The L1 regularization coefficient.</li>
+<li><strong>beta</strong> (<em>float, optional, default=1</em>) – Per-Coordinate Learning Rate beta.</li>
+<li><strong>wd</strong> (<em>float, optional, default=0</em>) – Weight decay augments the objective function with a regularization term that penalizes large weights. The penalty scales with the square of the magnitude of each weight.</li>
+<li><strong>rescale_grad</strong> (<em>float, optional, default=1</em>) – Rescale gradient to grad = rescale_grad*grad.</li>
+<li><strong>clip_gradient</strong> (<em>float, optional, default=-1</em>) – Clip gradient to the range of [-clip_gradient, clip_gradient] If clip_gradient <= 0, gradient clipping is turned off. grad = max(min(grad, clip_gradient), -clip_gradient).</li>
 <li><strong>name</strong> (<em>string, optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>
@@ -9432,7 +9483,7 @@ gradient and <span class="math">\(E[g^2]_t\)</span> is the decaying average over
 Tieleman &amp; Hinton, 2012.</p>
 <p>Hinton suggests the momentum term <span class="math">\(\gamma\)</span> to be 0.9 and the learning rate
 <span class="math">\(\eta\)</span> to be 0.001.</p>
-<p>Defined in src/operator/optimizer_op.cc:L220</p>
+<p>Defined in src/operator/optimizer_op.cc:L221</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9479,7 +9530,7 @@ E[g]_t = \gamma_1 * E[g]_{t-1} + (1 - \gamma_1) * g_t\\
 <a class="reference external" href="http://arxiv.org/pdf/1308.0850v5.pdf">http://arxiv.org/pdf/1308.0850v5.pdf</a> Eq(38) - Eq(45) by Alex Graves, 2013.</p>
 <p>Graves suggests the momentum term <span class="math">\(\gamma_1\)</span> to be 0.95, <span class="math">\(\gamma_2\)</span>
 to be 0.9 and the learning rate <span class="math">\(\eta\)</span> to be 0.0001.</p>
-<p>Defined in src/operator/optimizer_op.cc:L259</p>
+<p>Defined in src/operator/optimizer_op.cc:L260</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9992,7 +10043,7 @@ only the row slices whose indices appear in grad.indices are updated (for both w
     <span class="n">weight</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="n">v</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L87</p>
+<p>Defined in src/operator/optimizer_op.cc:L88</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -10033,7 +10084,7 @@ only the row slices whose indices appear in grad.indices are updated:</p>
     <span class="n">weight</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">gradient</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L49</p>
+<p>Defined in src/operator/optimizer_op.cc:L50</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>

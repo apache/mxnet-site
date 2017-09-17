@@ -836,6 +836,30 @@ by <a class="reference internal" href="#mxnet.optimizer.Optimizer" title="mxnet.
 <dd><p>The Ftrl optimizer.</p>
 <p>Referenced from <em>Ad Click Prediction: a View from the Trenches</em>, available at
 <a class="reference external" href="http://dl.acm.org/citation.cfm?id=2488200">http://dl.acm.org/citation.cfm?id=2488200</a>.</p>
+<dl class="docutils">
+<dt>eta :</dt>
+<dd><div class="first last math">
+\[\eta_{t,i} = \frac{learningrate}{\beta+\sqrt{\sum_{s=1}^tg_{s,i}^2}}\]</div>
+</dd>
+</dl>
+<p>The optimizer updates the weight by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">rescaled_grad</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">grad</span> <span class="o">*</span> <span class="n">rescale_grad</span><span class="p">,</span> <span class="n">clip_gradient</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">+=</span> <span class="n">rescaled_grad</span> <span class="o">-</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="n">rescaled_grad</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">*</span> <span class="n">weight</span> <span class="o">/</span> <span class="n">learning_rate</span>
+<span class="n">n</span> <span class="o">+=</span> <span class="n">rescaled_grad</span><span class="o">**</span><span class="mi">2</span>
+<span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">*</span> <span class="n">lamda1</span> <span class="o">-</span> <span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">beta</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">))</span> <span class="o">/</span> <span class="n">learning_rate</span> <span class="o">+</span> <span class="n">wd</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">></span> <span class="n">lamda1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the storage types of weight, state and grad are all <code class="docutils literal"><span class="pre">row_sparse</span></code>,     sparse updates are applied by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">grad</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
+    <span class="n">rescaled_grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">*</span> <span class="n">rescale_grad</span><span class="p">,</span> <span class="n">clip_gradient</span><span class="p">)</span>
+    <span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rescaled_grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+</span> <span class="n">rescaled_grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span> <span class="o">*</span> <span class="n">weight</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">/</span> <span class="n">learning_rate</span>
+    <span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="n">rescaled_grad</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">w</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">*</span> <span class="n">lamda1</span> <span class="o">-</span> <span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">/</span> <span class="p">((</span><span class="n">beta</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span> <span class="o">/</span> <span class="n">learning_rate</span> <span class="o">+</span> <span class="n">wd</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">></span> <span class="n">lamda1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For details of the update algorithm, see <a class="reference internal" href="../ndarray/ndarray.html#mxnet.ndarray.ftrl_update" title="mxnet.ndarray.ftrl_update"><code class="xref py py-class docutils literal"><span class="pre">ftrl_update</span></code></a>.</p>
+<p>This optimizer accepts the following parameters in addition to those accepted
+by <a class="reference internal" href="#mxnet.optimizer.Optimizer" title="mxnet.optimizer.Optimizer"><code class="xref py py-class docutils literal"><span class="pre">Optimizer</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -844,10 +868,6 @@ by <a class="reference internal" href="#mxnet.optimizer.Optimizer" title="mxnet.
 <li><strong>lamda1</strong> (<em>float, optional</em>) – L1 regularization coefficient.</li>
 <li><strong>learning_rate</strong> (<em>float, optional</em>) – The initial learning rate.</li>
 <li><strong>beta</strong> (<em>float, optional</em>) – Per-coordinate learning rate correlation parameter.</li>
-<li><strong>eta</strong> – <div class="math">
-</div>
-<p>eta_{t,i} = frac{learningrate}{beta+sqrt{sum_{s=1}^tg_{s,i}^t}}</p>
-</li>
 </ul>
 </td>
 </tr>
