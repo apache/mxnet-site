@@ -1518,7 +1518,7 @@ fixed-size items.</p>
 <col class="field-name"/>
 <col class="field-body"/>
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int or slice</em>) – Indexing key.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int or slice, or array like</em>) – Indexing key.</td>
 </tr>
 </tbody>
 </table>
@@ -3052,7 +3052,7 @@ Embedding(x, y, 4, 5) = [[[  5.,   6.,   7.,   8.,   9.],
                           [ 10.,  11.,  12.,  13.,  14.]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/indexing_op.cc:L73</p>
+<p>Defined in src/operator/tensor/indexing_op.cc:L74</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -5258,7 +5258,7 @@ an output array of shape <code class="docutils literal"><span class="pre">(i0,)<
 batch_take(x, [0,1,0]) = [ 1.  4.  5.]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/indexing_op.cc:L189</p>
+<p>Defined in src/operator/tensor/indexing_op.cc:L190</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -7052,6 +7052,49 @@ The output of this function.</p>
 </table>
 </dd></dl>
 <dl class="function">
+<dt id="mxnet.ndarray.gather_nd">
+<code class="descclassname">mxnet.ndarray.</code><code class="descname">gather_nd</code><span class="sig-paren">(</span><em>data=None</em>, <em>indices=None</em>, <em>out=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.gather_nd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather elements or slices from <cite>data</cite> and store to a tensor whose
+shape is defined by <cite>indices</cite>. <cite>gather_nd</cite> and <cite>scatter_nd</cite> are inverse functions
+to each other.</p>
+<p>Given <cite>data</cite> with shape <cite>(X_0, X_1, ..., X_{N-1})</cite> and indices with shape
+<cite>(M, Y_0, ..., Y_{K-1})</cite>, the output will have shape <cite>(Y_0, ..., Y_{K-1}, X_M, ..., X_{N-1})</cite>,
+where <cite>M <= N</cite>. If <cite>M == N</cite>, output shape will simply be <cite>(Y_0, ..., Y_{K-1})</cite>.</p>
+<p>The elements in output is defined as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>output[y_0, ..., y_{K-1}, x_M, ..., x_{N-1}] = data[indices[0, y_0, ..., y_{K-1}],
+                                                    ...,
+                                                    indices[M-1, y_0, ..., y_{K-1}],
+                                                    x_M, ..., x_{N-1}]
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="n">gather_nd</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<a class="reference internal" href="#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – data</li>
+<li><strong>indices</strong> (<a class="reference internal" href="#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – indices</li>
+<li><strong>out</strong> (<em>NDArray, optional</em>) – The output NDArray to hold the result.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> –
+The output of this function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">NDArray or list of NDArrays</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
 <dt id="mxnet.ndarray.identity">
 <code class="descclassname">mxnet.ndarray.</code><code class="descname">identity</code><span class="sig-paren">(</span><em>data=None</em>, <em>out=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.identity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a copy of the input.</p>
@@ -7121,7 +7164,7 @@ L = [[[-3.74165739, 0.],
       [-19.09768702, 0.52758934]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L526</p>
+<p>Defined in src/operator/tensor/la_op.cc:L528</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -7440,7 +7483,7 @@ A = [[[1., 1.]], [[0.1, 0.1]]]
 syrk(A, alpha=2., transpose=False) = [[[4.]], [[0.04]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L458</p>
+<p>Defined in src/operator/tensor/la_op.cc:L460</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8225,7 +8268,7 @@ one_hot([[1,0],[1,0],[2,0]], 3) = [[[ 0.  1.  0.]
                                     [ 1.  0.  0.]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/indexing_op.cc:L235</p>
+<p>Defined in src/operator/tensor/indexing_op.cc:L236</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9668,6 +9711,50 @@ The output of this function.</p>
 </table>
 </dd></dl>
 <dl class="function">
+<dt id="mxnet.ndarray.scatter_nd">
+<code class="descclassname">mxnet.ndarray.</code><code class="descname">scatter_nd</code><span class="sig-paren">(</span><em>data=None</em>, <em>indices=None</em>, <em>shape=_Null</em>, <em>out=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.scatter_nd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scatters data into a new tensor according to indices.
+<cite>gather_nd</cite> and <cite>scatter_nd</cite> are inverse functions to each other.</p>
+<p>Given <cite>data</cite> with shape <cite>(Y_0, ..., Y_{K-1}, X_M, ..., X_{N-1})</cite> and indices with shape
+<cite>(M, Y_0, ..., Y_{K-1})</cite>, the output will have shape <cite>(X_0, X_1, ..., X_{N-1})</cite>,
+where <cite>M <= N</cite>. If <cite>M == N</cite>, data shape should simply be <cite>(Y_0, ..., Y_{K-1})</cite>.</p>
+<p>The elements in output is defined as follows:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>output[indices[0, y_0, ..., y_{K-1}],
+       ...,
+       indices[M-1, y_0, ..., y_{K-1}],
+       x_M, ..., x_{N-1}] = data[y_0, ..., y_{K-1}, x_M, ..., x_{N-1}]
+</pre></div>
+</div>
+<p>all other entries in output are 0.</p>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="n">scatter_nd</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<a class="reference internal" href="#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – data</li>
+<li><strong>indices</strong> (<a class="reference internal" href="#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – indices</li>
+<li><strong>shape</strong> (<em>Shape(tuple), required</em>) – Shape of output.</li>
+<li><strong>out</strong> (<em>NDArray, optional</em>) – The output NDArray to hold the result.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> –
+The output of this function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">NDArray or list of NDArrays</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
 <dt id="mxnet.ndarray.sgd_mom_update">
 <code class="descclassname">mxnet.ndarray.</code><code class="descname">sgd_mom_update</code><span class="sig-paren">(</span><em>weight=None</em>, <em>grad=None</em>, <em>mom=None</em>, <em>lr=_Null</em>, <em>momentum=_Null</em>, <em>wd=_Null</em>, <em>rescale_grad=_Null</em>, <em>clip_gradient=_Null</em>, <em>out=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.sgd_mom_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Momentum update function for Stochastic Gradient Descent (SDG) optimizer.</p>
@@ -10598,7 +10685,7 @@ take(x, [[0,1],[1,2]]) = [[[ 1.,  2.],
                            [ 5.,  6.]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/indexing_op.cc:L134</p>
+<p>Defined in src/operator/tensor/indexing_op.cc:L135</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
