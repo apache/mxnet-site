@@ -1,8 +1,10 @@
 var searchData=
 [
   ['makeunique',['MakeUnique',['../namespacemxnet_1_1common.html#a9d9abe40c84b9924e51d5d57b3f0b7d6',1,'mxnet::common::MakeUnique(Args &amp;&amp;...args)'],['../namespacemxnet_1_1common.html#a39b3453302aa3aa56230fbc88005861d',1,'mxnet::common::MakeUnique(size_t n)'],['../namespacemxnet_1_1common.html#a6ca270747bb7ab942c61d364f14f3042',1,'mxnet::common::MakeUnique(Args &amp;&amp;...args)=delete']]],
+  ['markvariables',['MarkVariables',['../classmxnet_1_1Imperative.html#aa8c469ce724fb0c0aa27078e84428416',1,'mxnet::Imperative']]],
+  ['mutable_5finput_5fnodes',['mutable_input_nodes',['../classmxnet_1_1Imperative_1_1CachedOp.html#a7b5ef16f1454140e3457670f8b57a61f',1,'mxnet::Imperative::CachedOp']]],
   ['mxautogradbackward',['MXAutogradBackward',['../c__api_8h.html#a133d10a566764530bf3172e52afbe561',1,'c_api.h']]],
-  ['mxautogradbackwardex',['MXAutogradBackwardEx',['../c__api_8h.html#a57a5d1ed585f9f431a31f921b4ca00ab',1,'c_api.h']]],
+  ['mxautogradbackwardex',['MXAutogradBackwardEx',['../c__api_8h.html#ad14437f7eeba78c360f9717c6b5af177',1,'c_api.h']]],
   ['mxautogradcomputegradient',['MXAutogradComputeGradient',['../c__api_8h.html#a4ea5441aa16bff2121855a5afb7be84e',1,'c_api.h']]],
   ['mxautogradgetsymbol',['MXAutogradGetSymbol',['../c__api_8h.html#a638b8ad3ae66ff77d17bd3ee504f12cc',1,'c_api.h']]],
   ['mxautogradisrecording',['MXAutogradIsRecording',['../c__api_8h.html#a7464b4247cc7c8d3756edfc07bee833b',1,'c_api.h']]],

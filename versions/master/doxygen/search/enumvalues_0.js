@@ -25,6 +25,7 @@ var searchData=
   ['kcustomopproplistauxiliarystates',['kCustomOpPropListAuxiliaryStates',['../c__api_8h.html#a62d6b72cc6b3d920797c32ea8732cbbaaabeb765165b4748e68c7f196bf8a1686',1,'c_api.h']]],
   ['kcustomopproplistoutputs',['kCustomOpPropListOutputs',['../c__api_8h.html#a62d6b72cc6b3d920797c32ea8732cbbaa0a32388e902d5d81a88f62f3eabf56c3',1,'c_api.h']]],
   ['kdefaultstorage',['kDefaultStorage',['../namespacemxnet.html#a536b732faa980e1de446c552460ff76aabf6395d98a9668e8066a0c0da5570608',1,'mxnet']]],
+  ['kdeletevar',['kDeleteVar',['../namespacemxnet.html#a998b74220fab2b012cf8a179650e1b3bac41fda8552e9d327ad3b06b1bafa663a',1,'mxnet']]],
   ['kgpu',['kGPU',['../structmxnet_1_1Context.html#a611c227b5e04a2777c3e4507bb76f60eab21bed4d5cee411db15283d7529f28cf',1,'mxnet::Context']]],
   ['kidx',['kIdx',['../namespacemxnet_1_1csr.html#a74a2e3877ef7b348d5374a9d604aba42aa6ca1dbcb9c5858e0d28237ae3624ed7',1,'mxnet::csr::kIdx()'],['../namespacemxnet_1_1rowsparse.html#a0ad4c619684fa4d442c7076c18fef232ac52a46037d8cfe90ccc5da8712c7f6da',1,'mxnet::rowsparse::kIdx()']]],
   ['kindptr',['kIndPtr',['../namespacemxnet_1_1csr.html#a74a2e3877ef7b348d5374a9d604aba42ad9dcbaec1c8c6ca9d69648c83354aac1',1,'mxnet::csr']]],

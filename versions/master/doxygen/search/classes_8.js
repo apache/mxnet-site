@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kvstore',['KVStore',['../classmxnet_1_1KVStore.html',1,'mxnet']]]
+  ['lazyallocarray',['LazyAllocArray',['../classmxnet_1_1common_1_1LazyAllocArray.html',1,'mxnet::common']]]
 ];

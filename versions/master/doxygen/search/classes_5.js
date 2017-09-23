@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gradfunctionargument',['GradFunctionArgument',['../structmxnet_1_1op_1_1GradFunctionArgument.html',1,'mxnet::op']]]
+  ['handle',['Handle',['../structmxnet_1_1Storage_1_1Handle.html',1,'mxnet::Storage']]]
 ];

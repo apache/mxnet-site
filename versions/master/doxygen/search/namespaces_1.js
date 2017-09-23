@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['autograd',['autograd',['../namespacemxnet_1_1autograd.html',1,'mxnet']]],
   ['common',['common',['../namespacemxnet_1_1common.html',1,'mxnet']]],
   ['csr',['csr',['../namespacemxnet_1_1csr.html',1,'mxnet']]],
   ['cuda',['cuda',['../namespacemxnet_1_1common_1_1cuda.html',1,'mxnet::common']]],

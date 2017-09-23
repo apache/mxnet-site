@@ -5,6 +5,7 @@ var searchData=
   ['arg_5fgrad_5fmap',['arg_grad_map',['../classmxnet_1_1Executor.html#a84552a918a65633678f30c00a2a0ae7f',1,'mxnet::Executor']]],
   ['asarray',['AsArray',['../classmxnet_1_1NDArray.html#a3896fcce89afce4c1d2f825f7853ca0c',1,'mxnet::NDArray']]],
   ['at',['At',['../classmxnet_1_1NDArray.html#a3b615512a8fb89b9edc99b35064ead95',1,'mxnet::NDArray']]],
+  ['atwithrecord',['AtWithRecord',['../classmxnet_1_1NDArray.html#aa2a801dd5c47b5bdd01a385d2c4327b8',1,'mxnet::NDArray']]],
   ['aux_5fdata',['aux_data',['../classmxnet_1_1NDArray.html#ad8194805eabb65d8a9d33fda840b66a9',1,'mxnet::NDArray']]],
   ['aux_5fndarray',['aux_ndarray',['../classmxnet_1_1NDArray.html#a3d018c2cfcba0ad499ee5f8ac1475964',1,'mxnet::NDArray']]],
   ['aux_5fshape',['aux_shape',['../classmxnet_1_1NDArray.html#a5ebf1ac5452188d02bc7d784cb35fca9',1,'mxnet::NDArray']]],

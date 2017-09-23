@@ -1,9 +1,6 @@
 var searchData=
 [
   ['add_5farguments',['add_arguments',['../classmxnet_1_1op_1_1SimpleOpRegEntry.html#a405bfb5929d459d45d93c2eaa645bfb5',1,'mxnet::op::SimpleOpRegEntry']]],
-  ['ag_5fnode',['ag_node',['../classmxnet_1_1autograd_1_1AGNodeEntry.html#ada6b942a22f14e3d61fccb645f9e9a27',1,'mxnet::autograd::AGNodeEntry']]],
-  ['agnodeentry',['AGNodeEntry',['../classmxnet_1_1autograd_1_1AGNodeEntry.html',1,'mxnet::autograd']]],
-  ['agnodeptr',['AGNodePtr',['../namespacemxnet_1_1autograd.html#a8070fc188711b03b349a39d1b286d4a0',1,'mxnet::autograd']]],
   ['alloc',['Alloc',['../classmxnet_1_1Storage.html#aaa387e9ae8d66a63438543d640f6cfff',1,'mxnet::Storage']]],
   ['arg_5fgrad_5fmap',['arg_grad_map',['../classmxnet_1_1Executor.html#a84552a918a65633678f30c00a2a0ae7f',1,'mxnet::Executor']]],
   ['asarray',['AsArray',['../classmxnet_1_1NDArray.html#a3896fcce89afce4c1d2f825f7853ca0c',1,'mxnet::NDArray']]],
@@ -13,7 +10,7 @@ var searchData=
   ['at',['At',['../classmxnet_1_1NDArray.html#a3b615512a8fb89b9edc99b35064ead95',1,'mxnet::NDArray']]],
   ['atomicsymbolcreator',['AtomicSymbolCreator',['../c__api_8h.html#aa2e96133f49cfdc1095da6cd08afbce0',1,'c_api.h']]],
   ['atomicsymbolhandle',['AtomicSymbolHandle',['../c__api_8h.html#aaccda72ea7a5439c715ff5007b9595b5',1,'c_api.h']]],
-  ['autogradruntime',['AutogradRuntime',['../classmxnet_1_1NDArray.html#a423cc97aa03ee0dd8bc13781b77b8e50',1,'mxnet::NDArray']]],
+  ['atwithrecord',['AtWithRecord',['../classmxnet_1_1NDArray.html#aa2a801dd5c47b5bdd01a385d2c4327b8',1,'mxnet::NDArray']]],
   ['aux_5fdata',['aux_data',['../classmxnet_1_1NDArray.html#ad8194805eabb65d8a9d33fda840b66a9',1,'mxnet::NDArray']]],
   ['aux_5fndarray',['aux_ndarray',['../classmxnet_1_1NDArray.html#a3d018c2cfcba0ad499ee5f8ac1475964',1,'mxnet::NDArray']]],
   ['aux_5fshape',['aux_shape',['../classmxnet_1_1NDArray.html#a5ebf1ac5452188d02bc7d784cb35fca9',1,'mxnet::NDArray']]],

@@ -8,7 +8,7 @@
 var indexSectionsWithContent =
 {
   0: ":_abcdefghiklmnoprstuvw~",
-  1: "acdefghiklmnorstu",
+  1: "cdefghiklmnorstu",
   2: "dm",
   3: "bcegiklmnorstu",
   4: "_abcdefgilmnoprstvw~",
@@ -16,7 +16,7 @@ var indexSectionsWithContent =
   6: "abcdefgikmnoprstuv",
   7: "cdefnorst",
   8: "k",
-  9: ":an",
+  9: ":in",
   10: "acdmp"
 };
 

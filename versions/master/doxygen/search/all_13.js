@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['t',['T',['../classmxnet_1_1NDArray.html#a3fe1974c7c2d522b09b9bf82fd2865ba',1,'mxnet::NDArray']]],
-  ['tblob',['TBlob',['../classmxnet_1_1TBlob.html#adcdc6de67f81454f0a142bfc9fd38c9e',1,'mxnet::TBlob::TBlob(void)'],['../classmxnet_1_1TBlob.html#af89975f6a6de34624a1ee7fbc43df8fa',1,'mxnet::TBlob::TBlob(DType *dptr, const TShape &amp;shape, int dev_mask, int dev_id=-1)'],['../classmxnet_1_1TBlob.html#a660f447fbe40782e1db6a993ab1e37b4',1,'mxnet::TBlob::TBlob(void *dptr, const TShape &amp;shape, int dev_mask, int type_flag, int dev_id=-1)'],['../classmxnet_1_1TBlob.html#aae92a89345aad79c8c3b451b9e3b84a5',1,'mxnet::TBlob::TBlob(const mshadow::Tensor&lt; Device, dim, DType &gt; &amp;src)']]],
   ['tblob',['TBlob',['../classmxnet_1_1TBlob.html',1,'mxnet']]],
+  ['tblob',['TBlob',['../classmxnet_1_1TBlob.html#adcdc6de67f81454f0a142bfc9fd38c9e',1,'mxnet::TBlob::TBlob(void)'],['../classmxnet_1_1TBlob.html#af89975f6a6de34624a1ee7fbc43df8fa',1,'mxnet::TBlob::TBlob(DType *dptr, const TShape &amp;shape, int dev_mask, int dev_id=-1)'],['../classmxnet_1_1TBlob.html#a660f447fbe40782e1db6a993ab1e37b4',1,'mxnet::TBlob::TBlob(void *dptr, const TShape &amp;shape, int dev_mask, int type_flag, int dev_id=-1)'],['../classmxnet_1_1TBlob.html#aae92a89345aad79c8c3b451b9e3b84a5',1,'mxnet::TBlob::TBlob(const mshadow::Tensor&lt; Device, dim, DType &gt; &amp;src)']]],
   ['tensor_5fblob_2eh',['tensor_blob.h',['../tensor__blob_8h.html',1,'']]],
   ['tself',['TSelf',['../classmxnet_1_1op_1_1SimpleOpRegEntry.html#ac2fd6ca9171b44a1ab131430cc5866a3',1,'mxnet::op::SimpleOpRegEntry']]],
   ['tshape',['TShape',['../namespacemxnet.html#a6e14bb5f6ffc81892feca8d1da658687',1,'mxnet']]],
