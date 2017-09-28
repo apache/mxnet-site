@@ -211,6 +211,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#optimization-api">Optimization API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#callback-api">Callback API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#metric-api">Metric API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#run-time-compilation-api">Run-Time Compilation API</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../r/index.html">R Documents</a></li>
@@ -238,7 +239,7 @@
 <col width="90%"/>
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#module-mxnet.ndarray" title="mxnet.ndarray"><code class="xref py py-obj docutils literal"><span class="pre">mxnet.ndarray</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="sparse.html#module-mxnet.ndarray" title="mxnet.ndarray"><code class="xref py py-obj docutils literal"><span class="pre">mxnet.ndarray</span></code></a></td>
 <td>NDArray API of MXNet.</td>
 </tr>
 </tbody>
@@ -302,7 +303,7 @@ broadcasting enabled by default.</li>
 <td>An array object representing a multidimensional, homogeneous array of fixed-size items.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="sparse.html#mxnet.ndarray.sparse.CSRNDArray" title="mxnet.ndarray.sparse.CSRNDArray"><code class="xref py py-obj docutils literal"><span class="pre">sparse.CSRNDArray</span></code></a></td>
-<td>A sparse representation of 2D NDArray in the standard CSR format.</td>
+<td>A sparse representation of 2D NDArray in the Compressed Sparse Row format.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="sparse.html#mxnet.ndarray.sparse.RowSparseNDArray" title="mxnet.ndarray.sparse.RowSparseNDArray"><code class="xref py py-obj docutils literal"><span class="pre">sparse.RowSparseNDArray</span></code></a></td>
 <td>A sparse representation of a set of NDArray row slices at given indices.</td>
@@ -738,10 +739,10 @@ broadcasting enabled by default.</li>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.ndarray.arange" title="mxnet.ndarray.arange"><code class="xref py py-obj docutils literal"><span class="pre">arange</span></code></a></td>
 <td>Returns evenly spaced values within a given interval.</td>
 </tr>
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">load</span></code></td>
+<tr class="row-odd"><td><a class="reference internal" href="sparse.html#mxnet.ndarray.load" title="mxnet.ndarray.load"><code class="xref py py-obj docutils literal"><span class="pre">load</span></code></a></td>
 <td>Loads an array from file.</td>
 </tr>
-<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">save</span></code></td>
+<tr class="row-even"><td><a class="reference internal" href="sparse.html#mxnet.ndarray.save" title="mxnet.ndarray.save"><code class="xref py py-obj docutils literal"><span class="pre">save</span></code></a></td>
 <td>Saves a list of arrays or a dict of str->array to file.</td>
 </tr>
 </tbody>
@@ -1087,6 +1088,9 @@ broadcasting enabled by default.</li>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.ndarray.square" title="mxnet.ndarray.square"><code class="xref py py-obj docutils literal"><span class="pre">square</span></code></a></td>
 <td>Returns element-wise squared value of the input.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mxnet.ndarray.reciprocal" title="mxnet.ndarray.reciprocal"><code class="xref py py-obj docutils literal"><span class="pre">reciprocal</span></code></a></td>
+<td>Returns the reciprocal of the argument, element-wise.</td>
 </tr>
 </tbody>
 </table>
@@ -7520,7 +7524,7 @@ with positive diagonal. We compute:</p>
 <blockquote>
 <div><em>out</em> = <em>A</em><sup>-T</sup> * <em>A</em><sup>-1</sup></div></blockquote>
 <p>In other words, if <em>A</em> is the Cholesky factor of a symmetric positive definite matrix
-<em>B</em>, then</p>
+<em>B</em> (obtained by <em>potrf</em>), then</p>
 <blockquote>
 <div><em>out</em> = <em>B</em><sup>-1</sup></div></blockquote>
 <p>If <em>n>2</em>, <em>potri</em> is performed separately on the trailing two dimensions for all inputs
@@ -7532,8 +7536,8 @@ with positive diagonal. We compute:</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Use this operator only if you are certain you need the inverse of <em>B</em>, and
-cannot use the Cholesky factor alone. The latter is more numerically
-stable and cheaper.</p>
+cannot use the Cholesky factor <em>A</em> (<em>potrf</em>), together with backsubstitution
+(<em>trsm</em>). The latter is numerically much safer, and also cheaper.</p>
 </div>
 <p>Examples:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span>// Single matrix inverse
@@ -8371,7 +8375,7 @@ The output of this function.</p>
                                        <span class="p">[</span><span class="o">-</span><span class="mf">1.23474145</span><span class="p">,</span>  <span class="mf">1.55807114</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L83</p>
+<p>Defined in src/operator/random/sample_op.cc:L81</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8733,7 +8737,7 @@ The output of this function.</p>
                                    <span class="p">[</span> <span class="mf">0.04146638</span><span class="p">,</span>  <span class="mf">0.31715935</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L113</p>
+<p>Defined in src/operator/random/sample_op.cc:L109</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8767,7 +8771,7 @@ The output of this function.</p>
                                          <span class="p">[</span> <span class="mf">3.91697288</span><span class="p">,</span>  <span class="mf">3.65933681</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L98</p>
+<p>Defined in src/operator/random/sample_op.cc:L95</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8805,7 +8809,7 @@ Samples will always be returned as a floating point data type.</p>
                                                                  <span class="p">[</span> <span class="mf">6.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L161</p>
+<p>Defined in src/operator/random/sample_op.cc:L154</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8842,7 +8846,7 @@ Samples will always be returned as a floating point data type.</p>
                                               <span class="p">[</span> <span class="mf">2.</span><span class="p">,</span>  <span class="mf">5.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L144</p>
+<p>Defined in src/operator/random/sample_op.cc:L138</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8881,7 +8885,7 @@ The output of this function.</p>
                                        <span class="p">[</span><span class="o">-</span><span class="mf">1.23474145</span><span class="p">,</span>  <span class="mf">1.55807114</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L83</p>
+<p>Defined in src/operator/random/sample_op.cc:L81</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8917,7 +8921,7 @@ Samples will always be returned as a floating point data type.</p>
                                <span class="p">[</span> <span class="mf">4.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L128</p>
+<p>Defined in src/operator/random/sample_op.cc:L123</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8956,7 +8960,7 @@ The output of this function.</p>
                                        <span class="p">[</span> <span class="mf">0.54488319</span><span class="p">,</span>  <span class="mf">0.84725171</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L64</p>
+<p>Defined in src/operator/random/sample_op.cc:L63</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9497,7 +9501,7 @@ sample_exponential(lam, shape=(2)) = [[ 0.51837951,  0.19866663],
                                       [ 0.09994757,  0.50447971]]
 </pre></div>
 </div>
-<p>Defined in src/operator/random/multisample_op.cc:L388</p>
+<p>Defined in src/operator/random/multisample_op.cc:L389</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9546,7 +9550,7 @@ sample_gamma(alpha, beta, shape=(2)) = [[ 0.        ,  0.        ],
                                         [ 2.25797319,  1.70734084]]
 </pre></div>
 </div>
-<p>Defined in src/operator/random/multisample_op.cc:L386</p>
+<p>Defined in src/operator/random/multisample_op.cc:L387</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9597,7 +9601,7 @@ sample_generalized_negative_binomial(mu, alpha, shape=(2)) = [[ 0.,  3.],
                                                               [ 3.,  1.]]
 </pre></div>
 </div>
-<p>Defined in src/operator/random/multisample_op.cc:L397</p>
+<p>Defined in src/operator/random/multisample_op.cc:L398</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9699,7 +9703,7 @@ sample_negative_binomial(k, p, shape=(2)) = [[ 15.,  50.],
                                              [ 16.,  12.]]
 </pre></div>
 </div>
-<p>Defined in src/operator/random/multisample_op.cc:L393</p>
+<p>Defined in src/operator/random/multisample_op.cc:L394</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9749,7 +9753,7 @@ sample_normal(mu, sigma, shape=(2)) = [[-0.56410581,  0.2928229 ],
                                        [ 0.95934606,  4.48287058]]
 </pre></div>
 </div>
-<p>Defined in src/operator/random/multisample_op.cc:L383</p>
+<p>Defined in src/operator/random/multisample_op.cc:L384</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9799,7 +9803,7 @@ sample_poisson(lam, shape=(2)) = [[  0.,   4.],
                                   [ 13.,   8.]]
 </pre></div>
 </div>
-<p>Defined in src/operator/random/multisample_op.cc:L390</p>
+<p>Defined in src/operator/random/multisample_op.cc:L391</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9848,7 +9852,7 @@ sample_uniform(low, high, shape=(2)) = [[ 0.40451524,  0.18017688],
                                         [ 3.18687344,  3.68352246]]
 </pre></div>
 </div>
-<p>Defined in src/operator/random/multisample_op.cc:L381</p>
+<p>Defined in src/operator/random/multisample_op.cc:L382</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -11161,7 +11165,7 @@ The output of this function.</p>
                                        <span class="p">[</span> <span class="mf">0.54488319</span><span class="p">,</span>  <span class="mf">0.84725171</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/random/sample_op.cc:L64</p>
+<p>Defined in src/operator/random/sample_op.cc:L63</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>

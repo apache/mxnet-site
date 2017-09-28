@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mxcallbacklist',['MXCallbackList',['../structMXCallbackList.html',1,'']]]
+  ['lazyallocarray',['LazyAllocArray',['../classmxnet_1_1common_1_1LazyAllocArray.html',1,'mxnet::common']]]
 ];

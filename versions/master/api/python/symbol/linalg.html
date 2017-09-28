@@ -207,6 +207,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#optimization-api">Optimization API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#callback-api">Callback API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#metric-api">Metric API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#run-time-compilation-api">Run-Time Compilation API</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../r/index.html">R Documents</a></li>
@@ -277,6 +278,9 @@ symbolic expressions for linear algebra routines.</p>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#mxnet.symbol.linalg.gelqf" title="mxnet.symbol.linalg.gelqf"><code class="xref py py-obj docutils literal"><span class="pre">gelqf</span></code></a></td>
 <td>LQ factorization for general matrix.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#mxnet.symbol.linalg.syevd" title="mxnet.symbol.linalg.syevd"><code class="xref py py-obj docutils literal"><span class="pre">syevd</span></code></a></td>
+<td>Eigendecomposition for symmetric matrix.</td>
 </tr>
 </tbody>
 </table>
@@ -519,7 +523,7 @@ with positive diagonal. We compute:</p>
 <blockquote>
 <div><em>out</em> = <em>A</em><sup>-T</sup> * <em>A</em><sup>-1</sup></div></blockquote>
 <p>In other words, if <em>A</em> is the Cholesky factor of a symmetric positive definite matrix
-<em>B</em>, then</p>
+<em>B</em> (obtained by <em>potrf</em>), then</p>
 <blockquote>
 <div><em>out</em> = <em>B</em><sup>-1</sup></div></blockquote>
 <p>If <em>n>2</em>, <em>potri</em> is performed separately on the trailing two dimensions for all inputs
@@ -531,8 +535,8 @@ with positive diagonal. We compute:</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Use this operator only if you are certain you need the inverse of <em>B</em>, and
-cannot use the Cholesky factor alone. The latter is more numerically
-stable and cheaper.</p>
+cannot use the Cholesky factor <em>A</em> (<em>potrf</em>), together with backsubstitution
+(<em>trsm</em>). The latter is numerically much safer, and also cheaper.</p>
 </div>
 <p>Examples:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span>// Single matrix inverse
@@ -595,6 +599,78 @@ sumlogdiag(A) = [1.9459, 3.9318]
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>A</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Tensor of square matrices</li>
+<li><strong>name</strong> (<em>string, optional.</em>) – Name of the resulting symbol.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The result symbol.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol">Symbol</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
+<dt id="mxnet.symbol.linalg.syevd">
+<code class="descclassname">mxnet.symbol.linalg.</code><code class="descname">syevd</code><span class="sig-paren">(</span><em>A=None</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.linalg.syevd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eigendecomposition for symmetric matrix.
+Input is a tensor <em>A</em> of dimension <em>n >= 2</em>.</p>
+<p>If <em>n=2</em>, <em>A</em> must be symmetric, of shape <em>(x, x)</em>. We compute the eigendecomposition,
+resulting in the orthonormal matrix <em>U</em> of eigenvectors, shape <em>(x, x)</em>, and the
+vector <em>L</em> of eigenvalues, shape <em>(x,)</em>, so that:</p>
+<blockquote>
+<div><em>U</em> * <em>A</em> = <em>diag(L)</em> * <em>U</em></div></blockquote>
+<p>Here:</p>
+<blockquote>
+<div><em>U</em> * <em>U</em><sup>T</sup> = <em>U</em><sup>T</sup> * <em>U</em> = <em>I</em></div></blockquote>
+<p>where <em>I</em> is the identity matrix. Also, <em>L(0) <= L(1) <= L(2) <= ...</em> (ascending order).</p>
+<p>If <em>n>2</em>, <em>syevd</em> is performed separately on the trailing two dimensions of <em>A</em> (batch
+mode). In this case, <em>U</em> has <em>n</em> dimensions like <em>A</em>, and <em>L</em> has <em>n-1</em> dimensions.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The operator supports float32 and float64 data types only.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For the time being, this operator supports the float64 data type only. If the
+rest of your expression uses float32, please apply the Cast operator to inputs
+and outputs.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Derivatives for this operator are defined only if <em>A</em> is such that all its
+eigenvalues are distinct, and the eigengaps are not too small. If you need
+gradients, do not apply this operator to matrices with multiple eigenvalues.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>// Single symmetric eigendecomposition
+A = [[1., 2.], [2., 4.]]
+U, L = syevd(A)
+U = [[0.89442719, -0.4472136],
+     [0.4472136, 0.89442719]]
+L = [0., 5.]
+
+// Batch symmetric eigendecomposition
+A = [[[1., 2.], [2., 4.]],
+     [[1., 2.], [2., 5.]]]
+U, L = syevd(A)
+U = [[[0.89442719, -0.4472136],
+      [0.4472136, 0.89442719]],
+     [[0.92387953, -0.38268343],
+      [0.38268343, 0.92387953]]]
+L = [[0., 5.],
+     [0.17157288, 5.82842712]]
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L601</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>A</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Tensor of input matrices to be factorized</li>
 <li><strong>name</strong> (<em>string, optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>

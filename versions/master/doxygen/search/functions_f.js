@@ -37,6 +37,7 @@ var searchData=
   ['shape',['shape',['../classmxnet_1_1NDArray.html#abfbb85eb84be64976417ed0b13b1d8ee',1,'mxnet::NDArray']]],
   ['shape_5f',['shape_',['../classmxnet_1_1NDArray.html#a33ab3282cf49ef9a81aa7c365482e357',1,'mxnet::NDArray']]],
   ['signalforkill',['SignalForKill',['../classmxnet_1_1common_1_1LazyAllocArray.html#a000e31ad914a20415519a2b39a1d08c3',1,'mxnet::common::LazyAllocArray']]],
+  ['signature',['signature',['../classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#a529b07e197329fed9631262dd7103fae',1,'mxnet::rtc::CudaModule::Kernel']]],
   ['simplebind',['SimpleBind',['../classmxnet_1_1Executor.html#a2aca59fcb5aa76b1626b52bd14f0a32c',1,'mxnet::Executor']]],
   ['size',['size',['../classmxnet_1_1TBlob.html#a523fd58883de4b9cd0b1a2852daa64ae',1,'mxnet::TBlob::size(index_t idx) const '],['../classmxnet_1_1TBlob.html#a3b04db1348834e1576cfb2ed54959703',1,'mxnet::TBlob::Size(void) const ']]],
   ['slice',['Slice',['../classmxnet_1_1NDArray.html#a7acb6462c11e071949db2b0e1fbfd66e',1,'mxnet::NDArray']]],

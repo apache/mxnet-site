@@ -29,5 +29,6 @@ var searchData=
   ['num_5fscalars',['num_scalars',['../structmxnet_1_1NDArrayFunctionReg.html#a9591e2abf6cbca0903aec582b96b4d95',1,'mxnet::NDArrayFunctionReg']]],
   ['num_5fuse_5fvars',['num_use_vars',['../structmxnet_1_1NDArrayFunctionReg.html#aa0847438b4f3f600ec61d6d544755a29',1,'mxnet::NDArrayFunctionReg']]],
   ['numoutputs',['NumOutputs',['../classmxnet_1_1OperatorProperty.html#a49e25d85c38199338a9fa8150bc86df1',1,'mxnet::OperatorProperty']]],
-  ['numvisibleoutputs',['NumVisibleOutputs',['../classmxnet_1_1OperatorProperty.html#a6dc5ecd089ef01dcc154c02b20ad2f4b',1,'mxnet::OperatorProperty']]]
+  ['numvisibleoutputs',['NumVisibleOutputs',['../classmxnet_1_1OperatorProperty.html#a6dc5ecd089ef01dcc154c02b20ad2f4b',1,'mxnet::OperatorProperty']]],
+  ['nvrtc_5fcall',['NVRTC_CALL',['../cuda__utils_8h.html#a63b6d263b94df9e33474894ad02b792d',1,'cuda_utils.h']]]
 ];

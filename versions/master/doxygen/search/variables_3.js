@@ -6,5 +6,6 @@ var searchData=
   ['dev_5fid',['dev_id',['../structmxnet_1_1Context.html#a8486dcc599dffe447e2f098b170d3db9',1,'mxnet::Context']]],
   ['dev_5ftype',['dev_type',['../structmxnet_1_1Context.html#a66040df23c2a5663f29bc50aa0bbace3',1,'mxnet::Context']]],
   ['dptr',['dptr',['../structmxnet_1_1Storage_1_1Handle.html#a428e25a6317e50c8b55307c96f8ec595',1,'mxnet::Storage::Handle']]],
-  ['dptr_5f',['dptr_',['../classmxnet_1_1TBlob.html#a4e5f4953be2c16724ecff0afc5ea2e10',1,'mxnet::TBlob']]]
+  ['dptr_5f',['dptr_',['../classmxnet_1_1TBlob.html#a4e5f4953be2c16724ecff0afc5ea2e10',1,'mxnet::TBlob']]],
+  ['dtype',['dtype',['../structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#adf42baba2bb344bfc7a2be4c6ede34c8',1,'mxnet::rtc::CudaModule::ArgType']]]
 ];

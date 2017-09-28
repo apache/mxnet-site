@@ -7,5 +7,6 @@ var searchData=
   ['helper',['helper',['../namespacemxnet_1_1common_1_1helper.html',1,'mxnet::common']]],
   ['mxnet',['mxnet',['../namespacemxnet.html',1,'']]],
   ['op',['op',['../namespacemxnet_1_1op.html',1,'mxnet']]],
-  ['rowsparse',['rowsparse',['../namespacemxnet_1_1rowsparse.html',1,'mxnet']]]
+  ['rowsparse',['rowsparse',['../namespacemxnet_1_1rowsparse.html',1,'mxnet']]],
+  ['rtc',['rtc',['../namespacemxnet_1_1rtc.html',1,'mxnet']]]
 ];

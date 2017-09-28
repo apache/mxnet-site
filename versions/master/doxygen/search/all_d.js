@@ -157,8 +157,12 @@ var searchData=
   ['mxrecordiowriterfree',['MXRecordIOWriterFree',['../c__api_8h.html#ab2a55917ffd918e334464f1b8a7a1ab9',1,'c_api.h']]],
   ['mxrecordiowritertell',['MXRecordIOWriterTell',['../c__api_8h.html#a6cc8e9f94ec431edf8d9502f20d7b833',1,'c_api.h']]],
   ['mxrecordiowriterwriterecord',['MXRecordIOWriterWriteRecord',['../c__api_8h.html#a0c380b6aa00446e7cb6021c8e2df75f3',1,'c_api.h']]],
-  ['mxrtc_2eh',['mxrtc.h',['../mxrtc_8h.html',1,'']]],
   ['mxrtccreate',['MXRtcCreate',['../c__api_8h.html#a87e98002ae1a925b65a8cf0773f802d3',1,'c_api.h']]],
+  ['mxrtccudakernelcall',['MXRtcCudaKernelCall',['../c__api_8h.html#ab538e41bfc6c0ce3185676dd028f8ccb',1,'c_api.h']]],
+  ['mxrtccudakernelcreate',['MXRtcCudaKernelCreate',['../c__api_8h.html#aa58e90c31701d59826a76bf0efaf4db5',1,'c_api.h']]],
+  ['mxrtccudakernelfree',['MXRtcCudaKernelFree',['../c__api_8h.html#a025928c86657eb708e45103b8e3f02d1',1,'c_api.h']]],
+  ['mxrtccudamodulecreate',['MXRtcCudaModuleCreate',['../c__api_8h.html#a19d9053892c51c0b89f0e7698ff9c24c',1,'c_api.h']]],
+  ['mxrtccudamodulefree',['MXRtcCudaModuleFree',['../c__api_8h.html#a1f93e2016c7b3cd869a5741201b5508c',1,'c_api.h']]],
   ['mxrtcfree',['MXRtcFree',['../c__api_8h.html#a13819b19ab3cdd91566b1d5cf8bc6b0a',1,'c_api.h']]],
   ['mxrtcpush',['MXRtcPush',['../c__api_8h.html#a20f72cb4e18d5081eaf40875adcb6e98',1,'c_api.h']]],
   ['mxsetnumompthreads',['MXSetNumOMPThreads',['../c__api_8h.html#a13ebc161bc64049a26404ee6eca4ac26',1,'c_api.h']]],
@@ -194,5 +198,6 @@ var searchData=
   ['mxsymbolsavetojson',['MXSymbolSaveToJSON',['../c__api_8h.html#a5c99eac0fe3cfa0912259d0fa12b6651',1,'c_api.h']]],
   ['mxsymbolsetattr',['MXSymbolSetAttr',['../c__api_8h.html#aebeac35c3110eb391035fbbeb29e9436',1,'c_api.h']]],
   ['op',['op',['../namespacemxnet_1_1op.html',1,'mxnet']]],
-  ['rowsparse',['rowsparse',['../namespacemxnet_1_1rowsparse.html',1,'mxnet']]]
+  ['rowsparse',['rowsparse',['../namespacemxnet_1_1rowsparse.html',1,'mxnet']]],
+  ['rtc',['rtc',['../namespacemxnet_1_1rtc.html',1,'mxnet']]]
 ];
