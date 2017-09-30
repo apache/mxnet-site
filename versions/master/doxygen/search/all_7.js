@@ -7,7 +7,7 @@ var searchData=
   ['fieldentry',['FieldEntry',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html#a0755f0abe443e4b57da234ec7b49fde0',1,'dmlc::parameter::FieldEntry&lt; mxnet::TShape &gt;']]],
   ['fieldentry_3c_20mxnet_3a_3atshape_20_3e',['FieldEntry&lt; mxnet::TShape &gt;',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html',1,'dmlc::parameter']]],
   ['find',['Find',['../classmxnet_1_1op_1_1SimpleOpRegistry.html#a8ee596c99eef39fbbfffca181bf7f26e',1,'mxnet::op::SimpleOpRegistry']]],
-  ['finferstoragetype',['FInferStorageType',['../namespacemxnet.html#a06b4dc167edc15f0750c026ee6d5c44a',1,'mxnet']]],
+  ['finferstoragetype',['FInferStorageType',['../namespacemxnet.html#a0a1395f21139ba975a6268539df6a15d',1,'mxnet']]],
   ['flatto1d',['FlatTo1D',['../classmxnet_1_1TBlob.html#a95bf7032c2b90627510a89ac8bb2946f',1,'mxnet::TBlob']]],
   ['flatto2d',['FlatTo2D',['../classmxnet_1_1TBlob.html#a23cc57be3b2c40a269c8c9f242fa0532',1,'mxnet::TBlob']]],
   ['flatto3d',['FlatTo3D',['../classmxnet_1_1TBlob.html#ac5cd4953869cb66ed374854a34da40f8',1,'mxnet::TBlob::FlatTo3D(int axis, mshadow::Stream&lt; Device &gt; *stream=NULL) const '],['../classmxnet_1_1TBlob.html#ada83447eb80b913592e9ac2bf8c5740f',1,'mxnet::TBlob::FlatTo3D(int axis_begin, int axis_end, mshadow::Stream&lt; Device &gt; *stream=NULL) const ']]],

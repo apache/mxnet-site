@@ -6,7 +6,7 @@ var searchData=
   ['init',['Init',['../classmxnet_1_1IIterator.html#a774e490e5f3eee767fdc11b779bbd1fe',1,'mxnet::IIterator::Init()'],['../classmxnet_1_1KVStore.html#af4e56c1f2b90bdd02e2c4e7d2abf6265',1,'mxnet::KVStore::Init(const std::vector&lt; int &gt; &amp;keys, const std::vector&lt; NDArray &gt; &amp;values)=0'],['../classmxnet_1_1KVStore.html#a164c3314ba04dadab4fa2a7a74c440d4',1,'mxnet::KVStore::Init(const std::vector&lt; std::string &gt; &amp;str_keys, const std::vector&lt; NDArray &gt; &amp;values)=0'],['../classmxnet_1_1OperatorProperty.html#a0fb32e0ab03a86517473db0f0630856c',1,'mxnet::OperatorProperty::Init()']]],
   ['initpsenv',['InitPSEnv',['../classmxnet_1_1KVStore.html#a5d919a7a4c9495e9a569c8d733d6325f',1,'mxnet::KVStore']]],
   ['invoke',['Invoke',['../classmxnet_1_1Imperative.html#ae3a1279e546061bf6062817c93dce0dc',1,'mxnet::Imperative']]],
-  ['invokeop',['InvokeOp',['../classmxnet_1_1Imperative.html#af0c1707c98be967b761a355a2a2fc2ac',1,'mxnet::Imperative']]],
+  ['invokeop',['InvokeOp',['../classmxnet_1_1Imperative.html#adb41ed890acd4cbe672f088b0284fe84',1,'mxnet::Imperative']]],
   ['is_5fnone',['is_none',['../classmxnet_1_1NDArray.html#a2a15ffdbf29d4d5455a4fbb4b607880c',1,'mxnet::NDArray']]],
   ['is_5frecording',['is_recording',['../classmxnet_1_1Imperative.html#a62790da5baceaad22abdf23326770239',1,'mxnet::Imperative']]],
   ['is_5ftraining',['is_training',['../classmxnet_1_1Imperative.html#a05de0382a6aecf2cb8ee1c0a7c021bae',1,'mxnet::Imperative']]],

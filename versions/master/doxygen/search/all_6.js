@@ -7,6 +7,7 @@ var searchData=
   ['entry_5f',['entry_',['../classmxnet_1_1NDArray.html#a09ff97852143fdd75dd1e071d0d53266',1,'mxnet::NDArray::entry_({nullptr, 0, 0})'],['../classmxnet_1_1NDArray.html#a09ff97852143fdd75dd1e071d0d53266',1,'mxnet::NDArray::entry_({nullptr, 0, 0})']]],
   ['envarguments',['EnvArguments',['../structmxnet_1_1op_1_1EnvArguments.html',1,'mxnet::op']]],
   ['exec_5ftype',['exec_type',['../classmxnet_1_1Operator.html#aa6b4c247a914b4659c773965248019c7',1,'mxnet::Operator::exec_type()'],['../classmxnet_1_1OperatorProperty.html#aa5d6354ebe3e2a0c51f7f7ce4a60f664',1,'mxnet::OperatorProperty::exec_type()']]],
+  ['exec_5futils_2eh',['exec_utils.h',['../exec__utils_8h.html',1,'']]],
   ['exectype',['ExecType',['../namespacemxnet.html#ad7801fb2dd68294d4c7a9e289bc071ad',1,'mxnet']]],
   ['executor',['Executor',['../classmxnet_1_1Executor.html',1,'mxnet']]],
   ['executor_2eh',['executor.h',['../executor_8h.html',1,'']]],

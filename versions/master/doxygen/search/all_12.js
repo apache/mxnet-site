@@ -35,6 +35,7 @@ var searchData=
   ['setdataname',['SetDataName',['../classmxnet_1_1IIterator.html#a79ed9023cf4e525c8b4a8c6fa96eea05',1,'mxnet::IIterator']]],
   ['setmonitorcallback',['SetMonitorCallback',['../classmxnet_1_1Executor.html#a3c701dda22a9c1e474d23b11edda9b0d',1,'mxnet::Executor']]],
   ['setupdefaultblobs',['SetupDefaultBlobs',['../namespacemxnet_1_1common.html#a611f7ee7b2a5289efd463b11edf57264',1,'mxnet::common']]],
+  ['setupdefaultblobsinout',['SetupDefaultBlobsInOut',['../namespacemxnet_1_1common.html#a4d4518c9dda1e3f9481839ebf7eaa34c',1,'mxnet::common']]],
   ['shape',['shape',['../classmxnet_1_1NDArray.html#abfbb85eb84be64976417ed0b13b1d8ee',1,'mxnet::NDArray']]],
   ['shape_5f',['shape_',['../classmxnet_1_1TBlob.html#a6cc7a57d9c33fefc08630e81951a004f',1,'mxnet::TBlob::shape_()'],['../classmxnet_1_1NDArray.html#a33ab3282cf49ef9a81aa7c365482e357',1,'mxnet::NDArray::shape_()']]],
   ['signalforkill',['SignalForKill',['../classmxnet_1_1common_1_1LazyAllocArray.html#a000e31ad914a20415519a2b39a1d08c3',1,'mxnet::common::LazyAllocArray']]],
