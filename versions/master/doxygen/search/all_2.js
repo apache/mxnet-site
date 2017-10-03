@@ -1,6 +1,8 @@
 var searchData=
 [
   ['add_5farguments',['add_arguments',['../classmxnet_1_1op_1_1SimpleOpRegEntry.html#a405bfb5929d459d45d93c2eaa645bfb5',1,'mxnet::op::SimpleOpRegEntry']]],
+  ['aginfo',['AGInfo',['../classmxnet_1_1Imperative_1_1AGInfo.html#a30ae688e0b9e1b9fb506db3a4a7c23fe',1,'mxnet::Imperative::AGInfo']]],
+  ['aginfo',['AGInfo',['../classmxnet_1_1Imperative_1_1AGInfo.html',1,'mxnet::Imperative']]],
   ['alloc',['Alloc',['../classmxnet_1_1Storage.html#aaa387e9ae8d66a63438543d640f6cfff',1,'mxnet::Storage']]],
   ['arg_5fgrad_5fmap',['arg_grad_map',['../classmxnet_1_1Executor.html#a84552a918a65633678f30c00a2a0ae7f',1,'mxnet::Executor']]],
   ['argtype',['ArgType',['../structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html',1,'mxnet::rtc::CudaModule']]],

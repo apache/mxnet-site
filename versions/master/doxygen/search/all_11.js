@@ -13,7 +13,7 @@ var searchData=
   ['reshapeandalloc',['ReshapeAndAlloc',['../classmxnet_1_1NDArray.html#a15af0cf321dbe235b6900417d4847aae',1,'mxnet::NDArray']]],
   ['reshapewithrecord',['ReshapeWithRecord',['../classmxnet_1_1NDArray.html#a567712180a066b783907b30f1cb2248a',1,'mxnet::NDArray']]],
   ['resource',['Resource',['../structmxnet_1_1Resource.html',1,'mxnet']]],
-  ['resource',['resource',['../structmxnet_1_1op_1_1EnvArguments.html#a6b62df4767fd50d6a1fd9ebd44193bef',1,'mxnet::op::EnvArguments::resource()'],['../structmxnet_1_1Resource.html#a76a2cc8f2a94b67b3533a048a80396aa',1,'mxnet::Resource::Resource()']]],
+  ['resource',['Resource',['../structmxnet_1_1Resource.html#a76a2cc8f2a94b67b3533a048a80396aa',1,'mxnet::Resource::Resource()'],['../structmxnet_1_1op_1_1EnvArguments.html#a6b62df4767fd50d6a1fd9ebd44193bef',1,'mxnet::op::EnvArguments::resource()']]],
   ['resource_2eh',['resource.h',['../resource_8h.html',1,'']]],
   ['resourcemanager',['ResourceManager',['../classmxnet_1_1ResourceManager.html',1,'mxnet']]],
   ['resourcerequest',['ResourceRequest',['../structmxnet_1_1ResourceRequest.html#a0191250c5891ba487f354df4caf3604d',1,'mxnet::ResourceRequest::ResourceRequest()'],['../structmxnet_1_1ResourceRequest.html#aa01dd9fd716dfbb68c2ee01f5a11aea5',1,'mxnet::ResourceRequest::ResourceRequest(Type type)']]],

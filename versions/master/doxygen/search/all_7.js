@@ -19,7 +19,7 @@ var searchData=
   ['forwardinplaceoption',['ForwardInplaceOption',['../classmxnet_1_1OperatorProperty.html#aad7a3e87866515a2b7100e849a2fe966',1,'mxnet::OperatorProperty']]],
   ['forwardresource',['ForwardResource',['../classmxnet_1_1OperatorProperty.html#a623210dd1b9495ca73f223e0b06f998c',1,'mxnet::OperatorProperty']]],
   ['free',['Free',['../classmxnet_1_1Storage.html#a5bdbd7b3ab712cd9e087ab007bdc64dd',1,'mxnet::Storage']]],
-  ['fresh_5fout_5fgrad',['fresh_out_grad',['../classmxnet_1_1NDArray.html#aee74980eb87bf7c482d15458f5194cbe',1,'mxnet::NDArray']]],
+  ['fresh_5fout_5fgrad',['fresh_out_grad',['../classmxnet_1_1Imperative_1_1AGInfo.html#aa98f7d65123fb64697769cfb952de310',1,'mxnet::Imperative::AGInfo::fresh_out_grad()'],['../classmxnet_1_1NDArray.html#aee74980eb87bf7c482d15458f5194cbe',1,'mxnet::NDArray::fresh_out_grad()']]],
   ['fresourcerequest',['FResourceRequest',['../namespacemxnet.html#afaa687cbca9e992614be285711c1d72d',1,'mxnet']]],
   ['fromstring',['FromString',['../structmxnet_1_1Context.html#ac58071fc1c0647bcab7aca4a39ae6a29',1,'mxnet::Context']]],
   ['fstatefulcompute',['FStatefulCompute',['../namespacemxnet.html#a9097a269dd76d833c014149ff3eaab9b',1,'mxnet']]],
