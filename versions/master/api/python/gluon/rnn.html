@@ -239,14 +239,16 @@
 <p>This document lists the recurrent neural network API in Gluon:</p>
 <div class="section" id="recurrent-layers">
 <span id="recurrent-layers"></span><h3>Recurrent Layers<a class="headerlink" href="#recurrent-layers" title="Permalink to this headline">¶</a></h3>
-<p>Recurrent layers can be used in <code class="docutils literal"><span class="pre">Sequential</span></code> with other regular neural network layers. For example,
-to construct a sequence labeling model where a prediction is made for each time-step:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">model</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
-<span class="gp">>>> </span><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="gp">>>> </span><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
-<span class="gp">>>> </span><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
-<span class="gp">>>> </span><span class="n">model</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-<span class="gp">>>> </span><span class="n">model</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)))</span>
+<p>Recurrent layers can be used in <code class="docutils literal"><span class="pre">Sequential</span></code> with other regular neural network layers.
+For example, to construct a sequence labeling model where a prediction is made for each
+time-step:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">model</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="n">model</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)))</span>
 </pre></div>
 </div>
 <table border="1" class="longtable docutils">
@@ -269,8 +271,22 @@ to construct a sequence labeling model where a prediction is made for each time-
 </div>
 <div class="section" id="recurrent-cells">
 <span id="recurrent-cells"></span><h3>Recurrent Cells<a class="headerlink" href="#recurrent-cells" title="Permalink to this headline">¶</a></h3>
-<p>Recurrent cells exposes the intermediate recurrent states and allows for explicit stepping and
-unrolling, and thus provides more flexibility.</p>
+<p>Recurrent cells allows fine-grained control when defining recurrent models. User
+can explicit step and unroll to construct complex networks. It provides more
+flexibility but is slower than recurrent layers. Recurrent cells can be stacked
+with <code class="docutils literal"><span class="pre">SequentialRNNCell</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">SequentialRNNCell</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">model</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">LSTMCell</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">LSTMCell</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">states</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">begin_state</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">output</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">states</span><span class="p">)</span>
+    <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+</div>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%"/>
@@ -341,6 +357,20 @@ is 1 - percentage to retain.</td>
 </tr>
 </tbody>
 </table>
+<dl class="docutils">
+<dt>Inputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>data</strong>: input tensor with shape <cite>(batch_size, size)</cite>.</li>
+<li><strong>states</strong>: a list of recurrent state tensors.</li>
+</ul>
+</dd>
+<dt>Outputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>out</strong>: output tensor with shape <cite>(batch_size, size)</cite>.</li>
+<li><strong>next_states</strong>: returns input <cite>states</cite> directly.</li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.rnn.GRU">
@@ -386,29 +416,34 @@ If not specified, it will be inferred from input.</li>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>Input shapes:</dt>
-<dd>The input shape depends on <cite>layout</cite>. For <cite>layout=’TNC’</cite>, the
-input has shape <cite>(sequence_length, batch_size, input_size)</cite></dd>
-<dt>Output shape:</dt>
-<dd>The output shape depends on <cite>layout</cite>. For <cite>layout=’TNC’</cite>, the
-output has shape <cite>(sequence_length, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, output shape will instead be
-<cite>(sequence_length, batch_size, 2*num_hidden)</cite></dd>
-<dt>Recurrent state:</dt>
-<dd>The recurrent state is an NDArray with shape <cite>(num_layers, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, the recurrent state shape will instead be
-<cite>(2*num_layers, batch_size, num_hidden)</cite>
-If input recurrent state is None, zeros are used as default begin states,
-and the output recurrent state is omitted.</dd>
+<dt>Inputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>data</strong>: input tensor with shape <cite>(sequence_length, batch_size, input_size)</cite>
+when <cite>layout</cite> is “TNC”. For other layouts dimensions are permuted accordingly.</li>
+<li><strong>states</strong>: initial recurrent state tensor with shape
+<cite>(num_layers, batch_size, num_hidden)</cite>. If <cite>bidirectional</cite> is True,
+shape will instead be <cite>(2*num_layers, batch_size, num_hidden)</cite>. If
+<cite>states</cite> is None, zeros will be used as default begin states.</li>
+</ul>
+</dd>
+<dt>Outputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>out</strong>: output tensor with shape <cite>(sequence_length, batch_size, num_hidden)</cite>
+when <cite>layout</cite> is “TNC”. If <cite>bidirectional</cite> is True, output shape will instead
+be <cite>(sequence_length, batch_size, 2*num_hidden)</cite></li>
+<li><strong>out_states</strong>: output recurrent state tensor with the same shape as <cite>states</cite>.
+If <cite>states</cite> is None <cite>out_states</cite> will not be returned.</li>
+</ul>
+</dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">layer</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">GRU</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">layer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-<span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="c1"># by default zeros are used as begin state</span>
 <span class="gp">>>> </span><span class="n">output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="c1"># manually specify begin state.</span>
-<span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">output</span><span class="p">,</span> <span class="n">hn</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">h0</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -451,6 +486,22 @@ Created if <cite>None</cite>.</li>
 </tr>
 </tbody>
 </table>
+<dl class="docutils">
+<dt>Inputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>data</strong>: input tensor with shape <cite>(batch_size, input_size)</cite>.</li>
+<li><strong>states</strong>: a list of one initial recurrent state tensor with shape
+<cite>(batch_size, num_hidden)</cite>.</li>
+</ul>
+</dd>
+<dt>Outputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>out</strong>: output tensor with shape <cite>(batch_size, num_hidden)</cite>.</li>
+<li><strong>next_states</strong>: a list of one output recurrent state tensor with the
+same shape as <cite>states</cite>.</li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.rnn.HybridRecurrentCell">
@@ -507,31 +558,35 @@ If not specified, it will be inferred from input.</li>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>Input shapes:</dt>
-<dd>The input shape depends on <cite>layout</cite>. For <cite>layout=’TNC’</cite>, the
-input has shape <cite>(sequence_length, batch_size, input_size)</cite></dd>
-<dt>Output shape:</dt>
-<dd>The output shape depends on <cite>layout</cite>. For <cite>layout=’TNC’</cite>, the
-output has shape <cite>(sequence_length, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, output shape will instead be
-<cite>(sequence_length, batch_size, 2*num_hidden)</cite></dd>
-<dt>Recurrent state:</dt>
-<dd>The recurrent state is a list of two NDArrays. Both has shape
-<cite>(num_layers, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, each recurrent state will instead have shape
-<cite>(2*num_layers, batch_size, num_hidden)</cite>.
-If input recurrent state is None, zeros are used as default begin states,
-and the output recurrent state is omitted.</dd>
+<dt>Inputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>data</strong>: input tensor with shape <cite>(sequence_length, batch_size, input_size)</cite>
+when <cite>layout</cite> is “TNC”. For other layouts dimensions are permuted accordingly.</li>
+<li><strong>states</strong>: a list of two initial recurrent state tensors. Each has shape
+<cite>(num_layers, batch_size, num_hidden)</cite>. If <cite>bidirectional</cite> is True,
+shape will instead be <cite>(2*num_layers, batch_size, num_hidden)</cite>. If
+<cite>states</cite> is None, zeros will be used as default begin states.</li>
+</ul>
+</dd>
+<dt>Outputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>out</strong>: output tensor with shape <cite>(sequence_length, batch_size, num_hidden)</cite>
+when <cite>layout</cite> is “TNC”. If <cite>bidirectional</cite> is True, output shape will instead
+be <cite>(sequence_length, batch_size, 2*num_hidden)</cite></li>
+<li><strong>out_states</strong>: a list of two output recurrent state tensors with the same
+shape as in <cite>states</cite>. If <cite>states</cite> is None <cite>out_states</cite> will not be returned.</li>
+</ul>
+</dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">layer</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">layer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-<span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="c1"># by default zeros are used as begin state</span>
 <span class="gp">>>> </span><span class="n">output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="c1"># manually specify begin state.</span>
-<span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
-<span class="gp">>>> </span><span class="n">c0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="n">c0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">output</span><span class="p">,</span> <span class="n">hn</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="p">[</span><span class="n">h0</span><span class="p">,</span> <span class="n">c0</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -578,6 +633,22 @@ Created if <cite>None</cite>.</li>
 </tr>
 </tbody>
 </table>
+<dl class="docutils">
+<dt>Inputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>data</strong>: input tensor with shape <cite>(batch_size, input_size)</cite>.</li>
+<li><strong>states</strong>: a list of two initial recurrent state tensors. Each has shape
+<cite>(batch_size, num_hidden)</cite>.</li>
+</ul>
+</dd>
+<dt>Outputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>out</strong>: output tensor with shape <cite>(batch_size, num_hidden)</cite>.</li>
+<li><strong>next_states</strong>: a list of two output recurrent state tensors. Each has
+the same shape as <cite>states</cite>.</li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.rnn.ModifierCell">
@@ -629,29 +700,34 @@ If not specified, it will be inferred from input.</li>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>Input shapes:</dt>
-<dd>The input shape depends on <cite>layout</cite>. For <cite>layout=’TNC’</cite>, the
-input has shape <cite>(sequence_length, batch_size, input_size)</cite></dd>
-<dt>Output shape:</dt>
-<dd>The output shape depends on <cite>layout</cite>. For <cite>layout=’TNC’</cite>, the
-output has shape <cite>(sequence_length, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, output shape will instead be
-<cite>(sequence_length, batch_size, 2*num_hidden)</cite></dd>
-<dt>Recurrent state:</dt>
-<dd>The recurrent state is an NDArray with shape <cite>(num_layers, batch_size, num_hidden)</cite>.
-If <cite>bidirectional</cite> is True, the recurrent state shape will instead be
-<cite>(2*num_layers, batch_size, num_hidden)</cite>
-If input recurrent state is None, zeros are used as default begin states,
-and the output recurrent state is omitted.</dd>
+<dt>Inputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>data</strong>: input tensor with shape <cite>(sequence_length, batch_size, input_size)</cite>
+when <cite>layout</cite> is “TNC”. For other layouts dimensions are permuted accordingly.</li>
+<li><strong>states</strong>: initial recurrent state tensor with shape
+<cite>(num_layers, batch_size, num_hidden)</cite>. If <cite>bidirectional</cite> is True,
+shape will instead be <cite>(2*num_layers, batch_size, num_hidden)</cite>. If
+<cite>states</cite> is None, zeros will be used as default begin states.</li>
+</ul>
+</dd>
+<dt>Outputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>out</strong>: output tensor with shape <cite>(sequence_length, batch_size, num_hidden)</cite>
+when <cite>layout</cite> is “TNC”. If <cite>bidirectional</cite> is True, output shape will instead
+be <cite>(sequence_length, batch_size, 2*num_hidden)</cite></li>
+<li><strong>out_states</strong>: output recurrent state tensor with the same shape as <cite>states</cite>.
+If <cite>states</cite> is None <cite>out_states</cite> will not be returned.</li>
+</ul>
+</dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="n">layer</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">RNN</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="n">layer</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-<span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="nb">input</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="c1"># by default zeros are used as begin state</span>
 <span class="gp">>>> </span><span class="n">output</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
 <span class="gp">>>> </span><span class="c1"># manually specify begin state.</span>
-<span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="n">h0</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
 <span class="gp">>>> </span><span class="n">output</span><span class="p">,</span> <span class="n">hn</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">h0</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -688,6 +764,22 @@ Created if <cite>None</cite>.</li>
 </tr>
 </tbody>
 </table>
+<dl class="docutils">
+<dt>Inputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>data</strong>: input tensor with shape <cite>(batch_size, input_size)</cite>.</li>
+<li><strong>states</strong>: a list of one initial recurrent state tensor with shape
+<cite>(batch_size, num_hidden)</cite>.</li>
+</ul>
+</dd>
+<dt>Outputs:</dt>
+<dd><ul class="first last simple">
+<li><strong>out</strong>: output tensor with shape <cite>(batch_size, num_hidden)</cite>.</li>
+<li><strong>next_states</strong>: a list of one output recurrent state tensor with the
+same shape as <cite>states</cite>.</li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.rnn.RecurrentCell">
@@ -857,7 +949,7 @@ Output of the cell is output of the base cell plus input.</p>
 <col class="field-name"/>
 <col class="field-body"/>
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cell</strong> (<em>rnn cell</em>) – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cell</strong> (<a class="reference internal" href="#mxnet.gluon.rnn.RecurrentCell" title="mxnet.gluon.rnn.RecurrentCell"><em>RecurrentCell</em></a>) – The cell to add.</td>
 </tr>
 </tbody>
 </table>
