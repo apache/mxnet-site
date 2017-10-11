@@ -382,10 +382,12 @@ after data has been initialized successfully.</p>
 <code class="descname">push</code><span class="sig-paren">(</span><em>key</em>, <em>value</em>, <em>priority=0</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.kvstore.KVStore.push" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pushes a single or a sequence of key-value pairs into the store.</p>
 <p>This function returns immediately after adding an operator to the engine.
-The actual operation is executed asynchronously after all previous <cite>push</cite>
-for the same input key(s) are finished.
-There is no synchronization between workers. One can use <code class="docutils literal"><span class="pre">_barrier()</span></code>
-to sync all workers.</p>
+The actual operation is executed asynchronously. If there are consecutive
+pushes to the same key, there is no guarantee on the serialization of pushes.
+The execution of a push does not guarantee that all previous pushes are
+finished.
+There is no synchronization between workers.
+One can use <code class="docutils literal"><span class="pre">_barrier()</span></code> to sync all workers.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -460,10 +462,11 @@ other push actions.</li>
 <p>This function returns immediately after adding an operator to the engine.
 Subsequent attempts to read from the <cite>out</cite> variable will be blocked until the
 pull operation completes.</p>
-<p><cite>pull</cite> is executed asynchronously after all previous <cite>push</cite> and <cite>pull</cite> calls
-for the same input key(s) are finished.</p>
-<p>The returned values are gauranteed to be the latest values in the store.</p>
-<p>For <cite>RowSparseNDArray</cite> values, please use <code class="docutils literal"><span class="pre">row_sparse_pull</span></code> instead.</p>
+<p><cite>pull</cite> is executed asynchronously after all previous <cite>pull</cite> calls and only
+the last <cite>push</cite> call for the same input key(s) are finished.</p>
+<p>The returned values are guaranteed to be the latest values in the store.</p>
+<p>For <cite>RowSparseNDArray</cite> values, this call is ignored,
+please use <code class="docutils literal"><span class="pre">row_sparse_pull</span></code> instead.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -519,7 +522,8 @@ other pull actions.</li>
 <code class="descname">row_sparse_pull</code><span class="sig-paren">(</span><em>key</em>, <em>out=None</em>, <em>priority=0</em>, <em>row_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.kvstore.KVStore.row_sparse_pull" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pulls a single RowSparseNDArray value or a sequence of RowSparseNDArray values         from the store with specified row_ids.</p>
 <p><cite>row_sparse_pull</cite> is executed asynchronously after all previous
-<cite>push</cite>/<cite>pull</cite>/<cite>row_sparse_pull</cite> calls for the same input key(s) are finished.</p>
+<cite>pull</cite>/<cite>row_sparse_pull</cite> calls and the last <cite>push</cite> call for the
+same input key(s) are finished.</p>
 <p>The returned values are guaranteed to be the latest values in the store.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
