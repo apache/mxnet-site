@@ -122,6 +122,7 @@ var searchData=
   ['mxrecordioreaderfree',['MXRecordIOReaderFree',['../c__api_8h.html#a92736f17a5d9fd58e53e621358e4ef31',1,'c_api.h']]],
   ['mxrecordioreaderreadrecord',['MXRecordIOReaderReadRecord',['../c__api_8h.html#a38e350f748967e0caa2c781a507667e4',1,'c_api.h']]],
   ['mxrecordioreaderseek',['MXRecordIOReaderSeek',['../c__api_8h.html#aa992161083826ee6a434ade2790fbb31',1,'c_api.h']]],
+  ['mxrecordioreadertell',['MXRecordIOReaderTell',['../c__api_8h.html#a060d9a58a2e692af26fae433cecf7436',1,'c_api.h']]],
   ['mxrecordiowritercreate',['MXRecordIOWriterCreate',['../c__api_8h.html#ab2b93d730f48591b4f77f3968f6a1b98',1,'c_api.h']]],
   ['mxrecordiowriterfree',['MXRecordIOWriterFree',['../c__api_8h.html#ab2a55917ffd918e334464f1b8a7a1ab9',1,'c_api.h']]],
   ['mxrecordiowritertell',['MXRecordIOWriterTell',['../c__api_8h.html#a6cc8e9f94ec431edf8d9502f20d7b833',1,'c_api.h']]],
