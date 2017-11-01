@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['type',['type',['../structmxnet_1_1ResourceRequest.html#ad67cb809ea1e0db24629ffbd3db00a63',1,'mxnet::ResourceRequest']]],
-  ['type_5f',['type_',['../classmxnet_1_1KVStore.html#ad1023ca677c6e87ccc7d92c4df48bd40',1,'mxnet::KVStore']]],
-  ['type_5fflag_5f',['type_flag_',['../classmxnet_1_1TBlob.html#a4649b740b80a6045754cb2389cfcca61',1,'mxnet::TBlob']]],
-  ['type_5fmask',['type_mask',['../structmxnet_1_1NDArrayFunctionReg.html#a0b24615f30e4fbe69ee75c7b319735bf',1,'mxnet::NDArrayFunctionReg']]]
+  ['req',['req',['../structmxnet_1_1Resource.html#ae841e25cf5ee4aed895ace7fa080edc4',1,'mxnet::Resource']]],
+  ['requested',['requested',['../structmxnet_1_1OpContext.html#a833e95f95cf5e3af9c193b74b500fc5b',1,'mxnet::OpContext']]],
+  ['resource',['resource',['../structmxnet_1_1op_1_1EnvArguments.html#a6b62df4767fd50d6a1fd9ebd44193bef',1,'mxnet::op::EnvArguments']]],
+  ['run_5fctx',['run_ctx',['../structmxnet_1_1OpContext.html#a869d4c68c0028a175406f11332baf7cf',1,'mxnet::OpContext']]]
 ];

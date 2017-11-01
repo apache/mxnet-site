@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['launch',['Launch',['../classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#ae4f060e3de5fb498f6977563a9c20f96',1,'mxnet::rtc::CudaModule::Kernel']]],
   ['lazyallocarray',['LazyAllocArray',['../classmxnet_1_1common_1_1LazyAllocArray.html#a1dd703a9eabfe691793a8398706bcc09',1,'mxnet::common::LazyAllocArray']]],
   ['legacyload',['LegacyLoad',['../classmxnet_1_1NDArray.html#a0b212c0a0c4c83c64a6bf6d0c430602b',1,'mxnet::NDArray']]],
   ['listarguments',['ListArguments',['../classmxnet_1_1OperatorProperty.html#a24cc6a3763ff5f0881a2de0652810596',1,'mxnet::OperatorProperty']]],

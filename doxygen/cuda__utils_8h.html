@@ -128,6 +128,12 @@ Macros</h2></td></tr>
 <tr class="memitem:a82d7233550780a8c186e79c24aed8406"><td align="right" class="memItemLeft" valign="top">#define </td><td class="memItemRight" valign="bottom"><a class="el" href="cuda__utils_8h.html#a82d7233550780a8c186e79c24aed8406">CURAND_CALL</a>(func)</td></tr>
 <tr class="memdesc:a82d7233550780a8c186e79c24aed8406"><td class="mdescLeft"> </td><td class="mdescRight">Protected cuRAND call.  <a href="#a82d7233550780a8c186e79c24aed8406">More...</a><br/></td></tr>
 <tr class="separator:a82d7233550780a8c186e79c24aed8406"><td class="memSeparator" colspan="2"> </td></tr>
+<tr class="memitem:a63b6d263b94df9e33474894ad02b792d"><td align="right" class="memItemLeft" valign="top">#define </td><td class="memItemRight" valign="bottom"><a class="el" href="cuda__utils_8h.html#a63b6d263b94df9e33474894ad02b792d">NVRTC_CALL</a>(x)</td></tr>
+<tr class="memdesc:a63b6d263b94df9e33474894ad02b792d"><td class="mdescLeft"> </td><td class="mdescRight">Protected NVRTC call.  <a href="#a63b6d263b94df9e33474894ad02b792d">More...</a><br/></td></tr>
+<tr class="separator:a63b6d263b94df9e33474894ad02b792d"><td class="memSeparator" colspan="2"> </td></tr>
+<tr class="memitem:a0d9b08b9ef45122c54bf5a121aeab5c3"><td align="right" class="memItemLeft" valign="top">#define </td><td class="memItemRight" valign="bottom"><a class="el" href="cuda__utils_8h.html#a0d9b08b9ef45122c54bf5a121aeab5c3">CUDA_DRIVER_CALL</a>(func)</td></tr>
+<tr class="memdesc:a0d9b08b9ef45122c54bf5a121aeab5c3"><td class="mdescLeft"> </td><td class="mdescRight">Protected CUDA driver call.  <a href="#a0d9b08b9ef45122c54bf5a121aeab5c3">More...</a><br/></td></tr>
+<tr class="separator:a0d9b08b9ef45122c54bf5a121aeab5c3"><td class="memSeparator" colspan="2"> </td></tr>
 <tr class="memitem:a685e3713856baaafb1d4edea43725c83"><td align="right" class="memItemLeft" valign="top">#define </td><td class="memItemRight" valign="bottom"><a class="el" href="cuda__utils_8h.html#a685e3713856baaafb1d4edea43725c83">CUDA_UNROLL</a>   _Pragma("unroll")</td></tr>
 <tr class="separator:a685e3713856baaafb1d4edea43725c83"><td class="memSeparator" colspan="2"> </td></tr>
 <tr class="memitem:addb314f15d765a2ba72ae37dab23c03b"><td align="right" class="memItemLeft" valign="top">#define </td><td class="memItemRight" valign="bottom"><a class="el" href="cuda__utils_8h.html#addb314f15d765a2ba72ae37dab23c03b">CUDA_NOUNROLL</a>   _Pragma("nounroll")</td></tr>
@@ -260,6 +266,41 @@ Functions</h2></td></tr>
 <p>It checks for CUDA errors after invocation of the expression. </p>
 </div>
 </div>
+<a class="anchor" id="a0d9b08b9ef45122c54bf5a121aeab5c3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="memname">
+<tr>
+<td class="memname">#define CUDA_DRIVER_CALL</td>
+<td>(</td>
+<td class="paramtype"> </td>
+<td class="paramname">func</td><td>)</td>
+<td></td>
+</tr>
+</table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">{                                                                     \</div>
+<div class="line">    CUresult e = (func);                                                \</div>
+<div class="line">    if (e != CUDA_SUCCESS) {                                            \</div>
+<div class="line">      char <span class="keyword">const</span> * err_msg = <span class="keyword">nullptr</span>;                                         \</div>
+<div class="line">      if (cuGetErrorString(e, &amp;err_msg) == CUDA_ERROR_INVALID_VALUE) {  \</div>
+<div class="line">        LOG(FATAL) &lt;&lt; <span class="stringliteral">"CUDA Driver: Unknown error "</span> &lt;&lt; e;               \</div>
+<div class="line">      } <span class="keywordflow">else</span> {                                                          \</div>
+<div class="line">        LOG(FATAL) &lt;&lt; <span class="stringliteral">"CUDA Driver: "</span> &lt;&lt; err_msg;                       \</div>
+<div class="line">      }                                                                 \</div>
+<div class="line">    }                                                                   \</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+<p>Protected CUDA driver call. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+<table class="params">
+<tr><td class="paramname">func</td><td>Expression to call.</td></tr>
+</table>
+</dd>
+</dl>
+<p>It checks for CUDA driver errors after invocation of the expression. </p>
+</div>
+</div>
 <a class="anchor" id="addb314f15d765a2ba72ae37dab23c03b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -351,6 +392,36 @@ Functions</h2></td></tr>
 </tr>
 </table>
 </div><div class="memdoc">
+</div>
+</div>
+<a class="anchor" id="a63b6d263b94df9e33474894ad02b792d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="memname">
+<tr>
+<td class="memname">#define NVRTC_CALL</td>
+<td>(</td>
+<td class="paramtype"> </td>
+<td class="paramname">x</td><td>)</td>
+<td></td>
+</tr>
+</table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">{                                                     \</div>
+<div class="line">    nvrtcResult result = x;                             \</div>
+<div class="line">    CHECK_EQ(result, NVRTC_SUCCESS)                     \</div>
+<div class="line">      &lt;&lt; #x <span class="stringliteral">" failed with error "</span>                       \</div>
+<div class="line">      &lt;&lt; nvrtcGetErrorString(result);                   \</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+<p>Protected NVRTC call. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+<table class="params">
+<tr><td class="paramname">func</td><td>Expression to call.</td></tr>
+</table>
+</dd>
+</dl>
+<p>It checks for NVRTC errors after invocation of the expression. </p>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
@@ -536,7 +607,7 @@ Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 5 2017 19:57:06 for mxnet by  <a href="http://www.doxygen.org/index.html">
+Generated on Wed Nov 1 2017 06:54:02 for mxnet by  <a href="http://www.doxygen.org/index.html">
 <img alt="doxygen" class="footer" src="doxygen.png"/>
 </a> 1.8.6
 </small></address>

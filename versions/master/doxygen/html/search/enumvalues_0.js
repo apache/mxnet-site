@@ -25,6 +25,10 @@ var searchData=
   ['kcustomopproplistauxiliarystates',['kCustomOpPropListAuxiliaryStates',['../c__api_8h.html#a62d6b72cc6b3d920797c32ea8732cbbaaabeb765165b4748e68c7f196bf8a1686',1,'c_api.h']]],
   ['kcustomopproplistoutputs',['kCustomOpPropListOutputs',['../c__api_8h.html#a62d6b72cc6b3d920797c32ea8732cbbaa0a32388e902d5d81a88f62f3eabf56c3',1,'c_api.h']]],
   ['kdefaultstorage',['kDefaultStorage',['../namespacemxnet.html#a536b732faa980e1de446c552460ff76aabf6395d98a9668e8066a0c0da5570608',1,'mxnet']]],
+  ['kdeletevar',['kDeleteVar',['../namespacemxnet.html#a998b74220fab2b012cf8a179650e1b3bac41fda8552e9d327ad3b06b1bafa663a',1,'mxnet']]],
+  ['kfcompute',['kFCompute',['../namespacemxnet.html#aad5fec2b4bceabbf4b884460cc2e0a2ba2157864769b54d1d0f8f9be63393e7d6',1,'mxnet']]],
+  ['kfcomputeex',['kFComputeEx',['../namespacemxnet.html#aad5fec2b4bceabbf4b884460cc2e0a2ba57f93219462690bc438372ecd92fedd5',1,'mxnet']]],
+  ['kfcomputefallback',['kFComputeFallback',['../namespacemxnet.html#aad5fec2b4bceabbf4b884460cc2e0a2ba18bf63b4c196f79c9bca4ad8637e8fef',1,'mxnet']]],
   ['kgpu',['kGPU',['../structmxnet_1_1Context.html#a611c227b5e04a2777c3e4507bb76f60eab21bed4d5cee411db15283d7529f28cf',1,'mxnet::Context']]],
   ['kidx',['kIdx',['../namespacemxnet_1_1csr.html#a74a2e3877ef7b348d5374a9d604aba42aa6ca1dbcb9c5858e0d28237ae3624ed7',1,'mxnet::csr::kIdx()'],['../namespacemxnet_1_1rowsparse.html#a0ad4c619684fa4d442c7076c18fef232ac52a46037d8cfe90ccc5da8712c7f6da',1,'mxnet::rowsparse::kIdx()']]],
   ['kindptr',['kIndPtr',['../namespacemxnet_1_1csr.html#a74a2e3877ef7b348d5374a9d604aba42ad9dcbaec1c8c6ca9d69648c83354aac1',1,'mxnet::csr']]],
@@ -45,7 +49,9 @@ var searchData=
   ['kscalarbeforearray',['kScalarBeforeArray',['../namespacemxnet_1_1op.html#ae7310844fa858f1ec6b6428dd6977a13a44de4ba9d059034c023bc755cdc6026a',1,'mxnet::op']]],
   ['ksync',['kSync',['../namespacemxnet.html#ad7801fb2dd68294d4c7a9e289bc071adae3bade32f12a5139b27ef40b3689b77c',1,'mxnet']]],
   ['ktempspace',['kTempSpace',['../structmxnet_1_1ResourceRequest.html#aba2ee7560afb89ebdd00c7c735149630aae5d4509a9b382744ea13d2daa8aa3f3',1,'mxnet::ResourceRequest']]],
+  ['kundefined',['kUndefined',['../namespacemxnet.html#aad5fec2b4bceabbf4b884460cc2e0a2ba7934d40c7c17315d892e8d5d745b1c66',1,'mxnet']]],
   ['kundefinedstorage',['kUndefinedStorage',['../namespacemxnet.html#a536b732faa980e1de446c552460ff76aadf6c6faf0de1e55119c679180c99e584',1,'mxnet']]],
+  ['kvariable',['kVariable',['../namespacemxnet.html#aad5fec2b4bceabbf4b884460cc2e0a2bafb751f6ee1af15e773242f2accd2dbff',1,'mxnet']]],
   ['kwriteinplace',['kWriteInplace',['../namespacemxnet.html#a7cd7094ef222e9ae1f520c3b6a214398a640322face587ca12684378d0f053d51',1,'mxnet']]],
   ['kwriteto',['kWriteTo',['../namespacemxnet.html#a7cd7094ef222e9ae1f520c3b6a214398a03b4c19f34d3add7deecd7ef6c54b42a',1,'mxnet']]]
 ];

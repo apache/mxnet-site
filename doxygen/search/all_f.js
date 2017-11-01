@@ -29,7 +29,8 @@ var searchData=
   ['opreqtype',['OpReqType',['../namespacemxnet.html#a7cd7094ef222e9ae1f520c3b6a214398',1,'mxnet']]],
   ['oprhandle',['OprHandle',['../classmxnet_1_1Engine.html#a832436e413a075291aa1a631942c3f01',1,'mxnet::Engine::OprHandle()'],['../namespacemxnet_1_1engine.html#a2d9b14b658e3f3c4e03ca49cd38ace94',1,'mxnet::engine::OprHandle()']]],
   ['opstateptr',['OpStatePtr',['../classmxnet_1_1OpStatePtr.html',1,'mxnet']]],
+  ['out_5fgrads',['out_grads',['../classmxnet_1_1Imperative_1_1AGInfo.html#a694cd90f3a43ac0014fa4913da56c499',1,'mxnet::Imperative::AGInfo']]],
   ['outputgrad',['OutputGrad',['../structmxnet_1_1op_1_1OutputGrad.html',1,'mxnet::op']]],
-  ['outputs',['outputs',['../classmxnet_1_1Executor.html#a16d0f1ab276e32242685702aa10b9a3d',1,'mxnet::Executor']]],
+  ['outputs',['outputs',['../classmxnet_1_1Imperative_1_1AGInfo.html#a2ca114d69098860adc900ba5f54c4cb5',1,'mxnet::Imperative::AGInfo::outputs()'],['../classmxnet_1_1Executor.html#a16d0f1ab276e32242685702aa10b9a3d',1,'mxnet::Executor::outputs()']]],
   ['outputvalue',['OutputValue',['../structmxnet_1_1op_1_1OutputValue.html',1,'mxnet::op']]]
 ];
