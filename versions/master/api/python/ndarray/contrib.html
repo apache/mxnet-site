@@ -683,6 +683,74 @@ The output of this function.</p>
 </table>
 </dd></dl>
 <dl class="function">
+<dt id="mxnet.ndarray.contrib.SparseEmbedding">
+<code class="descclassname">mxnet.ndarray.contrib.</code><code class="descname">SparseEmbedding</code><span class="sig-paren">(</span><em>data=None</em>, <em>weight=None</em>, <em>input_dim=_Null</em>, <em>output_dim=_Null</em>, <em>dtype=_Null</em>, <em>out=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.contrib.SparseEmbedding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps integer indices to vector representations (embeddings).</p>
+<p>This operator maps words to real-valued vectors in a high-dimensional space,
+called word embeddings. These embeddings can capture semantic and syntactic properties of the words.
+For example, it has been noted that in the learned embedding spaces, similar words tend
+to be close to each other and dissimilar words far apart.</p>
+<p>For an input array of shape (d1, ..., dK),
+the shape of an output array is (d1, ..., dK, output_dim).
+All the input values should be integers in the range [0, input_dim).</p>
+<p>If the input_dim is ip0 and output_dim is op0, then shape of the embedding weight matrix must be
+(ip0, op0).</p>
+<p>The storage type of weight must be <cite>row_sparse</cite>, and the gradient of the weight will be of
+<cite>row_sparse</cite> storage type, too.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><cite>SparseEmbedding</cite> is designed for the use case where <cite>input_dim</cite> is very large (e.g. 100k).
+The <cite>row_sparse</cite> weight cannot be used in a <cite>BucketingModule</cite>.
+The operator is only available on CPU.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>input_dim = 4
+output_dim = 5
+
+// Each row in weight matrix y represents a word. So, y = (w0,w1,w2,w3)
+y = [[  0.,   1.,   2.,   3.,   4.],
+     [  5.,   6.,   7.,   8.,   9.],
+     [ 10.,  11.,  12.,  13.,  14.],
+     [ 15.,  16.,  17.,  18.,  19.]]
+
+// Input array x represents n-grams(2-gram). So, x = [(w1,w3), (w0,w2)]
+x = [[ 1.,  3.],
+     [ 0.,  2.]]
+
+// Mapped input x to its vector representation y.
+SparseEmbedding(x, y, 4, 5) = [[[  5.,   6.,   7.,   8.,   9.],
+                               [ 15.,  16.,  17.,  18.,  19.]],
+
+                              [[  0.,   1.,   2.,   3.,   4.],
+                               [ 10.,  11.,  12.,  13.,  14.]]]
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/indexing_op.cc:L144</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<a class="reference internal" href="ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The input array to the embedding operator.</li>
+<li><strong>weight</strong> (<a class="reference internal" href="ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The embedding weight matrix.</li>
+<li><strong>input_dim</strong> (<em>int, required</em>) – Vocabulary size of the input indices.</li>
+<li><strong>output_dim</strong> (<em>int, required</em>) – Dimension of the embedding vectors.</li>
+<li><strong>dtype</strong> (<em>{'float16', 'float32', 'float64', 'int32', 'uint8'},optional, default='float32'</em>) – Data type of weight.</li>
+<li><strong>out</strong> (<em>NDArray, optional</em>) – The output NDArray to hold the result.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> –
+The output of this function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">NDArray or list of NDArrays</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
 <dt id="mxnet.ndarray.contrib.count_sketch">
 <code class="descclassname">mxnet.ndarray.contrib.</code><code class="descname">count_sketch</code><span class="sig-paren">(</span><em>data=None</em>, <em>h=None</em>, <em>s=None</em>, <em>out_dim=_Null</em>, <em>processing_batch_size=_Null</em>, <em>out=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.contrib.count_sketch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply CountSketch to input: map a d-dimension data to k-dimension data”</p>

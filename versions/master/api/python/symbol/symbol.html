@@ -6151,7 +6151,7 @@ an output array of shape <code class="docutils literal"><span class="pre">(i0,)<
 batch_take(x, [0,1,0]) = [ 1.  4.  5.]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/indexing_op.cc:L190</p>
+<p>Defined in src/operator/tensor/indexing_op.cc:L272</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -6233,7 +6233,7 @@ broadcast_axis(x, axis=(0,2), size=(2,3)) = [[[ 1.,  1.,  1.],
                                               [ 2.,  2.,  2.]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L203</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L206</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -6276,7 +6276,7 @@ broadcast_axis(x, axis=(0,2), size=(2,3)) = [[[ 1.,  1.,  1.],
                                               [ 2.,  2.,  2.]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L203</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L206</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -6911,7 +6911,7 @@ Also see, <a class="reference external" href="https://docs.scipy.org/doc/numpy/u
 </div>
 <p>The dimension which you do not want to change can also be kept as <cite>0</cite> which means copy the original value.
 So with <cite>shape=(2,0)</cite>, we will obtain the same result as in the above example.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L227</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L230</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -7141,7 +7141,7 @@ Clipping <code class="docutils literal"><span class="pre">x</span></code> betwee
 <li>clip(csr, a_min > 0, a_max > 0) = csr</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/matrix_op.cc:L403</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L405</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -7289,8 +7289,11 @@ and <code class="docutils literal"><span class="pre">end=(e_1,</span> <span clas
 <code class="docutils literal"><span class="pre">(e_1-b_0,</span> <span class="pre">...,</span> <span class="pre">e_n-b_n-1)</span></code>.</p>
 <p>The resulting array’s <em>k</em>-th dimension contains elements
 from the <em>k</em>-th dimension of the input array with the open range <code class="docutils literal"><span class="pre">[b_k,</span> <span class="pre">e_k)</span></code>.</p>
-<p>For an input array of non-default storage type(e.g. <cite>csr</cite> or <cite>row_sparse</cite>), it only supports
-slicing on the first dimension.</p>
+<p>The storage type of <code class="docutils literal"><span class="pre">slice</span></code> output depends on storage types of inputs</p>
+<ul class="simple">
+<li>slice(csr) = csr</li>
+<li>otherwise, <code class="docutils literal"><span class="pre">slice</span></code> generates output with default storage</li>
+</ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[[</span>  <span class="mf">1.</span><span class="p">,</span>   <span class="mf">2.</span><span class="p">,</span>   <span class="mf">3.</span><span class="p">,</span>   <span class="mf">4.</span><span class="p">],</span>
      <span class="p">[</span>  <span class="mf">5.</span><span class="p">,</span>   <span class="mf">6.</span><span class="p">,</span>   <span class="mf">7.</span><span class="p">,</span>   <span class="mf">8.</span><span class="p">],</span>
@@ -7300,7 +7303,7 @@ slicing on the first dimension.</p>
                                    <span class="p">[</span> <span class="mf">6.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L278</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L280</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -7743,7 +7746,7 @@ the input array into an output array of shape <code class="docutils literal"><sp
                       <span class="p">[</span> <span class="mf">9.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">,</span>  <span class="mf">5.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L579</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L581</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8656,7 +8659,7 @@ from backpropagation. See more detail in <code class="docutils literal"><span cl
 <dt id="mxnet.symbol.max">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">max</code><span class="sig-paren">(</span><em>data=None</em>, <em>axis=_Null</em>, <em>keepdims=_Null</em>, <em>exclude=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.max" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the max of array elements over given axes.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L156</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L159</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8692,7 +8695,7 @@ NOT in axis instead.</p>
 <dt id="mxnet.symbol.max_axis">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">max_axis</code><span class="sig-paren">(</span><em>data=None</em>, <em>axis=_Null</em>, <em>keepdims=_Null</em>, <em>exclude=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.max_axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the max of array elements over given axes.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L156</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L159</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8728,7 +8731,7 @@ NOT in axis instead.</p>
 <dt id="mxnet.symbol.mean">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">mean</code><span class="sig-paren">(</span><em>data=None</em>, <em>axis=_Null</em>, <em>keepdims=_Null</em>, <em>exclude=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.mean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the mean of array elements over given axes.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L99</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L100</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8764,7 +8767,7 @@ NOT in axis instead.</p>
 <dt id="mxnet.symbol.min">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">min</code><span class="sig-paren">(</span><em>data=None</em>, <em>axis=_Null</em>, <em>keepdims=_Null</em>, <em>exclude=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.min" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the min of array elements over given axes.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L170</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L173</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8800,7 +8803,7 @@ NOT in axis instead.</p>
 <dt id="mxnet.symbol.min_axis">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">min_axis</code><span class="sig-paren">(</span><em>data=None</em>, <em>axis=_Null</em>, <em>keepdims=_Null</em>, <em>exclude=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.min_axis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the min of array elements over given axes.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L170</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L173</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8896,7 +8899,7 @@ NOT in axis instead.</p>
 <dt id="mxnet.symbol.nanprod">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">nanprod</code><span class="sig-paren">(</span><em>data=None</em>, <em>axis=_Null</em>, <em>keepdims=_Null</em>, <em>exclude=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.nanprod" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the product of array elements over given axes treating Not a Numbers (<code class="docutils literal"><span class="pre">NaN</span></code>) as one.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L142</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L145</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8932,7 +8935,7 @@ NOT in axis instead.</p>
 <dt id="mxnet.symbol.nansum">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">nansum</code><span class="sig-paren">(</span><em>data=None</em>, <em>axis=_Null</em>, <em>keepdims=_Null</em>, <em>exclude=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.nansum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the sum of array elements over given axes treating Not a Numbers (<code class="docutils literal"><span class="pre">NaN</span></code>) as zero.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L127</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L130</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9006,7 +9009,7 @@ NOT in axis instead.</p>
 <span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.47722578</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L253</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L256</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9098,7 +9101,7 @@ one_hot([[1,0],[1,0],[2,0]], 3) = [[[ 0.  1.  0.]
                                     [ 1.  0.  0.]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/indexing_op.cc:L236</p>
+<p>Defined in src/operator/tensor/indexing_op.cc:L318</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9320,7 +9323,7 @@ pick(x,y, 1, keepdims=True) = [[ 2.],
 <dt id="mxnet.symbol.prod">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">prod</code><span class="sig-paren">(</span><em>data=None</em>, <em>axis=_Null</em>, <em>keepdims=_Null</em>, <em>exclude=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.prod" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the product of array elements over given axes.</p>
-<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L112</p>
+<p>Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L115</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9753,7 +9756,7 @@ elements:</p>
                                  <span class="p">[</span> <span class="mf">3.</span><span class="p">,</span>  <span class="mf">3.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L477</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L479</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9905,7 +9908,7 @@ At most one dimension of shape can be -1.</p>
                       <span class="p">[</span> <span class="mf">9.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">,</span>  <span class="mf">5.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L579</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L581</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -10807,8 +10810,11 @@ and <code class="docutils literal"><span class="pre">end=(e_1,</span> <span clas
 <code class="docutils literal"><span class="pre">(e_1-b_0,</span> <span class="pre">...,</span> <span class="pre">e_n-b_n-1)</span></code>.</p>
 <p>The resulting array’s <em>k</em>-th dimension contains elements
 from the <em>k</em>-th dimension of the input array with the open range <code class="docutils literal"><span class="pre">[b_k,</span> <span class="pre">e_k)</span></code>.</p>
-<p>For an input array of non-default storage type(e.g. <cite>csr</cite> or <cite>row_sparse</cite>), it only supports
-slicing on the first dimension.</p>
+<p>The storage type of <code class="docutils literal"><span class="pre">slice</span></code> output depends on storage types of inputs</p>
+<ul class="simple">
+<li>slice(csr) = csr</li>
+<li>otherwise, <code class="docutils literal"><span class="pre">slice</span></code> generates output with default storage</li>
+</ul>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[[</span>  <span class="mf">1.</span><span class="p">,</span>   <span class="mf">2.</span><span class="p">,</span>   <span class="mf">3.</span><span class="p">,</span>   <span class="mf">4.</span><span class="p">],</span>
      <span class="p">[</span>  <span class="mf">5.</span><span class="p">,</span>   <span class="mf">6.</span><span class="p">,</span>   <span class="mf">7.</span><span class="p">,</span>   <span class="mf">8.</span><span class="p">],</span>
@@ -10818,7 +10824,7 @@ slicing on the first dimension.</p>
                                    <span class="p">[</span> <span class="mf">6.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L278</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L280</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -10863,7 +10869,7 @@ to the <cite>end</cite> index.</p>
                                            <span class="p">[</span> <span class="mf">10.</span><span class="p">,</span>  <span class="mf">11.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L360</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L362</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -11514,7 +11520,7 @@ take(x, [[0,1],[1,2]]) = [[[ 1.,  2.],
                            [ 5.,  6.]]]
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/indexing_op.cc:L135</p>
+<p>Defined in src/operator/tensor/indexing_op.cc:L217</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -11644,7 +11650,7 @@ shape <code class="docutils literal"><span class="pre">(2,2)</span></code> array
 </div>
 </li>
 </ul>
-<p>Defined in src/operator/tensor/matrix_op.cc:L538</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L540</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
