@@ -328,7 +328,7 @@ Please refer to the API reference section for further details on specific operat
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="#mxnet.symbol.sparse.slice" title="mxnet.symbol.sparse.slice"><code class="xref py py-obj docutils literal"><span class="pre">slice</span></code></a></td>
-<td>Slices a contiguous region of the array.</td>
+<td>Slices a region of the array.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.symbol.sparse.retain" title="mxnet.symbol.sparse.retain"><code class="xref py py-obj docutils literal"><span class="pre">retain</span></code></a></td>
 <td>pick rows specified by user input index array from a row sparse matrix</td>
@@ -1757,24 +1757,39 @@ and save them in the output sparse matrix.</p>
 </dd></dl>
 <dl class="function">
 <dt id="mxnet.symbol.sparse.slice">
-<code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">slice</code><span class="sig-paren">(</span><em>data=None</em>, <em>begin=_Null</em>, <em>end=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.slice" title="Permalink to this definition">¶</a></dt>
-<dd><p>Slices a contiguous region of the array.</p>
+<code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">slice</code><span class="sig-paren">(</span><em>data=None</em>, <em>begin=_Null</em>, <em>end=_Null</em>, <em>step=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slices a region of the array.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last"><code class="docutils literal"><span class="pre">crop</span></code> is deprecated. Use <code class="docutils literal"><span class="pre">slice</span></code> instead.</p>
 </div>
-<p>This function returns a sliced continuous region of the array between the indices given
-by <cite>begin</cite> and <cite>end</cite>.</p>
-<p>For an input array of <cite>n</cite> dimensions, slice operation with <code class="docutils literal"><span class="pre">begin=(b_0,</span> <span class="pre">b_1...b_n-1)</span></code> indices
-and <code class="docutils literal"><span class="pre">end=(e_1,</span> <span class="pre">e_2,</span> <span class="pre">...</span> <span class="pre">e_n)</span></code> indices will result in an array with the shape
-<code class="docutils literal"><span class="pre">(e_1-b_0,</span> <span class="pre">...,</span> <span class="pre">e_n-b_n-1)</span></code>.</p>
+<p>This function returns a sliced array between the indices given
+by <cite>begin</cite> and <cite>end</cite> with the corresponding <cite>step</cite>.</p>
+<p>For an input array of <code class="docutils literal"><span class="pre">shape=(d_0,</span> <span class="pre">d_1,</span> <span class="pre">...,</span> <span class="pre">d_n-1)</span></code>,
+slice operation with <code class="docutils literal"><span class="pre">begin=(b_0,</span> <span class="pre">b_1...b_m-1)</span></code>,
+<code class="docutils literal"><span class="pre">end=(e_0,</span> <span class="pre">e_1,</span> <span class="pre">...,</span> <span class="pre">e_m-1)</span></code>, and <code class="docutils literal"><span class="pre">step=(s_0,</span> <span class="pre">s_1,</span> <span class="pre">...,</span> <span class="pre">s_m-1)</span></code>,
+where m <= n, results in an array with the shape
+<code class="docutils literal"><span class="pre">(|e_0-b_0|/|s_0|,</span> <span class="pre">...,</span> <span class="pre">|e_m-1-b_m-1|/|s_m-1|,</span> <span class="pre">d_m,</span> <span class="pre">...,</span> <span class="pre">d_n-1)</span></code>.</p>
 <p>The resulting array’s <em>k</em>-th dimension contains elements
-from the <em>k</em>-th dimension of the input array with the open range <code class="docutils literal"><span class="pre">[b_k,</span> <span class="pre">e_k)</span></code>.</p>
+from the <em>k</em>-th dimension of the input array starting
+from index <code class="docutils literal"><span class="pre">b_k</span></code> (inclusive) with step <code class="docutils literal"><span class="pre">s_k</span></code>
+until reaching <code class="docutils literal"><span class="pre">e_k</span></code> (exclusive).</p>
+<p>If the <em>k</em>-th elements are <cite>None</cite> in the sequence of <cite>begin</cite>, <cite>end</cite>,
+and <cite>step</cite>, the following rule will be used to set default values.
+If <cite>s_k</cite> is <cite>None</cite>, set <cite>s_k=1</cite>. If <cite>s_k > 0</cite>, set <cite>b_k=0</cite>, <cite>e_k=d_k</cite>;
+else, set <cite>b_k=d_k-1</cite>, <cite>e_k=-1</cite>.</p>
 <p>The storage type of <code class="docutils literal"><span class="pre">slice</span></code> output depends on storage types of inputs</p>
 <ul class="simple">
 <li>slice(csr) = csr</li>
 <li>otherwise, <code class="docutils literal"><span class="pre">slice</span></code> generates output with default storage</li>
 </ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When input data storage type is csr, it only supports</p>
+</div>
+<p>step=(), or step=(None,), or step=(1,) to generate a csr output.
+For other step parameter values, it falls back to slicing
+a dense tensor.</p>
 <p>Example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[[</span>  <span class="mf">1.</span><span class="p">,</span>   <span class="mf">2.</span><span class="p">,</span>   <span class="mf">3.</span><span class="p">,</span>   <span class="mf">4.</span><span class="p">],</span>
      <span class="p">[</span>  <span class="mf">5.</span><span class="p">,</span>   <span class="mf">6.</span><span class="p">,</span>   <span class="mf">7.</span><span class="p">,</span>   <span class="mf">8.</span><span class="p">],</span>
@@ -1782,9 +1797,12 @@ from the <em>k</em>-th dimension of the input array with the open range <code cl
 
 <span class="nb">slice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span> <span class="o">=</span> <span class="p">[[</span> <span class="mf">2.</span><span class="p">,</span>  <span class="mf">3.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">],</span>
                                    <span class="p">[</span> <span class="mf">6.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">]]</span>
+<span class="nb">slice</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">step</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">9.</span><span class="p">,</span> <span class="mf">11.</span><span class="p">],</span>
+                                                          <span class="p">[</span><span class="mf">5.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">],</span>
+                                                          <span class="p">[</span><span class="mf">1.</span><span class="p">,</span>  <span class="mf">3.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L280</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L296</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1793,6 +1811,7 @@ from the <em>k</em>-th dimension of the input array with the open range <code cl
 <li><strong>data</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Source input</li>
 <li><strong>begin</strong> (<em>Shape(tuple), required</em>) – starting indices for the slice operation, supports negative indices.</li>
 <li><strong>end</strong> (<em>Shape(tuple), required</em>) – ending indices for the slice operation, supports negative indices.</li>
+<li><strong>step</strong> (<em>Shape(tuple), optional, default=[]</em>) – step for the slice operation, supports negative values.</li>
 <li><strong>name</strong> (<em>string, optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>

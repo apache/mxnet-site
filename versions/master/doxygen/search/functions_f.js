@@ -44,6 +44,7 @@ var searchData=
   ['slice',['Slice',['../classmxnet_1_1NDArray.html#a7acb6462c11e071949db2b0e1fbfd66e',1,'mxnet::NDArray']]],
   ['slicewithrecord',['SliceWithRecord',['../classmxnet_1_1NDArray.html#a0d868e5303669d6ce8a5ada1c34940ac',1,'mxnet::NDArray']]],
   ['smarch',['SMArch',['../cuda__utils_8h.html#a9779e3ad0efd0faec7fbe431c0db896d',1,'cuda_utils.h']]],
+  ['staticarray',['StaticArray',['../structmxnet_1_1common_1_1StaticArray.html#a1c3a79ddcb6b472f1a903f1753f4194a',1,'mxnet::common::StaticArray::StaticArray(void)'],['../structmxnet_1_1common_1_1StaticArray.html#a857e64b386ca8e0bfab5087a42ae2f53',1,'mxnet::common::StaticArray::StaticArray(const T &amp;val)'],['../structmxnet_1_1common_1_1StaticArray.html#abb2f84b9e5f856fed4435c3d5f0ef044',1,'mxnet::common::StaticArray::StaticArray(const StaticArray&lt; T, num &gt; &amp;sa)']]],
   ['storage_5finitialized',['storage_initialized',['../classmxnet_1_1NDArray.html#a0f59c72c8caefcc069d5839d35288cd1',1,'mxnet::NDArray']]],
   ['storage_5fshape',['storage_shape',['../classmxnet_1_1NDArray.html#a72059301dd967ecdd0fca19eaa7024d9',1,'mxnet::NDArray']]],
   ['storage_5ftype',['storage_type',['../classmxnet_1_1NDArray.html#a4d8f894c0306ad693ccf29278a613732',1,'mxnet::NDArray']]],
