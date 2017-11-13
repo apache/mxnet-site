@@ -25,7 +25,6 @@ var searchData=
   ['num_5fcallbacks',['num_callbacks',['../structMXCallbackList.html#aa593dcc4096dcc38a2af477e057d8861',1,'MXCallbackList']]],
   ['num_5finputs',['num_inputs',['../classmxnet_1_1Imperative_1_1CachedOp.html#a557a28c91c9020e6c5253e755a255706',1,'mxnet::Imperative::CachedOp']]],
   ['num_5fmutate_5fvars',['num_mutate_vars',['../structmxnet_1_1NDArrayFunctionReg.html#ad7881779b7807c6357902bdaccfccde2',1,'mxnet::NDArrayFunctionReg']]],
-  ['num_5fomp_5fthreads_5fper_5fworker',['num_omp_threads_per_worker',['../classmxnet_1_1Engine.html#ae33a279d7bf72f7aff61b315fe8793a4',1,'mxnet::Engine']]],
   ['num_5foutputs',['num_outputs',['../classmxnet_1_1Imperative_1_1CachedOp.html#a4ff0b204f301bc615492ee76f8548926',1,'mxnet::Imperative::CachedOp']]],
   ['num_5fscalars',['num_scalars',['../structmxnet_1_1NDArrayFunctionReg.html#a9591e2abf6cbca0903aec582b96b4d95',1,'mxnet::NDArrayFunctionReg']]],
   ['num_5fuse_5fvars',['num_use_vars',['../structmxnet_1_1NDArrayFunctionReg.html#aa0847438b4f3f600ec61d6d544755a29',1,'mxnet::NDArrayFunctionReg']]],
