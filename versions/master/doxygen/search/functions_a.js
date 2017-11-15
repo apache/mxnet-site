@@ -1,6 +1,7 @@
 var searchData=
 [
   ['makeunique',['MakeUnique',['../namespacemxnet_1_1common.html#a9d9abe40c84b9924e51d5d57b3f0b7d6',1,'mxnet::common::MakeUnique(Args &amp;&amp;...args)'],['../namespacemxnet_1_1common.html#a39b3453302aa3aa56230fbc88005861d',1,'mxnet::common::MakeUnique(size_t n)'],['../namespacemxnet_1_1common.html#a6ca270747bb7ab942c61d364f14f3042',1,'mxnet::common::MakeUnique(Args &amp;&amp;...args)=delete']]],
+  ['map',['Map',['../structmxnet_1_1common_1_1csr__indptr__check.html#a5da824c75914344ce1a228fcec1265b2',1,'mxnet::common::csr_indptr_check::Map()'],['../structmxnet_1_1common_1_1csr__idx__check.html#a325e38479cce9fd6f444ae5ba3b3a2f4',1,'mxnet::common::csr_idx_check::Map()'],['../structmxnet_1_1common_1_1rsp__idx__check.html#abb5a461090d1b410d0a1da852b88ccde',1,'mxnet::common::rsp_idx_check::Map()']]],
   ['markvariables',['MarkVariables',['../classmxnet_1_1Imperative.html#aa8c469ce724fb0c0aa27078e84428416',1,'mxnet::Imperative']]],
   ['mutable_5finput_5fnodes',['mutable_input_nodes',['../classmxnet_1_1Imperative_1_1CachedOp.html#a7b5ef16f1454140e3457670f8b57a61f',1,'mxnet::Imperative::CachedOp']]],
   ['mxautogradbackward',['MXAutogradBackward',['../c__api_8h.html#a133d10a566764530bf3172e52afbe561',1,'c_api.h']]],
@@ -99,6 +100,7 @@ var searchData=
   ['mxndarraysaverawbytes',['MXNDArraySaveRawBytes',['../c__api_8h.html#ab180057ee7a43918d021adfc468150a0',1,'c_api.h']]],
   ['mxndarraysetgradstate',['MXNDArraySetGradState',['../c__api_8h.html#a2ff7ded9017ac7617be4eeebffae06a1',1,'c_api.h']]],
   ['mxndarrayslice',['MXNDArraySlice',['../c__api_8h.html#a67c83f78e6bd15c6ad6eb09a34133086',1,'c_api.h']]],
+  ['mxndarraysynccheckformat',['MXNDArraySyncCheckFormat',['../c__api_8h.html#a0ae429cce829c760203fecb14bdaa91a',1,'c_api.h']]],
   ['mxndarraysynccopyfromcpu',['MXNDArraySyncCopyFromCPU',['../c__api_8h.html#ada464e85b86305d167511bb977095a52',1,'c_api.h']]],
   ['mxndarraysynccopyfromndarray',['MXNDArraySyncCopyFromNDArray',['../c__api_8h.html#ad85145c1cf066999697fd20b82dd417f',1,'c_api.h']]],
   ['mxndarraysynccopytocpu',['MXNDArraySyncCopyToCPU',['../c__api_8h.html#a98df4e0ceae7e198a5c18904cb135ab1',1,'c_api.h']]],

@@ -19,6 +19,7 @@ var searchData=
   ['resourcerequest',['ResourceRequest',['../structmxnet_1_1ResourceRequest.html#a0191250c5891ba487f354df4caf3604d',1,'mxnet::ResourceRequest::ResourceRequest()'],['../structmxnet_1_1ResourceRequest.html#aa01dd9fd716dfbb68c2ee01f5a11aea5',1,'mxnet::ResourceRequest::ResourceRequest(Type type)']]],
   ['resourcerequest',['ResourceRequest',['../structmxnet_1_1ResourceRequest.html',1,'mxnet']]],
   ['rowsparseauxtype',['RowSparseAuxType',['../namespacemxnet_1_1rowsparse.html#a0ad4c619684fa4d442c7076c18fef232',1,'mxnet::rowsparse']]],
+  ['rsp_5fidx_5fcheck',['rsp_idx_check',['../structmxnet_1_1common_1_1rsp__idx__check.html',1,'mxnet::common']]],
   ['rtc_2eh',['rtc.h',['../rtc_8h.html',1,'']]],
   ['rtchandle',['RtcHandle',['../c__api_8h.html#a58a159a7417ad988206970d46c4c7ee8',1,'c_api.h']]],
   ['run_5fctx',['run_ctx',['../structmxnet_1_1OpContext.html#a869d4c68c0028a175406f11332baf7cf',1,'mxnet::OpContext']]],

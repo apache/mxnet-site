@@ -1716,14 +1716,34 @@ fixed-size items.</p>
 <span class="gp">>>> </span><span class="n">x</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
 <span class="go">array([[ 1.,  2.,  1.],</span>
 <span class="go">       [ 0.,  0.,  4.]], dtype=float32)</span>
+<span class="gp">>>> </span><span class="n">x</span><span class="p">[[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">>>> </span><span class="n">x</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+<span class="go">array([[ 1.,  5.,  5.],</span>
+<span class="go">       [ 0.,  0.,  4.]], dtype=float32)</span>
+<span class="gp">>>> </span><span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+<span class="gp">>>> </span><span class="n">x</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+<span class="go">array([[ 6.,  5.,  5.],</span>
+<span class="go">       [ 6.,  0.,  4.]], dtype=float32)</span>
 </pre></div>
 </div>
 </dd></dl>
 <dl class="method">
 <dt id="mxnet.ndarray.NDArray.__getitem__">
 <code class="descname">__getitem__</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.NDArray.__getitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>x.__getitem__(i) <=> x[i]</p>
-<p>Returns a sliced view of this array.</p>
+<dd><p>x.__getitem__(i) <=> x[i]
+Returns a sliced view of this array if the elements fetched are contiguous in memory;
+otherwise, returns a newly created NDArray.
+This functions supports advanced indexing defined in the following reference with
+some limitations.
+<a class="reference external" href="https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.indexing.html#combining-advanced-and-basic-indexing">https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.indexing.html#combining-advanced-and-basic-indexing</a>  # pylint: disable=line-too-long
+The following features/functionality are not supported for now:
+1. If key is a list type, only a list of integers is supported,</p>
+<blockquote>
+<div>i.e. key=[1, 2] is okay, while not for key=[[1]].</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>Ellipsis (...) and np.newaxis are not supported.</li>
+<li>Boolean array indexing.</li>
+</ol>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1744,6 +1764,23 @@ fixed-size items.</p>
 <span class="gp">>>> </span><span class="n">x</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
 <span class="go">array([[ 2.,  2.,  2.],</span>
 <span class="go">       [ 3.,  4.,  5.]], dtype=float32)</span>
+<span class="gp">>>> </span><span class="n">x</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int32'</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="n">x</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+<span class="go">[[[0 1]</span>
+<span class="go">  [2 3]]</span>
+<span class="go"> [[4 5]</span>
+<span class="go">  [6 7]]]</span>
+<span class="gp">>>> </span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+<span class="go">[[[4 5]</span>
+<span class="go">  [6 7]]]</span>
+<span class="gp">>>> </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int32'</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="n">y</span><span class="p">]</span>
+<span class="go">[[[4 5]</span>
+<span class="go">  [6 7]]]</span>
+<span class="gp">>>> </span><span class="n">y</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'int32'</span><span class="p">)</span>
+<span class="gp">>>> </span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="n">y</span><span class="p">]</span>
+<span class="go">[[[4 5]</span>
+<span class="go">  [6 7]]]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -6710,7 +6747,7 @@ Clipping <code class="docutils literal"><span class="pre">x</span></code> betwee
 <li>clip(csr, a_min > 0, a_max > 0) = csr</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/matrix_op.cc:L421</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L422</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -7357,7 +7394,7 @@ The output of this function.</p>
                       <span class="p">[</span> <span class="mf">9.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">,</span>  <span class="mf">5.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L597</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L598</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9417,7 +9454,7 @@ elements:</p>
                                  <span class="p">[</span> <span class="mf">3.</span><span class="p">,</span>  <span class="mf">3.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L495</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L496</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -9572,7 +9609,7 @@ The output of this function.</p>
                       <span class="p">[</span> <span class="mf">9.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">,</span>  <span class="mf">5.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L597</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L598</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -10575,7 +10612,7 @@ to the <cite>end</cite> index.</p>
                                            <span class="p">[</span> <span class="mf">10.</span><span class="p">,</span>  <span class="mf">11.</span><span class="p">]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/matrix_op.cc:L378</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L379</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -11371,7 +11408,7 @@ shape <code class="docutils literal"><span class="pre">(2,2)</span></code> array
 </div>
 </li>
 </ul>
-<p>Defined in src/operator/tensor/matrix_op.cc:L556</p>
+<p>Defined in src/operator/tensor/matrix_op.cc:L557</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>

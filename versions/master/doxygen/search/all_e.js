@@ -6,6 +6,7 @@ var searchData=
   ['ndarray',['NDArray',['../classmxnet_1_1Imperative.html#ad41557e205cf8f4d6ef70b60587c37cb',1,'mxnet::Imperative::NDArray()'],['../classmxnet_1_1TBlob.html#ad41557e205cf8f4d6ef70b60587c37cb',1,'mxnet::TBlob::NDArray()'],['../classmxnet_1_1NDArray.html#a12ec978e5dbe9092d21721a657c39756',1,'mxnet::NDArray::NDArray()'],['../classmxnet_1_1NDArray.html#a8fb6d94c737c452e180650fdfe5228ad',1,'mxnet::NDArray::NDArray(const TShape &amp;shape, Context ctx, bool delay_alloc=false, int dtype=mshadow::default_type_flag)'],['../classmxnet_1_1NDArray.html#a1a7288505ac9bbb19830161f7e5c1a6f',1,'mxnet::NDArray::NDArray(const TBlob &amp;data, int dev_id)']]],
   ['ndarray_2eh',['ndarray.h',['../ndarray_8h.html',1,'']]],
   ['ndarrayapifunction',['NDArrayAPIFunction',['../namespacemxnet.html#ab0d55b0edf98cf8f3caeb050662ae9ec',1,'mxnet']]],
+  ['ndarrayformaterr',['NDArrayFormatErr',['../namespacemxnet.html#ace60510752753f459193f95cab0e9e1a',1,'mxnet']]],
   ['ndarrayfunctionreg',['NDArrayFunctionReg',['../structmxnet_1_1NDArrayFunctionReg.html#abd540887b52ba89572ad6a18b4ac739c',1,'mxnet::NDArrayFunctionReg']]],
   ['ndarrayfunctionreg',['NDArrayFunctionReg',['../structmxnet_1_1NDArrayFunctionReg.html',1,'mxnet']]],
   ['ndarrayfunctiontypemask',['NDArrayFunctionTypeMask',['../namespacemxnet.html#a89a5f0f5cfd9e1e94604a7b42dda818a',1,'mxnet']]],
