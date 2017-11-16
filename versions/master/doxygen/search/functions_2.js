@@ -6,5 +6,6 @@ var searchData=
   ['backwardresource',['BackwardResource',['../classmxnet_1_1OperatorProperty.html#ade7720a3e0ebba67d89978925a77609b',1,'mxnet::OperatorProperty']]],
   ['barrier',['Barrier',['../classmxnet_1_1KVStore.html#a4f9275fb7a11589fae1dcc5a8a3354ac',1,'mxnet::KVStore']]],
   ['beforefirst',['BeforeFirst',['../classmxnet_1_1IIterator.html#a37fc8b163cd0158686183cc0f319529a',1,'mxnet::IIterator']]],
-  ['bind',['Bind',['../classmxnet_1_1Executor.html#a8217aa9fbdd99d107bd836872d7d9692',1,'mxnet::Executor']]]
+  ['bind',['Bind',['../classmxnet_1_1Executor.html#a8217aa9fbdd99d107bd836872d7d9692',1,'mxnet::Executor']]],
+  ['bulk_5fsize',['bulk_size',['../classmxnet_1_1Engine.html#a78baf44fa0dfed3285d6b9b65845825c',1,'mxnet::Engine']]]
 ];

@@ -15,6 +15,7 @@ var searchData=
   ['sendcommandtoservers',['SendCommandToServers',['../classmxnet_1_1KVStore.html#a4ff4ca05f3c519ebbc2e46264e8b63dd',1,'mxnet::KVStore']]],
   ['set_5faux_5fshape',['set_aux_shape',['../classmxnet_1_1NDArray.html#a150c2f8f88a8d0859a5c49da36a03f30',1,'mxnet::NDArray']]],
   ['set_5fbarrier_5fbefore_5fexit',['set_barrier_before_exit',['../classmxnet_1_1KVStore.html#afa87753d90fc7e75234229834ea23abb',1,'mxnet::KVStore']]],
+  ['set_5fbulk_5fsize',['set_bulk_size',['../classmxnet_1_1Engine.html#ac33a02d6827b43c27c04371d8ef04ef4',1,'mxnet::Engine']]],
   ['set_5fenable_5fkwargs',['set_enable_kwargs',['../classmxnet_1_1op_1_1SimpleOpRegEntry.html#a4cdffb8337b41a643c05632b29e65a2b',1,'mxnet::op::SimpleOpRegEntry']]],
   ['set_5fenable_5fscalar',['set_enable_scalar',['../classmxnet_1_1op_1_1SimpleOpRegEntry.html#a0725f1b670044149a088355ffeb6977f',1,'mxnet::op::SimpleOpRegEntry']]],
   ['set_5fexpect_5fndim',['set_expect_ndim',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html#a9e17b866c2cbae2c0fb1af2003c0cfde',1,'dmlc::parameter::FieldEntry&lt; mxnet::TShape &gt;']]],

@@ -35,6 +35,7 @@ var searchData=
   ['mxdataitergetpadnum',['MXDataIterGetPadNum',['../c__api_8h.html#aec6d0d5055719576337687fc3702a899',1,'c_api.h']]],
   ['mxdataiternext',['MXDataIterNext',['../c__api_8h.html#a8be0adeef4b87243a5eda12f17e64e67',1,'c_api.h']]],
   ['mxdumpprofile',['MXDumpProfile',['../c__api_8h.html#a51716c7a38d1b02d26da4d84d6307025',1,'c_api.h']]],
+  ['mxenginesetbulksize',['MXEngineSetBulkSize',['../c__api_8h.html#a4917b11499d6ef916ab7f78274c8cf0b',1,'c_api.h']]],
   ['mxexecutorbackward',['MXExecutorBackward',['../c__api_8h.html#ad8f92bb15e11058abe12959cfc4dcbb3',1,'c_api.h']]],
   ['mxexecutorbackwardex',['MXExecutorBackwardEx',['../c__api_8h.html#a3a211f3e0c6270271ce4fe79228dd0c2',1,'c_api.h']]],
   ['mxexecutorbind',['MXExecutorBind',['../c__api_8h.html#a10a6deacde18b7d52b44eee0ddddf0e1',1,'c_api.h']]],
