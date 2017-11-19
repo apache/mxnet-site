@@ -22,6 +22,7 @@ var searchData=
   ['copyfromto',['CopyFromTo',['../namespacemxnet.html#aeee0e64a5e59bb0c222cbf44f4266f7a',1,'mxnet::CopyFromTo(const NDArray &amp;from, NDArray *to, int priority=0)'],['../namespacemxnet.html#aa005a02aac4f297b6fab561e907e89e3',1,'mxnet::CopyFromTo(const NDArray &amp;from, const NDArray &amp;to, int priority=0)']]],
   ['cpu',['CPU',['../structmxnet_1_1Context.html#a4bb231d70623fde216de51589347e513',1,'mxnet::Context']]],
   ['cpupinned',['CPUPinned',['../structmxnet_1_1Context.html#a420d4e662a5129b202507f42c991391c',1,'mxnet::Context']]],
+  ['cpushared',['CPUShared',['../structmxnet_1_1Context.html#a8e090b1fcc96b682512bcc22fc521f80',1,'mxnet::Context']]],
   ['create',['Create',['../structmxnet_1_1Context.html#a7cea13406ae21ae557d3455f54670a4a',1,'mxnet::Context::Create()'],['../classmxnet_1_1Imperative_1_1AGInfo.html#a8204823e44c4b44b08c276bddfcbb952',1,'mxnet::Imperative::AGInfo::Create()'],['../classmxnet_1_1KVStore.html#a6d54b075d3b43577f8339b25000a0c82',1,'mxnet::KVStore::Create()'],['../classmxnet_1_1OpStatePtr.html#ae0f821c7efce61a11730ef8b93070e3e',1,'mxnet::OpStatePtr::Create()'],['../classmxnet_1_1OperatorProperty.html#a15cf1f905b08a008ff38556ef6a35dd0',1,'mxnet::OperatorProperty::Create()']]],
   ['createcallback',['CreateCallback',['../classmxnet_1_1Engine.html#acf25be815b4200b48ee6e4e169bf95b8',1,'mxnet::Engine']]],
   ['createoperator',['CreateOperator',['../classmxnet_1_1OperatorProperty.html#a546ab25ddaae590ca98705ae9abc7ac0',1,'mxnet::OperatorProperty']]],

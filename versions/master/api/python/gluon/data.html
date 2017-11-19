@@ -400,7 +400,7 @@ iteration.</p>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.data.DataLoader">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.</code><code class="descname">DataLoader</code><span class="sig-paren">(</span><em>dataset</em>, <em>batch_size=None</em>, <em>shuffle=False</em>, <em>sampler=None</em>, <em>last_batch=None</em>, <em>batch_sampler=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.data.DataLoader" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mxnet.gluon.data.</code><code class="descname">DataLoader</code><span class="sig-paren">(</span><em>dataset</em>, <em>batch_size=None</em>, <em>shuffle=False</em>, <em>sampler=None</em>, <em>last_batch=None</em>, <em>batch_sampler=None</em>, <em>batchify_fn=None</em>, <em>num_workers=0</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.gluon.data.DataLoader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads data from a dataset and returns mini-batches of data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
@@ -420,6 +420,22 @@ rollover - The remaining samples are rolled over to the next epoch.</p>
 </li>
 <li><strong>batch_sampler</strong> (<a class="reference internal" href="#mxnet.gluon.data.Sampler" title="mxnet.gluon.data.Sampler"><em>Sampler</em></a>) – A sampler that returns mini-batches. Do not specify batch_size,
 shuffle, sampler, and last_batch if batch_sampler is specified.</li>
+<li><strong>batchify_fn</strong> (<em>callable</em>) – <p>Callback function to allow users to specify how to merge samples
+into a batch. Defaults to <cite>default_batchify_fn</cite>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">default_batchify_fn</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nd</span><span class="o">.</span><span class="n">NDArray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">default_batchify_fn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><strong>num_workers</strong> (<em>int, default 0</em>) – The number of multiprocessing workers to use for data preprocessing.
+<cite>num_workers > 0</cite> is not supported on Windows yet.</li>
 </ul>
 </td>
 </tr>
