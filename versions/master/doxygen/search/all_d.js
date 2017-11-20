@@ -83,7 +83,6 @@ var searchData=
   ['mxkvstoresendcommmandtoservers',['MXKVStoreSendCommmandToServers',['../c__api_8h.html#a5de45491037df7bf6b757b627100acd7',1,'c_api.h']]],
   ['mxkvstoreservercontroller',['MXKVStoreServerController',['../c__api_8h.html#a31f639b22167ac51b67381b16dfd5634',1,'c_api.h']]],
   ['mxkvstoresetbarrierbeforeexit',['MXKVStoreSetBarrierBeforeExit',['../c__api_8h.html#add5b8e9bbd098e8fef5deab4c7ab2737',1,'c_api.h']]],
-  ['mxkvstoresetgradientcompression',['MXKVStoreSetGradientCompression',['../c__api_8h.html#ab9e3c15451a1bc1d89f83773ae1185a3',1,'c_api.h']]],
   ['mxkvstoresetupdater',['MXKVStoreSetUpdater',['../c__api_8h.html#adbdd2035afce961837866c711af4f0ab',1,'c_api.h']]],
   ['mxkvstoresetupdaterex',['MXKVStoreSetUpdaterEx',['../c__api_8h.html#a70e08b32e56ad80a3557f831f6fd3b50',1,'c_api.h']]],
   ['mxkvstorestrupdater',['MXKVStoreStrUpdater',['../c__api_8h.html#a38e5829512ef685f1dd1b1d1fac93c42',1,'c_api.h']]],

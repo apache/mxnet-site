@@ -33,7 +33,6 @@ var searchData=
   ['set_5ftype_5fmask',['set_type_mask',['../structmxnet_1_1NDArrayFunctionReg.html#acc3656ba948c28d3d155736ce064a3f4',1,'mxnet::NDArrayFunctionReg']]],
   ['set_5fupdater',['set_updater',['../classmxnet_1_1KVStore.html#a352ef7eae04211eca1ed47401a6d15d5',1,'mxnet::KVStore::set_updater(const Updater &amp;updater)'],['../classmxnet_1_1KVStore.html#a777f1de6348bba9ef62b56064a6e0c46',1,'mxnet::KVStore::set_updater(const StrUpdater &amp;updater)']]],
   ['setdataname',['SetDataName',['../classmxnet_1_1IIterator.html#a79ed9023cf4e525c8b4a8c6fa96eea05',1,'mxnet::IIterator']]],
-  ['setgradientcompression',['SetGradientCompression',['../classmxnet_1_1KVStore.html#ac646c6d489a1c47b84556e90b2176f49',1,'mxnet::KVStore']]],
   ['setmonitorcallback',['SetMonitorCallback',['../classmxnet_1_1Executor.html#a3c701dda22a9c1e474d23b11edda9b0d',1,'mxnet::Executor']]],
   ['setupdefaultblobs',['SetupDefaultBlobs',['../namespacemxnet_1_1common.html#a611f7ee7b2a5289efd463b11edf57264',1,'mxnet::common']]],
   ['setupdefaultblobsinout',['SetupDefaultBlobsInOut',['../namespacemxnet_1_1common.html#a4d4518c9dda1e3f9481839ebf7eaa34c',1,'mxnet::common']]],
