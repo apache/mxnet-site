@@ -250,6 +250,11 @@
 <span class="sd">    kvstore : str or KVStore</span>
 <span class="sd">        kvstore type for multi-gpu and distributed training. See help on</span>
 <span class="sd">        :any:`mxnet.kvstore.create` for more information.</span>
+<span class="sd">    compression_params : dict</span>
+<span class="sd">        Specifies type of gradient compression and additional arguments depending</span>
+<span class="sd">        on the type of compression being used. For example, 2bit compression requires a threshold.</span>
+<span class="sd">        Arguments would then be {'type':'2bit', 'threshold':0.5}</span>
+<span class="sd">        See mxnet.KVStore.set_gradient_compression method for more details on gradient compression.</span>
 
 <span class="sd">    Properties</span>
 <span class="sd">    ----------</span>
@@ -257,7 +262,8 @@
 <span class="sd">        The current learning rate of the optimizer. Given an Optimizer object</span>
 <span class="sd">        optimizer, its learning rate can be accessed as optimizer.learning_rate.</span>
 <span class="sd">    """</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">optimizer_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">kvstore</span><span class="o">=</span><span class="s1">'device'</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">optimizer_params</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">kvstore</span><span class="o">=</span><span class="s1">'device'</span><span class="p">,</span>
+                 <span class="n">compression_params</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">ParameterDict</span><span class="p">)):</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
@@ -271,7 +277,7 @@
                     <span class="s2">"First argument must be a list or dict of Parameters, "</span> \
                     <span class="s2">"got list of </span><span class="si">%s</span><span class="s2">."</span><span class="o">%</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">)))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span> <span class="o">=</span> <span class="n">compression_params</span>
         <span class="n">optimizer_params</span> <span class="o">=</span> <span class="n">optimizer_params</span> <span class="k">if</span> <span class="n">optimizer_params</span> <span class="k">else</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="n">optimizer_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'rescale_grad'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_contexts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_contexts</span><span class="p">()</span>
@@ -310,6 +316,8 @@
         <span class="n">kvstore</span><span class="p">,</span> <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="n">_create_kvstore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_contexts</span><span class="p">),</span>
                                                      <span class="n">arg_arrays</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">kvstore</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span><span class="p">:</span>
+                <span class="n">kvstore</span><span class="o">.</span><span class="n">set_gradient_compression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span><span class="p">)</span>
             <span class="k">if</span> <span class="s1">'dist'</span> <span class="ow">in</span> <span class="n">kvstore</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
                 <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="bp">False</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">):</span>

@@ -267,10 +267,16 @@
 <span class="sd">        Instead they are initialized to 0 and can be set by `set_states()`.</span>
 <span class="sd">    group2ctxs : list of dict of str to context</span>
 <span class="sd">        Default is `None`. Mapping the `ctx_group` attribute to the context assignment.</span>
+<span class="sd">    compression_params : dict</span>
+<span class="sd">        Specifies type of gradient compression and additional arguments depending</span>
+<span class="sd">        on the type of compression being used. For example, 2bit compression requires a threshold.</span>
+<span class="sd">        Arguments would then be {'type':'2bit', 'threshold':0.5}</span>
+<span class="sd">        See mxnet.KVStore.set_gradient_compression method for more details on gradient compression.</span>
 <span class="sd">    """</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">data_names</span><span class="o">=</span><span class="p">(</span><span class="s1">'data'</span><span class="p">,),</span> <span class="n">label_names</span><span class="o">=</span><span class="p">(</span><span class="s1">'softmax_label'</span><span class="p">,),</span>
                  <span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">work_load_list</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
-                 <span class="n">fixed_param_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">state_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">group2ctxs</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+                 <span class="n">fixed_param_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">state_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">group2ctxs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">compression_params</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Module</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Context</span><span class="p">):</span>
@@ -309,6 +315,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_aux_params</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_params_dirty</span> <span class="o">=</span> <span class="bp">False</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span> <span class="o">=</span> <span class="n">compression_params</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span> <span class="o">=</span> <span class="bp">None</span>
@@ -731,6 +738,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_updater</span> <span class="o">=</span> <span class="bp">None</span>
 
         <span class="k">if</span> <span class="n">kvstore</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span><span class="p">:</span>
+                <span class="n">kvstore</span><span class="o">.</span><span class="n">set_gradient_compression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span><span class="p">)</span>
             <span class="c1"># copy initialized local parameters to kvstore</span>
             <span class="n">_initialize_kvstore</span><span class="p">(</span><span class="n">kvstore</span><span class="o">=</span><span class="n">kvstore</span><span class="p">,</span>
                                 <span class="n">param_arrays</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_exec_group</span><span class="o">.</span><span class="n">param_arrays</span><span class="p">,</span>

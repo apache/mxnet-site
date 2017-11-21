@@ -270,6 +270,16 @@
                  <span class="k">else</span> <span class="n">c_array_buf</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">'i'</span><span class="p">,</span> <span class="p">[</span><span class="n">keys</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)))</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">c_keys</span><span class="p">,</span> <span class="n">c_handle_array</span><span class="p">(</span><span class="n">vals</span><span class="p">),</span> <span class="n">use_str_keys</span><span class="p">)</span>
 
+<span class="k">def</span> <span class="nf">_ctype_dict</span><span class="p">(</span><span class="n">param_dict</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Returns ctype arrays for keys and values(converted to strings) in a dictionary</span>
+<span class="sd">    """</span>
+    <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">param_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)),</span> \
+        <span class="s2">"unexpected type for param_dict: "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">param_dict</span><span class="p">))</span>
+    <span class="n">c_keys</span> <span class="o">=</span> <span class="n">c_array</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_char_p</span><span class="p">,</span> <span class="p">[</span><span class="n">c_str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+    <span class="n">c_vals</span> <span class="o">=</span> <span class="n">c_array</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_char_p</span><span class="p">,</span> <span class="p">[</span><span class="n">c_str</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">param_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">c_keys</span><span class="p">,</span> <span class="n">c_vals</span><span class="p">)</span>
+
 <span class="k">def</span> <span class="nf">_updater_wrapper</span><span class="p">(</span><span class="n">updater</span><span class="p">):</span>
     <span class="sd">"""A wrapper for the user-defined handle."""</span>
     <span class="k">def</span> <span class="nf">updater_handle</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">lhs_handle</span><span class="p">,</span> <span class="n">rhs_handle</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
@@ -556,6 +566,58 @@
             <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXKVStorePullRowSparse</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ckeys</span><span class="p">)),</span> <span class="n">ckeys</span><span class="p">,</span> <span class="n">cvals</span><span class="p">,</span> <span class="n">crow_ids</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">priority</span><span class="p">)))</span></div>
 
+<div class="viewcode-block" id="KVStore.set_gradient_compression"><a class="viewcode-back" href="../../api/python/kvstore/kvstore.html#mxnet.kvstore.KVStore.set_gradient_compression">[docs]</a>    <span class="k">def</span> <span class="nf">set_gradient_compression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compression_params</span><span class="p">):</span>
+        <span class="sd">""" Specifies type of low-bit quantization for gradient compression \</span>
+<span class="sd">         and additional arguments depending on the type of compression being used.</span>
+
+<span class="sd">        2bit Gradient Compression takes a positive float `threshold`.</span>
+<span class="sd">        The technique works by thresholding values such that positive values in the</span>
+<span class="sd">        gradient above threshold will be set to threshold. Negative values whose absolute</span>
+<span class="sd">        values are higher than threshold, will be set to the negative of threshold.</span>
+<span class="sd">        Values whose absolute values are less than threshold will be set to 0.</span>
+<span class="sd">        By doing so, each value in the gradient is in one of three states. 2bits are</span>
+<span class="sd">        used to represent these states, and every 16 float values in the original</span>
+<span class="sd">        gradient can be represented using one float. This compressed representation</span>
+<span class="sd">        can reduce communication costs. The difference between these thresholded values and</span>
+<span class="sd">        original values is stored at the sender's end as residual and added to the</span>
+<span class="sd">        gradient in the next iteration.</span>
+
+<span class="sd">        When kvstore is 'local', gradient compression is used to reduce communication</span>
+<span class="sd">        between multiple devices (gpus). Gradient is quantized on each GPU which</span>
+<span class="sd">        computed the gradients, then sent to the GPU which merges the gradients. This</span>
+<span class="sd">        receiving GPU dequantizes the gradients and merges them. Note that this</span>
+<span class="sd">        increases memory usage on each GPU because of the residual array stored.</span>
+
+<span class="sd">        When kvstore is 'dist', gradient compression is used to reduce communication</span>
+<span class="sd">        from worker to sender. Gradient is quantized on each worker which</span>
+<span class="sd">        computed the gradients, then sent to the server which dequantizes</span>
+<span class="sd">        this data and merges the gradients from each worker. Note that this</span>
+<span class="sd">        increases CPU memory usage on each worker because of the residual array stored.</span>
+<span class="sd">        Only worker to server communication is compressed in this setting.</span>
+<span class="sd">        If each machine has multiple GPUs, currently this GPU to GPU or GPU to CPU communication</span>
+<span class="sd">        is not compressed. Server to worker communication (in the case of pull)</span>
+<span class="sd">        is also not compressed.</span>
+
+<span class="sd">        To use 2bit compression, we need to specify `type` as `2bit`.</span>
+<span class="sd">        Only specifying `type` would use default value for the threshold.</span>
+<span class="sd">        To completely specify the arguments for 2bit compression, we would need to pass</span>
+<span class="sd">        a dictionary which includes `threshold` like:</span>
+<span class="sd">        {'type': '2bit', 'threshold': 0.5}</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        compression_params : dict</span>
+<span class="sd">            A dictionary specifying the type and parameters for gradient compression.</span>
+<span class="sd">            The key `type` in this dictionary is a</span>
+<span class="sd">            required string argument and specifies the type of gradient compression.</span>
+<span class="sd">            Currently `type` can be only `2bit`</span>
+<span class="sd">            Other keys in this dictionary are optional and specific to the type</span>
+<span class="sd">            of gradient compression.</span>
+<span class="sd">        """</span>
+        <span class="n">ckeys</span><span class="p">,</span> <span class="n">cvals</span> <span class="o">=</span> <span class="n">_ctype_dict</span><span class="p">(</span><span class="n">compression_params</span><span class="p">)</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXKVStoreSetGradientCompression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
+                                                        <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">compression_params</span><span class="p">)),</span>
+                                                        <span class="n">ckeys</span><span class="p">,</span> <span class="n">cvals</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="KVStore.set_optimizer"><a class="viewcode-back" href="../../api/python/kvstore/kvstore.html#mxnet.kvstore.KVStore.set_optimizer">[docs]</a>    <span class="k">def</span> <span class="nf">set_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
         <span class="sd">""" Registers an optimizer with the kvstore.</span>

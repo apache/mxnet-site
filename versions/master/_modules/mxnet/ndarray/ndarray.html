@@ -582,16 +582,25 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="bp">None</span>
 
+    <span class="c1"># pylint: disable=line-too-long</span>
 <div class="viewcode-block" id="NDArray.__setitem__"><a class="viewcode-back" href="../../../api/python/ndarray/ndarray.html#mxnet.ndarray.NDArray.__setitem__">[docs]</a>    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">"""x.__setitem__(i, y) <=> x[i]=y</span>
 
-<span class="sd">        Set self[key] to value.</span>
+<span class="sd">        Sets value to self[key]. This functions supports advanced indexing defined in the following reference with</span>
+<span class="sd">        some restrictions.</span>
+
+<span class="sd">        https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.indexing.html#combining-advanced-and-basic-indexing</span>
+
+<span class="sd">        - If key is a list type, only a list of integers is supported, e.g. key=[1, 2] is supported,</span>
+<span class="sd">          while not for key=[[1, 2]].</span>
+<span class="sd">        - Ellipsis (...) and np.newaxis are not supported.</span>
+<span class="sd">        - Boolean array indexing is not supported.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        key : int, slice or tuple</span>
+<span class="sd">        key : int, slice, list, np.ndarray, NDArray, or tuple of all previous types</span>
 <span class="sd">            The indexing key.</span>
-<span class="sd">        value : scalar, NDArray or numpy.ndarray</span>
+<span class="sd">        value : scalar or array-like object that can be broadcast to the shape of self[key]</span>
 <span class="sd">            The value to set.</span>
 
 <span class="sd">        Examples</span>
@@ -637,24 +646,27 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Indexing NDArray with index=</span><span class="si">%s</span><span class="s1"> and type=</span><span class="si">%s</span><span class="s1"> is not supported'</span>
                              <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">))))</span></div>
+    <span class="c1"># pylint: enable=line-too-long</span>
 
     <span class="c1"># pylint: disable=line-too-long</span>
 <div class="viewcode-block" id="NDArray.__getitem__"><a class="viewcode-back" href="../../../api/python/ndarray/ndarray.html#mxnet.ndarray.NDArray.__getitem__">[docs]</a>    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">"""x.__getitem__(i) <=> x[i]</span>
+
 <span class="sd">        Returns a sliced view of this array if the elements fetched are contiguous in memory;</span>
 <span class="sd">        otherwise, returns a newly created NDArray.</span>
 <span class="sd">        This functions supports advanced indexing defined in the following reference with</span>
-<span class="sd">        some limitations.</span>
+<span class="sd">        some restrictions.</span>
+
 <span class="sd">        https://docs.scipy.org/doc/numpy-1.13.0/reference/arrays.indexing.html#combining-advanced-and-basic-indexing</span>
-<span class="sd">        The following features/functionality are not supported for now:</span>
-<span class="sd">        1. If key is a list type, only a list of integers is supported,</span>
-<span class="sd">           i.e. key=[1, 2] is okay, while not for key=[[1]].</span>
-<span class="sd">        2. Ellipsis (...) and np.newaxis are not supported.</span>
-<span class="sd">        3. Boolean array indexing.</span>
+
+<span class="sd">        - If key is a list type, only a list of integers is supported, e.g. key=[1, 2] is supported,</span>
+<span class="sd">          while not for key=[[1, 2]].</span>
+<span class="sd">        - Ellipsis (...) and np.newaxis are not supported.</span>
+<span class="sd">        - Boolean array indexing is not supported.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        key : int or slice, or array like</span>
+<span class="sd">        key : int, slice, list, np.ndarray, NDArray, or tuple of all previous types</span>
 <span class="sd">            Indexing key.</span>
 
 <span class="sd">        Examples</span>
