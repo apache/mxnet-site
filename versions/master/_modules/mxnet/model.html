@@ -226,6 +226,7 @@
 <span class="sd">"""MXNet model module"""</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -307,6 +308,26 @@
 
         <span class="k">if</span> <span class="n">update_on_kvstore</span><span class="p">:</span>
             <span class="n">kvstore</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">param_on_devs</span><span class="p">,</span> <span class="n">priority</span><span class="o">=-</span><span class="n">idx</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_update_params_on_kvstore_nccl</span><span class="p">(</span><span class="n">param_arrays</span><span class="p">,</span> <span class="n">grad_arrays</span><span class="p">,</span> <span class="n">kvstore</span><span class="p">,</span> <span class="n">param_names</span><span class="p">):</span>
+    <span class="sd">"""Perform update of param_arrays from grad_arrays on NCCL kvstore."""</span>
+    <span class="n">valid_indices</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">grad_list</span> <span class="ow">in</span>
+                     <span class="nb">enumerate</span><span class="p">(</span><span class="n">grad_arrays</span><span class="p">)</span> <span class="k">if</span> <span class="n">grad_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">]</span>
+    <span class="n">valid_grad_arrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">grad_arrays</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">valid_indices</span><span class="p">]</span>
+    <span class="n">valid_param_arrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">param_arrays</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">valid_indices</span><span class="p">]</span>
+    <span class="n">valid_param_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">param_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">valid_indices</span><span class="p">]</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_grad_arrays</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Use aggregation by default only with NCCL</span>
+    <span class="n">default_batch</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">'MXNET_UPDATE_AGGREGATION_SIZE'</span><span class="p">,</span> <span class="n">default_batch</span><span class="p">))</span>
+    <span class="k">while</span> <span class="n">start</span> <span class="o"><</span> <span class="n">size</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">batch</span> <span class="k">if</span> <span class="n">start</span> <span class="o">+</span> <span class="n">batch</span> <span class="o"><</span> <span class="n">size</span> <span class="k">else</span> <span class="n">size</span>
+        <span class="c1"># push gradient, priority is negative index</span>
+        <span class="n">kvstore</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">valid_param_names</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">valid_grad_arrays</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">priority</span><span class="o">=-</span><span class="n">start</span><span class="p">)</span>
+        <span class="c1"># pull back the weights</span>
+        <span class="n">kvstore</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">valid_param_names</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">valid_param_arrays</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">],</span> <span class="n">priority</span><span class="o">=-</span><span class="n">start</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
 
 <span class="k">def</span> <span class="nf">_update_params_on_kvstore</span><span class="p">(</span><span class="n">param_arrays</span><span class="p">,</span> <span class="n">grad_arrays</span><span class="p">,</span> <span class="n">kvstore</span><span class="p">,</span> <span class="n">param_names</span><span class="p">):</span>
     <span class="sd">"""Perform update of param_arrays from grad_arrays on kvstore."""</span>
@@ -469,9 +490,14 @@
                 <span class="n">executor_manager</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
 
                 <span class="k">if</span> <span class="n">update_on_kvstore</span><span class="p">:</span>
-                    <span class="n">_update_params_on_kvstore</span><span class="p">(</span><span class="n">executor_manager</span><span class="o">.</span><span class="n">param_arrays</span><span class="p">,</span>
-                                              <span class="n">executor_manager</span><span class="o">.</span><span class="n">grad_arrays</span><span class="p">,</span>
-                                              <span class="n">kvstore</span><span class="p">,</span> <span class="n">executor_manager</span><span class="o">.</span><span class="n">param_names</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="s1">'nccl'</span> <span class="ow">in</span> <span class="n">kvstore</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+                        <span class="n">_update_params_on_kvstore_nccl</span><span class="p">(</span><span class="n">executor_manager</span><span class="o">.</span><span class="n">param_arrays</span><span class="p">,</span>
+                                                       <span class="n">executor_manager</span><span class="o">.</span><span class="n">grad_arrays</span><span class="p">,</span>
+                                                       <span class="n">kvstore</span><span class="p">,</span> <span class="n">executor_manager</span><span class="o">.</span><span class="n">param_names</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">_update_params_on_kvstore</span><span class="p">(</span><span class="n">executor_manager</span><span class="o">.</span><span class="n">param_arrays</span><span class="p">,</span>
+                                                  <span class="n">executor_manager</span><span class="o">.</span><span class="n">grad_arrays</span><span class="p">,</span>
+                                                  <span class="n">kvstore</span><span class="p">,</span> <span class="n">executor_manager</span><span class="o">.</span><span class="n">param_names</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">_update_params</span><span class="p">(</span><span class="n">executor_manager</span><span class="o">.</span><span class="n">param_arrays</span><span class="p">,</span>
                                    <span class="n">executor_manager</span><span class="o">.</span><span class="n">grad_arrays</span><span class="p">,</span>

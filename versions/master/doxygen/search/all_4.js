@@ -31,7 +31,7 @@ var searchData=
   ['contexts',['contexts',['../structMXCallbackList.html#a332323a5f414bd3f5e423788804a0dcd',1,'MXCallbackList']]],
   ['controller',['Controller',['../classmxnet_1_1KVStore.html#a50db5cb1a140fb84c8e31def54270ae3',1,'mxnet::KVStore']]],
   ['copy',['Copy',['../classmxnet_1_1NDArray.html#a4a00e2868ad8b9ccb0a48079635b110f',1,'mxnet::NDArray::Copy()'],['../classmxnet_1_1OperatorProperty.html#ab38f2f877555ba34b548efd2575cac99',1,'mxnet::OperatorProperty::Copy()']]],
-  ['copyfromto',['CopyFromTo',['../namespacemxnet.html#aeee0e64a5e59bb0c222cbf44f4266f7a',1,'mxnet::CopyFromTo(const NDArray &amp;from, NDArray *to, int priority=0)'],['../namespacemxnet.html#aa005a02aac4f297b6fab561e907e89e3',1,'mxnet::CopyFromTo(const NDArray &amp;from, const NDArray &amp;to, int priority=0)']]],
+  ['copyfromto',['CopyFromTo',['../namespacemxnet.html#ae7b0809624683afc59b6d7f7784d8bfb',1,'mxnet::CopyFromTo(const NDArray &amp;from, const NDArray *to, int priority=0)'],['../namespacemxnet.html#aa005a02aac4f297b6fab561e907e89e3',1,'mxnet::CopyFromTo(const NDArray &amp;from, const NDArray &amp;to, int priority=0)']]],
   ['cpu',['CPU',['../structmxnet_1_1Context.html#a4bb231d70623fde216de51589347e513',1,'mxnet::Context::CPU()'],['../namespacemxnet.html#a850af9d76d9d4beaeb5234c1434973e3',1,'mxnet::cpu()']]],
   ['cpupinned',['CPUPinned',['../structmxnet_1_1Context.html#a420d4e662a5129b202507f42c991391c',1,'mxnet::Context']]],
   ['cpushared',['CPUShared',['../structmxnet_1_1Context.html#a8e090b1fcc96b682512bcc22fc521f80',1,'mxnet::Context']]],

@@ -492,6 +492,19 @@
         <span class="k">for</span> <span class="n">cld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
             <span class="n">cld</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">active</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Block.cast"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.cast">[docs]</a>    <span class="k">def</span> <span class="nf">cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
+        <span class="sd">"""Cast this Block to use another data type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dtype : str or numpy.dtype</span>
+<span class="sd">            The new data type.</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
+            <span class="n">child</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Block.__call__"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">"""Calls forward. Only accepts positional arguments."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
@@ -594,7 +607,6 @@
 
     <span class="k">def</span> <span class="nf">_finish_deferred_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hybrid</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">infer_shape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">infer_type</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">hybrid</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">is_arg</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op_args</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">is_arg</span><span class="p">:</span>
@@ -634,6 +646,10 @@
     <span class="k">def</span> <span class="nf">hybridize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cached_op</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_infer_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infer_fn</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">"""Generic infer attributes."""</span>
