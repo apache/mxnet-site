@@ -14,6 +14,7 @@ var searchData=
   ['mxautogradsetisrecording',['MXAutogradSetIsRecording',['../c__api_8h.html#a75939e5be09a150d4d8905c9fd6e986e',1,'c_api.h']]],
   ['mxautogradsetistraining',['MXAutogradSetIsTraining',['../c__api_8h.html#a9cf2b0aa3ff66119fe793f6ed82b61b8',1,'c_api.h']]],
   ['mxcreatecachedop',['MXCreateCachedOp',['../c__api_8h.html#a46d056bad70ea014110923da41524cfc',1,'c_api.h']]],
+  ['mxcreatecachedopex',['MXCreateCachedOpEx',['../c__api_8h.html#a3db4914eed5f3af126bb7ddb82f5fa5b',1,'c_api.h']]],
   ['mxcustomfunctionrecord',['MXCustomFunctionRecord',['../c__api_8h.html#ae1f7686cd08133d865ed6b9ea23eb31b',1,'c_api.h']]],
   ['mxcustomopregister',['MXCustomOpRegister',['../c__api_8h.html#a92233cd9477ce12458bbd2b3e628dec9',1,'c_api.h']]],
   ['mxdataiterbeforefirst',['MXDataIterBeforeFirst',['../c__api_8h.html#a21df19f3242a68d1c536783fcf35968a',1,'c_api.h']]],

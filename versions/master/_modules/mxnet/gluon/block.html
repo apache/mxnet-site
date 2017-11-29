@@ -480,7 +480,7 @@
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Block.hybridize"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.hybridize">[docs]</a>    <span class="k">def</span> <span class="nf">hybridize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Block.hybridize"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.hybridize">[docs]</a>    <span class="k">def</span> <span class="nf">hybridize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">"""Activates or deactivates :py:class:`HybridBlock` s recursively. Has no effect on</span>
 <span class="sd">        non-hybrid children.</span>
 
@@ -488,9 +488,11 @@
 <span class="sd">        ----------</span>
 <span class="sd">        active : bool, default True</span>
 <span class="sd">            Whether to turn hybrid on or off.</span>
+<span class="sd">        **kwargs : string</span>
+<span class="sd">            Additional flags for hybridized operator.</span>
 <span class="sd">        """</span>
         <span class="k">for</span> <span class="n">cld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
-            <span class="n">cld</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">active</span><span class="p">)</span></div>
+            <span class="n">cld</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Block.cast"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.cast">[docs]</a>    <span class="k">def</span> <span class="nf">cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
         <span class="sd">"""Cast this Block to use another data type.</span>
@@ -549,6 +551,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_out_format</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_format</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="HybridBlock.__setattr__"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.HybridBlock.__setattr__">[docs]</a>    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">"""Registers parameters."""</span>
@@ -584,7 +587,7 @@
     <span class="k">def</span> <span class="nf">_build_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="n">inputs</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_graph</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="n">input_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inputs</span><span class="p">)}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">CachedOp</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">CachedOp</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span><span class="p">)</span>
         <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 
         <span class="c1"># verify graph inputs</span>
@@ -643,9 +646,11 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">register_child</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cached_op</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">hybridize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">hybridize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">active</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cached_op</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cached_op</span><span class="p">()</span>
@@ -820,6 +825,11 @@
         <span class="n">ret</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cached_graph</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">ret</span><span class="o">.</span><span class="n">_compose</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cached_graph</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">)})</span>
         <span class="k">return</span> <span class="n">_regroup</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">ret</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_format</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_clear_cached_op</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_graph</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SymbolBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_clear_cached_op</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_graph</span> <span class="o">=</span> <span class="n">tmp</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
