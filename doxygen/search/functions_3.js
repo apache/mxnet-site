@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['cachedop',['CachedOp',['../classmxnet_1_1Imperative_1_1CachedOp.html#a5bf2c1e0f1f5d3830a6c165c6ea4c3eb',1,'mxnet::Imperative::CachedOp']]],
+  ['cachedop',['CachedOp',['../classmxnet_1_1Imperative_1_1CachedOp.html#a9453deca15713fd860541007f2eecd00',1,'mxnet::Imperative::CachedOp']]],
   ['castnondefaultstorage',['CastNonDefaultStorage',['../namespacemxnet_1_1common.html#a12f6653ed0571a1bc16afdfcf525c841',1,'mxnet::common']]],
   ['caststoragedispatch',['CastStorageDispatch',['../namespacemxnet_1_1common.html#afd53ea405dcc105e6b306148009ff827',1,'mxnet::common']]],
   ['check',['Check',['../classdmlc_1_1parameter_1_1FieldEntry_3_01mxnet_1_1TShape_01_4.html#a63affafc149cac4c39702c55cf94fdcf',1,'dmlc::parameter::FieldEntry&lt; mxnet::TShape &gt;']]],
@@ -19,9 +19,10 @@ var searchData=
   ['containsonlystorage',['ContainsOnlyStorage',['../namespacemxnet_1_1common.html#a2258092ce26805c0a8f65a4144c446dd',1,'mxnet::common::ContainsOnlyStorage(const StorageTypeVector &amp;vstorage, const NDArrayStorageType stype)'],['../namespacemxnet_1_1common.html#a10765e03ef091a5dd81b1b3efa4b46f4',1,'mxnet::common::ContainsOnlyStorage(const StorageTypeVector &amp;vstorage, const NDArrayStorageType stype1, const NDArrayStorageType stype2, bool *has_both)'],['../namespacemxnet_1_1common.html#a9a7d1b47adce6f8291db8c3106087b90',1,'mxnet::common::ContainsOnlyStorage(const std::vector&lt; NDArray &gt; &amp;ndarrays, const NDArrayStorageType stype)'],['../namespacemxnet_1_1common.html#a4d39ea49a4b4c2aefdd106ffd2ec9a11',1,'mxnet::common::ContainsOnlyStorage(const std::vector&lt; NDArray &gt; &amp;ndarrays, const NDArrayStorageType stype1, const NDArrayStorageType stype2, bool *has_both)']]],
   ['context',['Context',['../structmxnet_1_1Context.html#a290642a21363bef82bcb32cf7f98b884',1,'mxnet::Context']]],
   ['copy',['Copy',['../classmxnet_1_1NDArray.html#a4a00e2868ad8b9ccb0a48079635b110f',1,'mxnet::NDArray::Copy()'],['../classmxnet_1_1OperatorProperty.html#ab38f2f877555ba34b548efd2575cac99',1,'mxnet::OperatorProperty::Copy()']]],
-  ['copyfromto',['CopyFromTo',['../namespacemxnet.html#aeee0e64a5e59bb0c222cbf44f4266f7a',1,'mxnet::CopyFromTo(const NDArray &amp;from, NDArray *to, int priority=0)'],['../namespacemxnet.html#aa005a02aac4f297b6fab561e907e89e3',1,'mxnet::CopyFromTo(const NDArray &amp;from, const NDArray &amp;to, int priority=0)']]],
+  ['copyfromto',['CopyFromTo',['../namespacemxnet.html#ae7b0809624683afc59b6d7f7784d8bfb',1,'mxnet::CopyFromTo(const NDArray &amp;from, const NDArray *to, int priority=0)'],['../namespacemxnet.html#aa005a02aac4f297b6fab561e907e89e3',1,'mxnet::CopyFromTo(const NDArray &amp;from, const NDArray &amp;to, int priority=0)']]],
   ['cpu',['CPU',['../structmxnet_1_1Context.html#a4bb231d70623fde216de51589347e513',1,'mxnet::Context']]],
   ['cpupinned',['CPUPinned',['../structmxnet_1_1Context.html#a420d4e662a5129b202507f42c991391c',1,'mxnet::Context']]],
+  ['cpushared',['CPUShared',['../structmxnet_1_1Context.html#a8e090b1fcc96b682512bcc22fc521f80',1,'mxnet::Context']]],
   ['create',['Create',['../structmxnet_1_1Context.html#a7cea13406ae21ae557d3455f54670a4a',1,'mxnet::Context::Create()'],['../classmxnet_1_1Imperative_1_1AGInfo.html#a8204823e44c4b44b08c276bddfcbb952',1,'mxnet::Imperative::AGInfo::Create()'],['../classmxnet_1_1KVStore.html#a6d54b075d3b43577f8339b25000a0c82',1,'mxnet::KVStore::Create()'],['../classmxnet_1_1OpStatePtr.html#ae0f821c7efce61a11730ef8b93070e3e',1,'mxnet::OpStatePtr::Create()'],['../classmxnet_1_1OperatorProperty.html#a15cf1f905b08a008ff38556ef6a35dd0',1,'mxnet::OperatorProperty::Create()']]],
   ['createcallback',['CreateCallback',['../classmxnet_1_1Engine.html#acf25be815b4200b48ee6e4e169bf95b8',1,'mxnet::Engine']]],
   ['createoperator',['CreateOperator',['../classmxnet_1_1OperatorProperty.html#a546ab25ddaae590ca98705ae9abc7ac0',1,'mxnet::OperatorProperty']]],

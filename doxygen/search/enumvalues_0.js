@@ -9,6 +9,7 @@ var searchData=
   ['kcpu',['kCPU',['../structmxnet_1_1Context.html#a611c227b5e04a2777c3e4507bb76f60ea1aced5778bb0d64d4ce6bd4c0a86d140',1,'mxnet::Context']]],
   ['kcpupinned',['kCPUPinned',['../structmxnet_1_1Context.html#a611c227b5e04a2777c3e4507bb76f60eaa2e12b86e0f957dc14d45863eaa47f34',1,'mxnet::Context']]],
   ['kcpuprioritized',['kCPUPrioritized',['../namespacemxnet.html#a998b74220fab2b012cf8a179650e1b3bac41ceb98eeb9b2e208e3e242a7357142',1,'mxnet']]],
+  ['kcpushared',['kCPUShared',['../structmxnet_1_1Context.html#a611c227b5e04a2777c3e4507bb76f60ea80c6f8f13908c5805cf12784fca77e78',1,'mxnet::Context']]],
   ['kcrossdevicecopy',['kCrossDeviceCopy',['../namespacemxnet.html#ad7801fb2dd68294d4c7a9e289bc071ada3864860a073c64d74d3fc8e765fa6cad',1,'mxnet']]],
   ['kcsridxerr',['kCSRIdxErr',['../namespacemxnet.html#ace60510752753f459193f95cab0e9e1aaf3ee084ba1d9a6203922ff7c9ddb12e3',1,'mxnet']]],
   ['kcsrindptrerr',['kCSRIndPtrErr',['../namespacemxnet.html#ace60510752753f459193f95cab0e9e1aa11ce5dbb8ad355e9ee5a678f2f51a5bb',1,'mxnet']]],
