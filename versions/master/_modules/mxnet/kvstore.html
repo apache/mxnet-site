@@ -614,10 +614,13 @@
 <span class="sd">            Other keys in this dictionary are optional and specific to the type</span>
 <span class="sd">            of gradient compression.</span>
 <span class="sd">        """</span>
-        <span class="n">ckeys</span><span class="p">,</span> <span class="n">cvals</span> <span class="o">=</span> <span class="n">_ctype_dict</span><span class="p">(</span><span class="n">compression_params</span><span class="p">)</span>
-        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXKVStoreSetGradientCompression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
-                                                        <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">compression_params</span><span class="p">)),</span>
-                                                        <span class="n">ckeys</span><span class="p">,</span> <span class="n">cvals</span><span class="p">))</span></div>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">'device'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s1">'dist'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
+            <span class="n">ckeys</span><span class="p">,</span> <span class="n">cvals</span> <span class="o">=</span> <span class="n">_ctype_dict</span><span class="p">(</span><span class="n">compression_params</span><span class="p">)</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXKVStoreSetGradientCompression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
+                                                            <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">compression_params</span><span class="p">)),</span>
+                                                            <span class="n">ckeys</span><span class="p">,</span> <span class="n">cvals</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">'Gradient compression is not supported for this type of kvstore'</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KVStore.set_optimizer"><a class="viewcode-back" href="../../api/python/kvstore/kvstore.html#mxnet.kvstore.KVStore.set_optimizer">[docs]</a>    <span class="k">def</span> <span class="nf">set_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
         <span class="sd">""" Registers an optimizer with the kvstore.</span>
