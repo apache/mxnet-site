@@ -676,7 +676,7 @@
         <span class="sd">"""Infers data type of Parameters from inputs."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_infer_attrs</span><span class="p">(</span><span class="s1">'infer_type'</span><span class="p">,</span> <span class="s1">'dtype'</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="HybridBlock.export"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.HybridBlock.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="HybridBlock.export"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.HybridBlock.export">[docs]</a>    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">"""Export HybridBlock to json format that can be loaded by `mxnet.mod.Module`</span>
 <span class="sd">        or the C++ interface.</span>
 
@@ -686,8 +686,10 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        path : str</span>
-<span class="sd">            Path to save model. Two files `path-symbol.json` and `path-0000.params`</span>
-<span class="sd">            will be created.</span>
+<span class="sd">            Path to save model. Two files `path-symbol.json` and `path-xxxx.params`</span>
+<span class="sd">            will be created, where xxxx is the 4 digits epoch number.</span>
+<span class="sd">        epoch : int</span>
+<span class="sd">            Epoch number of saved model.</span>
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_graph</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
@@ -705,7 +707,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">aux_names</span>
                 <span class="n">arg_dict</span><span class="p">[</span><span class="s1">'aux:</span><span class="si">%s</span><span class="s1">'</span><span class="o">%</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">_reduce</span><span class="p">()</span>
-        <span class="n">ndarray</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">-0000.params'</span><span class="o">%</span><span class="n">path</span><span class="p">,</span> <span class="n">arg_dict</span><span class="p">)</span></div>
+        <span class="n">ndarray</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">-</span><span class="si">%04d</span><span class="s1">.params'</span><span class="o">%</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">epoch</span><span class="p">),</span> <span class="n">arg_dict</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HybridBlock.forward"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.HybridBlock.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">"""Defines the forward computation. Arguments can be either</span>

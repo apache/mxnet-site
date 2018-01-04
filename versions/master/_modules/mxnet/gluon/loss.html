@@ -825,8 +825,8 @@
 <span class="sd">        L = \sum_i \log(1 + \exp(- {pred}_i \cdot {label}_i))</span>
 
 <span class="sd">    where `pred` is the classifier prediction and `label` is the target tensor</span>
-<span class="sd">    containing values -1 or 1. `pred` and `label` can have arbitrary shape as</span>
-<span class="sd">    long as they have the same number of elements.</span>
+<span class="sd">    containing values -1 or 1 (0 or 1 if `label_format` is binary).</span>
+<span class="sd">     `pred` and `label` can have arbitrary shape as long as they have the same number of elements.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -834,7 +834,10 @@
 <span class="sd">        Global scalar weight for loss.</span>
 <span class="sd">    batch_axis : int, default 0</span>
 <span class="sd">        The axis that represents mini-batch.</span>
-
+<span class="sd">    label_format : str, default 'signed'</span>
+<span class="sd">        Can be either 'signed' or 'binary'. If the label_format is 'signed', all label values should</span>
+<span class="sd">        be either -1 or 1. If the label_format is 'binary', all label values should be either</span>
+<span class="sd">        0 or 1.</span>
 
 <span class="sd">    Inputs:</span>
 <span class="sd">        - **pred**: prediction tensor with arbitrary shape.</span>
@@ -849,11 +852,17 @@
 <span class="sd">        - **loss**: loss tensor with shape (batch_size,). Dimenions other than</span>
 <span class="sd">          batch_axis are averaged out.</span>
 <span class="sd">    """</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">batch_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">batch_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label_format</span><span class="o">=</span><span class="s1">'signed'</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LogisticLoss</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">batch_axis</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_label_format</span> <span class="o">=</span> <span class="n">label_format</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label_format</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"signed"</span><span class="p">,</span> <span class="s2">"binary"</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"label_format can only be signed or binary, recieved </span><span class="si">%s</span><span class="s2">."</span>
+                             <span class="o">%</span> <span class="n">label_format</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">_reshape_like</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label_format</span> <span class="o">==</span> <span class="s1">'binary'</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">label</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># Transform label to be either -1 or 1</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">F</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">pred</span> <span class="o">*</span> <span class="n">label</span><span class="p">))</span>
         <span class="n">loss</span> <span class="o">=</span> <span class="n">_apply_weighting</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_weight</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_batch_axis</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
