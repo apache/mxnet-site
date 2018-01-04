@@ -47,6 +47,7 @@ var searchData=
   ['knormalerr',['kNormalErr',['../namespacemxnet.html#ace60510752753f459193f95cab0e9e1aa322b8b178929b43f1b4b16c8cb9003ef',1,'mxnet']]],
   ['knotregistersymbolic',['kNotRegisterSymbolic',['../namespacemxnet_1_1op.html#a01bb0bb658bedb4d58bf7d11e4b17268a929ea2e4ea4bffd5119a8bbf296e616b',1,'mxnet::op']]],
   ['knullop',['kNullOp',['../namespacemxnet.html#a7cd7094ef222e9ae1f520c3b6a214398a001b85096e07108e174fe4c406368a26',1,'mxnet']]],
+  ['kparallelrandom',['kParallelRandom',['../structmxnet_1_1ResourceRequest.html#aba2ee7560afb89ebdd00c7c735149630a96b66c1afe93ea0fc12a7f3fbacf61df',1,'mxnet::ResourceRequest']]],
   ['krandom',['kRandom',['../structmxnet_1_1ResourceRequest.html#aba2ee7560afb89ebdd00c7c735149630adfccd3e369be7104e7300557f620f6b9',1,'mxnet::ResourceRequest']]],
   ['kregistersymbolic',['kRegisterSymbolic',['../namespacemxnet_1_1op.html#a01bb0bb658bedb4d58bf7d11e4b17268a534486ab7c3f672542bfa09b7b6982d1',1,'mxnet::op']]],
   ['krowsparsestorage',['kRowSparseStorage',['../namespacemxnet.html#a536b732faa980e1de446c552460ff76aac095f52c31076adc7207f4a4f17d7aa3',1,'mxnet']]],

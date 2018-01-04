@@ -51,7 +51,7 @@
 <link href="../../../index.html" rel="up" title="Module code">
 <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
 </link></link></link></head>
-<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background.png" role="document">
 <div class="content-block"><div class="navbar navbar-fixed-top">
 <div class="container" id="navContainer">
 <div class="innder" id="header-inner">
@@ -231,9 +231,7 @@
 <span class="kn">from</span> <span class="nn">multiprocessing.reduction</span> <span class="kn">import</span> <span class="n">ForkingPickler</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">sampler</span> <span class="k">as</span> <span class="n">_sampler</span>
@@ -258,7 +256,7 @@
 <span class="sd">    NDArray via shared memory."""</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">conn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="n">conn</span>
 
     <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="sd">"""Send object"""</span>
@@ -273,7 +271,8 @@
 
     <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">"""Emmulate conn"""</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'_conn'</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Queue</span><span class="p">(</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">queues</span><span class="o">.</span><span class="n">Queue</span><span class="p">):</span>
@@ -394,9 +393,6 @@
                              <span class="s2">"not be specified if batch_sampler is specified."</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_batch_sampler</span> <span class="o">=</span> <span class="n">batch_sampler</span>
-        <span class="k">if</span> <span class="n">num_workers</span> <span class="o">></span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">'nt'</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"DataLoader does not support num_workers > 0 on Windows yet."</span><span class="p">)</span>
-            <span class="n">num_workers</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_workers</span> <span class="o">=</span> <span class="n">num_workers</span>
         <span class="k">if</span> <span class="n">batchify_fn</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">num_workers</span> <span class="o">></span> <span class="mi">0</span><span class="p">:</span>
@@ -426,10 +422,11 @@
 
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_batch_sampler</span><span class="p">):</span>
             <span class="n">key_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">idx</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
+        <span class="n">num_batches</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
 
         <span class="n">data_buffer</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">curr_idx</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_batch_sampler</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_batches</span><span class="p">):</span>
             <span class="n">idx</span><span class="p">,</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">data_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
             <span class="n">data_buffer</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch</span>
             <span class="k">while</span> <span class="n">curr_idx</span> <span class="ow">in</span> <span class="n">data_buffer</span><span class="p">:</span>

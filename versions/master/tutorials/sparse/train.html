@@ -49,11 +49,11 @@
 <!-- <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
 <!-- -->
 <link href="../index.html" rel="up" title="Tutorials">
-<link href="../../community/index.html" rel="next" title="MXNet Community"/>
+<link href="../unsupervised_learning/gan.html" rel="next" title="Generative Adversarial Network (GAN)"/>
 <link href="row_sparse.html" rel="prev" title="RowSparseNDArray - NDArray for Sparse Gradient Updates"/>
 <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
 </link></link></link></head>
-<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background.png" role="document">
 <div class="content-block"><div class="navbar navbar-fixed-top">
 <div class="container" id="navContainer">
 <div class="innder" id="header-inner">
@@ -209,6 +209,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="">Train a Linear Regression Model with Sparse Symbols</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#advanced-neural-networks">Advanced Neural networks</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#contributing-tutorials">Contributing Tutorials</a></li>
@@ -261,6 +262,9 @@ We can specify the <code class="docutils literal"><span class="pre">stype</span>
 <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-python"><div class="highlight"><pre><span></span>(<Symbol a>, <Symbol b>, <Symbol c>)
+</pre></div>
+</div>
 </div>
 <div class="section" id="bind-with-sparse-arrays">
 <span id="bind-with-sparse-arrays"></span><h3>Bind with Sparse Arrays<a class="headerlink" href="#bind-with-sparse-arrays" title="Permalink to this headline">¶</a></h3>
@@ -280,12 +284,22 @@ The executor provides <code class="docutils literal"><span class="pre">forward</
 <span class="k">print</span><span class="p">(</span><span class="n">b_exec</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> <span class="n">c_exec</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="highlight-python"><div class="highlight"><pre><span></span>([
+<CSRNDArray 2x2 @cpu(0)>], [
+<RowSparseNDArray 2x2 @cpu(0)>])
+</pre></div>
+</div>
 <p>You can update the array held by the variable by accessing executor’s <code class="docutils literal"><span class="pre">arg_dict</span></code> and assigning new values.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">b_exec</span><span class="o">.</span><span class="n">arg_dict</span><span class="p">[</span><span class="s1">'b'</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">tostype</span><span class="p">(</span><span class="s1">'csr'</span><span class="p">)</span>
 <span class="n">b_exec</span><span class="o">.</span><span class="n">forward</span><span class="p">()</span>
 <span class="c1"># The array `b` holds are updated to be ones</span>
 <span class="n">eval_b</span> <span class="o">=</span> <span class="n">b_exec</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="p">{</span><span class="s1">'eval_b'</span><span class="p">:</span> <span class="n">eval_b</span><span class="p">,</span> <span class="s1">'eval_b.asnumpy()'</span><span class="p">:</span> <span class="n">eval_b</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span>{'eval_b': 
+ <CSRNDArray 2x2 @cpu(0)>, 'eval_b.asnumpy()': array([[ 1.,  1.],
+        [ 1.,  1.]], dtype=float32)}
 </pre></div>
 </div>
 </div>
@@ -305,11 +319,16 @@ The sparse symbols are available in the <code class="docutils literal"><span cla
 <span class="p">{</span><span class="s1">'d'</span><span class="p">:</span><span class="n">d</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">:</span><span class="n">e</span><span class="p">,</span> <span class="s1">'f'</span><span class="p">:</span><span class="n">f</span><span class="p">}</span>
 </pre></div>
 </div>
+<div class="highlight-python"><div class="highlight"><pre><span></span>{'d': <Symbol elemwise_add0>,
+ 'e': <Symbol negative0>,
+ 'f': <Symbol elemwise_add1>}
+</pre></div>
+</div>
 </div>
 <div class="section" id="storage-type-inference">
 <span id="storage-type-inference"></span><h3>Storage Type Inference<a class="headerlink" href="#storage-type-inference" title="Permalink to this headline">¶</a></h3>
 <p>What will be the output storage types of sparse symbols? In MXNet, for any sparse symbol, the result storage types are inferred based on storage types of inputs.
-You can read the <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/api/python/symbol/sparse.html">Sparse Symbol API</a> documentation to find what output storage types are. In the example below we will try out the storage types introduced in the Row Sparse and Compressed Sparse Row tutorials: <code class="docutils literal"><span class="pre">default</span></code> (dense), <code class="docutils literal"><span class="pre">csr</span></code>, and <code class="docutils literal"><span class="pre">row_sparse</span></code>.</p>
+You can read the <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/versions/master/api/python/symbol/sparse.html">Sparse Symbol API</a> documentation to find what output storage types are. In the example below we will try out the storage types introduced in the Row Sparse and Compressed Sparse Row tutorials: <code class="docutils literal"><span class="pre">default</span></code> (dense), <code class="docutils literal"><span class="pre">csr</span></code>, and <code class="docutils literal"><span class="pre">row_sparse</span></code>.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">add_exec</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Group</span><span class="p">([</span><span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">f</span><span class="p">])</span><span class="o">.</span><span class="n">simple_bind</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">a</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span>
 <span class="n">add_exec</span><span class="o">.</span><span class="n">forward</span><span class="p">()</span>
 <span class="n">dense_add</span> <span class="o">=</span> <span class="n">add_exec</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -318,6 +337,11 @@ You can read the <a class="reference external" href="https://mxnet.incubator.apa
 <span class="c1"># The output storage type of elemwise_add(row_sparse, row_sparse) will be inferred as "row_sparse"</span>
 <span class="n">rsp_add</span> <span class="o">=</span> <span class="n">add_exec</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 <span class="p">{</span><span class="s1">'dense_add.stype'</span><span class="p">:</span> <span class="n">dense_add</span><span class="o">.</span><span class="n">stype</span><span class="p">,</span> <span class="s1">'csr_add.stype'</span><span class="p">:</span><span class="n">csr_add</span><span class="o">.</span><span class="n">stype</span><span class="p">,</span> <span class="s1">'rsp_add.stype'</span><span class="p">:</span> <span class="n">rsp_add</span><span class="o">.</span><span class="n">stype</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">'csr_add.stype'</span><span class="p">:</span> <span class="s1">'csr'</span><span class="p">,</span>
+ <span class="s1">'dense_add.stype'</span><span class="p">:</span> <span class="s1">'default'</span><span class="p">,</span>
+ <span class="s1">'rsp_add.stype'</span><span class="p">:</span> <span class="s1">'row_sparse'</span><span class="p">}</span>
 </pre></div>
 </div>
 </div>
@@ -333,6 +357,15 @@ You can read the <a class="reference external" href="https://mxnet.incubator.apa
 <span class="n">fallback_add</span> <span class="o">=</span> <span class="n">fallback_exec</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">fallback_log</span> <span class="o">=</span> <span class="n">fallback_exec</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">{</span><span class="s1">'fallback_add'</span><span class="p">:</span> <span class="n">fallback_add</span><span class="p">,</span> <span class="s1">'fallback_log'</span><span class="p">:</span> <span class="n">fallback_log</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span>{'fallback_add': 
+ [[ 0.  0.]
+  [ 0.  0.]]
+ <NDArray 2x2 @cpu(0)>, 'fallback_log': 
+ [[-inf -inf]
+  [-inf -inf]]
+ <NDArray 2x2 @cpu(0)>}
 </pre></div>
 </div>
 </div>
@@ -430,6 +463,19 @@ and the optimizer will perform sparse update rules on it. The <code class="docut
         <span class="n">mod</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>                          <span class="c1"># compute gradients</span>
         <span class="n">mod</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>                            <span class="c1"># update parameters</span>
     <span class="k">print</span><span class="p">(</span><span class="s1">'Epoch </span><span class="si">%d</span><span class="s1">, Metric = </span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()))</span>
+<span class="k">assert</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o"><</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"Achieved MSE (</span><span class="si">%f</span><span class="s2">) is larger than expected (1.0)"</span> <span class="o">%</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span>Epoch 0, Metric = ('mse', 886.16457029229127)
+Epoch 1, Metric = ('mse', 173.16523056503445)
+Epoch 2, Metric = ('mse', 71.625164168341811)
+Epoch 3, Metric = ('mse', 29.625375983519298)
+Epoch 4, Metric = ('mse', 12.45004676561909)
+Epoch 5, Metric = ('mse', 6.9090727975622368)
+Epoch 6, Metric = ('mse', 3.0759215722750142)
+Epoch 7, Metric = ('mse', 1.3106610134811276)
+Epoch 8, Metric = ('mse', 0.63063102482907718)
+Epoch 9, Metric = ('mse', 0.35979430613957991)
 </pre></div>
 </div>
 </div>

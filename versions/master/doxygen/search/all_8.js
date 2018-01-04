@@ -8,6 +8,7 @@ var searchData=
   ['get_5fhost_5fspace_5finternal',['get_host_space_internal',['../structmxnet_1_1Resource.html#af6e0224f60b5e9afd3c883972863537f',1,'mxnet::Resource']]],
   ['get_5fhost_5fspace_5ftyped',['get_host_space_typed',['../structmxnet_1_1Resource.html#a7c6dff75a9e05a7394b02c84b79a14b2',1,'mxnet::Resource']]],
   ['get_5fnum_5fdead_5fnode',['get_num_dead_node',['../classmxnet_1_1KVStore.html#af5c48df3aade761a547a1dc6f7b8702d',1,'mxnet::KVStore']]],
+  ['get_5fparallel_5frandom',['get_parallel_random',['../structmxnet_1_1Resource.html#af181352be1fbf440eb43540c7d9d61fb',1,'mxnet::Resource']]],
   ['get_5frandom',['get_random',['../structmxnet_1_1Resource.html#a86039963ae5d682ffc287aefd520f6f9',1,'mxnet::Resource']]],
   ['get_5frank',['get_rank',['../classmxnet_1_1KVStore.html#a262ef45340106fdb5c2a296c3cb711b1',1,'mxnet::KVStore']]],
   ['get_5fspace',['get_space',['../structmxnet_1_1Resource.html#ab2be3ebdd3c5f5fa181ac4f6cdd69508',1,'mxnet::Resource']]],

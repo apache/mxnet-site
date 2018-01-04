@@ -21,6 +21,7 @@ var searchData=
   ['dev_5fid',['dev_id',['../structmxnet_1_1Context.html#a8486dcc599dffe447e2f098b170d3db9',1,'mxnet::Context::dev_id()'],['../classmxnet_1_1TBlob.html#a5dc3a399b0119175643da0d35fde7edd',1,'mxnet::TBlob::dev_id()']]],
   ['dev_5fmask',['dev_mask',['../structmxnet_1_1Context.html#a07c6092f42393d543460f766a7a3b6df',1,'mxnet::Context::dev_mask()'],['../classmxnet_1_1TBlob.html#a613ad1f5ba31efcbecbd041e23cc61b2',1,'mxnet::TBlob::dev_mask()']]],
   ['dev_5ftype',['dev_type',['../structmxnet_1_1Context.html#a66040df23c2a5663f29bc50aa0bbace3',1,'mxnet::Context']]],
+  ['dev_5ftype_5fstring',['dev_type_string',['../namespacemxnet_1_1common.html#a733ce35d109323dbf4ef1f4bc3094870',1,'mxnet::common']]],
   ['devicetype',['DeviceType',['../structmxnet_1_1Context.html#a611c227b5e04a2777c3e4507bb76f60e',1,'mxnet::Context']]],
   ['directfree',['DirectFree',['../classmxnet_1_1Storage.html#a098f8ebacd25f5203b2dc4c1796aec64',1,'mxnet::Storage']]],
   ['dispatch_5fmode_5fstring',['dispatch_mode_string',['../namespacemxnet_1_1common.html#a4716f6044f678090af8ae7ef3ace3a31',1,'mxnet::common']]],

@@ -1,5 +1,9 @@
 var searchData=
 [
+  ['randgenerator',['RandGenerator',['../classmxnet_1_1common_1_1random_1_1RandGenerator.html',1,'mxnet::common::random']]],
+  ['randgenerator_3c_20cpu_2c_20dtype_20_3e',['RandGenerator&lt; cpu, DType &gt;',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4.html',1,'mxnet::common::random']]],
+  ['randgenerator_3c_20gpu_2c_20double_20_3e',['RandGenerator&lt; gpu, double &gt;',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01double_01_4.html',1,'mxnet::common::random']]],
+  ['randgenerator_3c_20gpu_2c_20dtype_20_3e',['RandGenerator&lt; gpu, DType &gt;',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html',1,'mxnet::common::random']]],
   ['resource',['Resource',['../structmxnet_1_1Resource.html',1,'mxnet']]],
   ['resourcemanager',['ResourceManager',['../classmxnet_1_1ResourceManager.html',1,'mxnet']]],
   ['resourcerequest',['ResourceRequest',['../structmxnet_1_1ResourceRequest.html',1,'mxnet']]],

@@ -51,7 +51,7 @@
 <link href="../../index.html" rel="up" title="Module code">
 <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
 </link></link></link></head>
-<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background.png" role="document">
 <div class="content-block"><div class="navbar navbar-fixed-top">
 <div class="container" id="navContainer">
 <div class="innder" id="header-inner">
@@ -261,6 +261,9 @@
     <span class="c1"># disable dictionary storage, also do not have parent type.</span>
     <span class="c1"># pylint: disable=no-member</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Make numpy functions return Symbol instead of numpy object array</span>
+    <span class="n">__array_priority__</span> <span class="o">=</span> <span class="mf">1000.0</span>
 
 <div class="viewcode-block" id="Symbol.__repr__"><a class="viewcode-back" href="../../../api/python/symbol/symbol.html#mxnet.symbol.Symbol.__repr__">[docs]</a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Gets a string representation of the symbol."""</span>
@@ -697,14 +700,16 @@
 <span class="sd">            Indexing key</span>
 
 <span class="sd">        """</span>
-        <span class="n">output_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_outputs</span><span class="p">()</span>
+        <span class="n">output_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">py_slice</span><span class="p">):</span>
             <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">index</span><span class="o">.</span><span class="n">start</span>
-            <span class="n">stop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_names</span><span class="p">)</span> <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">index</span><span class="o">.</span><span class="n">stop</span>
+            <span class="n">stop</span> <span class="o">=</span> <span class="n">output_count</span> <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">index</span><span class="o">.</span><span class="n">stop</span>
             <span class="n">step</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">step</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">index</span><span class="o">.</span><span class="n">step</span>
             <span class="k">return</span> <span class="n">Group</span><span class="p">([</span><span class="bp">self</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">)])</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+            <span class="c1"># Returning this list of names is expensive. Some symbols may have hundreds of outputs</span>
+            <span class="n">output_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_outputs</span><span class="p">()</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="bp">None</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">output_names</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">index</span><span class="p">:</span>
@@ -717,7 +722,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Symbol only support integer index to fetch i-th output'</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">index</span> <span class="o">>=</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_names</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">>=</span> <span class="n">output_count</span><span class="p">:</span>
             <span class="c1"># Important, python determines the end by this exception</span>
             <span class="k">raise</span> <span class="ne">IndexError</span>
         <span class="n">handle</span> <span class="o">=</span> <span class="n">SymbolHandle</span><span class="p">()</span>
@@ -950,6 +955,25 @@
         <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXSymbolListOutputs</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">size</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">sarr</span><span class="p">)))</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">py_str</span><span class="p">(</span><span class="n">sarr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">value</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="Symbol.__len__"><a class="viewcode-back" href="../../../api/python/symbol/symbol.html#mxnet.symbol.Symbol.__len__">[docs]</a>    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Get number of outputs for the symbol.</span>
+
+<span class="sd">        Example</span>
+<span class="sd">        -------</span>
+<span class="sd">        >>> a = mx.sym.var('a')</span>
+<span class="sd">        >>> b = mx.sym.var('b')</span>
+<span class="sd">        >>> c = a + b</span>
+<span class="sd">        >>> len(c)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        len(self): Number of outputs</span>
+<span class="sd">            Number of outputs</span>
+<span class="sd">        """</span>
+        <span class="n">output_count</span> <span class="o">=</span> <span class="n">mx_uint</span><span class="p">()</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXSymbolGetNumOutputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">output_count</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">output_count</span><span class="o">.</span><span class="n">value</span></div>
 
 <div class="viewcode-block" id="Symbol.list_auxiliary_states"><a class="viewcode-back" href="../../../api/python/symbol/symbol.html#mxnet.symbol.Symbol.list_auxiliary_states">[docs]</a>    <span class="k">def</span> <span class="nf">list_auxiliary_states</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Lists all the auxiliary states in the symbol.</span>

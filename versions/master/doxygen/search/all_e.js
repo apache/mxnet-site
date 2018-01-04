@@ -19,6 +19,7 @@ var searchData=
   ['newoperator',['NewOperator',['../classmxnet_1_1Engine.html#aff3332258a158ef33a9a4b7bcdc2fe6f',1,'mxnet::Engine']]],
   ['newvariable',['NewVariable',['../classmxnet_1_1Engine.html#a6e141b188f018d5d933ab99868631d5e',1,'mxnet::Engine']]],
   ['next',['Next',['../classmxnet_1_1IIterator.html#ac02dda5d191a7bc629aaa93e5abab3d5',1,'mxnet::IIterator']]],
+  ['normal',['normal',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4_1_1Impl.html#a116539ba2e83889b1069831bb5f9693f',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Impl::normal()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4_1_1Impl.html#a20e9211034dd84dad5ddace145256f0d',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::Impl::normal()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01double_01_4_1_1Impl.html#a78f2d64849b7b8b17c11dfe552a27e26',1,'mxnet::common::random::RandGenerator&lt; gpu, double &gt;::Impl::normal()']]],
   ['notifyshutdown',['NotifyShutdown',['../classmxnet_1_1Engine.html#a3c0e2989538b5369c1592eddbcf0181c',1,'mxnet::Engine']]],
   ['num_5faux_5fdata',['num_aux_data',['../namespacemxnet.html#ae4143fe21881cbf0174bba638e8e0330',1,'mxnet']]],
   ['num_5fbackward_5finputs',['num_backward_inputs',['../classmxnet_1_1Imperative_1_1CachedOp.html#a6a34a0a2ead5b38e27ad50a4f34dea0b',1,'mxnet::Imperative::CachedOp']]],

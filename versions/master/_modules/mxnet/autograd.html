@@ -51,7 +51,7 @@
 <link href="../index.html" rel="up" title="Module code">
 <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
 </link></link></link></head>
-<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background.png" role="document">
 <div class="content-block"><div class="navbar navbar-fixed-top">
 <div class="container" id="navContainer">
 <div class="innder" id="header-inner">
@@ -578,7 +578,7 @@
 
 <span class="sd">    For example, a stable sigmoid function can be defined as::</span>
 
-<span class="sd">        class sigmoid(Function):</span>
+<span class="sd">        class sigmoid(mx.autograd.Function):</span>
 <span class="sd">            def forward(self, x):</span>
 <span class="sd">                y = 1 / (1 + mx.nd.exp(-x))</span>
 <span class="sd">                self.save_for_backward(y)</span>
@@ -589,6 +589,18 @@
 <span class="sd">                # and returns as many NDArrays as forward's arguments.</span>
 <span class="sd">                y, = self.saved_tensors</span>
 <span class="sd">                return y * (1-y)</span>
+
+<span class="sd">    Then, the function can be used in the following way::</span>
+
+<span class="sd">        func = sigmoid()</span>
+<span class="sd">        x = mx.nd.random.uniform(shape=(10,))</span>
+<span class="sd">        x.attach_grad()</span>
+
+<span class="sd">        with mx.autograd.record():</span>
+<span class="sd">            m = func(x)</span>
+<span class="sd">            m.backward()</span>
+<span class="sd">        dx = x.grad.asnumpy()</span>
+
 <span class="sd">    """</span>
     <span class="n">_bwd_functype</span> <span class="o">=</span> <span class="n">CFUNCTYPE</span><span class="p">(</span><span class="n">c_int</span><span class="p">,</span> <span class="n">c_int</span><span class="p">,</span> <span class="n">c_int</span><span class="p">,</span> <span class="n">POINTER</span><span class="p">(</span><span class="n">c_void_p</span><span class="p">),</span>
                               <span class="n">POINTER</span><span class="p">(</span><span class="n">c_int</span><span class="p">),</span> <span class="n">c_int</span><span class="p">,</span> <span class="n">c_void_p</span><span class="p">)</span>
