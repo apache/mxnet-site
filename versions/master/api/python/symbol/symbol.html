@@ -5702,7 +5702,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, m a
     <span class="n">w</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L208</p>
+<p>Defined in src/operator/optimizer_op.cc:L266</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -7859,7 +7859,7 @@ d_t = \frac{ (1 - \beta_1^t) }{ \eta_t } (\sqrt{ \frac{ v_t }{ 1 - \beta_2^t } }
 \sigma_t = d_t - \beta_1 d_{t-1}
 z_t = \beta_1 z_{ t-1 } + (1 - \beta_1^t) g_t - \sigma_t W_{t-1}
 W_t = - \frac{ z_t }{ d_t }\end{split}\]</div>
-<p>Defined in src/operator/optimizer_op.cc:L161</p>
+<p>Defined in src/operator/optimizer_op.cc:L219</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -7912,7 +7912,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
     <span class="n">w</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">*</span> <span class="n">lamda1</span> <span class="o">-</span> <span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">/</span> <span class="p">((</span><span class="n">beta</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span> <span class="o">/</span> <span class="n">learning_rate</span> <span class="o">+</span> <span class="n">wd</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">></span> <span class="n">lamda1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L341</p>
+<p>Defined in src/operator/optimizer_op.cc:L399</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -10133,7 +10133,7 @@ gradient and <span class="math">\(E[g^2]_t\)</span> is the decaying average over
 Tieleman &amp; Hinton, 2012.</p>
 <p>Hinton suggests the momentum term <span class="math">\(\gamma\)</span> to be 0.9 and the learning rate
 <span class="math">\(\eta\)</span> to be 0.001.</p>
-<p>Defined in src/operator/optimizer_op.cc:L262</p>
+<p>Defined in src/operator/optimizer_op.cc:L320</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -10180,7 +10180,7 @@ E[g]_t = \gamma_1 * E[g]_{t-1} + (1 - \gamma_1) * g_t\\
 <a class="reference external" href="http://arxiv.org/pdf/1308.0850v5.pdf">http://arxiv.org/pdf/1308.0850v5.pdf</a> Eq(38) - Eq(45) by Alex Graves, 2013.</p>
 <p>Graves suggests the momentum term <span class="math">\(\gamma_1\)</span> to be 0.95, <span class="math">\(\gamma_2\)</span>
 to be 0.9 and the learning rate <span class="math">\(\eta\)</span> to be 0.0001.</p>
-<p>Defined in src/operator/optimizer_op.cc:L301</p>
+<p>Defined in src/operator/optimizer_op.cc:L359</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -10734,14 +10734,16 @@ W_t = W_{t-1} + v_t\end{split}\]</div>
 </pre></div>
 </div>
 <p>Where the parameter <code class="docutils literal"><span class="pre">momentum</span></code> is the decay rate of momentum estimates at each epoch.</p>
-<p>If weight and momentum are both of <code class="docutils literal"><span class="pre">row_sparse</span></code> storage type,
+<p>If weight and grad are both of <code class="docutils literal"><span class="pre">row_sparse</span></code> storage type and momentum is of <code class="docutils literal"><span class="pre">default</span></code> storage type,
+standard update is applied.</p>
+<p>If weight, grad and momentum are all of <code class="docutils literal"><span class="pre">row_sparse</span></code> storage type,
 only the row slices whose indices appear in grad.indices are updated (for both weight and momentum):</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">gradient</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
     <span class="n">v</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">momentum</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">gradient</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
     <span class="n">weight</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="n">v</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L94</p>
+<p>Defined in src/operator/optimizer_op.cc:L148</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -10782,7 +10784,7 @@ only the row slices whose indices appear in grad.indices are updated:</p>
     <span class="n">weight</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">gradient</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L54</p>
+<p>Defined in src/operator/optimizer_op.cc:L105</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>

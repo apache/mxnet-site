@@ -639,14 +639,8 @@
 <div class="viewcode-block" id="SGD"><a class="viewcode-back" href="../../api/python/optimization/optimization.html#mxnet.optimizer.SGD">[docs]</a><span class="k">class</span> <span class="nc">SGD</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
     <span class="sd">"""The SGD optimizer with momentum and weight decay.</span>
 
-<span class="sd">    The optimizer updates the weight by::</span>
-
-<span class="sd">        rescaled_grad = lr * rescale_grad * clip(grad, clip_gradient) + wd * weight</span>
-<span class="sd">        state = momentum * state + rescaled_grad</span>
-<span class="sd">        weight = weight - state</span>
-
-<span class="sd">    If the storage types of weight, state and grad are all ``row_sparse``, \</span>
-<span class="sd">    **sparse updates** are applied by::</span>
+<span class="sd">    If the storage types of weight and grad are both ``row_sparse``, and ``lazy_update`` is True, \</span>
+<span class="sd">    **lazy updates** are applied by::</span>
 
 <span class="sd">        for row in grad.indices:</span>
 <span class="sd">            rescaled_grad[row] = lr * rescale_grad * clip(grad[row], clip_gradient) + wd * weight[row]</span>
@@ -660,6 +654,12 @@
 <span class="sd">    provides slightly different semantics than the original update, and</span>
 <span class="sd">    may lead to different empirical results.</span>
 
+<span class="sd">    Otherwise, **standard updates** are applied by::</span>
+
+<span class="sd">        rescaled_grad = lr * rescale_grad * clip(grad, clip_gradient) + wd * weight</span>
+<span class="sd">        state = momentum * state + rescaled_grad</span>
+<span class="sd">        weight = weight - state</span>
+
 <span class="sd">    For details of the update algorithm see</span>
 <span class="sd">    :class:`~mxnet.ndarray.sgd_update` and :class:`~mxnet.ndarray.sgd_mom_update`.</span>
 
@@ -670,6 +670,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    momentum : float, optional</span>
 <span class="sd">       The momentum value.</span>
+<span class="sd">    lazy_update : bool, optional</span>
+<span class="sd">       Default is True. If True, lazy updates are applied \</span>
+<span class="sd">       if the storage types of weight and grad are both ``row_sparse``.</span>
 <span class="sd">    multi_precision: bool, optional</span>
 <span class="sd">       Flag to control the internal precision of the optimizer.</span>
 <span class="sd">       ``False`` results in using the same precision as the weights (default),</span>
@@ -677,9 +680,10 @@
 <span class="sd">                in 32-bit precision even if actual weights used in the model have lower precision.\</span>
 <span class="sd">                Turning this on can improve convergence and accuracy when training with float16.</span>
 <span class="sd">    """</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">lazy_update</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SGD</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">momentum</span> <span class="o">=</span> <span class="n">momentum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lazy_update</span> <span class="o">=</span> <span class="n">lazy_update</span>
 
     <span class="k">def</span> <span class="nf">create_state_multi_precision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
         <span class="n">weight_master_copy</span> <span class="o">=</span> <span class="bp">None</span>
@@ -695,8 +699,9 @@
 
     <span class="k">def</span> <span class="nf">create_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
         <span class="n">momentum</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">stype</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">stype</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lazy_update</span> <span class="k">else</span> <span class="s1">'default'</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">momentum</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
-            <span class="n">momentum</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">weight</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">stype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">stype</span><span class="p">)</span>
+            <span class="n">momentum</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">weight</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">stype</span><span class="o">=</span><span class="n">stype</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">momentum</span>
 
     <span class="k">def</span> <span class="nf">_update_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">multi_precision</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
