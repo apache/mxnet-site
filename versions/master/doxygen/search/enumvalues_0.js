@@ -40,7 +40,6 @@ var searchData=
   ['kinplacelhsout',['kInplaceLhsOut',['../namespacemxnet_1_1op.html#a3c3b8c77865c7c715cfe05ee2b2fa8daa31a764e0ff5966a10e26f7fbff308c18',1,'mxnet::op']]],
   ['kinplaceoutin',['kInplaceOutIn',['../namespacemxnet_1_1op.html#a3c3b8c77865c7c715cfe05ee2b2fa8daab7974a6a3982dae42ba00af90dcabd80',1,'mxnet::op']]],
   ['kinplaceoutlhs',['kInplaceOutLhs',['../namespacemxnet_1_1op.html#a3c3b8c77865c7c715cfe05ee2b2fa8daa01a199e9f1e7d97724be8aa618d5a3d4',1,'mxnet::op']]],
-  ['klocal',['kLocal',['../namespacemxnet.html#ad7801fb2dd68294d4c7a9e289bc071adafcf37e733f29d6aa14fb34fa737a809a',1,'mxnet']]],
   ['kndarrayargbeforescalar',['kNDArrayArgBeforeScalar',['../namespacemxnet.html#a89a5f0f5cfd9e1e94604a7b42dda818aabbc1ba0bb3f8647dcfd8bad69efdbb51',1,'mxnet']]],
   ['knoinplace',['kNoInplace',['../namespacemxnet_1_1op.html#a3c3b8c77865c7c715cfe05ee2b2fa8daa048c01bf1598f31850baeb2152b005a2',1,'mxnet::op']]],
   ['knormal',['kNormal',['../namespacemxnet.html#a998b74220fab2b012cf8a179650e1b3ba07fa7a19aa722c635a15e94cb7f50416',1,'mxnet']]],

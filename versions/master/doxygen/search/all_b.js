@@ -42,7 +42,6 @@ var searchData=
   ['kinplacelhsout',['kInplaceLhsOut',['../namespacemxnet_1_1op.html#a3c3b8c77865c7c715cfe05ee2b2fa8daa31a764e0ff5966a10e26f7fbff308c18',1,'mxnet::op']]],
   ['kinplaceoutin',['kInplaceOutIn',['../namespacemxnet_1_1op.html#a3c3b8c77865c7c715cfe05ee2b2fa8daab7974a6a3982dae42ba00af90dcabd80',1,'mxnet::op']]],
   ['kinplaceoutlhs',['kInplaceOutLhs',['../namespacemxnet_1_1op.html#a3c3b8c77865c7c715cfe05ee2b2fa8daa01a199e9f1e7d97724be8aa618d5a3d4',1,'mxnet::op']]],
-  ['klocal',['kLocal',['../namespacemxnet.html#ad7801fb2dd68294d4c7a9e289bc071adafcf37e733f29d6aa14fb34fa737a809a',1,'mxnet']]],
   ['kmaxdevid',['kMaxDevID',['../structmxnet_1_1Context.html#a958219ae412395685ef1d82af0dbbe67',1,'mxnet::Context']]],
   ['kmaxdevtype',['kMaxDevType',['../structmxnet_1_1Context.html#a7433936d1daf38f7dced0de49fbe6a4b',1,'mxnet::Context']]],
   ['kminnumrandomperthread',['kMinNumRandomPerThread',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4.html#ad59a015f903f3f139a841d61d510b8eb',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::kMinNumRandomPerThread()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html#a38fd552186f00f675dcbd4cd078c0fec',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::kMinNumRandomPerThread()']]],
