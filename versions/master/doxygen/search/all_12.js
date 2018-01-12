@@ -11,7 +11,7 @@ var searchData=
   ['save_5finputs',['save_inputs',['../classmxnet_1_1Imperative_1_1CachedOp.html#a8b527087601f6d043f8ef1983afe78cc',1,'mxnet::Imperative::CachedOp']]],
   ['save_5foutputs',['save_outputs',['../classmxnet_1_1Imperative_1_1CachedOp.html#abba28b24be0fbd745d4a041c86aa2c8c',1,'mxnet::Imperative::CachedOp']]],
   ['scalar',['scalar',['../structmxnet_1_1op_1_1EnvArguments.html#a74dfe03602a990b6552c8f7a01b2ecb5',1,'mxnet::op::EnvArguments']]],
-  ['seed',['Seed',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4.html#ae5c3d260a14c4277997c7966bc9b430e',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Seed()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html#adf05341f150fbf1813bfcb963ff6c956',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::Seed()']]],
+  ['seed',['Seed',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4.html#a03cb2c614a863bb13870e4bca11f0c60',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Seed()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html#acda2839fbe97d1f782d92033a5b47ff8',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::Seed()']]],
   ['seedrandom',['SeedRandom',['../classmxnet_1_1ResourceManager.html#a7aa335bc9231a8eb7cd04de22e033603',1,'mxnet::ResourceManager']]],
   ['sendcommandtoservers',['SendCommandToServers',['../classmxnet_1_1KVStore.html#a4ff4ca05f3c519ebbc2e46264e8b63dd',1,'mxnet::KVStore']]],
   ['set_5fbarrier_5fbefore_5fexit',['set_barrier_before_exit',['../classmxnet_1_1KVStore.html#afa87753d90fc7e75234229834ea23abb',1,'mxnet::KVStore']]],
