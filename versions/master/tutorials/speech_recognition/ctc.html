@@ -5,12 +5,12 @@
 <meta charset="utf-8"/>
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Using Baidu Warp-CTC with MXNet — mxnet  documentation</title>
+<title>Connectionist Temporal Classification — mxnet  documentation</title>
 <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
-<link href="../../_static/basic.css" rel="stylesheet" type="text/css"/>
-<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
-<link href="../../_static/mxnet.css" rel="stylesheet" type="text/css">
+<link href="../../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../../_static/mxnet.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -48,7 +48,7 @@
 <!-- -->
 <!-- <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
 <!-- -->
-<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png">
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
 </link></link></head>
 <body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background.png" role="document">
 <div class="content-block"><div class="navbar navbar-fixed-top">
@@ -153,8 +153,8 @@
 <i class="glyphicon glyphicon-search"></i>
 <input class="form-control" name="q" placeholder="Search" type="text"/>
 </div>
-<input name="check_keywords" type="hidden" value="yes"/>
-<input name="area" type="hidden" value="default">
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
 </input></form>
 <div id="search-preview"></div>
 </div>
@@ -202,93 +202,20 @@
 </div>
 <div class="content">
 <div class="page-tracker"></div>
-<div class="section" id="using-baidu-warp-ctc-with-mxnet">
-<span id="using-baidu-warp-ctc-with-mxnet"></span><h1>Using Baidu Warp-CTC with MXNet<a class="headerlink" href="#using-baidu-warp-ctc-with-mxnet" title="Permalink to this headline">¶</a></h1>
-<p>Baidu-WarpCTC is a CTC implementation by Baidu that supports using GPU processors. It supports using CTC with LSTM to solve label alignment problems in many areas, such as OCR and speech recognition.</p>
-<p>You can get the source code for the example on <a class="reference external" href="https://github.com/dmlc/mxnet/tree/master/example/warpctc">GitHub</a>.</p>
-<div class="section" id="install-baidu-warp-ctc">
-<span id="install-baidu-warp-ctc"></span><h2>Install Baidu Warp-CTC<a class="headerlink" href="#install-baidu-warp-ctc" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span>  cd ~/
-  git clone https://github.com/baidu-research/warp-ctc
-  cd warp-ctc
-  mkdir build
-  cd build
-  cmake ..
-  make
-  sudo make install
-</pre></div>
+<div class="section" id="connectionist-temporal-classification">
+<span id="connectionist-temporal-classification"></span><h1>Connectionist Temporal Classification<a class="headerlink" href="#connectionist-temporal-classification" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://www.cs.toronto.edu/~graves/icml_2006.pdf">Connectionist Temporal Classification</a> (CTC) is a cost function that is used to train Recurrent Neural Networks (RNNs) to label unsegmented input sequence data in supervised learning. For example, in a speech recognition application, using a typical cross-entropy loss, the input signal needs to be segmented into words or sub-words. However, using CTC-loss, it suffices to provide one label sequence for input sequence and the network learns both the alignment as well labeling. Baidu’s warp-ctc page contains a more detailed <a class="reference external" href="https://github.com/baidu-research/warp-ctc#introduction">introduction to CTC-loss</a>.</p>
+<div class="section" id="ctc-loss-in-mxnet">
+<span id="ctc-loss-in-mxnet"></span><h2>CTC-loss in MXNet<a class="headerlink" href="#ctc-loss-in-mxnet" title="Permalink to this headline">¶</a></h2>
+<p>MXNet supports two CTC-loss layers in Symbol API:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">mxnet.symbol.contrib.ctc_loss</span></code> is implemented in MXNet and included as part of the standard package.</li>
+<li><code class="docutils literal"><span class="pre">mxnet.symbol.WarpCTC</span></code> uses Baidu’s warp-ctc library and requires building warp-ctc library and mxnet library both from source.</li>
+</ul>
 </div>
-</div>
-<div class="section" id="enable-warp-ctc-in-mxnet">
-<span id="enable-warp-ctc-in-mxnet"></span><h2>Enable Warp-CTC in MXNet<a class="headerlink" href="#enable-warp-ctc-in-mxnet" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><div class="highlight"><pre><span></span>  comment out following lines in make/config.mk
-  WARPCTC_PATH = $(HOME)/warp-ctc
-  MXNET_PLUGINS += plugin/warpctc/warpctc.mk
-
-  rebuild mxnet by
-  make clean &amp;&amp; make -j4
-</pre></div>
-</div>
-</div>
-<div class="section" id="run-examples">
-<span id="run-examples"></span><h2>Run Examples<a class="headerlink" href="#run-examples" title="Permalink to this headline">¶</a></h2>
-<p>There are two examples. One is a toy example that validates CTC integration. The second is an OCR example with LSTM and CTC. You can run it by typing the following code:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>  cd examples/warpctc
-  python lstm_ocr.py
-</pre></div>
-</div>
-<p>The OCR example is constructed as follows:</p>
-<ol class="simple">
-<li>It generates a 80x30-pixel image for a 4-digit captcha using a Python captcha library.</li>
-<li>The 80x30 image is used as 80 input for LSTM, and every input is one column of the image (a 30 dim vector).</li>
-<li>The output layer use CTC loss.</li>
-</ol>
-<p>The following code shows the detailed construction of the net:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>  <span class="k">def</span> <span class="nf">lstm_unroll</span><span class="p">(</span><span class="n">num_lstm_layer</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span>
-                  <span class="n">num_hidden</span><span class="p">,</span> <span class="n">num_label</span><span class="p">):</span>
-    <span class="n">param_cells</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">last_states</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_lstm_layer</span><span class="p">):</span>
-        <span class="n">param_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LSTMParam</span><span class="p">(</span><span class="n">i2h_weight</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s2">"l</span><span class="si">%d</span><span class="s2">_i2h_weight"</span> <span class="o">%</span> <span class="n">i</span><span class="p">),</span>
-                                     <span class="n">i2h_bias</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s2">"l</span><span class="si">%d</span><span class="s2">_i2h_bias"</span> <span class="o">%</span> <span class="n">i</span><span class="p">),</span>
-                                     <span class="n">h2h_weight</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s2">"l</span><span class="si">%d</span><span class="s2">_h2h_weight"</span> <span class="o">%</span> <span class="n">i</span><span class="p">),</span>
-                                     <span class="n">h2h_bias</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s2">"l</span><span class="si">%d</span><span class="s2">_h2h_bias"</span> <span class="o">%</span> <span class="n">i</span><span class="p">)))</span>
-        <span class="n">state</span> <span class="o">=</span> <span class="n">LSTMState</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s2">"l</span><span class="si">%d</span><span class="s2">_init_c"</span> <span class="o">%</span> <span class="n">i</span><span class="p">),</span>
-                          <span class="n">h</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s2">"l</span><span class="si">%d</span><span class="s2">_init_h"</span> <span class="o">%</span> <span class="n">i</span><span class="p">))</span>
-        <span class="n">last_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-    <span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">last_states</span><span class="p">)</span> <span class="o">==</span> <span class="n">num_lstm_layer</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s1">'label'</span><span class="p">)</span>
-
-    <span class="c1">#every column of image is an input, there are seq_len inputs</span>
-    <span class="n">wordvec</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">SliceChannel</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="n">seq_len</span><span class="p">,</span> <span class="n">squeeze_axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">hidden_all</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">seqidx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">seq_len</span><span class="p">):</span>
-        <span class="n">hidden</span> <span class="o">=</span> <span class="n">wordvec</span><span class="p">[</span><span class="n">seqidx</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_lstm_layer</span><span class="p">):</span>
-            <span class="n">next_state</span> <span class="o">=</span> <span class="n">lstm</span><span class="p">(</span><span class="n">num_hidden</span><span class="p">,</span> <span class="n">indata</span><span class="o">=</span><span class="n">hidden</span><span class="p">,</span>
-                              <span class="n">prev_state</span><span class="o">=</span><span class="n">last_states</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                              <span class="n">param</span><span class="o">=</span><span class="n">param_cells</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                              <span class="n">seqidx</span><span class="o">=</span><span class="n">seqidx</span><span class="p">,</span> <span class="n">layeridx</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
-            <span class="n">hidden</span> <span class="o">=</span> <span class="n">next_state</span><span class="o">.</span><span class="n">h</span>
-            <span class="n">last_states</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_state</span>
-        <span class="n">hidden_all</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hidden</span><span class="p">)</span>
-    <span class="n">hidden_concat</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Concat</span><span class="p">(</span><span class="o">*</span><span class="n">hidden_all</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">pred</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">hidden_concat</span><span class="p">,</span> <span class="n">num_hidden</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
-
-    <span class="c1"># here we do NOT need to transpose label as other lstm examples do</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Reshape</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">target_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,))</span>
-    <span class="c1">#label should be int type, so use cast</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Cast</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">label</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s1">'int32'</span><span class="p">)</span>
-    <span class="n">sm</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">WarpCTC</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">label_length</span> <span class="o">=</span> <span class="n">num_label</span><span class="p">,</span> <span class="n">input_length</span> <span class="o">=</span> <span class="n">seq_len</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sm</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="supporting-multi-label-length">
-<span id="supporting-multi-label-length"></span><h2>Supporting Multi-label Length<a class="headerlink" href="#supporting-multi-label-length" title="Permalink to this headline">¶</a></h2>
-<p>Provide labels with length b. For samples whose label length is smaller than b, append 0 to the label data to make it have length b.</p>
-<p>0 is reserved for a blank label.</p>
+<div class="section" id="lstm-ocr-example">
+<span id="lstm-ocr-example"></span><h2>LSTM OCR Example<a class="headerlink" href="#lstm-ocr-example" title="Permalink to this headline">¶</a></h2>
+<p>MXNet’s example folder contains a <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/example/ctc">CTC example</a> for using CTC loss with an LSTM network to perform Optical Character Recognition (OCR) prediction on CAPTCHA images. The example demonstrates use of both CTC loss options, as well as inference after training using network symbol and parameter checkpoints.</p>
 </div>
 <div class="section" id="next-steps">
 <span id="next-steps"></span><h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
@@ -305,11 +232,9 @@
 <div class="sphinxsidebarwrapper">
 <h3><a href="../../index.html">Table Of Contents</a></h3>
 <ul>
-<li><a class="reference internal" href="#">Using Baidu Warp-CTC with MXNet</a><ul>
-<li><a class="reference internal" href="#install-baidu-warp-ctc">Install Baidu Warp-CTC</a></li>
-<li><a class="reference internal" href="#enable-warp-ctc-in-mxnet">Enable Warp-CTC in MXNet</a></li>
-<li><a class="reference internal" href="#run-examples">Run Examples</a></li>
-<li><a class="reference internal" href="#supporting-multi-label-length">Supporting Multi-label Length</a></li>
+<li><a class="reference internal" href="#">Connectionist Temporal Classification</a><ul>
+<li><a class="reference internal" href="#ctc-loss-in-mxnet">CTC-loss in MXNet</a></li>
+<li><a class="reference internal" href="#lstm-ocr-example">LSTM OCR Example</a></li>
 <li><a class="reference internal" href="#next-steps">Next Steps</a></li>
 </ul>
 </li>

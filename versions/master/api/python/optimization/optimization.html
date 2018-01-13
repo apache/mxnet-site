@@ -198,7 +198,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#gluon-api">Gluon API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#kvstore-api">KVStore API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#io-api">IO API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#text-api">Text API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#image-api">Image API</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#optimization-api">Optimization API</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="">Optimization: initialize and update weights</a><ul>
@@ -737,6 +736,33 @@ by <a class="reference internal" href="#mxnet.optimizer.Optimizer" title="mxnet.
 <li><strong>multi_precision</strong> (<em>bool, optional</em>) – Flag to control the internal precision of the optimizer.
 <code class="docutils literal"><span class="pre">False</span></code> results in using the same precision as the weights (default),
 <code class="docutils literal"><span class="pre">True</span></code> makes internal 32-bit copy of the weights and applies gradients                 in 32-bit precision even if actual weights used in the model have lower precision.                Turning this on can improve convergence and accuracy when training with float16.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="class">
+<dt id="mxnet.optimizer.Signum">
+<em class="property">class </em><code class="descclassname">mxnet.optimizer.</code><code class="descname">Signum</code><span class="sig-paren">(</span><em>learning_rate=0.01</em>, <em>momentum=0.9</em>, <em>wd_lh=0.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/optimizer.html#Signum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.optimizer.Signum" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Signum optimizer that takes the sign of gradient or momentum.</p>
+<p>The optimizer updates the weight by:</p>
+<blockquote>
+<div>rescaled_grad = rescale_grad * clip(grad, clip_gradient) + wd * weight
+state = momentum * state + (1-momentum)*rescaled_grad
+weight = (1 - lr * wd_lh) * weight - lr * sign(state)</div></blockquote>
+<p>See the original paper at: <a class="reference external" href="https://jeremybernste.in/projects/amazon/signum.pdf">https://jeremybernste.in/projects/amazon/signum.pdf</a></p>
+<p>For details of the update algorithm see
+<a class="reference internal" href="../ndarray/ndarray.html#mxnet.ndarray.signsgd_update" title="mxnet.ndarray.signsgd_update"><code class="xref py py-class docutils literal"><span class="pre">signsgd_update</span></code></a> and <a class="reference internal" href="../ndarray/ndarray.html#mxnet.ndarray.signum_update" title="mxnet.ndarray.signum_update"><code class="xref py py-class docutils literal"><span class="pre">signum_update</span></code></a>.</p>
+<p>This optimizer accepts the following parameters in addition to those accepted
+by <a class="reference internal" href="#mxnet.optimizer.Optimizer" title="mxnet.optimizer.Optimizer"><code class="xref py py-class docutils literal"><span class="pre">Optimizer</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>momentum</strong> (<em>float, optional</em>) – The momentum value.</li>
+<li><strong>wd_lh</strong> (<em>float, optional</em>) – The amount of decoupled weight decay regularization, see details in the original paper at:       <a class="reference external" href="https://arxiv.org/abs/1711.05101">https://arxiv.org/abs/1711.05101</a></li>
 </ul>
 </td>
 </tr>

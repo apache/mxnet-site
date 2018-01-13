@@ -228,6 +228,7 @@
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">initializer</span>
 <span class="kn">from</span> <span class="nn">..symbol</span> <span class="kn">import</span> <span class="n">Symbol</span>
@@ -433,13 +434,38 @@
 <span class="sd">        children's parameters)."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span>
 
-<div class="viewcode-block" id="Block.collect_params"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.collect_params">[docs]</a>    <span class="k">def</span> <span class="nf">collect_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Block.collect_params"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.collect_params">[docs]</a>    <span class="k">def</span> <span class="nf">collect_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">"""Returns a :py:class:`ParameterDict` containing this :py:class:`Block` and all of its</span>
-<span class="sd">        children's Parameters."""</span>
+<span class="sd">        children's Parameters(default), also can returns the select :py:class:`ParameterDict`</span>
+<span class="sd">        which match some given regular expressions.</span>
+
+<span class="sd">        For example, collect the specified parameter in ['conv1_weight', 'conv1_bias', 'fc_weight',</span>
+<span class="sd">        'fc_bias']::</span>
+
+<span class="sd">            model.collect_params('conv1_weight|conv1_bias|fc_weight|fc_bias')</span>
+
+<span class="sd">        or collect all paramters which their name ends with 'weight' or 'bias', this can be done</span>
+<span class="sd">        using regular expressions::</span>
+
+<span class="sd">            model.collect_params('.*weight|.*bias')</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        select : str</span>
+<span class="sd">            regular expressions</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        The selected :py:class:`ParameterDict`</span>
+<span class="sd">        """</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">ParameterDict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
-        <span class="n">ret</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">select</span><span class="p">:</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">select</span><span class="p">)</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:</span><span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">pattern</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">name</span><span class="p">)})</span>
         <span class="k">for</span> <span class="n">cld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
-            <span class="n">ret</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cld</span><span class="o">.</span><span class="n">collect_params</span><span class="p">())</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cld</span><span class="o">.</span><span class="n">collect_params</span><span class="p">(</span><span class="n">select</span><span class="o">=</span><span class="n">select</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">ret</span></div>
 
 <div class="viewcode-block" id="Block.save_params"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.save_params">[docs]</a>    <span class="k">def</span> <span class="nf">save_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
@@ -466,7 +492,6 @@
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">allow_missing</span><span class="p">,</span> <span class="n">ignore_extra</span><span class="p">,</span>
                                    <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="Block.register_child"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.register_child">[docs]</a>    <span class="k">def</span> <span class="nf">register_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
         <span class="sd">"""Registers block as a child of self. :py:class:`Block` s assigned to self as</span>
