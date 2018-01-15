@@ -56,6 +56,7 @@ var searchData=
   ['smarch',['SMArch',['../cuda__utils_8h.html#a9779e3ad0efd0faec7fbe431c0db896d',1,'cuda_utils.h']]],
   ['sourcefunction',['SourceFunction',['../namespacemxnet_1_1op.html#a8dc66fcca4ca52343570931503fca2c3',1,'mxnet::op']]],
   ['sourceshapefunction',['SourceShapeFunction',['../namespacemxnet_1_1op.html#af71f289b0df41398bcbac75d37435a07',1,'mxnet::op']]],
+  ['sparseretainopforwardrspwrapper',['SparseRetainOpForwardRspWrapper',['../namespacemxnet_1_1common.html#a905e77124ee11208c40a8afd3ee42167',1,'mxnet::common']]],
   ['start',['Start',['../classmxnet_1_1Engine.html#a136a1d60db77a0846faa8462d0fb6237',1,'mxnet::Engine']]],
   ['state',['state',['../classmxnet_1_1Imperative_1_1AGInfo.html#a027a81d4864241f12ae79388efd482da',1,'mxnet::Imperative::AGInfo']]],
   ['static_5farray_2eh',['static_array.h',['../static__array_8h.html',1,'']]],

@@ -45,6 +45,7 @@ var searchData=
   ['slice',['Slice',['../classmxnet_1_1NDArray.html#a7acb6462c11e071949db2b0e1fbfd66e',1,'mxnet::NDArray']]],
   ['slicewithrecord',['SliceWithRecord',['../classmxnet_1_1NDArray.html#a0d868e5303669d6ce8a5ada1c34940ac',1,'mxnet::NDArray']]],
   ['smarch',['SMArch',['../cuda__utils_8h.html#a9779e3ad0efd0faec7fbe431c0db896d',1,'cuda_utils.h']]],
+  ['sparseretainopforwardrspwrapper',['SparseRetainOpForwardRspWrapper',['../namespacemxnet_1_1common.html#a905e77124ee11208c40a8afd3ee42167',1,'mxnet::common']]],
   ['start',['Start',['../classmxnet_1_1Engine.html#a136a1d60db77a0846faa8462d0fb6237',1,'mxnet::Engine']]],
   ['staticarray',['StaticArray',['../structmxnet_1_1common_1_1StaticArray.html#a1c3a79ddcb6b472f1a903f1753f4194a',1,'mxnet::common::StaticArray::StaticArray(void)'],['../structmxnet_1_1common_1_1StaticArray.html#a857e64b386ca8e0bfab5087a42ae2f53',1,'mxnet::common::StaticArray::StaticArray(const T &amp;val)'],['../structmxnet_1_1common_1_1StaticArray.html#abb2f84b9e5f856fed4435c3d5f0ef044',1,'mxnet::common::StaticArray::StaticArray(const StaticArray&lt; T, num &gt; &amp;sa)']]],
   ['stop',['Stop',['../classmxnet_1_1Engine.html#a30f8947a7a1ad86b4c2cdb5b15b6d1e1',1,'mxnet::Engine']]],

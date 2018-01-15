@@ -231,14 +231,14 @@
 <span class="kn">from</span> <span class="nn">....context</span> <span class="kn">import</span> <span class="n">cpu</span>
 <span class="kn">from</span> <span class="nn">...block</span> <span class="kn">import</span> <span class="n">HybridBlock</span>
 <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">nn</span>
-<span class="kn">from</span> <span class="nn">..custom_layers</span> <span class="kn">import</span> <span class="n">HybridConcurrent</span>
+<span class="kn">from</span> <span class="nn">...contrib.nn</span> <span class="kn">import</span> <span class="n">HybridConcurrent</span>
 
 <span class="c1"># Helpers</span>
 <span class="k">def</span> <span class="nf">_make_fire</span><span class="p">(</span><span class="n">squeeze_channels</span><span class="p">,</span> <span class="n">expand1x1_channels</span><span class="p">,</span> <span class="n">expand3x3_channels</span><span class="p">):</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
     <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_make_fire_conv</span><span class="p">(</span><span class="n">squeeze_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
-    <span class="n">paths</span> <span class="o">=</span> <span class="n">HybridConcurrent</span><span class="p">(</span><span class="n">concat_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="n">HybridConcurrent</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
     <span class="n">paths</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_make_fire_conv</span><span class="p">(</span><span class="n">expand1x1_channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">paths</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_make_fire_conv</span><span class="p">(</span><span class="n">expand3x3_channels</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
