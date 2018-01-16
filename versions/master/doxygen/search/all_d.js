@@ -209,6 +209,5 @@ var searchData=
   ['mxsymbolsetattr',['MXSymbolSetAttr',['../c__api_8h.html#aebeac35c3110eb391035fbbeb29e9436',1,'c_api.h']]],
   ['op',['op',['../namespacemxnet_1_1op.html',1,'mxnet']]],
   ['random',['random',['../namespacemxnet_1_1common_1_1random.html',1,'mxnet::common']]],
-  ['rowsparse',['rowsparse',['../namespacemxnet_1_1rowsparse.html',1,'mxnet']]],
-  ['rtc',['rtc',['../namespacemxnet_1_1rtc.html',1,'mxnet']]]
+  ['rowsparse',['rowsparse',['../namespacemxnet_1_1rowsparse.html',1,'mxnet']]]
 ];

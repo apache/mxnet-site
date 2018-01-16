@@ -30,7 +30,6 @@ var searchData=
   ['kcustomopproplistoutputs',['kCustomOpPropListOutputs',['../c__api_8h.html#a62d6b72cc6b3d920797c32ea8732cbbaa0a32388e902d5d81a88f62f3eabf56c3',1,'c_api.h']]],
   ['kdefaultstorage',['kDefaultStorage',['../namespacemxnet.html#a536b732faa980e1de446c552460ff76aabf6395d98a9668e8066a0c0da5570608',1,'mxnet']]],
   ['kdeletevar',['kDeleteVar',['../namespacemxnet.html#a998b74220fab2b012cf8a179650e1b3bac41fda8552e9d327ad3b06b1bafa663a',1,'mxnet']]],
-  ['kernel',['Kernel',['../classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html',1,'mxnet::rtc::CudaModule']]],
   ['key_5fvar_5fnum_5fargs',['key_var_num_args',['../structmxnet_1_1OperatorPropertyReg.html#af3aee96c6a2289e7554d7503186a540c',1,'mxnet::OperatorPropertyReg']]],
   ['kfcompute',['kFCompute',['../namespacemxnet.html#aad5fec2b4bceabbf4b884460cc2e0a2ba2157864769b54d1d0f8f9be63393e7d6',1,'mxnet']]],
   ['kfcomputeex',['kFComputeEx',['../namespacemxnet.html#aad5fec2b4bceabbf4b884460cc2e0a2ba57f93219462690bc438372ecd92fedd5',1,'mxnet']]],

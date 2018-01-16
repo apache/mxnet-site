@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['launch',['Launch',['../classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#ae4f060e3de5fb498f6977563a9c20f96',1,'mxnet::rtc::CudaModule::Kernel']]],
   ['lazy_5falloc_5farray_2eh',['lazy_alloc_array.h',['../lazy__alloc__array_8h.html',1,'']]],
   ['lazyallocarray',['LazyAllocArray',['../classmxnet_1_1common_1_1LazyAllocArray.html',1,'mxnet::common']]],
   ['lazyallocarray',['LazyAllocArray',['../classmxnet_1_1common_1_1LazyAllocArray.html#a1dd703a9eabfe691793a8398706bcc09',1,'mxnet::common::LazyAllocArray']]],

@@ -99,7 +99,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span> <span class="preprocessor">#ifndef MXNET_RTC_H_</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span> <span class="preprocessor"></span><span class="preprocessor">#define MXNET_RTC_H_</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span> <span class="preprocessor"></span><span class="preprocessor">#include "<a class="code" href="base_8h.html">./base.h</a>"</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span> <span class="preprocessor">#if MXNET_USE_CUDA</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span> <span class="preprocessor">#if MXNET_USE_CUDA &amp;&amp; MXNET_ENABLE_CUDA_RTC</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span> <span class="preprocessor"></span><span class="preprocessor">#include &lt;nvrtc.h&gt;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span> <span class="preprocessor">#include &lt;cuda.h&gt;</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span> </div>
@@ -112,16 +112,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span> <span class="preprocessor">#include "<a class="code" href="ndarray_8h.html">./ndarray.h</a>"</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span> <span class="keyword">namespace </span>mxnet {</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="namespacemxnet_1_1rtc.html">   36</a></span> <span class="keyword">namespace </span>rtc {</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span> <span class="keyword">namespace </span>rtc {</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classmxnet_1_1rtc_1_1CudaModule.html">   39</a></span> <span class="keyword">class </span><a class="code" href="classmxnet_1_1rtc_1_1CudaModule.html">CudaModule</a> {</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span> <span class="keyword">class </span>CudaModule {</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>   <span class="keyword">struct </span>Chunk {</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>     Chunk(<span class="keyword">const</span> <span class="keywordtype">char</span>* source,</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>           <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; options,</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>           <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; exports);</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>     ~Chunk();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>     CUfunction GetFunction(<span class="keyword">const</span> std::string&amp; mangled_name, <span class="keyword">const</span> <a class="code" href="structmxnet_1_1Context.html">Context</a>&amp; ctx);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>     CUfunction GetFunction(<span class="keyword">const</span> std::string&amp; mangled_name, <span class="keyword">const</span> Context&amp; ctx);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>     nvrtcProgram prog_;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>     <span class="keywordtype">char</span>* ptx_;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>     std::unordered_map&lt;int, CUmodule&gt; mod_;</div>
@@ -130,59 +130,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>   std::shared_ptr&lt;Chunk&gt; ptr_;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span> </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html">   74</a></span>   <span class="keyword">struct </span><a class="code" href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html">ArgType</a> {</div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#abf6a5d630d3b9f88988e162b5bd10470">   76</a></span>     <span class="keywordtype">bool</span> <a class="code" href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#abf6a5d630d3b9f88988e162b5bd10470">is_ndarray</a>;</div>
-<div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#a4420722fb81a18eb520c89ecb6fcde3e">   78</a></span>     <span class="keywordtype">bool</span> <a class="code" href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#a4420722fb81a18eb520c89ecb6fcde3e">is_const</a>;</div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#adf42baba2bb344bfc7a2be4c6ede34c8">   80</a></span>     mshadow::TypeFlag <a class="code" href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#adf42baba2bb344bfc7a2be4c6ede34c8">dtype</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>   <span class="keyword">struct </span>ArgType {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>     <span class="keywordtype">bool</span> is_ndarray;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>     <span class="keywordtype">bool</span> is_const;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>     mshadow::TypeFlag dtype;</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>   };</div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html">   83</a></span>   <span class="keyword">class </span><a class="code" href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html">Kernel</a> {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>   <span class="keyword">class </span>Kernel {</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>     <span class="keywordtype">void</span> <a class="code" href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#ae4f060e3de5fb498f6977563a9c20f96">Launch</a>(<span class="keyword">const</span> <a class="code" href="structmxnet_1_1Context.html">Context</a>&amp; ctx, <span class="keyword">const</span> std::vector&lt;dmlc::any&gt;&amp; args,</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>     <span class="keywordtype">void</span> Launch(<span class="keyword">const</span> Context&amp; ctx, <span class="keyword">const</span> std::vector&lt;dmlc::any&gt;&amp; args,</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>                 uint32_t grid_dim_x, uint32_t grid_dim_y, uint32_t grid_dim_z,</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>                 uint32_t block_dim_x, uint32_t block_dim_y, uint32_t block_dim_z,</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>                 uint32_t shared_mem);</div>
-<div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#a529b07e197329fed9631262dd7103fae">   91</a></span>     <span class="keyword">const</span> std::vector&lt;ArgType&gt;&amp; <a class="code" href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#a529b07e197329fed9631262dd7103fae">signature</a>() { <span class="keywordflow">return</span> signature_; }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>     <span class="keyword">const</span> std::vector&lt;ArgType&gt;&amp; signature() { <span class="keywordflow">return</span> signature_; }</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span> </div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#a30d0071fcb0841e922f69cba4216ac63">   94</a></span>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classmxnet_1_1rtc_1_1CudaModule.html">CudaModule</a>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>     <a class="code" href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html">Kernel</a>(<span class="keyword">const</span> std::shared_ptr&lt;Chunk&gt;&amp; mod,</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>     <span class="keyword">friend</span> <span class="keyword">class </span>CudaModule;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>     Kernel(<span class="keyword">const</span> std::shared_ptr&lt;Chunk&gt;&amp; mod,</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>            <span class="keyword">const</span> std::string&amp; mangled_name,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>            <span class="keyword">const</span> std::vector&lt;ArgType&gt;&amp; <a class="code" href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#a529b07e197329fed9631262dd7103fae">signature</a>);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>            <span class="keyword">const</span> std::vector&lt;ArgType&gt;&amp; signature);</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>     std::string mangled_name_;</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>     std::vector&lt;ArgType&gt; signature_;</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>     std::shared_ptr&lt;Chunk&gt; mod_;</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>     std::unordered_map&lt;int, CUfunction&gt; func_;</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>   };</div>
-<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="classmxnet_1_1rtc_1_1CudaModule.html#a44ca063023adb5d05ad1a219c9c14f20">  118</a></span>   <a class="code" href="classmxnet_1_1rtc_1_1CudaModule.html#a44ca063023adb5d05ad1a219c9c14f20">CudaModule</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* source,</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>   CudaModule(<span class="keyword">const</span> <span class="keywordtype">char</span>* source,</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>              <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; options,</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>              <span class="keyword">const</span> std::vector&lt;std::string&gt;&amp; exports)</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>       : ptr_(std::make_shared&lt;Chunk&gt;(source, options, exports)) {}</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>   std::shared_ptr&lt;Kernel&gt; <a class="code" href="classmxnet_1_1rtc_1_1CudaModule.html#ab31092777ac1fa3c8902db0ed291b1a4">GetKernel</a>(<span class="keyword">const</span> std::string&amp; name,</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>   std::shared_ptr&lt;Kernel&gt; GetKernel(<span class="keyword">const</span> std::string&amp; name,</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>                                     <span class="keyword">const</span> std::vector&lt;ArgType&gt;&amp; signature);</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span> };</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span> </div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span> }  <span class="comment">// namespace rtc</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span> }  <span class="comment">// namespace mxnet</span></div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span> <span class="preprocessor">#endif  // MXNET_USE_CUDA</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span> <span class="preprocessor">#endif  // MXNET_USE_CUDA &amp;&amp; MXNET_ENABLE_CUDA_RTC</span></div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span> <span class="preprocessor"></span><span class="preprocessor">#endif  // MXNET_RTC_H_</span></div>
-<div class="ttc" id="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType_html_a4420722fb81a18eb520c89ecb6fcde3e"><div class="ttname"><a href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#a4420722fb81a18eb520c89ecb6fcde3e">mxnet::rtc::CudaModule::ArgType::is_const</a></div><div class="ttdeci">bool is_const</div><div class="ttdoc">whether argument is constant (input) </div><div class="ttdef"><b>Definition:</b> rtc.h:78</div></div>
-<div class="ttc" id="classmxnet_1_1rtc_1_1CudaModule_html"><div class="ttname"><a href="classmxnet_1_1rtc_1_1CudaModule.html">mxnet::rtc::CudaModule</a></div><div class="ttdoc">Cuda runtime compile module. </div><div class="ttdef"><b>Definition:</b> rtc.h:39</div></div>
-<div class="ttc" id="classmxnet_1_1rtc_1_1CudaModule_html_ab31092777ac1fa3c8902db0ed291b1a4"><div class="ttname"><a href="classmxnet_1_1rtc_1_1CudaModule.html#ab31092777ac1fa3c8902db0ed291b1a4">mxnet::rtc::CudaModule::GetKernel</a></div><div class="ttdeci">std::shared_ptr&lt; Kernel &gt; GetKernel(const std::string &amp;name, const std::vector&lt; ArgType &gt; &amp;signature)</div><div class="ttdoc">Get cuda kernal from module by name. </div></div>
-<div class="ttc" id="classmxnet_1_1rtc_1_1CudaModule_html_a44ca063023adb5d05ad1a219c9c14f20"><div class="ttname"><a href="classmxnet_1_1rtc_1_1CudaModule.html#a44ca063023adb5d05ad1a219c9c14f20">mxnet::rtc::CudaModule::CudaModule</a></div><div class="ttdeci">CudaModule(const char *source, const std::vector&lt; std::string &gt; &amp;options, const std::vector&lt; std::string &gt; &amp;exports)</div><div class="ttdoc">CudaModule constructor. </div><div class="ttdef"><b>Definition:</b> rtc.h:118</div></div>
-<div class="ttc" id="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel_html_a529b07e197329fed9631262dd7103fae"><div class="ttname"><a href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#a529b07e197329fed9631262dd7103fae">mxnet::rtc::CudaModule::Kernel::signature</a></div><div class="ttdeci">const std::vector&lt; ArgType &gt; &amp; signature()</div><div class="ttdoc">kernel interface signature </div><div class="ttdef"><b>Definition:</b> rtc.h:91</div></div>
 <div class="ttc" id="ndarray_8h_html"><div class="ttname"><a href="ndarray_8h.html">ndarray.h</a></div><div class="ttdoc">NDArray interface that handles array arithematics. </div></div>
-<div class="ttc" id="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel_html_ae4f060e3de5fb498f6977563a9c20f96"><div class="ttname"><a href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html#ae4f060e3de5fb498f6977563a9c20f96">mxnet::rtc::CudaModule::Kernel::Launch</a></div><div class="ttdeci">void Launch(const Context &amp;ctx, const std::vector&lt; dmlc::any &gt; &amp;args, uint32_t grid_dim_x, uint32_t grid_dim_y, uint32_t grid_dim_z, uint32_t block_dim_x, uint32_t block_dim_y, uint32_t block_dim_z, uint32_t shared_mem)</div><div class="ttdoc">Launch the kernel. </div></div>
-<div class="ttc" id="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType_html_adf42baba2bb344bfc7a2be4c6ede34c8"><div class="ttname"><a href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#adf42baba2bb344bfc7a2be4c6ede34c8">mxnet::rtc::CudaModule::ArgType::dtype</a></div><div class="ttdeci">mshadow::TypeFlag dtype</div><div class="ttdoc">data type of argument </div><div class="ttdef"><b>Definition:</b> rtc.h:80</div></div>
-<div class="ttc" id="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel_html"><div class="ttname"><a href="classmxnet_1_1rtc_1_1CudaModule_1_1Kernel.html">mxnet::rtc::CudaModule::Kernel</a></div><div class="ttdoc">Cuda kernel. </div><div class="ttdef"><b>Definition:</b> rtc.h:83</div></div>
 <div class="ttc" id="base_8h_html"><div class="ttname"><a href="base_8h.html">base.h</a></div><div class="ttdoc">configuation of mxnet as well as basic data structure. </div></div>
-<div class="ttc" id="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType_html"><div class="ttname"><a href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html">mxnet::rtc::CudaModule::ArgType</a></div><div class="ttdoc">cuda kernel argument descriptor </div><div class="ttdef"><b>Definition:</b> rtc.h:74</div></div>
-<div class="ttc" id="structmxnet_1_1Context_html"><div class="ttname"><a href="structmxnet_1_1Context.html">mxnet::Context</a></div><div class="ttdoc">Context information about the execution environment. </div><div class="ttdef"><b>Definition:</b> base.h:142</div></div>
-<div class="ttc" id="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType_html_abf6a5d630d3b9f88988e162b5bd10470"><div class="ttname"><a href="structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#abf6a5d630d3b9f88988e162b5bd10470">mxnet::rtc::CudaModule::ArgType::is_ndarray</a></div><div class="ttdeci">bool is_ndarray</div><div class="ttdoc">whether argument is NDArray </div><div class="ttdef"><b>Definition:</b> rtc.h:76</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 15 2018 07:03:02 for mxnet by  <a href="http://www.doxygen.org/index.html">
+Generated on Tue Jan 16 2018 07:03:13 for mxnet by  <a href="http://www.doxygen.org/index.html">
 <img alt="doxygen" class="footer" src="doxygen.png"/>
 </a> 1.8.6
 </small></address>

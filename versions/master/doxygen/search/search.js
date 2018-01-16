@@ -16,7 +16,7 @@ var indexSectionsWithContent =
   6: "abcdefgikmnoprstuv",
   7: "cdefnorst",
   8: "k",
-  9: ":cin",
+  9: ":in",
   10: "acdmnp"
 };
 
