@@ -986,15 +986,8 @@
 <span class="sd">    This class implements the optimizer described in *Adam: A Method for</span>
 <span class="sd">    Stochastic Optimization*, available at http://arxiv.org/abs/1412.6980.</span>
 
-<span class="sd">    The optimizer updates the weight by::</span>
-
-<span class="sd">        rescaled_grad = clip(grad * rescale_grad + wd * weight, clip_gradient)</span>
-<span class="sd">        m = beta1 * m + (1 - beta1) * rescaled_grad</span>
-<span class="sd">        v = beta2 * v + (1 - beta2) * (rescaled_grad**2)</span>
-<span class="sd">        w = w - learning_rate * m / (sqrt(v) + epsilon)</span>
-
-<span class="sd">    If the storage types of weight, state and grad are all ``row_sparse``, \</span>
-<span class="sd">    **sparse updates** are applied by::</span>
+<span class="sd">    If the storage types of weight and grad are both ``row_sparse``, and ``lazy_update`` is True, \</span>
+<span class="sd">    **lazy updates** are applied by::</span>
 
 <span class="sd">        for row in grad.indices:</span>
 <span class="sd">            rescaled_grad[row] = clip(grad[row] * rescale_grad + wd * weight[row], clip_gradient)</span>
@@ -1002,11 +995,18 @@
 <span class="sd">            v[row] = beta2 * v[row] + (1 - beta2) * (rescaled_grad[row]**2)</span>
 <span class="sd">            w[row] = w[row] - learning_rate * m[row] / (sqrt(v[row]) + epsilon)</span>
 
-<span class="sd">    The sparse update only updates the mean and var for the weights whose row_sparse</span>
+<span class="sd">    The lazy update only updates the mean and var for the weights whose row_sparse</span>
 <span class="sd">    gradient indices appear in the current batch, rather than updating it for all indices.</span>
 <span class="sd">    Compared with the original update, it can provide large improvements in model training</span>
 <span class="sd">    throughput for some applications. However, it provides slightly different semantics than</span>
 <span class="sd">    the original update, and may lead to different empirical results.</span>
+
+<span class="sd">    Otherwise, **standard updates** are applied by::</span>
+
+<span class="sd">        rescaled_grad = clip(grad * rescale_grad + wd * weight, clip_gradient)</span>
+<span class="sd">        m = beta1 * m + (1 - beta1) * rescaled_grad</span>
+<span class="sd">        v = beta2 * v + (1 - beta2) * (rescaled_grad**2)</span>
+<span class="sd">        w = w - learning_rate * m / (sqrt(v) + epsilon)</span>
 
 <span class="sd">    This optimizer accepts the following parameters in addition to those accepted</span>
 <span class="sd">    by :class:`.Optimizer`.</span>
@@ -1021,19 +1021,24 @@
 <span class="sd">        Exponential decay rate for the second moment estimates.</span>
 <span class="sd">    epsilon : float, optional</span>
 <span class="sd">        Small value to avoid division by 0.</span>
+<span class="sd">    lazy_update : bool, optional</span>
+<span class="sd">       Default is True. If True, lazy updates are applied \</span>
+<span class="sd">       if the storage types of weight and grad are both ``row_sparse``.</span>
 <span class="sd">    """</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">beta1</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">beta2</span><span class="o">=</span><span class="mf">0.999</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">lazy_update</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Adam</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">beta1</span> <span class="o">=</span> <span class="n">beta1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">beta2</span> <span class="o">=</span> <span class="n">beta2</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lazy_update</span> <span class="o">=</span> <span class="n">lazy_update</span>
 
     <span class="k">def</span> <span class="nf">create_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
+        <span class="n">stype</span> <span class="o">=</span> <span class="n">weight</span><span class="o">.</span><span class="n">stype</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lazy_update</span> <span class="k">else</span> <span class="s1">'default'</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">zeros</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">weight</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
-                      <span class="n">stype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">stype</span><span class="p">),</span>  <span class="c1"># mean</span>
+                      <span class="n">stype</span><span class="o">=</span><span class="n">stype</span><span class="p">),</span>  <span class="c1"># mean</span>
                 <span class="n">zeros</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">weight</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
-                      <span class="n">stype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">stype</span><span class="p">))</span>  <span class="c1"># variance</span>
+                      <span class="n">stype</span><span class="o">=</span><span class="n">stype</span><span class="p">))</span>  <span class="c1"># variance</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">))</span>
