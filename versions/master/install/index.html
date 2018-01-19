@@ -231,7 +231,7 @@
 <button class="btn btn-default opt active" type="button">Raspberry Pi</button>
 <button class="btn btn-default opt" type="button">NVIDIA Jetson TX2</button>
 </div>
-</div><!-- Linux Python GPU Options --><div class="linux macos">
+</div><!-- Linux Python GPU Options --><div class="linux macos windows">
 <div class="python">
 <div class="cpu gpu">
 <div class="btn-group opt-group" role="group">
@@ -640,11 +640,63 @@ $ bash install-mxnet-osx-python.sh
 </div>
 </div><!-- END - Mac OS Python CPU Installation Instructions --><!-- START - Mac OS Python GPU Installation Instructions --><div class="macos">
 <div class="python">
-<div class="gpu"><p>More details and verified installation instructions for macOS, with GPUs, coming soon.</p>
-<p><em>MXNet</em> is expected to be compatible on macOS with NVIDIA GPUs. Please install CUDA 9.0 and cuDNN 7, prior to installing GPU version of <em>MXNet</em>.</p>
+<div class="gpu"><div class="pip virtualenv docker">
+</div></div></div></div></div></div></div></div></div></body></html><p>Try the <strong>Build from Source</strong> option for now.</p>
+<div class="build-from-source"><p><strong>Step 1</strong>  Install prerequisites - Homebrew, python development tools.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="c1"># Install Homebrew</span>
+$ /usr/bin/ruby -e <span class="s2">"</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install<span class="k">)</span><span class="s2">"</span>
+$ <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span>/usr/local/bin:/usr/local/sbin:<span class="nv">$PATH</span>
+
+<span class="c1"># Install python development tools - python2.7, pip, python-setuptools</span>
+$ brew install python pkg-config graphviz
+</pre></div>
 </div>
+<p><strong>Step 2</strong>  Install optional components - OpenCV</p>
+<p>If you want to use OpenCV you should install it first, then build MXNet with the <code class="docutils literal"><span class="pre">USE_OPENCV=1</span></code> option in the later steps.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>brew tap homebrew/science
+brew install opencv
+</pre></div>
 </div>
-</div><!-- END - Mac OS Python GPU Installation Instructions --><!-- START - Cloud Python Installation Instructions --><div class="cloud"><p>AWS Marketplace distributes Deep Learning AMIs (Amazon Machine Image) with MXNet pre-installed. You can launch one of these Deep Learning AMIs by following instructions in the <a class="reference external" href="http://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">AWS Deep Learning AMI Developer Guide</a>.</p>
+<p><strong>Step 3</strong>  Install CUDA and cuDNN</p>
+<p>The following instructions are for CUDA 9.1 and cuDNN 7 for macOS 10.12+ and a CUDA-capable GPU. They summarize confirmed successful builds in <a class="reference external" href="https://github.com/apache/incubator-mxnet/issues/9217">#9217</a>.
+Alternatively, you may follow the <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-installation-guide-mac-os-x/index.html">CUDA installation instructions for macOS</a>.</p>
+<ol class="simple">
+<li><a class="reference external" href="https://developer.apple.com/download/more/">Download Xcode 8.3.3 from Apple</a>. This is the version <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-installation-guide-mac-os-x/index.html">NVIDIA specifies in its instructions for macOS</a>. Unzip and rename to <code class="docutils literal"><span class="pre">Xcode8.3.3.app</span></code>.</li>
+<li>Run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">xcode-select</span> <span class="pre">-s</span> <span class="pre">/Applications/Xcode8.3.3.app</span></code> or to wherever you have placed Xcode.</li>
+<li>Run <code class="docutils literal"><span class="pre">xcode-select</span> <span class="pre">--install</span></code> to install all command line tools, compilers, etc.</li>
+<li>Run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">xcodebuild</span> <span class="pre">-license</span> <span class="pre">accept</span></code> to accept Xcode’s licensing terms.</li>
+<li>Install CUDA for macOS. Specific steps are provided in NVIDIA’s <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-installation-guide-mac-os-x/index.html#installation">CUDA installation instructions</a>.</li>
+<li><a class="reference external" href="http://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#download-mac">Download</a> and <a class="reference external" href="http://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#installmac">install</a> cuDNN for macOS. You will need to <a class="reference external" href="https://developer.nvidia.com/accelerated-computing-developer">create a free developer account</a> with NVIDIA prior to getting the download link.</li>
+</ol>
+<p><strong>Step 4</strong>  Build MXNet</p>
+<ol>
+<li><p class="first">Run <code class="docutils literal"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">--recursive</span> <span class="pre">https://github.com/apache/incubator-mxnet.git</span> <span class="pre">mxnet</span></code> to get the latest version.</p>
+</li>
+<li><p class="first">Run <code class="docutils literal"><span class="pre">cd</span> <span class="pre">mxnet</span></code>.</p>
+</li>
+<li><p class="first">Edit the <code class="docutils literal"><span class="pre">make/osx.mk</span></code> file to set the following parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>USE_CUDA = 1
+USE_CUDA_PATH = /usr/local/cuda
+USE_CUDNN = 1
+USE_OPENCV = 0   # set to 1 if you want to build with OpenCV
+</pre></div>
+</div>
+</li>
+<li><p class="first">Copy the <code class="docutils literal"><span class="pre">make/osx.mk</span></code> to <code class="docutils literal"><span class="pre">config.mk</span></code></p>
+</li>
+<li><p class="first">Run <code class="docutils literal"><span class="pre">make</span></code>. If you previously attempted to compile you might want to do <code class="docutils literal"><span class="pre">make</span> <span class="pre">clean_all</span></code> first. You can also run <code class="docutils literal"><span class="pre">make</span> <span class="pre">-j</span></code> with the number of processors you have to compile with multithreading. There’ll be plenty of warnings, but there should be no errors.</p>
+</li>
+<li><p class="first">Once finished, you should have a file called <code class="docutils literal"><span class="pre">libmxnet.so</span></code> in <code class="docutils literal"><span class="pre">lib/</span></code>.</p>
+</li>
+<li><p class="first">Do <code class="docutils literal"><span class="pre">cd</span> <span class="pre">python</span></code>.</p>
+</li>
+<li><p class="first">Run <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code> <strong>Note</strong>: the <code class="docutils literal"><span class="pre">.</span></code> is part of the command.</p>
+</li>
+</ol>
+</div>
+
+
+<!-- END - Mac OS Python GPU Installation Instructions --><!-- START - Cloud Python Installation Instructions --><div class="cloud"><p>AWS Marketplace distributes Deep Learning AMIs (Amazon Machine Image) with MXNet pre-installed. You can launch one of these Deep Learning AMIs by following instructions in the <a class="reference external" href="http://docs.aws.amazon.com/dlami/latest/devguide/what-is-dlami.html">AWS Deep Learning AMI Developer Guide</a>.</p>
 <p>You can also run distributed deep learning with <em>MXNet</em> on AWS using <a class="reference external" href="https://github.com/awslabs/deeplearning-cfn/blob/master/README.md">Cloudformation Template</a>.</p>
 </div><!-- END - Cloud Python Installation Instructions --><!-- START - MacOS R CPU Installation Instructions --><div class="macos">
 <div class="r">
@@ -782,8 +834,65 @@ install.packages<span class="p">(</span><span class="s">"mxnet"</span><span clas
 </div>
 </div>
 </div><div class="windows">
-<div class="python scala julia perl">
-<div class="gpu"><p>Follow the installation instructions <a class="reference internal" href="windows_setup.html"><em>in this guide</em></a> to set up MXNet.</p>
+<div class="python">
+<div class="cpu">
+<div class="pip">
+<br/><p><strong>Step 1</strong>  Install Python.</p>
+<p><a class="reference external" href="https://www.anaconda.com/download/">Anaconda</a> is recommended.</p>
+<p><strong>Step 2</strong>  Install <em>MXNet</em>.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install mxnet --pre
+</pre></div>
+</div>
+</div>
+</div> <div class="gpu"><div class="pip">
+<br/><p><strong>Step 1</strong>  Install Python.</p>
+<p><a class="reference external" href="https://www.anaconda.com/download/">Anaconda</a> is recommended.</p>
+<p><strong>Step 2</strong>  Install <em>MXNet</em> with GPU support using CUDA 9.0.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install mxnet-cu90
+</pre></div>
+</div>
+<p>Refer to <a class="reference external" href="https://github.com/apache/incubator-mxnet/issues/8671">#8671</a> for status on CUDA 9.1 support.</p>
+</div>
+<div class="build-from-source">
+<br/>
+To build and install MXNet yourself, you need the following dependencies. Install the required dependencies:<ol class="simple">
+<li>If <a class="reference external" href="https://www.visualstudio.com/downloads/">Microsoft Visual Studio 2015</a> is not already installed, download and install it. You can download and install the free community edition.</li>
+<li>Download and install <a class="reference external" href="https://cmake.org/">CMake</a> if it is not already installed.</li>
+<li>Download and install <a class="reference external" href="http://sourceforge.net/projects/opencvlibrary/files/opencv-win/3.0.0/opencv-3.0.0.exe/download">OpenCV</a>.</li>
+<li>Unzip the OpenCV package.</li>
+<li>Set the environment variable <code class="docutils literal"><span class="pre">OpenCV_DIR</span></code> to point to the <code class="docutils literal"><span class="pre">OpenCV</span> <span class="pre">build</span> <span class="pre">directory</span></code>.</li>
+<li>If you don’t have the Intel Math Kernel Library (MKL) installed, download and install <a class="reference external" href="http://sourceforge.net/projects/openblas/files/v0.2.14/">OpenBlas</a>.</li>
+<li>Set the environment variable <code class="docutils literal"><span class="pre">OpenBLAS_HOME</span></code> to point to the <code class="docutils literal"><span class="pre">OpenBLAS</span></code> directory that contains the <code class="docutils literal"><span class="pre">include</span></code> and <code class="docutils literal"><span class="pre">lib</span></code> directories. Typically, you can find the directory in <code class="docutils literal"><span class="pre">C:\Program</span> <span class="pre">files</span> <span class="pre">(x86)\OpenBLAS\</span></code>.</li>
+<li>Download and install <a class="reference external" href="https://developer.nvidia.com/cuda-downloads?target_os=Windows&amp;target_arch=x86_64">CUDA</a> and <a class="reference external" href="https://developer.nvidia.com/cudnn">cuDNN</a>. To get access to the download link, register as an NVIDIA community user.</li>
+</ol>
+<p>After you have installed all of the required dependencies, build the MXNet source code:</p>
+<ol class="simple">
+<li>Download the MXNet source code from <a class="reference external" href="https://github.com/apache/incubator-mxnet">GitHub</a>.</li>
+<li>Use <a class="reference external" href="https://cmake.org/">CMake</a> to create a Visual Studio solution in <code class="docutils literal"><span class="pre">./build</span></code>.</li>
+<li>In Visual Studio, open the solution file,<code class="docutils literal"><span class="pre">.sln</span></code>, and compile it.
+These commands produce a library called <code class="docutils literal"><span class="pre">mxnet.dll</span></code> in the <code class="docutils literal"><span class="pre">./build/Release/</span></code> or <code class="docutils literal"><span class="pre">./build/Debug</span></code> folder.</li>
+</ol>
+<p><p> </p>
+
+Next, we install the <code class="docutils literal"><span class="pre">graphviz</span></code> library that we use for visualizing network graphs that you build on MXNet. We will also install <a class="reference external" href="http://jupyter.readthedocs.io/">Jupyter Notebook</a> which is used for running MXNet tutorials and examples.</p>
+<ul class="simple">
+<li>Install the <code class="docutils literal"><span class="pre">graphviz</span></code> by downloading the installer from the <a class="reference external" href="https://graphviz.gitlab.io/_pages/Download/Download_windows.html">Graphviz Download Page</a>.
+<strong>Note</strong> Make sure to add the <code class="docutils literal"><span class="pre">graphviz</span></code> executable path to the PATH environment variable. Refer <a class="reference external" href="http://stackoverflow.com/questions/35064304/runtimeerror-make-sure-the-graphviz-executables-are-on-your-systems-path-aft">here for more details</a></li>
+</ul>
+<p><p> </p>
+</p>
+</div>
+</div>
+</div><div class="windows">
+<div class="scala julia perl">
+<div class="cpu gpu"><p>Follow the installation instructions <a class="reference internal" href="windows_setup.html"><em>in this guide</em></a> to set up MXNet.</p>
+</div>
+</div>
+</div><div class="windows">
+<div class="python">
+<div class="cpu">
+<div class="virtualenv docker build-from-source"><p>Follow the installation instructions <a class="reference internal" href="windows_setup.html"><em>in this guide</em></a> to set up MXNet.</p>
+</div>
 </div>
 </div>
 </div><div class="devices">
@@ -832,7 +941,7 @@ install.packages<span class="p">(</span><span class="s">"mxnet"</span><span clas
 </pre></div>
 </div>
 <p><strong>Step 2</strong> Install MXNet Python Bindings</p>
-<p>To install python bindings run the following commands in the MXNet directory:</p>
+<p>To install Python bindings run the following commands in the MXNet directory:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>    <span class="nb">cd</span> python
     pip install --upgrade pip
     pip install -e .
@@ -888,7 +997,7 @@ install.packages<span class="p">(</span><span class="s">"mxnet"</span><span clas
 </div>
 <p>Executing this command creates a file called <code class="docutils literal"><span class="pre">libmxnet.so</span></code> in the mxnet/lib directory.</p>
 <p><strong>Step 2</strong> Install MXNet Python Bindings</p>
-<p>To install python bindings run the following commands in the MXNet directory:</p>
+<p>To install Python bindings run the following commands in the MXNet directory:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>    <span class="nb">cd</span> python
     pip install --upgrade pip
     pip install -e .
@@ -905,7 +1014,8 @@ install.packages<span class="p">(</span><span class="s">"mxnet"</span><span clas
 <p>You are now ready to run MXNet on your NVIDIA Jetson TX2 device.</p>
 </div>
 </div><p><br/></p>
-</div>
+<!-- This # tag restarts the page and allows reuse
+ of the div classes for validation sections, etc --></div>
 <div class="section" id="validate-mxnet-installation">
 <span id="validate-mxnet-installation"></span><h1>Validate MXNet Installation<a class="headerlink" href="#validate-mxnet-installation" title="Permalink to this headline">¶</a></h1>
 <div class="linux macos">
@@ -944,7 +1054,40 @@ root@4919c4f58cac:/# python
 </div>
 </div>
 </div>
-</div><!-- Validation for GPU machines --><div class="linux">
+</div><!-- Validate Windows CPU pip install --><div class="windows">
+<div class="python">
+<div class="cpu">
+<div class="pip"><p>Run a short <em>MXNet</em> python program to create a 2X3 matrix of ones, multiply each element in the matrix by 2 followed by adding 1. We expect the output to be a 2X3 matrix with all elements being 3.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">>>> </span><span class="kn">import</span> <span class="nn">mxnet</span> <span class="kn">as</span> <span class="nn">mx</span>
+<span class="gp">>>> </span><span class="n">a</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">>>> </span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">>>> </span><span class="n">b</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+<span class="go">array([[ 3.,  3.,  3.],</span>
+<span class="go">       [ 3.,  3.,  3.]], dtype=float32)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><!-- Mac OS GPU installation validation --><div class="macos">
+<div class="python">
+<div class="gpu"><div class="pip virtualenv docker">
+</div></div></div></div></div><p>Will be available soon.</p>
+<div class="build-from-source">
+</div><p>From the MXNet root directory run: <code class="docutils literal"><span class="pre">python</span> <span class="pre">example/image-classification/train_mnist.py</span> <span class="pre">--network</span> <span class="pre">lenet</span> <span class="pre">--gpus</span> <span class="pre">0</span></code> to test GPU training.</p>
+
+
+
+<!-- Windows GPU installation validation --><div class="windows">
+<div class="python">
+<div class="gpu"><div class="virtualenv docker">
+</div></div></div></div><p>Will be available soon.</p>
+<div class="pip build-from-source">
+</div><p>From the MXNet root directory run: <code class="docutils literal"><span class="pre">python</span> <span class="pre">example/image-classification/train_mnist.py</span> <span class="pre">--network</span> <span class="pre">lenet</span> <span class="pre">--gpus</span> <span class="pre">0</span></code> to test GPU training.</p>
+
+
+
+<!-- Validation for GPU machines --><div class="linux">
 <div class="python">
 <div class="gpu"><div class="pip build-from-source"><p>Start the python terminal.</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>$ python
@@ -978,11 +1121,6 @@ root@4919c4f58cac:/# python
 <span class="go">       [ 3.,  3.,  3.]], dtype=float32)</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div><div class="macos">
-<div class="python">
-<div class="gpu"><p>More details and verified validation instructions for macOS, with GPUs, coming soon.</p>
 </div>
 </div>
 </div><!-- Linux Clean up -->
@@ -1087,70 +1225,29 @@ b
 <div class="cpu gpu"><p>Will be available soon.</p>
 </div>
 </div>
-</div><div class="windows">
+</div><!-- Windows MXNet Installation validation -->
+<div class="windows">
 <div class="python">
-<div class="cpu">
-</div>
-<div class="gpu"><p><strong>Prerequisites</strong></p>
-<p>Install the following NVIDIA libraries to setup <em>MXNet</em> with GPU support:</p>
-<ol class="simple">
-<li>Install CUDA 9.0 following the NVIDIA’s <a class="reference external" href="http://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows">installation guide</a>.</li>
-<li>Install cuDNN 7 for CUDA 9.0 following the NVIDIA’s <a class="reference external" href="https://developer.nvidia.com/cudnn">installation guide</a>. You may need to register with NVIDIA for downloading the cuDNN library.</li>
-</ol>
-<p><strong>Note:</strong> Make sure to add CUDA install path to <code class="docutils literal"><span class="pre">PATH</span></code>.</p>
-<div class="pip">
-<br/><p><strong>Step 1</strong>  Install python.</p>
-<p>Recommend install <code class="docutils literal"><span class="pre">Anaconda3</span></code> <a class="reference external" href="https://www.anaconda.com/download/">here</a></p>
-<p><strong>Step 2</strong>  Install <em>MXNet</em> with GPU support using CUDA 9.0</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install mxnet-cu90
-</pre></div>
-</div>
-</div>
-<div class="build-from-source">
+<div class="cpu"><div class="build-from-source virtualenv docker">
 <br/>
-To build and install MXNet yourself, you need the following dependencies. Install the required dependencies:<ol class="simple">
-<li>If <a class="reference external" href="https://www.visualstudio.com/downloads/">Microsoft Visual Studio 2015</a> is not already installed, download and install it. You can download and install the free community edition.</li>
-<li>Download and Install <a class="reference external" href="https://cmake.org/">CMake</a> if it is not already installed.</li>
-<li>Download and install <a class="reference external" href="http://sourceforge.net/projects/opencvlibrary/files/opencv-win/3.0.0/opencv-3.0.0.exe/download">OpenCV</a>.</li>
-<li>Unzip the OpenCV package.</li>
-<li>Set the environment variable <code class="docutils literal"><span class="pre">OpenCV_DIR</span></code> to point to the <code class="docutils literal"><span class="pre">OpenCV</span> <span class="pre">build</span> <span class="pre">directory</span></code>.</li>
-<li>If you don’t have the Intel Math Kernel Library (MKL) installed, download and install <a class="reference external" href="http://sourceforge.net/projects/openblas/files/v0.2.14/">OpenBlas</a>.</li>
-<li>Set the environment variable <code class="docutils literal"><span class="pre">OpenBLAS_HOME</span></code> to point to the <code class="docutils literal"><span class="pre">OpenBLAS</span></code> directory that contains the <code class="docutils literal"><span class="pre">include</span></code> and <code class="docutils literal"><span class="pre">lib</span></code> directories. Typically, you can find the directory in <code class="docutils literal"><span class="pre">C:\Program</span> <span class="pre">files</span> <span class="pre">(x86)\OpenBLAS\</span></code>.</li>
-<li>Download and install <a class="reference external" href="https://developer.nvidia.com/cudnn">CuDNN</a>. To get access to the download link, register as an NVIDIA community user.</li>
-</ol>
-<p>After you have installed all of the required dependencies, build the MXNet source code:</p>
-<ol class="simple">
-<li>Download the MXNet source code from <a class="reference external" href="https://github.com/apache/incubator-mxnet">GitHub</a>.</li>
-<li>Use <a class="reference external" href="https://cmake.org/">CMake</a> to create a Visual Studio solution in <code class="docutils literal"><span class="pre">./build</span></code>.</li>
-<li>In Visual Studio, open the solution file,<code class="docutils literal"><span class="pre">.sln</span></code>, and compile it.
-These commands produce a library called <code class="docutils literal"><span class="pre">mxnet.dll</span></code> in the <code class="docutils literal"><span class="pre">./build/Release/</span></code> or <code class="docutils literal"><span class="pre">./build/Debug</span></code> folder.</li>
-</ol>
-<p><p> </p>
-
-Next, we install <code class="docutils literal"><span class="pre">graphviz</span></code> library that we use for visualizing network graphs you build on MXNet. We will also install <a class="reference external" href="http://jupyter.readthedocs.io/">Jupyter Notebook</a>  used for running MXNet tutorials and examples.</p>
-<ul class="simple">
-<li>Install <code class="docutils literal"><span class="pre">graphviz</span></code> by downloading MSI installer from <a class="reference external" href="https://graphviz.gitlab.io/_pages/Download/Download_windows.html">Graphviz Download Page</a>.
-<strong>Note</strong> Make sure to add graphviz executable path to PATH environment variable. Refer <a class="reference external" href="http://stackoverflow.com/questions/35064304/runtimeerror-make-sure-the-graphviz-executables-are-on-your-systems-path-aft">here for more details</a></li>
-</ul>
-<p><p> </p>
-</p>
-</div> </div>
-</div>
-<div class="scala julia perl">
+Will be available soon.
+</div></div>
+</div><div class="scala julia perl">
 <div class="cpu gpu"><p>Will be available soon.</p>
 </div>
 </div>
-</div><div class="devices">
+</div>
+<!-- End Windows Installation validation --><div class="devices">
 <div class="raspberry-pi"><p>Will be available soon.</p>
 </div>
 <div class="nvidia-jetson-tx2"><p>Will be available soon.</p>
 </div>
-</div></div>
+</div>
 <div class="section" id="download-source-package">
 <span id="download-source-package"></span><h1>Download Source Package<a class="headerlink" href="#download-source-package" title="Permalink to this headline">¶</a></h1>
 </div>
-</div>
-</div>
+
+
 <div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
 <div class="sphinxsidebarwrapper">
 <h3><a href="../index.html">Table Of Contents</a></h3>
@@ -1161,7 +1258,7 @@ Next, we install <code class="docutils literal"><span class="pre">graphviz</span
 </ul>
 </div>
 </div>
-</div><div class="footer">
+<div class="footer">
 <div class="section-disclaimer">
 <div class="container">
 <div>
@@ -1177,7 +1274,7 @@ Next, we install <code class="docutils literal"><span class="pre">graphviz</span
 </div>
 </div>
 </div> <!-- pagename != index -->
-</div>
+
 <script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="../_static/js/sidebar.js" type="text/javascript"></script>
 <script src="../_static/js/search.js" type="text/javascript"></script>
@@ -1190,5 +1287,4 @@ Next, we install <code class="docutils literal"><span class="pre">graphviz</span
             $('body').css('visibility', 'visible');
         });
     </script>
-</body>
-</html>
+
