@@ -257,7 +257,7 @@
 <td>Dataset utilities.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#module-mxnet.gluon.data.vision" title="mxnet.gluon.data.vision"><code class="xref py py-obj docutils literal"><span class="pre">mxnet.gluon.data.vision</span></code></a></td>
-<td>Dataset container.</td>
+<td>Vision utilities.</td>
 </tr>
 </tbody>
 </table>
@@ -277,7 +277,7 @@ and processing tools, as well as common public datasets.</p>
 <td>Abstract dataset class.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.gluon.data.ArrayDataset" title="mxnet.gluon.data.ArrayDataset"><code class="xref py py-obj docutils literal"><span class="pre">ArrayDataset</span></code></a></td>
-<td>A dataset of multiple arrays.</td>
+<td>A dataset that combines multiple dataset-like objects, e.g.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.data.RecordFileDataset" title="mxnet.gluon.data.RecordFileDataset"><code class="xref py py-obj docutils literal"><span class="pre">RecordFileDataset</span></code></a></td>
 <td>A dataset wrapping over a RecordIO (.rec) file.</td>
@@ -323,22 +323,22 @@ and processing tools, as well as common public datasets.</p>
 <col width="90%"/>
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.data.vision.MNIST" title="mxnet.gluon.data.vision.MNIST"><code class="xref py py-obj docutils literal"><span class="pre">MNIST</span></code></a></td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">MNIST</span></code></td>
 <td>MNIST handwritten digits dataset from <a class="reference external" href="http://yann.lecun.com/exdb/mnist">http://yann.lecun.com/exdb/mnist</a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#mxnet.gluon.data.vision.FashionMNIST" title="mxnet.gluon.data.vision.FashionMNIST"><code class="xref py py-obj docutils literal"><span class="pre">FashionMNIST</span></code></a></td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">FashionMNIST</span></code></td>
 <td>A dataset of Zalando’s article images consisting of fashion products,</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.data.vision.CIFAR10" title="mxnet.gluon.data.vision.CIFAR10"><code class="xref py py-obj docutils literal"><span class="pre">CIFAR10</span></code></a></td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">CIFAR10</span></code></td>
 <td>CIFAR10 image classification dataset from <a class="reference external" href="https://www.cs.toronto.edu/~kriz/cifar.html">https://www.cs.toronto.edu/~kriz/cifar.html</a></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#mxnet.gluon.data.vision.CIFAR100" title="mxnet.gluon.data.vision.CIFAR100"><code class="xref py py-obj docutils literal"><span class="pre">CIFAR100</span></code></a></td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">CIFAR100</span></code></td>
 <td>CIFAR100 image classification dataset from <a class="reference external" href="https://www.cs.toronto.edu/~kriz/cifar.html">https://www.cs.toronto.edu/~kriz/cifar.html</a></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.data.vision.ImageRecordDataset" title="mxnet.gluon.data.vision.ImageRecordDataset"><code class="xref py py-obj docutils literal"><span class="pre">ImageRecordDataset</span></code></a></td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">ImageRecordDataset</span></code></td>
 <td>A dataset wrapping over a RecordIO file containing images.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#mxnet.gluon.data.vision.ImageFolderDataset" title="mxnet.gluon.data.vision.ImageFolderDataset"><code class="xref py py-obj docutils literal"><span class="pre">ImageFolderDataset</span></code></a></td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">ImageFolderDataset</span></code></td>
 <td>A dataset for loading image files stored in a folder structure like:</td>
 </tr>
 </tbody>
@@ -351,8 +351,9 @@ and processing tools, as well as common public datasets.</p>
 <dl class="class">
 <dt id="mxnet.gluon.data.ArrayDataset">
 <em class="property">class </em><code class="descclassname">mxnet.gluon.data.</code><code class="descname">ArrayDataset</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/dataset.html#ArrayDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.ArrayDataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dataset of multiple arrays.</p>
-<p>The i-th sample is <cite>(x1[i], x2[i], ...)</cite>.</p>
+<dd><p>A dataset that combines multiple dataset-like objects, e.g.
+Datasets, lists, arrays, etc.</p>
+<p>The i-th sample is defined as <cite>(x1[i], x2[i], ...)</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -449,6 +450,64 @@ element, and <cite>__len__</cite>, which returns the total number elements.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">An mxnet or numpy array can be directly used as a dataset.</p>
 </div>
+<dl class="method">
+<dt id="mxnet.gluon.data.Dataset.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>fn</em>, <em>lazy=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/dataset.html#Dataset.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.Dataset.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new dataset with each sample transformed by the
+transformer function <cite>fn</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fn</strong> (<em>callable</em>) – A transformer function that takes a sample as input and
+returns the transformed sample.</li>
+<li><strong>lazy</strong> (<em>bool, default True</em>) – If False, transforms all samples at once. Otherwise,
+transforms each sample on demand. Note that if <cite>fn</cite>
+is stochastic, you must set lazy to True or you will
+get the same result on all epochs.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The transformed dataset.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mxnet.gluon.data.Dataset" title="mxnet.gluon.data.Dataset">Dataset</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="method">
+<dt id="mxnet.gluon.data.Dataset.transform_first">
+<code class="descname">transform_first</code><span class="sig-paren">(</span><em>fn</em>, <em>lazy=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/dataset.html#Dataset.transform_first"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.Dataset.transform_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a new dataset with the first element of each sample
+transformed by the transformer function <cite>fn</cite>.</p>
+<p>This is useful, for example, when you only want to transform data
+while keeping label as is.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fn</strong> (<em>callable</em>) – A transformer function that takes the first elemtn of a sample
+as input and returns the transformed element.</li>
+<li><strong>lazy</strong> (<em>bool, default True</em>) – If False, transforms all samples at once. Otherwise,
+transforms each sample on demand. Note that if <cite>fn</cite>
+is stochastic, you must set lazy to True or you will
+get the same result on all epochs.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The transformed dataset.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#mxnet.gluon.data.Dataset" title="mxnet.gluon.data.Dataset">Dataset</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.data.RandomSampler">
@@ -497,176 +556,20 @@ methods.</p>
 </tbody>
 </table>
 </dd></dl>
-<span class="target" id="module-mxnet.gluon.data.vision"></span><p>Dataset container.</p>
 <dl class="class">
-<dt id="mxnet.gluon.data.vision.MNIST">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">MNIST</code><span class="sig-paren">(</span><em>root='~/.mxnet/datasets/mnist'</em>, <em>train=True</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/vision.html#MNIST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.vision.MNIST" title="Permalink to this definition">¶</a></dt>
-<dd><p>MNIST handwritten digits dataset from <a class="reference external" href="http://yann.lecun.com/exdb/mnist">http://yann.lecun.com/exdb/mnist</a></p>
-<p>Each sample is an image (in 3D NDArray) with shape (28, 28, 1).</p>
+<dt id="mxnet.gluon.data.SimpleDataset">
+<em class="property">class </em><code class="descclassname">mxnet.gluon.data.</code><code class="descname">SimpleDataset</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/dataset.html#SimpleDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.SimpleDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple Dataset wrapper for lists and arrays.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>root</strong> (<em>str, default '~/.mxnet/datasets/mnist'</em>) – Path to temp folder for storing data.</li>
-<li><strong>train</strong> (<em>bool, default True</em>) – Whether to load the training or testing set.</li>
-<li><strong>transform</strong> (<em>function, default None</em>) – A user defined callback that transforms each sample. For example:</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dataset-like object</em>) – Any object that implements <cite>len()</cite> and <cite>[]</cite>.</td>
 </tr>
 </tbody>
 </table>
-<dl class="docutils">
-<dt>:param :</dt>
-<dd>transform=lambda data, label: (data.astype(np.float32)/255, label)</dd>
-</dl>
-<p>:type : :</p>
 </dd></dl>
-<dl class="class">
-<dt id="mxnet.gluon.data.vision.FashionMNIST">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">FashionMNIST</code><span class="sig-paren">(</span><em>root='~/.mxnet/datasets/fashion-mnist'</em>, <em>train=True</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/vision.html#FashionMNIST"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.vision.FashionMNIST" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dataset of Zalando’s article images consisting of fashion products,
-a drop-in replacement of the original MNIST dataset from
-<a class="reference external" href="https://github.com/zalandoresearch/fashion-mnist">https://github.com/zalandoresearch/fashion-mnist</a></p>
-<p>Each sample is an image (in 3D NDArray) with shape (28, 28, 1).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name"/>
-<col class="field-body"/>
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>root</strong> (<em>str, default '~/.mxnet/datasets/fashion-mnist'</em>) – Path to temp folder for storing data.</li>
-<li><strong>train</strong> (<em>bool, default True</em>) – Whether to load the training or testing set.</li>
-<li><strong>transform</strong> (<em>function, default None</em>) – A user defined callback that transforms each sample. For example:</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:param :</dt>
-<dd>transform=lambda data, label: (data.astype(np.float32)/255, label)</dd>
-</dl>
-<p>:type : :</p>
-</dd></dl>
-<dl class="class">
-<dt id="mxnet.gluon.data.vision.CIFAR10">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">CIFAR10</code><span class="sig-paren">(</span><em>root='~/.mxnet/datasets/cifar10'</em>, <em>train=True</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/vision.html#CIFAR10"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.vision.CIFAR10" title="Permalink to this definition">¶</a></dt>
-<dd><p>CIFAR10 image classification dataset from <a class="reference external" href="https://www.cs.toronto.edu/~kriz/cifar.html">https://www.cs.toronto.edu/~kriz/cifar.html</a></p>
-<p>Each sample is an image (in 3D NDArray) with shape (32, 32, 1).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name"/>
-<col class="field-body"/>
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>root</strong> (<em>str, default '~/.mxnet/datasets/cifar10'</em>) – Path to temp folder for storing data.</li>
-<li><strong>train</strong> (<em>bool, default True</em>) – Whether to load the training or testing set.</li>
-<li><strong>transform</strong> (<em>function, default None</em>) – A user defined callback that transforms each sample. For example:</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:param :</dt>
-<dd>transform=lambda data, label: (data.astype(np.float32)/255, label)</dd>
-</dl>
-<p>:type : :</p>
-</dd></dl>
-<dl class="class">
-<dt id="mxnet.gluon.data.vision.CIFAR100">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">CIFAR100</code><span class="sig-paren">(</span><em>root='~/.mxnet/datasets/cifar100'</em>, <em>fine_label=False</em>, <em>train=True</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/vision.html#CIFAR100"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.vision.CIFAR100" title="Permalink to this definition">¶</a></dt>
-<dd><p>CIFAR100 image classification dataset from <a class="reference external" href="https://www.cs.toronto.edu/~kriz/cifar.html">https://www.cs.toronto.edu/~kriz/cifar.html</a></p>
-<p>Each sample is an image (in 3D NDArray) with shape (32, 32, 1).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name"/>
-<col class="field-body"/>
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>root</strong> (<em>str, default '~/.mxnet/datasets/cifar100'</em>) – Path to temp folder for storing data.</li>
-<li><strong>fine_label</strong> (<em>bool, default False</em>) – Whether to load the fine-grained (100 classes) or coarse-grained (20 super-classes) labels.</li>
-<li><strong>train</strong> (<em>bool, default True</em>) – Whether to load the training or testing set.</li>
-<li><strong>transform</strong> (<em>function, default None</em>) – A user defined callback that transforms each sample. For example:</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:param :</dt>
-<dd>transform=lambda data, label: (data.astype(np.float32)/255, label)</dd>
-</dl>
-<p>:type : :</p>
-</dd></dl>
-<dl class="class">
-<dt id="mxnet.gluon.data.vision.ImageRecordDataset">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">ImageRecordDataset</code><span class="sig-paren">(</span><em>filename</em>, <em>flag=1</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/vision.html#ImageRecordDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.vision.ImageRecordDataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dataset wrapping over a RecordIO file containing images.</p>
-<p>Each sample is an image and its corresponding label.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name"/>
-<col class="field-body"/>
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filename</strong> (<em>str</em>) – Path to rec file.</li>
-<li><strong>flag</strong> (<em>{0, 1}, default 1</em>) – <p>If 0, always convert images to greyscale.</p>
-<p>If 1, always convert images to colored (RGB).</p>
-</li>
-<li><strong>transform</strong> (<em>function, default None</em>) – A user defined callback that transforms each sample. For example:</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:param :</dt>
-<dd>transform=lambda data, label: (data.astype(np.float32)/255, label)</dd>
-</dl>
-<p>:type : :</p>
-</dd></dl>
-<dl class="class">
-<dt id="mxnet.gluon.data.vision.ImageFolderDataset">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.data.vision.</code><code class="descname">ImageFolderDataset</code><span class="sig-paren">(</span><em>root</em>, <em>flag=1</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/data/vision.html#ImageFolderDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.data.vision.ImageFolderDataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dataset for loading image files stored in a folder structure like:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>root/car/0001.jpg
-root/car/xxxa.jpg
-root/car/yyyb.jpg
-root/bus/123.jpg
-root/bus/023.jpg
-root/bus/wwww.jpg
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name"/>
-<col class="field-body"/>
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>root</strong> (<em>str</em>) – Path to root directory.</li>
-<li><strong>flag</strong> (<em>{0, 1}, default 1</em>) – If 0, always convert loaded images to greyscale (1 channel).
-If 1, always convert loaded images to colored (3 channels).</li>
-<li><strong>transform</strong> (<em>callable, default None</em>) – A function that takes data and label and transforms them:</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:param :</dt>
-<dd>transform = lambda data, label: (data.astype(np.float32)/255, label)</dd>
-</dl>
-<p>:type : :</p>
-<dl class="attribute">
-<dt id="mxnet.gluon.data.vision.ImageFolderDataset.synsets">
-<code class="descname">synsets</code><a class="headerlink" href="#mxnet.gluon.data.vision.ImageFolderDataset.synsets" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>list</em></p>
-<p>List of class names. <cite>synsets[i]</cite> is the name for the integer label <cite>i</cite></p>
-</dd></dl>
-<dl class="attribute">
-<dt id="mxnet.gluon.data.vision.ImageFolderDataset.items">
-<code class="descname">items</code><a class="headerlink" href="#mxnet.gluon.data.vision.ImageFolderDataset.items" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>list of tuples</em></p>
-<p>List of all images in (filename, label) pairs.</p>
-</dd></dl>
-</dd></dl>
+<span class="target" id="module-mxnet.gluon.data.vision"></span><p>Vision utilities.</p>
 <script>auto_index("api-reference");</script></div>
 </div>
 </div>
