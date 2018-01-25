@@ -223,6 +223,7 @@
 
 <span class="c1"># coding: utf-8</span>
 <span class="c1"># pylint: disable=consider-iterating-dictionary</span>
+<span class="c1"># pylint: disable=super-init-not-called</span>
 
 <span class="sd">"""Text token embeddings."""</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
@@ -236,22 +237,119 @@
 <span class="kn">import</span> <span class="nn">zipfile</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_constants</span> <span class="k">as</span> <span class="n">C</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">indexer</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">vocab</span>
 <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">ndarray</span> <span class="k">as</span> <span class="n">nd</span>
 <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">registry</span>
 
 
-<div class="viewcode-block" id="TokenEmbedding"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.TokenEmbedding">[docs]</a><span class="k">class</span> <span class="nc">TokenEmbedding</span><span class="p">(</span><span class="n">indexer</span><span class="o">.</span><span class="n">TokenIndexer</span><span class="p">):</span>
+<div class="viewcode-block" id="register"><a class="viewcode-back" href="../../../../api/python/contrib/text.html#mxnet.contrib.text.embedding.register">[docs]</a><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="n">embedding_cls</span><span class="p">):</span>
+    <span class="sd">"""Registers a new token embedding.</span>
+
+
+<span class="sd">    Once an embedding is registered, we can create an instance of this embedding with</span>
+<span class="sd">    :func:`~mxnet.contrib.text.embedding.create`.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    >>> @mxnet.contrib.text.embedding.register</span>
+<span class="sd">    ... class MyTextEmbed(mxnet.contrib.text.embedding._TokenEmbedding):</span>
+<span class="sd">    ...     def __init__(self, pretrained_file_name='my_pretrain_file'):</span>
+<span class="sd">    ...         pass</span>
+<span class="sd">    >>> embed = mxnet.contrib.text.embedding.create('MyTokenEmbed')</span>
+<span class="sd">    >>> print(type(embed))</span>
+<span class="sd">    <class '__main__.MyTokenEmbed'></span>
+<span class="sd">    """</span>
+
+    <span class="n">register_text_embedding</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_register_func</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">,</span> <span class="s1">'token embedding'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">register_text_embedding</span><span class="p">(</span><span class="n">embedding_cls</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create"><a class="viewcode-back" href="../../../../api/python/contrib/text.html#mxnet.contrib.text.embedding.create">[docs]</a><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">embedding_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">"""Creates an instance of token embedding.</span>
+
+
+<span class="sd">    Creates a token embedding instance by loading embedding vectors from an externally hosted</span>
+<span class="sd">    pre-trained token embedding file, such as those of GloVe and FastText. To get all the valid</span>
+<span class="sd">    `embedding_name` and `pretrained_file_name`, use</span>
+<span class="sd">    `mxnet.contrib.text.embedding.get_pretrained_file_names()`.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    embedding_name : str</span>
+<span class="sd">        The token embedding name (case-insensitive).</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    An instance of `mxnet.contrib.text.glossary._TokenEmbedding`:</span>
+<span class="sd">        A token embedding instance that loads embedding vectors from an externally hosted</span>
+<span class="sd">        pre-trained token embedding file.</span>
+<span class="sd">    """</span>
+
+    <span class="n">create_text_embedding</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_create_func</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">,</span> <span class="s1">'token embedding'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">create_text_embedding</span><span class="p">(</span><span class="n">embedding_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_pretrained_file_names"><a class="viewcode-back" href="../../../../api/python/contrib/text.html#mxnet.contrib.text.embedding.get_pretrained_file_names">[docs]</a><span class="k">def</span> <span class="nf">get_pretrained_file_names</span><span class="p">(</span><span class="n">embedding_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">"""Get valid token embedding names and their pre-trained file names.</span>
+
+
+<span class="sd">    To load token embedding vectors from an externally hosted pre-trained token embedding file,</span>
+<span class="sd">    such as those of GloVe and FastText, one should use</span>
+<span class="sd">    `mxnet.contrib.text.embedding.create(embedding_name, pretrained_file_name)`.</span>
+<span class="sd">    This method returns all the valid names of `pretrained_file_name` for the specified</span>
+<span class="sd">    `embedding_name`. If `embedding_name` is set to None, this method returns all the valid</span>
+<span class="sd">    names of `embedding_name` with their associated `pretrained_file_name`.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    embedding_name : str or None, default None</span>
+<span class="sd">        The pre-trained token embedding name.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict or list:</span>
+<span class="sd">        A list of all the valid pre-trained token embedding file names (`pretrained_file_name`)</span>
+<span class="sd">        for the specified token embedding name (`embedding_name`). If the text embeding name is</span>
+<span class="sd">        set to None, returns a dict mapping each valid token embedding name to a list of valid</span>
+<span class="sd">        pre-trained files (`pretrained_file_name`). They can be plugged into</span>
+<span class="sd">        `mxnet.contrib.text.embedding.create(embedding_name,</span>
+<span class="sd">        pretrained_file_name)`.</span>
+<span class="sd">    """</span>
+
+    <span class="n">text_embedding_reg</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_registry</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">embedding_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">embedding_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">text_embedding_reg</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">'Cannot find `embedding_name` </span><span class="si">%s</span><span class="s1">. Use '</span>
+                           <span class="s1">'`get_pretrained_file_names('</span>
+                           <span class="s1">'embedding_name=None).keys()` to get all the valid embedding '</span>
+                           <span class="s1">'names.'</span> <span class="o">%</span> <span class="n">embedding_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">text_embedding_reg</span><span class="p">[</span><span class="n">embedding_name</span><span class="p">]</span><span class="o">.</span><span class="n">pretrained_file_name_sha1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">embedding_name</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">embedding_cls</span><span class="o">.</span><span class="n">pretrained_file_name_sha1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">embedding_name</span><span class="p">,</span> <span class="n">embedding_cls</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_registry</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+
+<span class="k">class</span> <span class="nc">_TokenEmbedding</span><span class="p">(</span><span class="n">vocab</span><span class="o">.</span><span class="n">Vocabulary</span><span class="p">):</span>
     <span class="sd">"""Token embedding base class.</span>
 
 
 <span class="sd">    To load token embeddings from an externally hosted pre-trained token embedding file, such as</span>
-<span class="sd">    those of GloVe and FastText, use `TokenEmbedding.create(embedding_name, pretrained_file_name)`.</span>
+<span class="sd">    those of GloVe and FastText, use</span>
+<span class="sd">    :func:`~mxnet.contrib.text.embedding.create(embedding_name, pretrained_file_name)`.</span>
 <span class="sd">    To get all the available `embedding_name` and `pretrained_file_name`, use</span>
-<span class="sd">    `TokenEmbedding.get_embedding_and_pretrained_file_names()`.</span>
+<span class="sd">    :func:`~mxnet.contrib.text.embedding.get_pretrained_file_names()`.</span>
 
 <span class="sd">    Alternatively, to load embedding vectors from a custom pre-trained token embedding file, use</span>
 <span class="sd">    :class:`~mxnet.contrib.text.embedding.CustomEmbedding`.</span>
+
+<span class="sd">    Moreover, to load composite embedding vectors, such as to concatenate embedding vectors, use</span>
+<span class="sd">    :class:`~mxnet.contrib.text.embedding.CompositeEmbedding`.</span>
 
 <span class="sd">    For every unknown token, if its representation `self.unknown_token` is encountered in the</span>
 <span class="sd">    pre-trained token embedding file, index 0 of `self.idx_to_vec` maps to the pre-trained token</span>
@@ -261,8 +359,11 @@
 <span class="sd">    If a token is encountered multiple times in the pre-trained token embedding file, only the</span>
 <span class="sd">    first-encountered token embedding vector will be loaded and the rest will be skipped.</span>
 
-<span class="sd">    For the same token, its index and embedding vector may vary across different instances of</span>
-<span class="sd">    :class:`~mxnet.contrib.text.embedding.TokenEmbedding`.</span>
+<span class="sd">    The indexed tokens in a text token embedding may come from a vocabulary or from the loaded</span>
+<span class="sd">    embedding vectors. In the former case, only the indexed tokens in a vocabulary are associated</span>
+<span class="sd">    with the loaded embedding vectors, such as loaded from a pre-trained token embedding file. In</span>
+<span class="sd">    the later case, all the tokens from the loaded embedding vectors, such as loaded from a</span>
+<span class="sd">    pre-trained token embedding file, are taken as the indexed tokens of the embedding.</span>
 
 
 <span class="sd">    Properties</span>
@@ -285,7 +386,7 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TokenEmbedding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_get_download_file_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pretrained_file_name</span><span class="p">):</span>
@@ -384,8 +485,8 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">vec_len</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                         <span class="n">vec_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">elems</span><span class="p">)</span>
-                        <span class="c1"># Reserve a vector slot for the unknown token at the</span>
-                        <span class="c1"># very beggining because the unknown index is 0.</span>
+                        <span class="c1"># Reserve a vector slot for the unknown token at the very beggining because</span>
+                        <span class="c1"># the unknown index is 0.</span>
                         <span class="n">all_elems</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">vec_len</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">elems</span><span class="p">)</span> <span class="o">==</span> <span class="n">vec_len</span><span class="p">,</span> \
@@ -406,6 +507,59 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_idx_to_vec</span><span class="p">[</span><span class="n">C</span><span class="o">.</span><span class="n">UNKNOWN_IDX</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">loaded_unknown_vec</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">_index_tokens_from_vocabulary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocabulary</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_token_to_idx</span> <span class="o">=</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">token_to_idx</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> \
+            <span class="k">if</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">token_to_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_idx_to_token</span> <span class="o">=</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">idx_to_token</span><span class="p">[:]</span> \
+            <span class="k">if</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">idx_to_token</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unknown_token</span> <span class="o">=</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">unknown_token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reserved_tokens</span> <span class="o">=</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">reserved_tokens</span><span class="p">[:]</span> \
+            <span class="k">if</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">reserved_tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="k">else</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">_set_idx_to_vec_by_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_embeddings</span><span class="p">,</span> <span class="n">vocab_len</span><span class="p">,</span> <span class="n">vocab_idx_to_token</span><span class="p">):</span>
+        <span class="sd">"""Sets the mapping between token indices and token embedding vectors.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        token_embeddings : instance or list `mxnet.contrib.text.embedding._TokenEmbedding`</span>
+<span class="sd">            One or multiple pre-trained token embeddings to load. If it is a list of multiple</span>
+<span class="sd">            embeddings, these embedding vectors will be concatenated for each token.</span>
+<span class="sd">        vocab_len : int</span>
+<span class="sd">            Length of vocabulary whose tokens are indexed in the token embedding.</span>
+<span class="sd">        vocab_idx_to_token: list of str</span>
+<span class="sd">            A list of indexed tokens in the vocabulary. These tokens are indexed in the token</span>
+<span class="sd">            embedding.</span>
+<span class="sd">        """</span>
+
+        <span class="n">new_vec_len</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">embed</span><span class="o">.</span><span class="n">vec_len</span> <span class="k">for</span> <span class="n">embed</span> <span class="ow">in</span> <span class="n">token_embeddings</span><span class="p">)</span>
+        <span class="n">new_idx_to_vec</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">vocab_len</span><span class="p">,</span> <span class="n">new_vec_len</span><span class="p">))</span>
+
+        <span class="n">col_start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Concatenate all the embedding vectors in token_embeddings.</span>
+        <span class="k">for</span> <span class="n">embed</span> <span class="ow">in</span> <span class="n">token_embeddings</span><span class="p">:</span>
+            <span class="n">col_end</span> <span class="o">=</span> <span class="n">col_start</span> <span class="o">+</span> <span class="n">embed</span><span class="o">.</span><span class="n">vec_len</span>
+            <span class="c1"># Cancatenate vectors of the unknown token.</span>
+            <span class="n">new_idx_to_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">col_start</span><span class="p">:</span><span class="n">col_end</span><span class="p">]</span> <span class="o">=</span> <span class="n">embed</span><span class="o">.</span><span class="n">idx_to_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">new_idx_to_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="n">col_start</span><span class="p">:</span><span class="n">col_end</span><span class="p">]</span> <span class="o">=</span> <span class="n">embed</span><span class="o">.</span><span class="n">get_vecs_by_tokens</span><span class="p">(</span><span class="n">vocab_idx_to_token</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">col_start</span> <span class="o">=</span> <span class="n">col_end</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vec_len</span> <span class="o">=</span> <span class="n">new_vec_len</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_idx_to_vec</span> <span class="o">=</span> <span class="n">new_idx_to_vec</span>
+
+    <span class="k">def</span> <span class="nf">_build_embedding_for_vocabulary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocabulary</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">vocabulary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">,</span> <span class="n">vocab</span><span class="o">.</span><span class="n">Vocabulary</span><span class="p">),</span> \
+                <span class="s1">'The argument `vocabulary` must be an instance of '</span> \
+                <span class="s1">'mxnet.contrib.text.vocab.Vocabulary.'</span>
+
+            <span class="c1"># Set _idx_to_vec so that indices of tokens from vocabulary are associated with the</span>
+            <span class="c1"># loaded token embedding vectors.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_idx_to_vec_by_embeddings</span><span class="p">([</span><span class="bp">self</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">),</span> <span class="n">vocabulary</span><span class="o">.</span><span class="n">idx_to_token</span><span class="p">)</span>
+
+            <span class="c1"># Index tokens from vocabulary.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_index_tokens_from_vocabulary</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">vec_len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vec_len</span>
@@ -414,7 +568,7 @@
     <span class="k">def</span> <span class="nf">idx_to_vec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_idx_to_vec</span>
 
-<div class="viewcode-block" id="TokenEmbedding.get_vecs_by_tokens"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.TokenEmbedding.get_vecs_by_tokens">[docs]</a>    <span class="k">def</span> <span class="nf">get_vecs_by_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">lower_case_backup</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_vecs_by_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">lower_case_backup</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">"""Look up embedding vectors of tokens.</span>
 
 
@@ -451,9 +605,9 @@
         <span class="n">vecs</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_vec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_vec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_vec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">vecs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">to_reduce</span> <span class="k">else</span> <span class="n">vecs</span></div>
+        <span class="k">return</span> <span class="n">vecs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">to_reduce</span> <span class="k">else</span> <span class="n">vecs</span>
 
-<div class="viewcode-block" id="TokenEmbedding.update_token_vectors"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.TokenEmbedding.update_token_vectors">[docs]</a>    <span class="k">def</span> <span class="nf">update_token_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">new_vectors</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_token_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">new_vectors</span><span class="p">):</span>
         <span class="sd">"""Updates embedding vectors for tokens.</span>
 
 
@@ -482,9 +636,8 @@
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_vectors</span><span class="p">,</span> <span class="n">nd</span><span class="o">.</span><span class="n">NDArray</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> \
                 <span class="s1">'`new_vectors` must be a 2-D NDArray if `tokens` is a list of multiple strings.'</span>
         <span class="k">assert</span> <span class="n">new_vectors</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">vec_len</span><span class="p">),</span> \
-            <span class="s1">'The length of new_vectors must be equal to the number of tokens '</span> \
-            <span class="s1">'and the width of new_vectors must be equal to the dimension of '</span> \
-            <span class="s1">'embeddings of the glossary.'</span>
+            <span class="s1">'The length of new_vectors must be equal to the number of tokens and the width of'</span> \
+            <span class="s1">'new_vectors must be equal to the dimension of embeddings of the glossary.'</span>
 
         <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
@@ -496,57 +649,7 @@
                                  <span class="s1">'`unknown_token` </span><span class="si">%s</span><span class="s1"> in `tokens`. This is to avoid unintended '</span>
                                  <span class="s1">'updates.'</span> <span class="o">%</span> <span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_token</span><span class="p">[</span><span class="n">C</span><span class="o">.</span><span class="n">UNKNOWN_IDX</span><span class="p">]))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_idx_to_vec</span><span class="p">[</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">indices</span><span class="p">)]</span> <span class="o">=</span> <span class="n">new_vectors</span></div>
-
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="TokenEmbedding.register"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.TokenEmbedding.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="n">embedding_cls</span><span class="p">):</span>
-        <span class="sd">"""Registers a new token embedding.</span>
-
-
-<span class="sd">        Once an embedding is registered, we can create an instance of this embedding with</span>
-<span class="sd">        :func:`~mxnet.contrib.text.embedding.TokenEmbedding.create`.</span>
-
-
-<span class="sd">        Examples</span>
-<span class="sd">        --------</span>
-<span class="sd">        >>> @mxnet.contrib.text.embedding.TokenEmbedding.register</span>
-<span class="sd">        ... class MyTextEmbed(mxnet.contrib.text.embedding.TokenEmbedding):</span>
-<span class="sd">        ...     def __init__(self, pretrained_file_name='my_pretrain_file'):</span>
-<span class="sd">        ...         pass</span>
-<span class="sd">        >>> embed = mxnet.contrib.text.embedding.TokenEmbedding.create('MyTokenEmbed')</span>
-<span class="sd">        >>> print(type(embed))</span>
-<span class="sd">        <class '__main__.MyTokenEmbed'></span>
-<span class="sd">        """</span>
-
-        <span class="n">register_text_embedding</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_register_func</span><span class="p">(</span><span class="n">TokenEmbedding</span><span class="p">,</span> <span class="s1">'token embedding'</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">register_text_embedding</span><span class="p">(</span><span class="n">embedding_cls</span><span class="p">)</span></div>
-
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="TokenEmbedding.create"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.TokenEmbedding.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">embedding_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">"""Creates an instance of :class:`~mxnet.contrib.text.embedding.TokenEmbedding`.</span>
-
-
-<span class="sd">        Creates a token embedding instance by loading embedding vectors from an externally hosted</span>
-<span class="sd">        pre-trained token embedding file, such as those of GloVe and FastText. To get all the valid</span>
-<span class="sd">        `embedding_name` and `pretrained_file_name`, use</span>
-<span class="sd">        `mxnet.contrib.text.embedding.TokenEmbedding.get_embedding_and_pretrained_file_names()`.</span>
-
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        embedding_name : str</span>
-<span class="sd">            The token embedding name (case-insensitive).</span>
-
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        :class:`~mxnet.contrib.text.glossary.TokenEmbedding`:</span>
-<span class="sd">            A token embedding instance that loads embedding vectors from an externally hosted</span>
-<span class="sd">            pre-trained token embedding file.</span>
-<span class="sd">        """</span>
-
-        <span class="n">create_text_embedding</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_create_func</span><span class="p">(</span><span class="n">TokenEmbedding</span><span class="p">,</span> <span class="s1">'token embedding'</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">create_text_embedding</span><span class="p">(</span><span class="n">embedding_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_idx_to_vec</span><span class="p">[</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">indices</span><span class="p">)]</span> <span class="o">=</span> <span class="n">new_vectors</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_check_pretrained_file_names</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pretrained_file_name</span><span class="p">):</span>
@@ -566,55 +669,9 @@
                            <span class="p">(</span><span class="n">pretrained_file_name</span><span class="p">,</span> <span class="n">embedding_name</span><span class="p">,</span> <span class="n">embedding_name</span><span class="p">,</span>
                             <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">pretrained_file_name_sha1</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
 
-    <span class="nd">@staticmethod</span>
-<div class="viewcode-block" id="TokenEmbedding.get_embedding_and_pretrained_file_names"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.TokenEmbedding.get_embedding_and_pretrained_file_names">[docs]</a>    <span class="k">def</span> <span class="nf">get_embedding_and_pretrained_file_names</span><span class="p">(</span><span class="n">embedding_name</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">"""Get valid token embedding names and their pre-trained file names.</span>
 
-
-<span class="sd">        To load token embedding vectors from an externally hosted pre-trained token embedding file,</span>
-<span class="sd">        such as those of GloVe and FastText, one should use</span>
-<span class="sd">        `mxnet.contrib.text.embedding.TokenEmbedding.create(embedding_name, pretrained_file_name)`.</span>
-<span class="sd">        This method returns all the valid names of `pretrained_file_name` for the specified</span>
-<span class="sd">        `embedding_name`. If `embedding_name` is set to None, this method returns all the valid</span>
-<span class="sd">        names of `embedding_name` with associated `pretrained_file_name`.</span>
-
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        embedding_name : str or None, default None</span>
-<span class="sd">            The pre-trained token embedding name.</span>
-
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        dict or list:</span>
-<span class="sd">            A list of all the valid pre-trained token embedding file names (`pretrained_file_name`)</span>
-<span class="sd">            for the specified token embedding name (`embedding_name`). If the text embeding name is</span>
-<span class="sd">            set to None, returns a dict mapping each valid token embedding name to a list of valid</span>
-<span class="sd">            pre-trained files (`pretrained_file_name`). They can be plugged into</span>
-<span class="sd">            `mxnet.contrib.text.embedding.TokenEmbedding.create(embedding_name,</span>
-<span class="sd">            pretrained_file_name)`.</span>
-<span class="sd">        """</span>
-
-        <span class="n">text_embedding_reg</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get_registry</span><span class="p">(</span><span class="n">TokenEmbedding</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">embedding_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">embedding_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">text_embedding_reg</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s1">'Cannot find `embedding_name` </span><span class="si">%s</span><span class="s1">. Use '</span>
-                               <span class="s1">'`get_embedding_and_pretrained_file_names('</span>
-                               <span class="s1">'embedding_name=None).keys()` to get all the valid embedding '</span>
-                               <span class="s1">'names.'</span> <span class="o">%</span> <span class="n">embedding_name</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">text_embedding_reg</span><span class="p">[</span>
-                <span class="n">embedding_name</span><span class="p">]</span><span class="o">.</span><span class="n">pretrained_file_name_sha1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="n">embedding_name</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span>
-                <span class="n">embedding_cls</span><span class="o">.</span><span class="n">pretrained_file_name_sha1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-                    <span class="k">for</span> <span class="n">embedding_name</span><span class="p">,</span> <span class="n">embedding_cls</span> <span class="ow">in</span>
-                    <span class="n">registry</span><span class="o">.</span><span class="n">get_registry</span><span class="p">(</span><span class="n">TokenEmbedding</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div></div>
-
-
-<span class="nd">@TokenEmbedding.register</span>
-<div class="viewcode-block" id="GloVe"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.GloVe">[docs]</a><span class="k">class</span> <span class="nc">GloVe</span><span class="p">(</span><span class="n">TokenEmbedding</span><span class="p">):</span>
+<span class="nd">@register</span>
+<div class="viewcode-block" id="GloVe"><a class="viewcode-back" href="../../../../api/python/contrib/text.html#mxnet.contrib.text.embedding.GloVe">[docs]</a><span class="k">class</span> <span class="nc">GloVe</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">):</span>
     <span class="sd">"""The GloVe word embedding.</span>
 
 
@@ -643,12 +700,17 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    pretrain_file : str, default 'glove.840B.300d.txt'</span>
+<span class="sd">    pretrained_file_name : str, default 'glove.840B.300d.txt'</span>
 <span class="sd">        The name of the pre-trained token embedding file.</span>
-<span class="sd">    embed_root : str, default os.path.join('~', '.mxnet', 'embeddings')</span>
+<span class="sd">    embedding_root : str, default os.path.join('~', '.mxnet', 'embeddings')</span>
 <span class="sd">        The root directory for storing embedding-related files.</span>
-<span class="sd">    unknown_vec : callback</span>
+<span class="sd">    init_unknown_vec : callback</span>
 <span class="sd">        The callback used to initialize the embedding vector for the unknown token.</span>
+<span class="sd">    vocabulary : :class:`~mxnet.contrib.text.vocab.Vocabulary`, default None</span>
+<span class="sd">        It contains the tokens to index. Each indexed token will be associated with the loaded</span>
+<span class="sd">        embedding vectors, such as loaded from a pre-trained token embedding file. If None, all the</span>
+<span class="sd">        tokens from the loaded embedding vectors, such as loaded from a pre-trained token embedding</span>
+<span class="sd">        file, will be indexed.</span>
 
 
 <span class="sd">    Properties</span>
@@ -678,7 +740,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">_get_download_file_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pretrained_file_name</span><span class="p">):</span>
-        <span class="c1"># Map a pretrained embedding file to its archive to download.</span>
+        <span class="c1"># Map a pre-trained embedding file to its archive to download.</span>
         <span class="n">src_archive</span> <span class="o">=</span> <span class="p">{</span><span class="n">archive</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">archive</span> <span class="k">for</span> <span class="n">archive</span> <span class="ow">in</span>
                        <span class="n">GloVe</span><span class="o">.</span><span class="n">pretrained_archive_name_sha1</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
         <span class="n">archive</span> <span class="o">=</span> <span class="n">src_archive</span><span class="p">[</span><span class="n">pretrained_file_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
@@ -686,17 +748,20 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pretrained_file_name</span><span class="o">=</span><span class="s1">'glove.840B.300d.txt'</span><span class="p">,</span>
                  <span class="n">embedding_root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'~'</span><span class="p">,</span> <span class="s1">'.mxnet'</span><span class="p">,</span> <span class="s1">'embeddings'</span><span class="p">),</span>
-                 <span class="n">init_unknown_vec</span><span class="o">=</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">init_unknown_vec</span><span class="o">=</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">,</span> <span class="n">vocabulary</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">GloVe</span><span class="o">.</span><span class="n">_check_pretrained_file_names</span><span class="p">(</span><span class="n">pretrained_file_name</span><span class="p">)</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">GloVe</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">pretrained_file_path</span> <span class="o">=</span> <span class="n">GloVe</span><span class="o">.</span><span class="n">_get_pretrained_file</span><span class="p">(</span><span class="n">embedding_root</span><span class="p">,</span> <span class="n">pretrained_file_name</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_load_embedding</span><span class="p">(</span><span class="n">pretrained_file_path</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">init_unknown_vec</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_embedding</span><span class="p">(</span><span class="n">pretrained_file_path</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">init_unknown_vec</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vocabulary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_build_embedding_for_vocabulary</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span></div>
 
 
-<span class="nd">@TokenEmbedding.register</span>
-<div class="viewcode-block" id="FastText"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.FastText">[docs]</a><span class="k">class</span> <span class="nc">FastText</span><span class="p">(</span><span class="n">TokenEmbedding</span><span class="p">):</span>
+<span class="nd">@register</span>
+<div class="viewcode-block" id="FastText"><a class="viewcode-back" href="../../../../api/python/contrib/text.html#mxnet.contrib.text.embedding.FastText">[docs]</a><span class="k">class</span> <span class="nc">FastText</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">):</span>
     <span class="sd">"""The fastText word embedding.</span>
 
 
@@ -733,12 +798,17 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    pretrain_file : str, default 'wiki.en.vec'</span>
+<span class="sd">    pretrained_file_name : str, default 'wiki.en.vec'</span>
 <span class="sd">        The name of the pre-trained token embedding file.</span>
-<span class="sd">    embed_root : str, default os.path.join('~', '.mxnet', 'embeddings')</span>
+<span class="sd">    embedding_root : str, default os.path.join('~', '.mxnet', 'embeddings')</span>
 <span class="sd">        The root directory for storing embedding-related files.</span>
-<span class="sd">    unknown_vec : callback</span>
+<span class="sd">    init_unknown_vec : callback</span>
 <span class="sd">        The callback used to initialize the embedding vector for the unknown token.</span>
+<span class="sd">    vocabulary : :class:`~mxnet.contrib.text.vocab.Vocabulary`, default None</span>
+<span class="sd">        It contains the tokens to index. Each indexed token will be associated with the loaded</span>
+<span class="sd">        embedding vectors, such as loaded from a pre-trained token embedding file. If None, all the</span>
+<span class="sd">        tokens from the loaded embedding vectors, such as loaded from a pre-trained token embedding</span>
+<span class="sd">        file, will be indexed.</span>
 
 
 <span class="sd">    Properties</span>
@@ -765,16 +835,19 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pretrained_file_name</span><span class="o">=</span><span class="s1">'wiki.simple.vec'</span><span class="p">,</span>
                  <span class="n">embedding_root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'~'</span><span class="p">,</span> <span class="s1">'.mxnet'</span><span class="p">,</span> <span class="s1">'embeddings'</span><span class="p">),</span>
-                 <span class="n">init_unknown_vec</span><span class="o">=</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">init_unknown_vec</span><span class="o">=</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">,</span> <span class="n">vocabulary</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">FastText</span><span class="o">.</span><span class="n">_check_pretrained_file_names</span><span class="p">(</span><span class="n">pretrained_file_name</span><span class="p">)</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">FastText</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">pretrained_file_path</span> <span class="o">=</span> <span class="n">FastText</span><span class="o">.</span><span class="n">_get_pretrained_file</span><span class="p">(</span><span class="n">embedding_root</span><span class="p">,</span> <span class="n">pretrained_file_name</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_load_embedding</span><span class="p">(</span><span class="n">pretrained_file_path</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">init_unknown_vec</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_embedding</span><span class="p">(</span><span class="n">pretrained_file_path</span><span class="p">,</span> <span class="s1">' '</span><span class="p">,</span> <span class="n">init_unknown_vec</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vocabulary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_build_embedding_for_vocabulary</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="CustomEmbedding"><a class="viewcode-back" href="../../../../api/python/text/text.html#mxnet.contrib.text.glossary.CustomEmbedding">[docs]</a><span class="k">class</span> <span class="nc">CustomEmbedding</span><span class="p">(</span><span class="n">TokenEmbedding</span><span class="p">):</span>
+<div class="viewcode-block" id="CustomEmbedding"><a class="viewcode-back" href="../../../../api/python/contrib/text.html#mxnet.contrib.text.embedding.CustomEmbedding">[docs]</a><span class="k">class</span> <span class="nc">CustomEmbedding</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">):</span>
     <span class="sd">"""User-defined token embedding.</span>
 
 <span class="sd">    This is to load embedding vectors from a user-defined pre-trained text embedding file.</span>
@@ -791,13 +864,20 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    pretrain_file_path : str</span>
+<span class="sd">    pretrained_file_path : str</span>
 <span class="sd">        The path to the custom pre-trained token embedding file.</span>
 <span class="sd">    elem_delim : str, default ' '</span>
 <span class="sd">        The delimiter for splitting a token and every embedding vector element value on the same</span>
 <span class="sd">        line of the custom pre-trained token embedding file.</span>
-<span class="sd">    unknown_vec : callback</span>
+<span class="sd">    encoding : str, default 'utf8'</span>
+<span class="sd">        The encoding scheme for reading the custom pre-trained token embedding file.</span>
+<span class="sd">    init_unknown_vec : callback</span>
 <span class="sd">        The callback used to initialize the embedding vector for the unknown token.</span>
+<span class="sd">    vocabulary : :class:`~mxnet.contrib.text.vocab.Vocabulary`, default None</span>
+<span class="sd">        It contains the tokens to index. Each indexed token will be associated with the loaded</span>
+<span class="sd">        embedding vectors, such as loaded from a pre-trained token embedding file. If None, all the</span>
+<span class="sd">        tokens from the loaded embedding vectors, such as loaded from a pre-trained token embedding</span>
+<span class="sd">        file, will be indexed.</span>
 
 
 <span class="sd">    Properties</span>
@@ -820,9 +900,74 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pretrained_file_path</span><span class="p">,</span> <span class="n">elem_delim</span><span class="o">=</span><span class="s1">' '</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf8'</span><span class="p">,</span>
-                 <span class="n">init_unknown_vec</span><span class="o">=</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">init_unknown_vec</span><span class="o">=</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">,</span> <span class="n">vocabulary</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CustomEmbedding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_load_embedding</span><span class="p">(</span><span class="n">pretrained_file_path</span><span class="p">,</span> <span class="n">elem_delim</span><span class="p">,</span> <span class="n">init_unknown_vec</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_embedding</span><span class="p">(</span><span class="n">pretrained_file_path</span><span class="p">,</span> <span class="n">elem_delim</span><span class="p">,</span> <span class="n">init_unknown_vec</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">vocabulary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_build_embedding_for_vocabulary</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CompositeEmbedding"><a class="viewcode-back" href="../../../../api/python/contrib/text.html#mxnet.contrib.text.embedding.CompositeEmbedding">[docs]</a><span class="k">class</span> <span class="nc">CompositeEmbedding</span><span class="p">(</span><span class="n">_TokenEmbedding</span><span class="p">):</span>
+    <span class="sd">"""Composite token embeddings.</span>
+
+
+<span class="sd">    For each indexed token in a vocabulary, multiple embedding vectors, such as concatenated</span>
+<span class="sd">    multiple embedding vectors, will be associated with it. Such embedding vectors can be loaded</span>
+<span class="sd">    from externally hosted or custom pre-trained token embedding files, such as via token embedding</span>
+<span class="sd">    instances.</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vocabulary : :class:`~mxnet.contrib.text.vocab.Vocabulary`</span>
+<span class="sd">        For each indexed token in a vocabulary, multiple embedding vectors, such as concatenated</span>
+<span class="sd">        multiple embedding vectors, will be associated with it.</span>
+<span class="sd">    token_embeddings : instance or list of `mxnet.contrib.text.embedding._TokenEmbedding`</span>
+<span class="sd">        One or multiple pre-trained token embeddings to load. If it is a list of multiple</span>
+<span class="sd">        embeddings, these embedding vectors will be concatenated for each token.</span>
+
+
+<span class="sd">    Properties</span>
+<span class="sd">    ----------</span>
+<span class="sd">    token_to_idx : dict mapping str to int</span>
+<span class="sd">        A dict mapping each token to its index integer.</span>
+<span class="sd">    idx_to_token : list of strs</span>
+<span class="sd">        A list of indexed tokens where the list indices and the token indices are aligned.</span>
+<span class="sd">    unknown_token : hashable object</span>
+<span class="sd">        The representation for any unknown token. In other words, any unknown token will be indexed</span>
+<span class="sd">        as the same representation.</span>
+<span class="sd">    reserved_tokens : list of strs or None</span>
+<span class="sd">        A list of reserved tokens that will always be indexed.</span>
+<span class="sd">    vec_len : int</span>
+<span class="sd">        The length of the embedding vector for each token.</span>
+<span class="sd">    idx_to_vec : mxnet.ndarray.NDArray</span>
+<span class="sd">        For all the indexed tokens in this embedding, this NDArray maps each token's index to an</span>
+<span class="sd">        embedding vector. The largest valid index maps to the initialized embedding vector for every</span>
+<span class="sd">        reserved token, such as an unknown_token token and a padding token.</span>
+<span class="sd">    """</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocabulary</span><span class="p">,</span> <span class="n">token_embeddings</span><span class="p">):</span>
+
+        <span class="c1"># Sanity checks.</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">,</span> <span class="n">vocab</span><span class="o">.</span><span class="n">Vocabulary</span><span class="p">),</span> \
+            <span class="s1">'The argument `vocabulary` must be an instance of '</span> \
+            <span class="s1">'mxnet.contrib.text.indexer.Vocabulary.'</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">token_embeddings</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">token_embeddings</span> <span class="o">=</span> <span class="p">[</span><span class="n">token_embeddings</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">embed</span> <span class="ow">in</span> <span class="n">token_embeddings</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">embed</span><span class="p">,</span> <span class="n">_TokenEmbedding</span><span class="p">),</span> \
+                <span class="s1">'The argument `token_embeddings` must be an instance or a list of instances '</span> \
+                <span class="s1">'of `mxnet.contrib.text.embedding.TextEmbedding` whose embedding vectors will be'</span> \
+                <span class="s1">'loaded or concatenated-then-loaded to map to the indexed tokens.'</span>
+
+        <span class="c1"># Index tokens.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_index_tokens_from_vocabulary</span><span class="p">(</span><span class="n">vocabulary</span><span class="p">)</span>
+
+        <span class="c1"># Set _idx_to_vec so that indices of tokens from keys of `counter` are associated with token</span>
+        <span class="c1"># embedding vectors from `token_embeddings`.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_idx_to_vec_by_embeddings</span><span class="p">(</span><span class="n">token_embeddings</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx_to_token</span><span class="p">)</span></div>
 </pre></div>
 </div>
 </div>
