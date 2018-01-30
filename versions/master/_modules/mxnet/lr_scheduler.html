@@ -342,6 +342,38 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lr</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lr</span></div>
+
+<div class="viewcode-block" id="PolyScheduler"><a class="viewcode-back" href="../../api/python/optimization/optimization.html#mxnet.lr_scheduler.PolyScheduler">[docs]</a><span class="k">class</span> <span class="nc">PolyScheduler</span><span class="p">(</span><span class="n">LRScheduler</span><span class="p">):</span>
+    <span class="sd">""" Reduce the learning rate by given a list of steps.</span>
+
+<span class="sd">    Calculate the new learning rate by::</span>
+
+<span class="sd">       base_lr * (1-nup/max_nup)^pwr</span>
+<span class="sd">       if nup < max_nup, 0 otherwise.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">       max_update: maximum number of updates before the decay reaches 0.</span>
+<span class="sd">       base_lr:    base learning rate</span>
+<span class="sd">       pwr:   power of the decay term as a funtion of the current number of updates.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_update</span><span class="p">,</span> <span class="n">base_lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">pwr</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PolyScheduler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">base_lr</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_update</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_update</span> <span class="o"><</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"maximum number of updates must be strictly positive"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_lr_orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_update</span> <span class="o">=</span> <span class="n">max_update</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">pwr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lr_orig</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_update</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num_update</span> <span class="o"><=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_update</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lr_orig</span> <span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">num_update</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_update</span><span class="p">),</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_lr</span></div>
 </pre></div>
 </div>
 </div>
