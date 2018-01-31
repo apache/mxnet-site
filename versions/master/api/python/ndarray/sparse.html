@@ -840,6 +840,9 @@ and then list other routines provided by the <code class="docutils literal"><spa
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.ndarray.sparse.retain" title="mxnet.ndarray.sparse.retain"><code class="xref py py-obj docutils literal"><span class="pre">retain</span></code></a></td>
 <td>pick rows specified by user input index array from a row sparse matrix</td>
 </tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mxnet.ndarray.sparse.where" title="mxnet.ndarray.sparse.where"><code class="xref py py-obj docutils literal"><span class="pre">where</span></code></a></td>
+<td>Return the elements, either from x or y, depending on the condition.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -4334,6 +4337,53 @@ zero than x is. In short, the fractional part of the signed number x is discarde
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>data</strong> (<a class="reference internal" href="ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The input array.</li>
+<li><strong>out</strong> (<em>NDArray, optional</em>) – The output NDArray to hold the result.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> –
+The output of this function.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">NDArray or list of NDArrays</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
+<dt id="mxnet.ndarray.sparse.where">
+<code class="descclassname">mxnet.ndarray.sparse.</code><code class="descname">where</code><span class="sig-paren">(</span><em>condition=None</em>, <em>x=None</em>, <em>y=None</em>, <em>out=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.sparse.where" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the elements, either from x or y, depending on the condition.</p>
+<p>Given three ndarrays, condition, x, and y, return an ndarray with the elements from x or y,
+depending on the elements from condition are true or false. x and y must have the same shape.
+If condition has the same shape as x, each element in the output array is from x if the
+corresponding element in the condition is true, and from y if false.</p>
+<p>If condition does not have the same shape as x, it must be a 1D array whose size is
+the same as x’s first dimension size. Each row of the output array is from x’s row
+if the corresponding element from condition is true, and from y’s row if false.</p>
+<p>Note that all non-zero values are interpreted as <code class="docutils literal"><span class="pre">True</span></code> in condition.</p>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]]</span>
+<span class="n">cond</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+
+<span class="n">where</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">]]</span>
+
+<span class="n">csr_cond</span> <span class="o">=</span> <span class="n">cast_storage</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="s1">'csr'</span><span class="p">)</span>
+
+<span class="n">where</span><span class="p">(</span><span class="n">csr_cond</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/control_flow_op.cc:L57</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>condition</strong> (<a class="reference internal" href="ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – condition array</li>
+<li><strong>x</strong> (<a class="reference internal" href="ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – </li>
+<li><strong>y</strong> (<a class="reference internal" href="ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – </li>
 <li><strong>out</strong> (<em>NDArray, optional</em>) – The output NDArray to hold the result.</li>
 </ul>
 </td>
