@@ -24,7 +24,7 @@ var searchData=
   ['getfcompute',['GetFCompute',['../namespacemxnet_1_1common.html#a1abcb76ccd9022ebacdacd69c821cdc2',1,'mxnet::common']]],
   ['getforwardgraph',['GetForwardGraph',['../classmxnet_1_1Imperative_1_1CachedOp.html#ab2c76e6c130d7bf4a9e69708b32d93c1',1,'mxnet::Imperative::CachedOp']]],
   ['getmutex',['GetMutex',['../classmxnet_1_1Storage.html#ac12e7740df4520d6267d250ca16404d4',1,'mxnet::Storage']]],
-  ['getnumthreadpergpu',['GetNumThreadPerGPU',['../namespacemxnet_1_1common.html#abc7580a95e3de5cf38d5bc2617c6d541',1,'mxnet::common']]],
+  ['getnumthreadspergpu',['GetNumThreadsPerGPU',['../namespacemxnet_1_1common.html#a467e8b51fc0d0a7266e9f3172b2ff7f1',1,'mxnet::common']]],
   ['getparams',['GetParams',['../classmxnet_1_1OperatorProperty.html#a704ae43181c8a88bfd0a47e8005f7cb8',1,'mxnet::OperatorProperty']]],
   ['gpu',['GPU',['../structmxnet_1_1Context.html#a39d1a2b59bce135da127475995a58671',1,'mxnet::Context']]],
   ['gradient',['Gradient',['../classmxnet_1_1Imperative_1_1CachedOp.html#ab0f1d3a2e05f8790ff39f11c9af02f2a',1,'mxnet::Imperative::CachedOp']]]

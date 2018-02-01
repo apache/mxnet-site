@@ -13,5 +13,5 @@ var searchData=
   ['free',['Free',['../classmxnet_1_1Storage.html#a5bdbd7b3ab712cd9e087ab007bdc64dd',1,'mxnet::Storage']]],
   ['freestate',['FreeState',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4.html#aaa64545e32685e361acac218ef764d76',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::FreeState()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html#a4d8f90c3bc95bf05a57d175afcd2700e',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::FreeState()']]],
   ['fresh_5fout_5fgrad',['fresh_out_grad',['../classmxnet_1_1NDArray.html#aee74980eb87bf7c482d15458f5194cbe',1,'mxnet::NDArray']]],
-  ['fromstring',['FromString',['../structmxnet_1_1Context.html#ac58071fc1c0647bcab7aca4a39ae6a29',1,'mxnet::Context']]]
+  ['fromstring',['FromString',['../structmxnet_1_1Context.html#a4b7e2c87496a90b6b0ed06eab61956c4',1,'mxnet::Context']]]
 ];
