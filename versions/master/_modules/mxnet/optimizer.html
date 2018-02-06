@@ -335,10 +335,11 @@
         <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="nb">type</span><span class="p">))</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">Optimizer</span><span class="o">.</span><span class="n">opt_registry</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'WARNING: New optimizer </span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1"> is overriding existing '</span>
-                          <span class="s1">'optimizer </span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                          <span class="n">Optimizer</span><span class="o">.</span><span class="n">opt_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
-                          <span class="n">Optimizer</span><span class="o">.</span><span class="n">opt_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'WARNING: New optimizer </span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1"> is overriding '</span>
+                          <span class="s1">'existing optimizer </span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span>
+                          <span class="p">(</span><span class="n">klass</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                           <span class="n">Optimizer</span><span class="o">.</span><span class="n">opt_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
+                           <span class="n">Optimizer</span><span class="o">.</span><span class="n">opt_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
         <span class="n">Optimizer</span><span class="o">.</span><span class="n">opt_registry</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">klass</span>
         <span class="k">return</span> <span class="n">klass</span></div>
 
@@ -1098,7 +1099,8 @@
         <span class="n">weight</span><span class="p">[:]</span> <span class="o">+=</span> <span class="n">mom</span></div>
 
 <span class="nd">@register</span>
-<div class="viewcode-block" id="NAG"><a class="viewcode-back" href="../../api/python/optimization/optimization.html#mxnet.optimizer.NAG">[docs]</a><span class="k">class</span> <span class="nc">NAG</span><span class="p">(</span><span class="n">SGD</span><span class="p">):</span>
+<span class="nd">@register</span>
+<div class="viewcode-block" id="NAG"><a class="viewcode-back" href="../../api/python/optimization/optimization.html#mxnet.optimizer.NAG">[docs]</a><span class="k">class</span> <span class="nc">NAG</span><span class="p">(</span><span class="n">Optimizer</span><span class="p">):</span>
     <span class="sd">"""Nesterov accelerated SGD.</span>
 
 <span class="sd">    This optimizer updates each weight by::</span>
@@ -1106,10 +1108,26 @@
 <span class="sd">        state = momentum * state + grad + wd * weight</span>
 <span class="sd">        weight = weight - (lr * (grad + momentum * state))</span>
 
-<span class="sd">    This optimizer accepts the same arguments as :class:`.SGD`.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    momentum : float, optional</span>
+<span class="sd">       The momentum value.</span>
+<span class="sd">    multi_precision: bool, optional</span>
+<span class="sd">       Flag to control the internal precision of the optimizer.</span>
+<span class="sd">       ``False`` results in using the same precision as the weights (default),</span>
+<span class="sd">       ``True`` makes internal 32-bit copy of the weights and applies gradients \</span>
+<span class="sd">                in 32-bit precision even if actual weights used in the model have lower precision.\</span>
+<span class="sd">                Turning this on can improve convergence and accuracy when training with float16.</span>
 <span class="sd">    """</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">NAG</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">momentum</span> <span class="o">=</span> <span class="n">momentum</span>
+
+    <span class="k">def</span> <span class="nf">create_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
+        <span class="n">momentum</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">momentum</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="n">momentum</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">weight</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">weight</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">weight</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">momentum</span>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="k">assert</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">weight</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">))</span>
