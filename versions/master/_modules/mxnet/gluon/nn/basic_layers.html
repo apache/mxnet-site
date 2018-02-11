@@ -224,12 +224,12 @@
 <span class="c1"># coding: utf-8</span>
 <span class="c1"># pylint: disable= arguments-differ</span>
 <span class="sd">"""Basic neural network layers."""</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Sequential'</span><span class="p">,</span> <span class="s1">'HybridSequential'</span><span class="p">,</span> <span class="s1">'Dense'</span><span class="p">,</span> <span class="s1">'Activation'</span><span class="p">,</span>
-           <span class="s1">'Dropout'</span><span class="p">,</span> <span class="s1">'BatchNorm'</span><span class="p">,</span> <span class="s1">'InstanceNorm'</span><span class="p">,</span> <span class="s1">'LeakyReLU'</span><span class="p">,</span> <span class="s1">'Embedding'</span><span class="p">,</span>
-           <span class="s1">'Flatten'</span><span class="p">,</span> <span class="s1">'Lambda'</span><span class="p">,</span> <span class="s1">'HybridLambda'</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Sequential'</span><span class="p">,</span> <span class="s1">'HybridSequential'</span><span class="p">,</span> <span class="s1">'Dense'</span><span class="p">,</span> <span class="s1">'Dropout'</span><span class="p">,</span> <span class="s1">'Embedding'</span><span class="p">,</span>
+           <span class="s1">'BatchNorm'</span><span class="p">,</span> <span class="s1">'InstanceNorm'</span><span class="p">,</span> <span class="s1">'Flatten'</span><span class="p">,</span> <span class="s1">'Lambda'</span><span class="p">,</span> <span class="s1">'HybridLambda'</span><span class="p">]</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">.activations</span> <span class="kn">import</span> <span class="n">Activation</span>
 <span class="kn">from</span> <span class="nn">..block</span> <span class="kn">import</span> <span class="n">Block</span><span class="p">,</span> <span class="n">HybridBlock</span>
 <span class="kn">from</span> <span class="nn">..utils</span> <span class="kn">import</span> <span class="n">_indent</span>
 <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">nd</span><span class="p">,</span> <span class="n">sym</span>
@@ -422,38 +422,6 @@
                         <span class="n">layout</span><span class="o">=</span><span class="s1">'{0} -> {1}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="bp">None</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
 
 
-<div class="viewcode-block" id="Activation"><a class="viewcode-back" href="../../../../api/python/gluon/nn.html#mxnet.gluon.nn.Activation">[docs]</a><span class="k">class</span> <span class="nc">Activation</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">"""Applies an activation function to input.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    activation : str</span>
-<span class="sd">        Name of activation function to use.</span>
-<span class="sd">        See :func:`~mxnet.ndarray.Activation` for available choices.</span>
-
-
-<span class="sd">    Inputs:</span>
-<span class="sd">        - **data**: input tensor with arbitrary shape.</span>
-
-<span class="sd">    Outputs:</span>
-<span class="sd">        - **out**: output tensor with the same shape as `data`.</span>
-<span class="sd">    """</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_act_type</span> <span class="o">=</span> <span class="n">activation</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Activation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_act_type</span>
-
-    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_act_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'fwd'</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="s1">'{name}({_act_type})'</span>
-        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                        <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="Dropout"><a class="viewcode-back" href="../../../../api/python/gluon/nn.html#mxnet.gluon.nn.Dropout">[docs]</a><span class="k">class</span> <span class="nc">Dropout</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sd">"""Applies Dropout to the input.</span>
 
@@ -584,46 +552,6 @@
         <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                         <span class="n">content</span><span class="o">=</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">'='</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()])</span>
                                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()]))</span></div>
-
-
-<div class="viewcode-block" id="LeakyReLU"><a class="viewcode-back" href="../../../../api/python/gluon/nn.html#mxnet.gluon.nn.LeakyReLU">[docs]</a><span class="k">class</span> <span class="nc">LeakyReLU</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">"""Leaky version of a Rectified Linear Unit.</span>
-
-<span class="sd">    It allows a small gradient when the unit is not active</span>
-
-<span class="sd">    .. math::</span>
-
-<span class="sd">        f\left(x\right) = \left\{</span>
-<span class="sd">            \begin{array}{lr}</span>
-<span class="sd">               \alpha x &amp; : x \lt 0 \\</span>
-<span class="sd">                      x &amp; : x \geq 0 \\</span>
-<span class="sd">            \end{array}</span>
-<span class="sd">        \right.\\</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    alpha : float</span>
-<span class="sd">        slope coefficient for the negative half axis. Must be >= 0.</span>
-
-
-<span class="sd">    Inputs:</span>
-<span class="sd">        - **data**: input tensor with arbitrary shape.</span>
-
-<span class="sd">    Outputs:</span>
-<span class="sd">        - **out**: output tensor with the same shape as `data`.</span>
-<span class="sd">    """</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">alpha</span> <span class="o">>=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"Slope coefficient for LeakyReLU must be no less than 0."</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">LeakyReLU</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">=</span> <span class="n">alpha</span>
-
-    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">'leaky'</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'fwd'</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="s1">'{name}({alpha})'</span>
-        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                        <span class="n">alpha</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Embedding"><a class="viewcode-back" href="../../../../api/python/gluon/nn.html#mxnet.gluon.nn.Embedding">[docs]</a><span class="k">class</span> <span class="nc">Embedding</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
