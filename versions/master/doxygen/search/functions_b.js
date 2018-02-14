@@ -4,7 +4,7 @@ var searchData=
   ['ndarrayfunctionreg',['NDArrayFunctionReg',['../structmxnet_1_1NDArrayFunctionReg.html#abd540887b52ba89572ad6a18b4ac739c',1,'mxnet::NDArrayFunctionReg']]],
   ['ndim',['ndim',['../classmxnet_1_1TBlob.html#a3be3b640e59a480b8ac5369d73b117de',1,'mxnet::TBlob']]],
   ['new',['New',['../classmxnet_1_1common_1_1ObjectPool.html#a5d711031f61dbd06d8c6975fd49e5632',1,'mxnet::common::ObjectPool::New()'],['../structmxnet_1_1common_1_1ObjectPoolAllocatable.html#aaf92ecb0cb6542b5c3f70ec31a31db4e',1,'mxnet::common::ObjectPoolAllocatable::New()']]],
-  ['newoperator',['NewOperator',['../classmxnet_1_1Engine.html#aff3332258a158ef33a9a4b7bcdc2fe6f',1,'mxnet::Engine']]],
+  ['newoperator',['NewOperator',['../classmxnet_1_1Engine.html#a1aa6dcadfbca86d215366c380310dd57',1,'mxnet::Engine']]],
   ['newvariable',['NewVariable',['../classmxnet_1_1Engine.html#a6e141b188f018d5d933ab99868631d5e',1,'mxnet::Engine']]],
   ['next',['Next',['../classmxnet_1_1IIterator.html#ac02dda5d191a7bc629aaa93e5abab3d5',1,'mxnet::IIterator']]],
   ['normal',['normal',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4_1_1Impl.html#a116539ba2e83889b1069831bb5f9693f',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Impl::normal()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4_1_1Impl.html#a20e9211034dd84dad5ddace145256f0d',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::Impl::normal()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01double_01_4_1_1Impl.html#a78f2d64849b7b8b17c11dfe552a27e26',1,'mxnet::common::random::RandGenerator&lt; gpu, double &gt;::Impl::normal()']]],
