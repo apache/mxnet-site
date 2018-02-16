@@ -35,6 +35,6 @@ var searchData=
   ['dptr',['dptr',['../structmxnet_1_1Storage_1_1Handle.html#a428e25a6317e50c8b55307c96f8ec595',1,'mxnet::Storage::Handle::dptr()'],['../classmxnet_1_1TBlob.html#a3449ca0a9130e87c343130b041b68c53',1,'mxnet::TBlob::dptr()']]],
   ['dptr_5f',['dptr_',['../classmxnet_1_1TBlob.html#a4e5f4953be2c16724ecff0afc5ea2e10',1,'mxnet::TBlob']]],
   ['dtype',['dtype',['../classmxnet_1_1NDArray.html#a1b6038a196c14d038bd3e6d6bbe36ad2',1,'mxnet::NDArray']]],
-  ['dtype_5f',['dtype_',['../classmxnet_1_1NDArray.html#a3e095ff4cb510f9b3160513a89802259',1,'mxnet::NDArray::dtype_(dtype)'],['../classmxnet_1_1NDArray.html#a3e095ff4cb510f9b3160513a89802259',1,'mxnet::NDArray::dtype_(dtype)']]],
+  ['dtype_5f',['dtype_',['../classmxnet_1_1NDArray.html#a3e095ff4cb510f9b3160513a89802259',1,'mxnet::NDArray']]],
   ['parameter',['parameter',['../namespacedmlc_1_1parameter.html',1,'dmlc']]]
 ];

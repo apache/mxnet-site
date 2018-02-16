@@ -681,6 +681,85 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">num_inst</span> <span class="o">+=</span> <span class="n">num_samples</span></div></div>
 
 
+<span class="k">class</span> <span class="nc">_BinaryClassificationMetrics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">"""</span>
+<span class="sd">    Private container class for classification metric statistics. True/false positive and</span>
+<span class="sd">     true/false negative counts are sufficient statistics for various classification metrics.</span>
+<span class="sd">    This class provides the machinery to track those statistics across mini-batches of</span>
+<span class="sd">    (label, prediction) pairs.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">false_negatives</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">false_positives</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">true_negatives</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">update_binary_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Update various binary classification counts for a single (label, pred)</span>
+<span class="sd">        pair.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        label : `NDArray`</span>
+<span class="sd">            The labels of the data.</span>
+
+<span class="sd">        pred : `NDArray`</span>
+<span class="sd">            Predicted values.</span>
+<span class="sd">        """</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int32'</span><span class="p">)</span>
+        <span class="n">pred_label</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">check_label_shapes</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">label</span><span class="p">))</span> <span class="o">></span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> currently only supports binary classification."</span>
+                             <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pred_label</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">+=</span> <span class="mf">1.</span>
+            <span class="k">elif</span> <span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">y_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">false_positives</span> <span class="o">+=</span> <span class="mf">1.</span>
+            <span class="k">elif</span> <span class="n">y_pred</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">false_negatives</span> <span class="o">+=</span> <span class="mf">1.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">true_negatives</span> <span class="o">+=</span> <span class="mf">1.</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">precision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">false_positives</span> <span class="o">></span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">false_positives</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">recall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">false_negatives</span> <span class="o">></span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">false_negatives</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fscore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">recall</span> <span class="o">></span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">recall</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">recall</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total_examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">false_negatives</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">false_positives</span> <span class="o">+</span> \
+               <span class="bp">self</span><span class="o">.</span><span class="n">true_negatives</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span>
+
+    <span class="k">def</span> <span class="nf">reset_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">false_positives</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">false_negatives</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">true_positives</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">true_negatives</span> <span class="o">=</span> <span class="mi">0</span>
+
+
 <span class="nd">@register</span>
 <div class="viewcode-block" id="F1"><a class="viewcode-back" href="../../api/python/model.html#mxnet.metric.F1">[docs]</a><span class="k">class</span> <span class="nc">F1</span><span class="p">(</span><span class="n">EvalMetric</span><span class="p">):</span>
     <span class="sd">"""Computes the F1 score of a binary classification problem.</span>
@@ -709,21 +788,27 @@
 <span class="sd">    label_names : list of str, or None</span>
 <span class="sd">        Name of labels that should be used when updating with update_dict.</span>
 <span class="sd">        By default include all labels.</span>
+<span class="sd">    average : str, default 'macro'</span>
+<span class="sd">        Strategy to be used for aggregating across mini-batches.</span>
+<span class="sd">            "macro": average the F1 scores for each batch.</span>
+<span class="sd">            "micro": compute a single F1 score across all batches.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    >>> predicts = [mx.nd.array([[0.3, 0.7], [0., 1.], [0.4, 0.6]])]</span>
 <span class="sd">    >>> labels   = [mx.nd.array([0., 1., 1.])]</span>
-<span class="sd">    >>> acc = mx.metric.F1()</span>
-<span class="sd">    >>> acc.update(preds = predicts, labels = labels)</span>
-<span class="sd">    >>> print acc.get()</span>
+<span class="sd">    >>> f1 = mx.metric.F1()</span>
+<span class="sd">    >>> f1.update(preds = predicts, labels = labels)</span>
+<span class="sd">    >>> print f1.get()</span>
 <span class="sd">    ('f1', 0.8)</span>
 <span class="sd">    """</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'f1'</span><span class="p">,</span>
-                 <span class="n">output_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">label_names</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">F1</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">output_names</span><span class="o">=</span><span class="n">output_names</span><span class="p">,</span> <span class="n">label_names</span><span class="o">=</span><span class="n">label_names</span><span class="p">)</span>
+                 <span class="n">output_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">label_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="s2">"macro"</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">average</span> <span class="o">=</span> <span class="n">average</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">_BinaryClassificationMetrics</span><span class="p">()</span>
+        <span class="n">EvalMetric</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                            <span class="n">output_names</span><span class="o">=</span><span class="n">output_names</span><span class="p">,</span> <span class="n">label_names</span><span class="o">=</span><span class="n">label_names</span><span class="p">)</span>
 
 <div class="viewcode-block" id="F1.update"><a class="viewcode-back" href="../../api/python/model.html#mxnet.metric.F1.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">preds</span><span class="p">):</span>
         <span class="sd">"""Updates the internal evaluation result.</span>
@@ -739,41 +824,21 @@
         <span class="n">check_label_shapes</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">preds</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">preds</span><span class="p">):</span>
-            <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'int32'</span><span class="p">)</span>
-            <span class="n">pred_label</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">update_binary_stats</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
 
-            <span class="n">check_label_shapes</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">label</span><span class="p">))</span> <span class="o">></span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"F1 currently only supports binary classification."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">average</span> <span class="o">==</span> <span class="s2">"macro"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sum_metric</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">fscore</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_inst</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">reset_stats</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sum_metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">fscore</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_examples</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_inst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">total_examples</span></div>
 
-            <span class="n">true_positives</span><span class="p">,</span> <span class="n">false_positives</span><span class="p">,</span> <span class="n">false_negatives</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span>
-
-            <span class="k">for</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">y_true</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pred_label</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">true_positives</span> <span class="o">+=</span> <span class="mf">1.</span>
-                <span class="k">elif</span> <span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">y_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">false_positives</span> <span class="o">+=</span> <span class="mf">1.</span>
-                <span class="k">elif</span> <span class="n">y_pred</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">y_true</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">false_negatives</span> <span class="o">+=</span> <span class="mf">1.</span>
-
-            <span class="k">if</span> <span class="n">true_positives</span> <span class="o">+</span> <span class="n">false_positives</span> <span class="o">></span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">precision</span> <span class="o">=</span> <span class="n">true_positives</span> <span class="o">/</span> <span class="p">(</span><span class="n">true_positives</span> <span class="o">+</span> <span class="n">false_positives</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">precision</span> <span class="o">=</span> <span class="mf">0.</span>
-
-            <span class="k">if</span> <span class="n">true_positives</span> <span class="o">+</span> <span class="n">false_negatives</span> <span class="o">></span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">recall</span> <span class="o">=</span> <span class="n">true_positives</span> <span class="o">/</span> <span class="p">(</span><span class="n">true_positives</span> <span class="o">+</span> <span class="n">false_negatives</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">recall</span> <span class="o">=</span> <span class="mf">0.</span>
-
-            <span class="k">if</span> <span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span> <span class="o">></span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">f1_score</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">f1_score</span> <span class="o">=</span> <span class="mf">0.</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">sum_metric</span> <span class="o">+=</span> <span class="n">f1_score</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">num_inst</span> <span class="o">+=</span> <span class="mi">1</span></div></div>
+<div class="viewcode-block" id="F1.reset"><a class="viewcode-back" href="../../api/python/model.html#mxnet.metric.F1.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Resets the internal evaluation result to initial state."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sum_metric</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_inst</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">reset_stats</span><span class="p">()</span></div></div>
 
 
 <span class="nd">@register</span>
