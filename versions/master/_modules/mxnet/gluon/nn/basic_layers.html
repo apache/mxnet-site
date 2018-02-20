@@ -626,6 +626,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    axis : int, default 1</span>
+<span class="sd">        The axis that should be normalized. This is typically the channels</span>
+<span class="sd">        (C) axis. For instance, after a `Conv2D` layer with `layout='NCHW'`,</span>
+<span class="sd">        set `axis=1` in `InstanceNorm`. If `layout='NHWC'`, then set `axis=3`.</span>
 <span class="sd">    epsilon: float, default 1e-5</span>
 <span class="sd">        Small float added to variance to avoid dividing by zero.</span>
 <span class="sd">    center: bool, default True</span>
@@ -644,6 +648,7 @@
 <span class="sd">        Number of channels (feature maps) in input data. If not specified,</span>
 <span class="sd">        initialization will be deferred to the first time `forward` is called</span>
 <span class="sd">        and `in_channels` will be inferred from the shape of input data.</span>
+
 
 <span class="sd">    Inputs:</span>
 <span class="sd">        - **data**: input tensor with arbitrary shape.</span>
@@ -669,11 +674,13 @@
 <span class="sd">     [[-0.99998319  0.99998361]]]</span>
 <span class="sd">    <NDArray 2x1x2 @cpu(0)></span>
 <span class="sd">    """</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
                  <span class="n">beta_initializer</span><span class="o">=</span><span class="s1">'zeros'</span><span class="p">,</span> <span class="n">gamma_initializer</span><span class="o">=</span><span class="s1">'ones'</span><span class="p">,</span>
                  <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">InstanceNorm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'eps'</span><span class="p">:</span> <span class="n">epsilon</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'eps'</span><span class="p">:</span> <span class="n">epsilon</span><span class="p">,</span> <span class="s1">'axis'</span><span class="p">:</span> <span class="n">axis</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span> <span class="o">=</span> <span class="n">axis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'gamma'</span><span class="p">,</span> <span class="n">grad_req</span><span class="o">=</span><span class="s1">'write'</span> <span class="k">if</span> <span class="n">scale</span> <span class="k">else</span> <span class="s1">'null'</span><span class="p">,</span>
                                      <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">in_channels</span><span class="p">,),</span> <span class="n">init</span><span class="o">=</span><span class="n">gamma_initializer</span><span class="p">,</span>
                                      <span class="n">allow_deferred_init</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -682,8 +689,12 @@
                                     <span class="n">allow_deferred_init</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">InstanceNorm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span>
-                              <span class="n">name</span><span class="o">=</span><span class="s1">'fwd'</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">InstanceNorm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="s1">'fwd'</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">InstanceNorm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'fwd'</span><span class="p">,</span>
+                              <span class="n">eps</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_epsilon</span><span class="p">)</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_axis</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s1">'{name}({content}'</span>

@@ -1132,12 +1132,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">mx_uint</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">NDArray</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">writable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.reshape"><a class="viewcode-back" href="../../../api/python/ndarray/ndarray.html#mxnet.ndarray.NDArray.reshape">[docs]</a>    <span class="k">def</span> <span class="nf">reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.reshape"><a class="viewcode-back" href="../../../api/python/ndarray/ndarray.html#mxnet.ndarray.NDArray.reshape">[docs]</a>    <span class="k">def</span> <span class="nf">reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">"""Returns a **view** of this array with a new shape without altering any data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        shape : tuple of int</span>
+<span class="sd">        shape : tuple of int, or n ints</span>
 <span class="sd">            The new shape should not change the array size, namely</span>
 <span class="sd">            ``np.prod(new_shape)`` should be equal to ``np.prod(self.shape)``.</span>
 
@@ -1169,11 +1169,27 @@
 <span class="sd">        array([[ 0.,  1.],</span>
 <span class="sd">               [ 2.,  3.],</span>
 <span class="sd">               [ 4.,  5.]], dtype=float32)</span>
+<span class="sd">        >>> y = x.reshape(3,2)</span>
+<span class="sd">        >>> y.asnumpy()</span>
+<span class="sd">        array([[ 0.,  1.],</span>
+<span class="sd">               [ 2.,  3.],</span>
+<span class="sd">               [ 4.,  5.]], dtype=float32)</span>
 <span class="sd">        >>> y[:] = -1</span>
 <span class="sd">        >>> x.asnumpy()</span>
 <span class="sd">        array([[-1., -1., -1.],</span>
 <span class="sd">               [-1., -1., -1.]], dtype=float32)</span>
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">shape</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'shape'</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">shape</span><span class="p">,</span> <span class="s2">"Shape must be provided."</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Only 'shape' is supported as keyword argument. Got: {}."</span>
+                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">,</span>\
+                <span class="s2">"Specifying both positional and keyword arguments is not allowed in reshape."</span>
         <span class="n">handle</span> <span class="o">=</span> <span class="n">NDArrayHandle</span><span class="p">()</span>
 
         <span class="c1"># Actual reshape</span>
