@@ -444,17 +444,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00479"></a><span class="lineno">  479</span>   } <span class="keywordflow">while</span> (assumed != old);</div>
 <div class="line"><a name="l00480"></a><span class="lineno">  480</span> }</div>
 <div class="line"><a name="l00481"></a><span class="lineno">  481</span> </div>
-<div class="line"><a name="l00482"></a><span class="lineno">  482</span> <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DType&gt;</div>
-<div class="line"><a name="l00483"></a><span class="lineno">  483</span> __device__ <span class="keyword">inline</span> DType ldg(<span class="keyword">const</span> DType* address) {</div>
-<div class="line"><a name="l00484"></a><span class="lineno">  484</span> <span class="preprocessor">#if __CUDA_ARCH__ &gt;= 350</span></div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span> <span class="preprocessor"></span> <span class="keywordflow">return</span> __ldg(address);</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span> <span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span> <span class="preprocessor"></span> <span class="keywordflow">return</span> *address;</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span> <span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span> <span class="preprocessor"></span>}</div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span> <span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span> <span class="preprocessor"></span></div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span> <span class="preprocessor">#endif  // MXNET_COMMON_CUDA_UTILS_H_</span></div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span> <span class="comment">// Overload atomicAdd to work for signed int64 on all architectures</span></div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span> <span class="keyword">static</span> <span class="keyword">inline</span>  __device__  <span class="keywordtype">void</span> atomicAdd(int64_t *address, int64_t val) {</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>   atomicAdd(reinterpret_cast&lt;unsigned long long*&gt;(address), static_cast&lt;unsigned long long&gt;(val)); <span class="comment">// NOLINT</span></div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span> }</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span> </div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span> <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DType&gt;</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span> __device__ <span class="keyword">inline</span> DType ldg(<span class="keyword">const</span> DType* address) {</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span> <span class="preprocessor">#if __CUDA_ARCH__ &gt;= 350</span></div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span> <span class="preprocessor"></span> <span class="keywordflow">return</span> __ldg(address);</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span> <span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span> <span class="preprocessor"></span> <span class="keywordflow">return</span> *address;</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span> <span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span> <span class="preprocessor"></span>}</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span> <span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span> <span class="preprocessor"></span></div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span> <span class="preprocessor">#endif  // MXNET_COMMON_CUDA_UTILS_H_</span></div>
 <div class="ttc" id="cuda__utils_8h_html_a685d7ca3c9370ff471665abcacdeb381"><div class="ttname"><a href="cuda__utils_8h.html#a685d7ca3c9370ff471665abcacdeb381">CUBLAS_CALL</a></div><div class="ttdeci">#define CUBLAS_CALL(func)</div><div class="ttdoc">Protected cuBLAS call. </div><div class="ttdef"><b>Definition:</b> cuda_utils.h:200</div></div>
 <div class="ttc" id="cuda__utils_8h_html_aa79f548df23452162de37663f171e99d"><div class="ttname"><a href="cuda__utils_8h.html#aa79f548df23452162de37663f171e99d">ComputeCapabilityMajor</a></div><div class="ttdeci">int ComputeCapabilityMajor(int device_id)</div><div class="ttdoc">Determine major version number of the gpu's cuda compute architecture. </div><div class="ttdef"><b>Definition:</b> cuda_utils.h:280</div></div>
 <div class="ttc" id="cuda__utils_8h_html_a464dee13053e3b0b1006c6307069196c"><div class="ttname"><a href="cuda__utils_8h.html#a464dee13053e3b0b1006c6307069196c">GetEnvAllowTensorCore</a></div><div class="ttdeci">bool GetEnvAllowTensorCore()</div><div class="ttdoc">Returns global policy for TensorCore algo use. </div><div class="ttdef"><b>Definition:</b> cuda_utils.h:346</div></div>
@@ -472,7 +477,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 4 2017 01:09:30 for mxnet by  <a href="http://www.doxygen.org/index.html">
+Generated on Thu Feb 22 2018 19:36:05 for mxnet by  <a href="http://www.doxygen.org/index.html">
 <img alt="doxygen" class="footer" src="doxygen.png"/>
 </a> 1.8.6
 </small></address>
