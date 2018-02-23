@@ -8,7 +8,6 @@ var searchData=
   ['get_5fhost_5fspace_5finternal',['get_host_space_internal',['../structmxnet_1_1Resource.html#af6e0224f60b5e9afd3c883972863537f',1,'mxnet::Resource']]],
   ['get_5fhost_5fspace_5ftyped',['get_host_space_typed',['../structmxnet_1_1Resource.html#a7c6dff75a9e05a7394b02c84b79a14b2',1,'mxnet::Resource']]],
   ['get_5fnum_5fdead_5fnode',['get_num_dead_node',['../classmxnet_1_1KVStore.html#af5c48df3aade761a547a1dc6f7b8702d',1,'mxnet::KVStore']]],
-  ['get_5fparallel_5frandom',['get_parallel_random',['../structmxnet_1_1Resource.html#af181352be1fbf440eb43540c7d9d61fb',1,'mxnet::Resource']]],
   ['get_5frandom',['get_random',['../structmxnet_1_1Resource.html#a86039963ae5d682ffc287aefd520f6f9',1,'mxnet::Resource']]],
   ['get_5frank',['get_rank',['../classmxnet_1_1KVStore.html#a262ef45340106fdb5c2a296c3cb711b1',1,'mxnet::KVStore']]],
   ['get_5fspace',['get_space',['../structmxnet_1_1Resource.html#ab2be3ebdd3c5f5fa181ac4f6cdd69508',1,'mxnet::Resource']]],
@@ -23,8 +22,9 @@ var searchData=
   ['getexecnummatchcolor',['GetExecNumMatchColor',['../namespacemxnet_1_1common.html#a56555edcc52c5b25bed90bd05e00b5fa',1,'mxnet::common']]],
   ['getfcompute',['GetFCompute',['../namespacemxnet_1_1common.html#a1abcb76ccd9022ebacdacd69c821cdc2',1,'mxnet::common']]],
   ['getforwardgraph',['GetForwardGraph',['../classmxnet_1_1Imperative_1_1CachedOp.html#ab2c76e6c130d7bf4a9e69708b32d93c1',1,'mxnet::Imperative::CachedOp']]],
+  ['getkernel',['GetKernel',['../classmxnet_1_1rtc_1_1CudaModule.html#ab31092777ac1fa3c8902db0ed291b1a4',1,'mxnet::rtc::CudaModule']]],
   ['getmutex',['GetMutex',['../classmxnet_1_1Storage.html#ac12e7740df4520d6267d250ca16404d4',1,'mxnet::Storage']]],
-  ['getnumthreadspergpu',['GetNumThreadsPerGPU',['../namespacemxnet_1_1common.html#a467e8b51fc0d0a7266e9f3172b2ff7f1',1,'mxnet::common']]],
+  ['getnumthreadpergpu',['GetNumThreadPerGPU',['../namespacemxnet_1_1common.html#abc7580a95e3de5cf38d5bc2617c6d541',1,'mxnet::common']]],
   ['getparams',['GetParams',['../classmxnet_1_1OperatorProperty.html#a704ae43181c8a88bfd0a47e8005f7cb8',1,'mxnet::OperatorProperty']]],
   ['gpu',['GPU',['../structmxnet_1_1Context.html#a39d1a2b59bce135da127475995a58671',1,'mxnet::Context']]],
   ['gradient',['Gradient',['../classmxnet_1_1Imperative_1_1CachedOp.html#ab0f1d3a2e05f8790ff39f11c9af02f2a',1,'mxnet::Imperative::CachedOp']]]

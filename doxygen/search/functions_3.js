@@ -31,6 +31,7 @@ var searchData=
   ['cublasgeterrorstring',['CublasGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#a9feee613a4f16a954dd68e55345a72ac',1,'mxnet::common::cuda']]],
   ['cudamax',['CudaMax',['../namespacemxnet_1_1common_1_1cuda.html#a6f3ee04eb382c57e10916108db3efd80',1,'mxnet::common::cuda']]],
   ['cudamin',['CudaMin',['../namespacemxnet_1_1common_1_1cuda.html#a03888f252f813f6d052ae84bf8801498',1,'mxnet::common::cuda']]],
+  ['cudamodule',['CudaModule',['../classmxnet_1_1rtc_1_1CudaModule.html#a44ca063023adb5d05ad1a219c9c14f20',1,'mxnet::rtc::CudaModule']]],
   ['curandgeterrorstring',['CurandGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#a97c06b2f4d26445a7386b0f54fae1feb',1,'mxnet::common::cuda']]],
   ['cusolvergeterrorstring',['CusolverGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#abf9bcb4cb696e9ae61b818510dac39c8',1,'mxnet::common::cuda']]]
 ];
