@@ -1,12 +1,6 @@
 var searchData=
 [
-  ['rand',['rand',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4_1_1Impl.html#ab0c9e07876283262b448ba484695f1e0',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Impl::rand()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4_1_1Impl.html#a1b93a653772f69ba2922d51f93612813',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::Impl::rand()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01double_01_4_1_1Impl.html#a6b3157a5c54dffb36f0610242aa277a9',1,'mxnet::common::random::RandGenerator&lt; gpu, double &gt;::Impl::rand()']]],
-  ['randgenerator',['RandGenerator',['../classmxnet_1_1common_1_1random_1_1RandGenerator.html',1,'mxnet::common::random']]],
-  ['randgenerator_3c_20cpu_2c_20dtype_20_3e',['RandGenerator&lt; cpu, DType &gt;',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4.html',1,'mxnet::common::random']]],
-  ['randgenerator_3c_20gpu_2c_20double_20_3e',['RandGenerator&lt; gpu, double &gt;',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01double_01_4.html',1,'mxnet::common::random']]],
-  ['randgenerator_3c_20gpu_2c_20dtype_20_3e',['RandGenerator&lt; gpu, DType &gt;',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html',1,'mxnet::common::random']]],
   ['random_5fengine',['RANDOM_ENGINE',['../namespacemxnet_1_1common.html#aceba8f2d6de65796966d7f1d341dcf33',1,'mxnet::common']]],
-  ['random_5fgenerator_2eh',['random_generator.h',['../random__generator_8h.html',1,'']]],
   ['randomseed',['RandomSeed',['../namespacemxnet.html#a5bf83454c8f41259eb9d471f59feda2b',1,'mxnet']]],
   ['real_5fdev_5fid',['real_dev_id',['../structmxnet_1_1Context.html#ada4cad693c928562d0fd74fba5ddcde3',1,'mxnet::Context']]],
   ['real_5ft',['real_t',['../namespacemxnet.html#a4421326e33f2a848cb2fa3e70ab24ff4',1,'mxnet']]],
@@ -23,8 +17,8 @@ var searchData=
   ['resource',['Resource',['../structmxnet_1_1Resource.html#a76a2cc8f2a94b67b3533a048a80396aa',1,'mxnet::Resource::Resource()'],['../structmxnet_1_1op_1_1EnvArguments.html#a6b62df4767fd50d6a1fd9ebd44193bef',1,'mxnet::op::EnvArguments::resource()']]],
   ['resource_2eh',['resource.h',['../resource_8h.html',1,'']]],
   ['resourcemanager',['ResourceManager',['../classmxnet_1_1ResourceManager.html',1,'mxnet']]],
-  ['resourcerequest',['ResourceRequest',['../structmxnet_1_1ResourceRequest.html#a0191250c5891ba487f354df4caf3604d',1,'mxnet::ResourceRequest::ResourceRequest()'],['../structmxnet_1_1ResourceRequest.html#aa01dd9fd716dfbb68c2ee01f5a11aea5',1,'mxnet::ResourceRequest::ResourceRequest(Type type)']]],
   ['resourcerequest',['ResourceRequest',['../structmxnet_1_1ResourceRequest.html',1,'mxnet']]],
+  ['resourcerequest',['ResourceRequest',['../structmxnet_1_1ResourceRequest.html#a0191250c5891ba487f354df4caf3604d',1,'mxnet::ResourceRequest::ResourceRequest()'],['../structmxnet_1_1ResourceRequest.html#aa01dd9fd716dfbb68c2ee01f5a11aea5',1,'mxnet::ResourceRequest::ResourceRequest(Type type)']]],
   ['rowsparseauxtype',['RowSparseAuxType',['../namespacemxnet_1_1rowsparse.html#a0ad4c619684fa4d442c7076c18fef232',1,'mxnet::rowsparse']]],
   ['rsp_5fidx_5fcheck',['rsp_idx_check',['../structmxnet_1_1common_1_1rsp__idx__check.html',1,'mxnet::common']]],
   ['rtc_2eh',['rtc.h',['../rtc_8h.html',1,'']]],
