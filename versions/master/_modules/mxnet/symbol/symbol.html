@@ -253,7 +253,7 @@
 <span class="kn">from</span> <span class="nn">._internal</span> <span class="kn">import</span> <span class="n">SymbolBase</span><span class="p">,</span> <span class="n">_set_symbol_class</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Symbol"</span><span class="p">,</span> <span class="s2">"var"</span><span class="p">,</span> <span class="s2">"Variable"</span><span class="p">,</span> <span class="s2">"Group"</span><span class="p">,</span> <span class="s2">"load"</span><span class="p">,</span> <span class="s2">"load_json"</span><span class="p">,</span>
-           <span class="s2">"pow"</span><span class="p">,</span> <span class="s2">"maximum"</span><span class="p">,</span> <span class="s2">"minimum"</span><span class="p">,</span> <span class="s2">"hypot"</span><span class="p">,</span> <span class="s2">"zeros"</span><span class="p">,</span> <span class="s2">"ones"</span><span class="p">,</span> <span class="s2">"full"</span><span class="p">,</span> <span class="s2">"arange"</span><span class="p">]</span>
+           <span class="s2">"pow"</span><span class="p">,</span> <span class="s2">"maximum"</span><span class="p">,</span> <span class="s2">"minimum"</span><span class="p">,</span> <span class="s2">"hypot"</span><span class="p">,</span> <span class="s2">"eye"</span><span class="p">,</span> <span class="s2">"zeros"</span><span class="p">,</span> <span class="s2">"ones"</span><span class="p">,</span> <span class="s2">"full"</span><span class="p">,</span> <span class="s2">"arange"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Symbol"><a class="viewcode-back" href="../../../api/python/symbol/symbol.html#mxnet.symbol.Symbol">[docs]</a><span class="k">class</span> <span class="nc">Symbol</span><span class="p">(</span><span class="n">SymbolBase</span><span class="p">):</span>
@@ -2937,6 +2937,29 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'types (</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">) not supported'</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">left</span><span class="p">)),</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">right</span><span class="p">))))</span></div>
 
+<div class="viewcode-block" id="eye"><a class="viewcode-back" href="../../../api/python/symbol/symbol.html#mxnet.symbol.eye">[docs]</a><span class="k">def</span> <span class="nf">eye</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">"""Returns a new symbol of 2-D shpae, filled with ones on the diagonal</span>
+<span class="sd">       and zeros elsewhere.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    N: int</span>
+<span class="sd">        Number of rows in the output.</span>
+<span class="sd">    M: int, optional</span>
+<span class="sd">        Number of columns in the output. If 0, defaults to N.</span>
+<span class="sd">    k: int, optional</span>
+<span class="sd">        Index of the diagonal: 0 (the default) refers to the main diagonal,</span>
+<span class="sd">        a positive value refers to an upper diagonal,</span>
+<span class="sd">        and a negative value to a lower diagonal.</span>
+<span class="sd">    dtype : str or numpy.dtype, optional</span>
+<span class="sd">        The value type of the inner value, default to ``np.float32``.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out : Symbol</span>
+<span class="sd">        The created Symbol.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">_numpy</span><span class="o">.</span><span class="n">float32</span>
+    <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_eye</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="zeros"><a class="viewcode-back" href="../../../api/python/symbol/symbol.html#mxnet.symbol.zeros">[docs]</a><span class="k">def</span> <span class="nf">zeros</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">"""Returns a new symbol of given shape and type, filled with zeros.</span>
