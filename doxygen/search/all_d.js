@@ -191,6 +191,7 @@ var searchData=
   ['mxsymbolgetchildren',['MXSymbolGetChildren',['../c__api_8h.html#a6050b4cfcb75ed3d0a44afb1b8df45cd',1,'c_api.h']]],
   ['mxsymbolgetinternals',['MXSymbolGetInternals',['../c__api_8h.html#a13816872b73d6c474686d985747e8c65',1,'c_api.h']]],
   ['mxsymbolgetname',['MXSymbolGetName',['../c__api_8h.html#a33606f8bf8413da87c9d499e2b2f1e88',1,'c_api.h']]],
+  ['mxsymbolgetnumoutputs',['MXSymbolGetNumOutputs',['../c__api_8h.html#a970b94e3dfb72a2a76065149180c4f1f',1,'c_api.h']]],
   ['mxsymbolgetoutput',['MXSymbolGetOutput',['../c__api_8h.html#a8e601320c59679d9423179f23f281bf2',1,'c_api.h']]],
   ['mxsymbolgrad',['MXSymbolGrad',['../c__api_8h.html#ac2268c0bc7ad2f96d36bbbdab9a51c2e',1,'c_api.h']]],
   ['mxsymbolinfershape',['MXSymbolInferShape',['../c__api_8h.html#afaf03324563098f1ac4c23ecfc88b784',1,'c_api.h']]],
@@ -207,6 +208,6 @@ var searchData=
   ['mxsymbolsavetojson',['MXSymbolSaveToJSON',['../c__api_8h.html#a5c99eac0fe3cfa0912259d0fa12b6651',1,'c_api.h']]],
   ['mxsymbolsetattr',['MXSymbolSetAttr',['../c__api_8h.html#aebeac35c3110eb391035fbbeb29e9436',1,'c_api.h']]],
   ['op',['op',['../namespacemxnet_1_1op.html',1,'mxnet']]],
-  ['rowsparse',['rowsparse',['../namespacemxnet_1_1rowsparse.html',1,'mxnet']]],
-  ['rtc',['rtc',['../namespacemxnet_1_1rtc.html',1,'mxnet']]]
+  ['random',['random',['../namespacemxnet_1_1common_1_1random.html',1,'mxnet::common']]],
+  ['rowsparse',['rowsparse',['../namespacemxnet_1_1rowsparse.html',1,'mxnet']]]
 ];

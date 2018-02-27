@@ -21,6 +21,7 @@ var searchData=
   ['dev_5fid',['dev_id',['../structmxnet_1_1Context.html#a8486dcc599dffe447e2f098b170d3db9',1,'mxnet::Context::dev_id()'],['../classmxnet_1_1TBlob.html#a5dc3a399b0119175643da0d35fde7edd',1,'mxnet::TBlob::dev_id()']]],
   ['dev_5fmask',['dev_mask',['../structmxnet_1_1Context.html#a07c6092f42393d543460f766a7a3b6df',1,'mxnet::Context::dev_mask()'],['../classmxnet_1_1TBlob.html#a613ad1f5ba31efcbecbd041e23cc61b2',1,'mxnet::TBlob::dev_mask()']]],
   ['dev_5ftype',['dev_type',['../structmxnet_1_1Context.html#a66040df23c2a5663f29bc50aa0bbace3',1,'mxnet::Context']]],
+  ['dev_5ftype_5fstring',['dev_type_string',['../namespacemxnet_1_1common.html#a733ce35d109323dbf4ef1f4bc3094870',1,'mxnet::common']]],
   ['devicetype',['DeviceType',['../structmxnet_1_1Context.html#a611c227b5e04a2777c3e4507bb76f60e',1,'mxnet::Context']]],
   ['directfree',['DirectFree',['../classmxnet_1_1Storage.html#a098f8ebacd25f5203b2dc4c1796aec64',1,'mxnet::Storage']]],
   ['dispatch_5fmode_5fstring',['dispatch_mode_string',['../namespacemxnet_1_1common.html#a4716f6044f678090af8ae7ef3ace3a31',1,'mxnet::common']]],
@@ -33,7 +34,7 @@ var searchData=
   ['dmlc_5fdeclare_5ftype_5fname',['DMLC_DECLARE_TYPE_NAME',['../namespacedmlc.html#a2bb53a09f94357722a2099ff7309f9f3',1,'dmlc::DMLC_DECLARE_TYPE_NAME(mxnet::TShape,&quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#ad2dedf41507bf76166d85fe447fa95de',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; int &gt;,&quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#aa4d7485dc06589628bb4488ec9e8b1c9',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; dmlc::optional&lt; int &gt;&gt;,&quot;Shape(tuple)&quot;)']]],
   ['dptr',['dptr',['../structmxnet_1_1Storage_1_1Handle.html#a428e25a6317e50c8b55307c96f8ec595',1,'mxnet::Storage::Handle::dptr()'],['../classmxnet_1_1TBlob.html#a3449ca0a9130e87c343130b041b68c53',1,'mxnet::TBlob::dptr()']]],
   ['dptr_5f',['dptr_',['../classmxnet_1_1TBlob.html#a4e5f4953be2c16724ecff0afc5ea2e10',1,'mxnet::TBlob']]],
-  ['dtype',['dtype',['../structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html#adf42baba2bb344bfc7a2be4c6ede34c8',1,'mxnet::rtc::CudaModule::ArgType::dtype()'],['../classmxnet_1_1NDArray.html#a1b6038a196c14d038bd3e6d6bbe36ad2',1,'mxnet::NDArray::dtype()']]],
+  ['dtype',['dtype',['../classmxnet_1_1NDArray.html#a1b6038a196c14d038bd3e6d6bbe36ad2',1,'mxnet::NDArray']]],
   ['dtype_5f',['dtype_',['../classmxnet_1_1NDArray.html#a3e095ff4cb510f9b3160513a89802259',1,'mxnet::NDArray::dtype_(dtype)'],['../classmxnet_1_1NDArray.html#a3e095ff4cb510f9b3160513a89802259',1,'mxnet::NDArray::dtype_(dtype)']]],
   ['parameter',['parameter',['../namespacedmlc_1_1parameter.html',1,'dmlc']]]
 ];
