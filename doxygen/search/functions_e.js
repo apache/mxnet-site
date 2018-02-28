@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['rand',['rand',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4_1_1Impl.html#ab0c9e07876283262b448ba484695f1e0',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Impl::rand()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4_1_1Impl.html#a1b93a653772f69ba2922d51f93612813',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::Impl::rand()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01double_01_4_1_1Impl.html#a6b3157a5c54dffb36f0610242aa277a9',1,'mxnet::common::random::RandGenerator&lt; gpu, double &gt;::Impl::rand()']]],
   ['randomseed',['RandomSeed',['../namespacemxnet.html#a5bf83454c8f41259eb9d471f59feda2b',1,'mxnet']]],
   ['real_5fdev_5fid',['real_dev_id',['../structmxnet_1_1Context.html#ada4cad693c928562d0fd74fba5ddcde3',1,'mxnet::Context']]],
   ['recordop',['RecordOp',['../classmxnet_1_1Imperative.html#a2b0f55c31882412c44468d8ba1a97fd1',1,'mxnet::Imperative']]],
