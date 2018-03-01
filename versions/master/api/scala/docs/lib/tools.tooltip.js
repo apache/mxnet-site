@@ -1,4 +1,4 @@
-/*
+/**
  * tools.tooltip 1.1.3 - Tooltips done right.
  * 
  * Copyright (c) 2009 Tero Piirainen
@@ -11,4 +11,372 @@
  * Date: ${date}
  * Revision: ${revision} 
  */
-(function(c){var d=[];c.tools=c.tools||{};c.tools.tooltip={version:"1.1.3",conf:{effect:"toggle",fadeOutSpeed:"fast",tip:null,predelay:0,delay:30,opacity:1,lazy:undefined,position:["top","center"],offset:[0,0],cancelDefault:true,relative:false,oneInstance:true,events:{def:"mouseover,mouseout",input:"focus,blur",widget:"focus mouseover,blur mouseout",tooltip:"mouseover,mouseout"},api:false},addEffect:function(e,g,f){b[e]=[g,f]}};var b={toggle:[function(e){var f=this.getConf(),g=this.getTip(),h=f.opacity;if(h<1){g.css({opacity:h})}g.show();e.call()},function(e){this.getTip().hide();e.call()}],fade:[function(e){this.getTip().fadeIn(this.getConf().fadeInSpeed,e)},function(e){this.getTip().fadeOut(this.getConf().fadeOutSpeed,e)}]};function a(f,g){var p=this,k=c(this);f.data("tooltip",p);var l=f.next();if(g.tip){l=c(g.tip);if(l.length>1){l=f.nextAll(g.tip).eq(0);if(!l.length){l=f.parent().nextAll(g.tip).eq(0)}}}function o(u){var t=g.relative?f.position().top:f.offset().top,s=g.relative?f.position().left:f.offset().left,v=g.position[0];t-=l.outerHeight()-g.offset[0];s+=f.outerWidth()+g.offset[1];var q=l.outerHeight()+f.outerHeight();if(v=="center"){t+=q/2}if(v=="bottom"){t+=q}v=g.position[1];var r=l.outerWidth()+f.outerWidth();if(v=="center"){s-=r/2}if(v=="left"){s-=r}return{top:t,left:s}}var i=f.is(":input"),e=i&&f.is(":checkbox, :radio, select, :button"),h=f.attr("type"),n=g.events[h]||g.events[i?(e?"widget":"input"):"def"];n=n.split(/,\s*/);if(n.length!=2){throw"Tooltip: bad events configuration for "+h}f.bind(n[0],function(r){if(g.oneInstance){c.each(d,function(){this.hide()})}var q=l.data("trigger");if(q&&q[0]!=this){l.hide().stop(true,true)}r.target=this;p.show(r);n=g.events.tooltip.split(/,\s*/);l.bind(n[0],function(){p.show(r)});if(n[1]){l.bind(n[1],function(){p.hide(r)})}});f.bind(n[1],function(q){p.hide(q)});if(!c.browser.msie&&!i&&!g.predelay){f.mousemove(function(){if(!p.isShown()){f.triggerHandler("mouseover")}})}if(g.opacity<1){l.css("opacity",g.opacity)}var m=0,j=f.attr("title");if(j&&g.cancelDefault){f.removeAttr("title");f.data("title",j)}c.extend(p,{show:function(r){if(r){f=c(r.target)}clearTimeout(l.data("timer"));if(l.is(":animated")||l.is(":visible")){return p}function q(){l.data("trigger",f);var t=o(r);if(g.tip&&j){l.html(f.data("title"))}r=r||c.Event();r.type="onBeforeShow";k.trigger(r,[t]);if(r.isDefaultPrevented()){return p}t=o(r);l.css({position:"absolute",top:t.top,left:t.left});var s=b[g.effect];if(!s){throw'Nonexistent effect "'+g.effect+'"'}s[0].call(p,function(){r.type="onShow";k.trigger(r)})}if(g.predelay){clearTimeout(m);m=setTimeout(q,g.predelay)}else{q()}return p},hide:function(r){clearTimeout(l.data("timer"));clearTimeout(m);if(!l.is(":visible")){return}function q(){r=r||c.Event();r.type="onBeforeHide";k.trigger(r);if(r.isDefaultPrevented()){return}b[g.effect][1].call(p,function(){r.type="onHide";k.trigger(r)})}if(g.delay&&r){l.data("timer",setTimeout(q,g.delay))}else{q()}return p},isShown:function(){return l.is(":visible, :animated")},getConf:function(){return g},getTip:function(){return l},getTrigger:function(){return f},bind:function(q,r){k.bind(q,r);return p},onHide:function(q){return this.bind("onHide",q)},onBeforeShow:function(q){return this.bind("onBeforeShow",q)},onShow:function(q){return this.bind("onShow",q)},onBeforeHide:function(q){return this.bind("onBeforeHide",q)},unbind:function(q){k.unbind(q);return p}});c.each(g,function(q,r){if(c.isFunction(r)){p.bind(q,r)}})}c.prototype.tooltip=function(e){var f=this.eq(typeof e=="number"?e:0).data("tooltip");if(f){return f}var g=c.extend(true,{},c.tools.tooltip.conf);if(c.isFunction(e)){e={onBeforeShow:e}}else{if(typeof e=="string"){e={tip:e}}}e=c.extend(true,g,e);if(typeof e.position=="string"){e.position=e.position.split(/,?\s/)}if(e.lazy!==false&&(e.lazy===true||this.length>20)){this.one("mouseover",function(h){f=new a(c(this),e);f.show(h);d.push(f)})}else{this.each(function(){f=new a(c(this),e);d.push(f)})}return e.api?f:this}})(jQuery);
+(function($) { 
+
+	var instances = [];
+	
+	// static constructs
+	$.tools = $.tools || {};
+	
+	$.tools.tooltip = {
+		version: '1.1.3',
+		
+		conf: { 
+			
+			// default effect variables
+			effect: 'toggle',			
+			fadeOutSpeed: "fast",
+			tip: null,
+			
+			predelay: 0,
+			delay: 30,
+			opacity: 1,			
+			lazy: undefined,
+			
+			// 'top', 'bottom', 'right', 'left', 'center'
+			position: ['top', 'center'], 
+			offset: [0, 0],			
+			cancelDefault: true,
+			relative: false,
+			oneInstance: true,
+			
+			
+			// type to event mapping 
+			events: {
+				def: 			"mouseover,mouseout",
+				input: 		"focus,blur",
+				widget:		"focus mouseover,blur mouseout",
+				tooltip:		"mouseover,mouseout"
+			},			
+			
+			api: false
+		},
+		
+		addEffect: function(name, loadFn, hideFn) {
+			effects[name] = [loadFn, hideFn];	
+		} 
+	};
+	
+	
+	var effects = { 
+		toggle: [ 
+			function(done) { 
+				var conf = this.getConf(), tip = this.getTip(), o = conf.opacity;
+				if (o < 1) { tip.css({opacity: o}); }
+				tip.show();
+				done.call();
+			},
+			
+			function(done) { 
+				this.getTip().hide();
+				done.call();
+			} 
+		],
+		
+		fade: [
+			function(done) { this.getTip().fadeIn(this.getConf().fadeInSpeed, done); },  
+			function(done) { this.getTip().fadeOut(this.getConf().fadeOutSpeed, done); } 
+		]		
+	};   
+
+	function Tooltip(trigger, conf) {
+
+		var self = this, $self = $(this);
+		
+		trigger.data("tooltip", self);
+		
+		// find the tip
+		var tip = trigger.next();
+		
+		if (conf.tip) {
+			
+			tip = $(conf.tip);
+			
+			// multiple tip elements
+			if (tip.length > 1) {
+				
+				// find sibling
+				tip = trigger.nextAll(conf.tip).eq(0);	
+				
+				// find sibling from the parent element
+				if (!tip.length) {
+					tip = trigger.parent().nextAll(conf.tip).eq(0);
+				}
+			} 
+		} 				
+		
+		/* calculate tip position relative to the trigger */  	
+		function getPosition(e) {	
+			
+			// get origin top/left position 
+			var top = conf.relative ? trigger.position().top : trigger.offset().top, 
+				 left = conf.relative ? trigger.position().left : trigger.offset().left,
+				 pos = conf.position[0];
+
+			top  -= tip.outerHeight() - conf.offset[0];
+			left += trigger.outerWidth() + conf.offset[1];
+			
+			// adjust Y		
+			var height = tip.outerHeight() + trigger.outerHeight();
+			if (pos == 'center') 	{ top += height / 2; }
+			if (pos == 'bottom') 	{ top += height; }
+			
+			// adjust X
+			pos = conf.position[1]; 	
+			var width = tip.outerWidth() + trigger.outerWidth();
+			if (pos == 'center') 	{ left -= width / 2; }
+			if (pos == 'left')   	{ left -= width; }	 
+			
+			return {top: top, left: left};
+		}		
+
+		
+		// event management
+		var isInput = trigger.is(":input"), 
+			 isWidget = isInput && trigger.is(":checkbox, :radio, select, :button"),			
+			 type = trigger.attr("type"),
+			 evt = conf.events[type] || conf.events[isInput ? (isWidget ? 'widget' : 'input') : 'def']; 
+		
+		evt = evt.split(/,\s*/); 
+		if (evt.length != 2) { throw "Tooltip: bad events configuration for " + type; }
+				
+		trigger.bind(evt[0], function(e) {
+			
+			// close all instances
+			if (conf.oneInstance) {
+				$.each(instances, function()  {
+					this.hide();		
+				});
+			}
+				
+			// see if the tip was launched by this trigger
+			var t = tip.data("trigger");			
+			if (t && t[0] != this) { tip.hide().stop(true, true); }			
+			
+			e.target = this;
+			self.show(e); 
+			
+			// tooltip close events
+			evt = conf.events.tooltip.split(/,\s*/);
+			tip.bind(evt[0], function() { self.show(e); });
+			if (evt[1]) { tip.bind(evt[1], function() { self.hide(e); }); }
+			
+		});
+		
+		trigger.bind(evt[1], function(e) {
+			self.hide(e); 
+		});
+		
+		// ensure that the tip really shows up. IE cannot catch up with this.
+		if (!$.browser.msie && !isInput && !conf.predelay) {
+			trigger.mousemove(function()  {					
+				if (!self.isShown()) {
+					trigger.triggerHandler("mouseover");	
+				}
+			});
+		}
+
+		// avoid "black box" bug in IE with PNG background images
+		if (conf.opacity < 1) {
+			tip.css("opacity", conf.opacity);		
+		}
+		
+		var pretimer = 0, title = trigger.attr("title");
+		
+		if (title && conf.cancelDefault) { 
+			trigger.removeAttr("title");
+			trigger.data("title", title);			
+		}						
+		
+		$.extend(self, {
+				
+			show: function(e) {
+				
+				if (e) { trigger = $(e.target); }				
+
+				clearTimeout(tip.data("timer"));					
+
+				if (tip.is(":animated") || tip.is(":visible")) { return self; }
+				
+				function show() {
+					
+					// remember the trigger element for this tip
+					tip.data("trigger", trigger);
+					
+					// get position
+					var pos = getPosition(e);					
+					
+					// title attribute					
+					if (conf.tip && title) {
+						tip.html(trigger.data("title"));
+					} 				
+					
+					// onBeforeShow
+					e = e || $.Event();
+					e.type = "onBeforeShow";
+					$self.trigger(e, [pos]);				
+					if (e.isDefaultPrevented()) { return self; }
+			
+					
+					// onBeforeShow may have altered the configuration
+					pos = getPosition(e);
+					
+					// set position
+					tip.css({position:'absolute', top: pos.top, left: pos.left});					
+					
+					// invoke effect
+					var eff = effects[conf.effect];
+					if (!eff) { throw "Nonexistent effect \"" + conf.effect + "\""; }
+					
+					eff[0].call(self, function() {
+						e.type = "onShow";
+						$self.trigger(e);			
+					});					
+					
+				}
+				
+				if (conf.predelay) {
+					clearTimeout(pretimer);
+					pretimer = setTimeout(show, conf.predelay);	
+					
+				} else {
+					show();	
+				}
+				
+				return self;
+			},
+			
+			hide: function(e) {
+
+				clearTimeout(tip.data("timer"));
+				clearTimeout(pretimer);
+				
+				if (!tip.is(":visible")) { return; }
+				
+				function hide() {
+					
+					// onBeforeHide
+					e = e || $.Event();
+					e.type = "onBeforeHide";
+					$self.trigger(e);				
+					if (e.isDefaultPrevented()) { return; }
+					
+					effects[conf.effect][1].call(self, function() {
+						e.type = "onHide";
+						$self.trigger(e);		
+					});
+				}
+				 
+				if (conf.delay && e) {
+					tip.data("timer", setTimeout(hide, conf.delay));
+					
+				} else {
+					hide();	
+				}			
+				
+				return self;
+			},
+			
+			isShown: function() {
+				return tip.is(":visible, :animated");	
+			},
+				
+			getConf: function() {
+				return conf;	
+			},
+				
+			getTip: function() {
+				return tip;	
+			},
+			
+			getTrigger: function() {
+				return trigger;	
+			},
+			
+			// callback functions			
+			bind: function(name, fn) {
+				$self.bind(name, fn);
+				return self;	
+			},
+			
+			onHide: function(fn) {
+				return this.bind("onHide", fn);
+			},
+
+			onBeforeShow: function(fn) {
+				return this.bind("onBeforeShow", fn);
+			},
+			
+			onShow: function(fn) {
+				return this.bind("onShow", fn);
+			},
+			
+			onBeforeHide: function(fn) {
+				return this.bind("onBeforeHide", fn);
+			},
+
+			unbind: function(name) {
+				$self.unbind(name);
+				return self;	
+			}			
+
+		});		
+
+		// bind all callbacks from configuration
+		$.each(conf, function(name, fn) {
+			if ($.isFunction(fn)) { self.bind(name, fn); }
+		}); 		
+		
+	}
+		
+	
+	// jQuery plugin implementation
+	$.prototype.tooltip = function(conf) {
+		
+		// return existing instance
+		var api = this.eq(typeof conf == 'number' ? conf : 0).data("tooltip");
+		if (api) { return api; }
+		
+		// setup options
+		var globals = $.extend(true, {}, $.tools.tooltip.conf);		
+		
+		if ($.isFunction(conf)) {
+			conf = {onBeforeShow: conf};
+			
+		} else if (typeof conf == 'string') {
+			conf = {tip: conf};	
+		}
+
+		conf = $.extend(true, globals, conf);
+		
+		// can also be given as string
+		if (typeof conf.position == 'string') {
+			conf.position = conf.position.split(/,?\s/);	
+		}
+		
+		// assign tip's only when apiement is being mouseovered		
+		if (conf.lazy !== false && (conf.lazy === true || this.length > 20)) {	
+				
+			this.one("mouseover", function(e) {	
+				api = new Tooltip($(this), conf);
+				api.show(e);
+				instances.push(api);
+			}); 
+			
+		} else {
+			
+			// install tooltip for each entry in jQuery object
+			this.each(function() {
+				api = new Tooltip($(this), conf); 
+				instances.push(api);
+			});
+		} 
+
+		return conf.api ? api: this;		
+		
+	};
+		
+}) (jQuery);
+
+		
+

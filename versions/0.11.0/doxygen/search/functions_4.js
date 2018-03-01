@@ -1,7 +1,6 @@
 var searchData=
 [
   ['data',['data',['../classmxnet_1_1NDArray.html#aebd03e900ec7664a99b780a0cb1efea6',1,'mxnet::NDArray']]],
-  ['data_5fndarray',['data_ndarray',['../classmxnet_1_1NDArray.html#af6d456d1e9f105fe913b696fe88efdc3',1,'mxnet::NDArray']]],
   ['declarebackwarddependency',['DeclareBackwardDependency',['../classmxnet_1_1OperatorProperty.html#abf9e6a8d40750f3ee81fe30cbe3e2aae',1,'mxnet::OperatorProperty']]],
   ['deduplicatevarhandle',['DeduplicateVarHandle',['../classmxnet_1_1Engine.html#a9d8ac1987a6844dba9b0463030fb3430',1,'mxnet::Engine']]],
   ['delete',['Delete',['../classmxnet_1_1common_1_1ObjectPool.html#a7dcdcbe9b6764cedc28a1de2fbc8dd6f',1,'mxnet::common::ObjectPool::Delete()'],['../structmxnet_1_1common_1_1ObjectPoolAllocatable.html#a68ed487cb6de6194a4798fdbbfd04597',1,'mxnet::common::ObjectPoolAllocatable::Delete()']]],
@@ -16,6 +15,5 @@ var searchData=
   ['dmlc_5fdeclare_5ftraits',['DMLC_DECLARE_TRAITS',['../namespacedmlc.html#a7272c846fa03dee55916aadce0165a46',1,'dmlc']]],
   ['dmlc_5fdeclare_5ftype_5fname',['DMLC_DECLARE_TYPE_NAME',['../namespacedmlc.html#a2bb53a09f94357722a2099ff7309f9f3',1,'dmlc::DMLC_DECLARE_TYPE_NAME(mxnet::TShape,&quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#ad2dedf41507bf76166d85fe447fa95de',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; int &gt;,&quot;Shape(tuple)&quot;)'],['../namespacedmlc.html#aa4d7485dc06589628bb4488ec9e8b1c9',1,'dmlc::DMLC_DECLARE_TYPE_NAME(nnvm::Tuple&lt; dmlc::optional&lt; int &gt;&gt;,&quot;Shape(tuple)&quot;)']]],
   ['dptr',['dptr',['../classmxnet_1_1TBlob.html#a3449ca0a9130e87c343130b041b68c53',1,'mxnet::TBlob']]],
-  ['dtype',['dtype',['../classmxnet_1_1NDArray.html#a1b6038a196c14d038bd3e6d6bbe36ad2',1,'mxnet::NDArray']]],
-  ['dtype_5f',['dtype_',['../classmxnet_1_1NDArray.html#a3e095ff4cb510f9b3160513a89802259',1,'mxnet::NDArray::dtype_(dtype)'],['../classmxnet_1_1NDArray.html#af5d6ed79d0346407edfc969d4d51d15c',1,'mxnet::NDArray::dtype_(data.type_flag_)']]]
+  ['dtype',['dtype',['../classmxnet_1_1NDArray.html#a1b6038a196c14d038bd3e6d6bbe36ad2',1,'mxnet::NDArray']]]
 ];

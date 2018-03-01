@@ -15,5 +15,6 @@ var searchData=
   ['isschedulernode',['IsSchedulerNode',['../classmxnet_1_1KVStore.html#a41113b9dfeab6c705ba064cc3f010fb4',1,'mxnet::KVStore']]],
   ['isservernode',['IsServerNode',['../classmxnet_1_1KVStore.html#a101178924ce1d635b0c8c2a5bce0ceaf',1,'mxnet::KVStore']]],
   ['isvariable',['IsVariable',['../classmxnet_1_1Imperative_1_1AGInfo.html#ad5f1d672e9adc8c0be46cc4002c0aafc',1,'mxnet::Imperative::AGInfo']]],
+  ['isview',['IsView',['../classmxnet_1_1NDArray.html#a117e3af0d08abf56ff8852adfb71f413',1,'mxnet::NDArray']]],
   ['isworkernode',['IsWorkerNode',['../classmxnet_1_1KVStore.html#ab216fb292fa77e843e95f474fa671a20',1,'mxnet::KVStore']]]
 ];

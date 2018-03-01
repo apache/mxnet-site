@@ -1,7 +1,6 @@
 var searchData=
 [
   ['lazyallocarray',['LazyAllocArray',['../classmxnet_1_1common_1_1LazyAllocArray.html#a1dd703a9eabfe691793a8398706bcc09',1,'mxnet::common::LazyAllocArray']]],
-  ['legacyload',['LegacyLoad',['../classmxnet_1_1NDArray.html#a0b212c0a0c4c83c64a6bf6d0c430602b',1,'mxnet::NDArray']]],
   ['listarguments',['ListArguments',['../classmxnet_1_1OperatorProperty.html#a24cc6a3763ff5f0881a2de0652810596',1,'mxnet::OperatorProperty']]],
   ['listauxiliarystates',['ListAuxiliaryStates',['../classmxnet_1_1OperatorProperty.html#a0e20dead67dad0cd76c147a997ef5094',1,'mxnet::OperatorProperty']]],
   ['listoutputs',['ListOutputs',['../classmxnet_1_1OperatorProperty.html#a1b37fb362748fa5027d4b5c925131892',1,'mxnet::OperatorProperty']]],
