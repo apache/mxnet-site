@@ -6,7 +6,6 @@ var searchData=
   ['alloc',['Alloc',['../classmxnet_1_1Storage.html#aaa387e9ae8d66a63438543d640f6cfff',1,'mxnet::Storage']]],
   ['arg_5fgrad_5fmap',['arg_grad_map',['../classmxnet_1_1Executor.html#a84552a918a65633678f30c00a2a0ae7f',1,'mxnet::Executor']]],
   ['argtype',['ArgType',['../structmxnet_1_1rtc_1_1CudaModule_1_1ArgType.html',1,'mxnet::rtc::CudaModule']]],
-  ['array_5f',['array_',['../structmxnet_1_1common_1_1StaticArray.html#a2b48c2aff03cc1c29306defddbca3649',1,'mxnet::common::StaticArray']]],
   ['asarray',['AsArray',['../classmxnet_1_1NDArray.html#a3896fcce89afce4c1d2f825f7853ca0c',1,'mxnet::NDArray']]],
   ['assign_5fdispatch',['ASSIGN_DISPATCH',['../operator__util_8h.html#a0e0ffc581a0c4a40815110163625b517',1,'operator_util.h']]],
   ['async_5fon_5fcomplete',['async_on_complete',['../structmxnet_1_1OpContext.html#a40ce0e3d4ac21412cfafafc5b1fd32ef',1,'mxnet::OpContext']]],

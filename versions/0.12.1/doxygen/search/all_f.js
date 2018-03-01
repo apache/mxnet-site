@@ -22,7 +22,6 @@ var searchData=
   ['operator_3c',['operator&lt;',['../structmxnet_1_1Context.html#a1862b54dcfd20332eb2365451f47c678',1,'mxnet::Context']]],
   ['operator_3d',['operator=',['../classmxnet_1_1NDArray.html#aa7a198e3e4c80a48cf92a913009aab8f',1,'mxnet::NDArray::operator=()'],['../classmxnet_1_1TBlob.html#ad3263d9d1ef40678cd592be822d1c7be',1,'mxnet::TBlob::operator=()']]],
   ['operator_3d_3d',['operator==',['../structmxnet_1_1Context.html#ad59267de7b56e3aebe86a6d0e9fca2f0',1,'mxnet::Context']]],
-  ['operator_5b_5d',['operator[]',['../structmxnet_1_1common_1_1StaticArray.html#a73ee83769fb76d465481097f572252ce',1,'mxnet::common::StaticArray::operator[](const index_t idx)'],['../structmxnet_1_1common_1_1StaticArray.html#a82f141a5e77df93e2082866165e95e4e',1,'mxnet::common::StaticArray::operator[](const index_t idx) const ']]],
   ['operator_5futil_2eh',['operator_util.h',['../operator__util_8h.html',1,'']]],
   ['operatorproperty',['OperatorProperty',['../classmxnet_1_1OperatorProperty.html',1,'mxnet']]],
   ['operatorpropertyfactory',['OperatorPropertyFactory',['../namespacemxnet.html#a6f5428fbf261a94eaac079ec24413815',1,'mxnet']]],

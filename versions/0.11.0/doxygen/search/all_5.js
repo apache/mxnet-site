@@ -2,14 +2,13 @@ var searchData=
 [
   ['data',['data',['../structmxnet_1_1DataInst.html#a3511bbb64add286c9cd1b03c70d4b111',1,'mxnet::DataInst::data()'],['../structmxnet_1_1DataBatch.html#acc98dd6f48816ca7462352a929e48959',1,'mxnet::DataBatch::data()'],['../structmxnet_1_1op_1_1GradFunctionArgument.html#ab9214ef3cfcf53b375a2e8f716e66929',1,'mxnet::op::GradFunctionArgument::data()'],['../classmxnet_1_1NDArray.html#aebd03e900ec7664a99b780a0cb1efea6',1,'mxnet::NDArray::data()']]],
   ['data_5fnames',['data_names',['../classmxnet_1_1IIterator.html#a65cd81ecf71d54a17a94ca65d27aa014',1,'mxnet::IIterator']]],
-  ['data_5fndarray',['data_ndarray',['../classmxnet_1_1NDArray.html#af6d456d1e9f105fe913b696fe88efdc3',1,'mxnet::NDArray']]],
   ['databatch',['DataBatch',['../structmxnet_1_1DataBatch.html',1,'mxnet']]],
   ['datainst',['DataInst',['../structmxnet_1_1DataInst.html',1,'mxnet']]],
   ['dataiteratorfactory',['DataIteratorFactory',['../namespacemxnet.html#a6dca73c81706d54b0ddb0ef967d1e132',1,'mxnet']]],
   ['dataiteratorreg',['DataIteratorReg',['../structmxnet_1_1DataIteratorReg.html',1,'mxnet']]],
   ['dataitercreator',['DataIterCreator',['../c__api_8h.html#a0b9b13ccb06a6a4f05d211261fa883dd',1,'c_api.h']]],
   ['dataiterhandle',['DataIterHandle',['../c__api_8h.html#abce84fe05f55709d643bcfd0a4e4620b',1,'c_api.h']]],
-  ['declare_5fbackward_5fdependency',['declare_backward_dependency',['../structNDArrayOpInfo.html#a4327dd20a65eb3a7241f67ede18f9950',1,'NDArrayOpInfo']]],
+  ['declare_5fbackward_5fdependency',['declare_backward_dependency',['../structNDArrayOpInfo.html#af73bb5dbfdc64e2442b98398f0b63ce0',1,'NDArrayOpInfo']]],
   ['declarebackwarddependency',['DeclareBackwardDependency',['../classmxnet_1_1OperatorProperty.html#abf9e6a8d40750f3ee81fe30cbe3e2aae',1,'mxnet::OperatorProperty']]],
   ['deduplicatevarhandle',['DeduplicateVarHandle',['../classmxnet_1_1Engine.html#a9d8ac1987a6844dba9b0463030fb3430',1,'mxnet::Engine']]],
   ['default',['DEFAULT',['../c__api_8h.html#a2380be5ab258c3657553d0cef62936fe',1,'c_api.h']]],
@@ -30,6 +29,5 @@ var searchData=
   ['dptr',['dptr',['../structmxnet_1_1Storage_1_1Handle.html#a428e25a6317e50c8b55307c96f8ec595',1,'mxnet::Storage::Handle::dptr()'],['../classmxnet_1_1TBlob.html#a3449ca0a9130e87c343130b041b68c53',1,'mxnet::TBlob::dptr()']]],
   ['dptr_5f',['dptr_',['../classmxnet_1_1TBlob.html#a4e5f4953be2c16724ecff0afc5ea2e10',1,'mxnet::TBlob']]],
   ['dtype',['dtype',['../classmxnet_1_1NDArray.html#a1b6038a196c14d038bd3e6d6bbe36ad2',1,'mxnet::NDArray']]],
-  ['dtype_5f',['dtype_',['../classmxnet_1_1NDArray.html#a3e095ff4cb510f9b3160513a89802259',1,'mxnet::NDArray::dtype_(dtype)'],['../classmxnet_1_1NDArray.html#af5d6ed79d0346407edfc969d4d51d15c',1,'mxnet::NDArray::dtype_(data.type_flag_)']]],
   ['parameter',['parameter',['../namespacedmlc_1_1parameter.html',1,'dmlc']]]
 ];

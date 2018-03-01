@@ -16,7 +16,7 @@ var searchData=
   ['request',['Request',['../classmxnet_1_1ResourceManager.html#a276e4e3ae229a118e50a03955f3f1a08',1,'mxnet::ResourceManager']]],
   ['requested',['requested',['../structmxnet_1_1OpContext.html#a833e95f95cf5e3af9c193b74b500fc5b',1,'mxnet::OpContext']]],
   ['reset',['reset',['../classmxnet_1_1OpStatePtr.html#ae43213b3a65073a87bf489350a58d78e',1,'mxnet::OpStatePtr']]],
-  ['reshape',['reshape',['../classmxnet_1_1TBlob.html#a0c66b10f5a17528cc858762b60125789',1,'mxnet::TBlob::reshape()'],['../classmxnet_1_1NDArray.html#ada618436206b59aa3ffcdb8474d5051c',1,'mxnet::NDArray::Reshape()']]],
+  ['reshape',['Reshape',['../classmxnet_1_1NDArray.html#ada618436206b59aa3ffcdb8474d5051c',1,'mxnet::NDArray::Reshape()'],['../classmxnet_1_1TBlob.html#a0c66b10f5a17528cc858762b60125789',1,'mxnet::TBlob::reshape()']]],
   ['reshapeandalloc',['ReshapeAndAlloc',['../classmxnet_1_1NDArray.html#a15af0cf321dbe235b6900417d4847aae',1,'mxnet::NDArray']]],
   ['reshapewithrecord',['ReshapeWithRecord',['../classmxnet_1_1NDArray.html#a567712180a066b783907b30f1cb2248a',1,'mxnet::NDArray']]],
   ['resource',['Resource',['../structmxnet_1_1Resource.html',1,'mxnet']]],
