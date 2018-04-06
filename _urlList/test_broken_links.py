@@ -58,9 +58,13 @@ print("Starting broken link test with command $ " + cmd)
 try:
     command_output = check_output(cmd, stderr=STDOUT, shell=True)
     print("Writing output to a file.")
-    with open("blc_output.txt", "w") as text_file:
-        for line in command_output.splitlines():
-            text_file.write("{}\n".format(line))
+    text_file = open("blc_output.txt", "w")
+    for line in command_output.splitlines():
+        text_file.write("{}\n".format(line))
+    text_file.close()
+#    with open("blc_output.txt", "w") as text_file:
+#        for line in command_output.splitlines():
+#            text_file.write("{}\n".format(line))
     print("Done")
     broken_links_count, broken_links_summary = prepare_link_test_result(command_output)
 except CalledProcessError as ex:
