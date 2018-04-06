@@ -16,7 +16,9 @@ do
 	fi
 	unset err
 done < new_url_list.txt
-cp new_url_list.txt url_list.txt
+mv new_url_list.txt url_list.txt
+rm -rf unique_current_urls.txt
+rm -rf blc_output.txt
 if [ $regression ]; then
 	echo "FAIL"
 else 
