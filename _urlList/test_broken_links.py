@@ -54,22 +54,20 @@ cmd = "blc https://mxnet.incubator.apache.org -ro"
 broken_links_count = 0
 broken_links_summary = ""
 
+text_file = open("./blc_output.txt", 'w')
+command_output = ""
 print("Starting broken link test with command $ " + cmd)
 try:
     command_output = check_output(cmd, stderr=STDOUT, shell=True)
-    print("Writing output to a file.")
-    text_file = open("blc_output.txt", 'w')
-    for line in command_output.splitlines():
-        text_file.write("{}\n".format(line))
-    text_file.close()
-    print("Done")
-    broken_links_count, broken_links_summary = prepare_link_test_result(command_output)
 except CalledProcessError as ex:
     if ex.returncode > 1:
         print("Failed to do broken link test. Console output : \n" + ex.output)
         sys.exit(ex.returncode)
-    broken_links_count, broken_links_summary = prepare_link_test_result(ex.output)
+    command_output = ex.output
 
+text_file.write(command_output)
+text_file.close()
+broken_links_count, broken_links_summary = prepare_link_test_result(command_output)
 # These START and END string in output is used to parse the script output in automated scripts and nightly jobs.
 print("START - Broken links count")
 print(broken_links_count)
