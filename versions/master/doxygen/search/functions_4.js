@@ -4,6 +4,7 @@ var searchData=
   ['data_5fndarray',['data_ndarray',['../classmxnet_1_1NDArray.html#af6d456d1e9f105fe913b696fe88efdc3',1,'mxnet::NDArray']]],
   ['declarebackwarddependency',['DeclareBackwardDependency',['../classmxnet_1_1OperatorProperty.html#abf9e6a8d40750f3ee81fe30cbe3e2aae',1,'mxnet::OperatorProperty']]],
   ['deduplicatevarhandle',['DeduplicateVarHandle',['../classmxnet_1_1Engine.html#a9d8ac1987a6844dba9b0463030fb3430',1,'mxnet::Engine']]],
+  ['defaultstoragetype',['DefaultStorageType',['../namespacemxnet_1_1common.html#a33f2eeb2434d3cdab77227b62ecf3d31',1,'mxnet::common']]],
   ['delete',['Delete',['../classmxnet_1_1common_1_1ObjectPool.html#a7dcdcbe9b6764cedc28a1de2fbc8dd6f',1,'mxnet::common::ObjectPool::Delete()'],['../structmxnet_1_1common_1_1ObjectPoolAllocatable.html#a68ed487cb6de6194a4798fdbbfd04597',1,'mxnet::common::ObjectPoolAllocatable::Delete()']]],
   ['deleteoperator',['DeleteOperator',['../classmxnet_1_1Engine.html#a3fd7c8b35a2f52805506cc242bf82ca7',1,'mxnet::Engine']]],
   ['deletevariable',['DeleteVariable',['../classmxnet_1_1Engine.html#a738e5192dab345ab0ec9888b095903cf',1,'mxnet::Engine']]],
