@@ -14,5 +14,6 @@ var searchData=
   ['binarygradfunctiont1',['BinaryGradFunctionT1',['../namespacemxnet_1_1op.html#a027d1f190d964f7494816733aff6c3f2',1,'mxnet::op']]],
   ['binaryshapefunction',['BinaryShapeFunction',['../namespacemxnet_1_1op.html#a78c7bd2075894ac41351feca1b1e5c94',1,'mxnet::op']]],
   ['bind',['Bind',['../classmxnet_1_1Executor.html#a8217aa9fbdd99d107bd836872d7d9692',1,'mxnet::Executor']]],
-  ['bulk_5fsize',['bulk_size',['../classmxnet_1_1Engine.html#a78baf44fa0dfed3285d6b9b65845825c',1,'mxnet::Engine']]]
+  ['bulk_5fsize',['bulk_size',['../classmxnet_1_1Engine.html#a78baf44fa0dfed3285d6b9b65845825c',1,'mxnet::Engine']]],
+  ['byte_5foffset',['byte_offset',['../classmxnet_1_1NDArray.html#a5dfa016a606afd37b8bc85dc2832b025',1,'mxnet::NDArray']]]
 ];

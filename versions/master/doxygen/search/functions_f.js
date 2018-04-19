@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['sametype',['SameType',['../namespacemxnet_1_1common.html#a6369bac95f2e7080088927858937d7b0',1,'mxnet::common']]],
   ['sampleexponential',['SampleExponential',['../namespacemxnet.html#a51f9b094369a349c05463de2be9f0a31',1,'mxnet']]],
   ['samplegamma',['SampleGamma',['../namespacemxnet.html#a050beaa505f11e0b844deb91efe0cac2',1,'mxnet']]],
   ['samplegaussian',['SampleGaussian',['../namespacemxnet.html#a5a28062f52ca576a126599e7ad487077',1,'mxnet']]],
@@ -11,7 +12,7 @@ var searchData=
   ['save_5finputs',['save_inputs',['../classmxnet_1_1Imperative_1_1CachedOp.html#a8b527087601f6d043f8ef1983afe78cc',1,'mxnet::Imperative::CachedOp']]],
   ['save_5foutputs',['save_outputs',['../classmxnet_1_1Imperative_1_1CachedOp.html#abba28b24be0fbd745d4a041c86aa2c8c',1,'mxnet::Imperative::CachedOp']]],
   ['seed',['Seed',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4.html#a03cb2c614a863bb13870e4bca11f0c60',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Seed()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html#acda2839fbe97d1f782d92033a5b47ff8',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::Seed()']]],
-  ['seedrandom',['SeedRandom',['../classmxnet_1_1ResourceManager.html#a7aa335bc9231a8eb7cd04de22e033603',1,'mxnet::ResourceManager']]],
+  ['seedrandom',['SeedRandom',['../classmxnet_1_1ResourceManager.html#a7aa335bc9231a8eb7cd04de22e033603',1,'mxnet::ResourceManager::SeedRandom(uint32_t seed)=0'],['../classmxnet_1_1ResourceManager.html#a143d445deda8f08aab3316b14004a588',1,'mxnet::ResourceManager::SeedRandom(Context ctx, uint32_t seed)=0']]],
   ['sendcommandtoservers',['SendCommandToServers',['../classmxnet_1_1KVStore.html#a4ff4ca05f3c519ebbc2e46264e8b63dd',1,'mxnet::KVStore']]],
   ['set_5faux_5fshape',['set_aux_shape',['../classmxnet_1_1NDArray.html#a150c2f8f88a8d0859a5c49da36a03f30',1,'mxnet::NDArray']]],
   ['set_5fbarrier_5fbefore_5fexit',['set_barrier_before_exit',['../classmxnet_1_1KVStore.html#afa87753d90fc7e75234229834ea23abb',1,'mxnet::KVStore']]],
@@ -47,6 +48,7 @@ var searchData=
   ['slicewithrecord',['SliceWithRecord',['../classmxnet_1_1NDArray.html#a0d868e5303669d6ce8a5ada1c34940ac',1,'mxnet::NDArray']]],
   ['smarch',['SMArch',['../cuda__utils_8h.html#a9779e3ad0efd0faec7fbe431c0db896d',1,'cuda_utils.h']]],
   ['sparseretainopforwardrspwrapper',['SparseRetainOpForwardRspWrapper',['../namespacemxnet_1_1common.html#a905e77124ee11208c40a8afd3ee42167',1,'mxnet::common']]],
+  ['sparseupdatechunk',['SparseUpdateChunk',['../classmxnet_1_1NDArray.html#a36348646a0c2756b8c8cfa80f44f1eef',1,'mxnet::NDArray']]],
   ['start',['Start',['../classmxnet_1_1Engine.html#a136a1d60db77a0846faa8462d0fb6237',1,'mxnet::Engine']]],
   ['staticarray',['StaticArray',['../structmxnet_1_1common_1_1StaticArray.html#a1c3a79ddcb6b472f1a903f1753f4194a',1,'mxnet::common::StaticArray::StaticArray(void)'],['../structmxnet_1_1common_1_1StaticArray.html#a857e64b386ca8e0bfab5087a42ae2f53',1,'mxnet::common::StaticArray::StaticArray(const T &amp;val)'],['../structmxnet_1_1common_1_1StaticArray.html#abb2f84b9e5f856fed4435c3d5f0ef044',1,'mxnet::common::StaticArray::StaticArray(const StaticArray&lt; T, num &gt; &amp;sa)']]],
   ['stop',['Stop',['../classmxnet_1_1Engine.html#a30f8947a7a1ad86b4c2cdb5b15b6d1e1',1,'mxnet::Engine']]],

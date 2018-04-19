@@ -6,6 +6,8 @@ var searchData=
   ['fexectype',['FExecType',['../namespacemxnet.html#a666f1055e5401ecec0278e8ba5790732',1,'mxnet']]],
   ['finferstoragetype',['FInferStorageType',['../namespacemxnet.html#a0a1395f21139ba975a6268539df6a15d',1,'mxnet']]],
   ['fndarrayfunction',['FNDArrayFunction',['../namespacemxnet.html#a0906e49a921265634672f555451075ed',1,'mxnet']]],
+  ['fneedrequantize',['FNeedRequantize',['../namespacemxnet.html#a7f7c271f6d03ee358eb9e66486e41045',1,'mxnet']]],
+  ['fquantizedop',['FQuantizedOp',['../namespacemxnet.html#ac4a55ce92442f122a1a0e6ae8d134f10',1,'mxnet']]],
   ['fresourcerequest',['FResourceRequest',['../namespacemxnet.html#afaa687cbca9e992614be285711c1d72d',1,'mxnet']]],
   ['fstatefulcompute',['FStatefulCompute',['../namespacemxnet.html#a9097a269dd76d833c014149ff3eaab9b',1,'mxnet']]],
   ['fstatefulcomputeex',['FStatefulComputeEx',['../namespacemxnet.html#ab12f1853179b1456152a563edff844a9',1,'mxnet']]],
