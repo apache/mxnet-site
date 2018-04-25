@@ -14,7 +14,6 @@ var searchData=
   ['predictorhandle',['PredictorHandle',['../c__predict__api_8h.html#a0aacfd245edcae2dcd19e01192fcd7a2',1,'c_predict_api.h']]],
   ['print',['Print',['../classmxnet_1_1Executor.html#a3803afcb87e4c69940c8d3d88a03e6ee',1,'mxnet::Executor']]],
   ['profilehandle',['ProfileHandle',['../c__api_8h.html#a2f6ad8b0cc1e894f64b5ecad2ceb1aa7',1,'c_api.h']]],
-  ['profiler_5fmessage',['PROFILER_MESSAGE',['../base_8h.html#aa14c0c7d2ea15e79c6edc864f5ecdc54',1,'base.h']]],
   ['profiler_5fmessage_5ffuncname',['PROFILER_MESSAGE_FUNCNAME',['../base_8h.html#ae34be2bf889657a1452b87fd36f034c3',1,'base.h']]],
   ['ptr_5f',['ptr_',['../structmxnet_1_1Resource.html#a7e9576783b7e9023375ffebd76a11806',1,'mxnet::Resource']]],
   ['pull',['Pull',['../classmxnet_1_1KVStore.html#a98e041793c133337cecc441e441ed721',1,'mxnet::KVStore::Pull(const std::vector&lt; int &gt; &amp;keys, const std::vector&lt; NDArray * &gt; &amp;values, int priority=0)=0'],['../classmxnet_1_1KVStore.html#a473e95dbf4618e34ba2e519944ece2b4',1,'mxnet::KVStore::Pull(const std::vector&lt; std::string &gt; &amp;str_keys, const std::vector&lt; NDArray * &gt; &amp;values, int priority=0)=0']]],
