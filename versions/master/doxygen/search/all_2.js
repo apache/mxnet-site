@@ -9,6 +9,7 @@ var searchData=
   ['array_5f',['array_',['../structmxnet_1_1common_1_1StaticArray.html#a2b48c2aff03cc1c29306defddbca3649',1,'mxnet::common::StaticArray']]],
   ['asarray',['AsArray',['../classmxnet_1_1NDArray.html#a3896fcce89afce4c1d2f825f7853ca0c',1,'mxnet::NDArray']]],
   ['assign_5fdispatch',['ASSIGN_DISPATCH',['../operator__util_8h.html#a0e0ffc581a0c4a40815110163625b517',1,'operator_util.h']]],
+  ['assigncontext',['AssignContext',['../namespacemxnet_1_1common.html#a19bebfe40260d14068675b893f6b1a6b',1,'mxnet::common']]],
   ['async_5fon_5fcomplete',['async_on_complete',['../structmxnet_1_1OpContext.html#a40ce0e3d4ac21412cfafafc5b1fd32ef',1,'mxnet::OpContext']]],
   ['asyncfn',['AsyncFn',['../classmxnet_1_1Engine.html#ad41feff70bba0f29fc24f60b5381984c',1,'mxnet::Engine']]],
   ['at',['At',['../classmxnet_1_1NDArray.html#a3b615512a8fb89b9edc99b35064ead95',1,'mxnet::NDArray']]],

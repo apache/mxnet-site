@@ -18,15 +18,14 @@ var searchData=
   ['get_5fstream',['get_stream',['../structmxnet_1_1RunContext.html#a8bcd2fc6392f95a1fdc3d98f74dbfcb9',1,'mxnet::RunContext::get_stream()'],['../structmxnet_1_1OpContext.html#aa700c5c28e024b42d41e15f46615f1b8',1,'mxnet::OpContext::get_stream()']]],
   ['get_5fvar',['get_var',['../classmxnet_1_1OpStatePtr.html#a77a1636269466569c0b6e32941ed7264',1,'mxnet::OpStatePtr']]],
   ['get_5fwith_5fshape',['get_with_shape',['../classmxnet_1_1TBlob.html#abbdbdc8d02c15e854cc7f5fe5dc09f61',1,'mxnet::TBlob']]],
-  ['getbackwardgraph',['GetBackwardGraph',['../classmxnet_1_1Imperative_1_1CachedOp.html#ab9970c190fbbf52a4cb7c7abafa26c27',1,'mxnet::Imperative::CachedOp']]],
   ['getenvallowtensorcore',['GetEnvAllowTensorCore',['../cuda__utils_8h.html#a464dee13053e3b0b1006c6307069196c',1,'cuda_utils.h']]],
   ['getexecnummatchcolor',['GetExecNumMatchColor',['../namespacemxnet_1_1common.html#a56555edcc52c5b25bed90bd05e00b5fa',1,'mxnet::common']]],
   ['getfcompute',['GetFCompute',['../namespacemxnet_1_1common.html#a1abcb76ccd9022ebacdacd69c821cdc2',1,'mxnet::common']]],
-  ['getforwardgraph',['GetForwardGraph',['../classmxnet_1_1Imperative_1_1CachedOp.html#ab2c76e6c130d7bf4a9e69708b32d93c1',1,'mxnet::Imperative::CachedOp']]],
+  ['getgpucount',['GetGPUCount',['../structmxnet_1_1Context.html#adde995df8e2b9871151921a932788cd2',1,'mxnet::Context']]],
+  ['getgpumemoryinformation',['GetGPUMemoryInformation',['../structmxnet_1_1Context.html#a18263bc769c2a9196ca8efe44339d11b',1,'mxnet::Context']]],
   ['getmutex',['GetMutex',['../classmxnet_1_1Storage.html#ac12e7740df4520d6267d250ca16404d4',1,'mxnet::Storage']]],
-  ['getnumthreadpergpu',['GetNumThreadPerGPU',['../namespacemxnet_1_1common.html#abc7580a95e3de5cf38d5bc2617c6d541',1,'mxnet::common']]],
+  ['getnumthreadspergpu',['GetNumThreadsPerGPU',['../namespacemxnet_1_1common.html#a467e8b51fc0d0a7266e9f3172b2ff7f1',1,'mxnet::common']]],
   ['getparams',['GetParams',['../classmxnet_1_1OperatorProperty.html#a704ae43181c8a88bfd0a47e8005f7cb8',1,'mxnet::OperatorProperty']]],
   ['gpu',['GPU',['../structmxnet_1_1Context.html#a39d1a2b59bce135da127475995a58671',1,'mxnet::Context']]],
-  ['grad',['grad',['../classmxnet_1_1NDArray.html#aed729c3bc9db04ab346fd3969b4fc982',1,'mxnet::NDArray']]],
-  ['gradient',['Gradient',['../classmxnet_1_1Imperative_1_1CachedOp.html#ab0f1d3a2e05f8790ff39f11c9af02f2a',1,'mxnet::Imperative::CachedOp']]]
+  ['grad',['grad',['../classmxnet_1_1NDArray.html#aed729c3bc9db04ab346fd3969b4fc982',1,'mxnet::NDArray']]]
 ];

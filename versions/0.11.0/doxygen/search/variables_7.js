@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['key_5fvar_5fnum_5fargs',['key_var_num_args',['../structmxnet_1_1OperatorPropertyReg.html#af3aee96c6a2289e7554d7503186a540c',1,'mxnet::OperatorPropertyReg']]],
-  ['kmaxdevid',['kMaxDevID',['../structmxnet_1_1Context.html#a958219ae412395685ef1d82af0dbbe67',1,'mxnet::Context']]],
-  ['kmaxdevtype',['kMaxDevType',['../structmxnet_1_1Context.html#a7433936d1daf38f7dced0de49fbe6a4b',1,'mxnet::Context']]],
-  ['kwargs',['kwargs',['../structmxnet_1_1op_1_1EnvArguments.html#a9dc6ddeef01eb50bc77517bec1195d5d',1,'mxnet::op::EnvArguments']]]
+  ['id',['id',['../structmxnet_1_1Resource.html#aa1fc8578c0fa849afe7da29c1cf1308b',1,'mxnet::Resource']]],
+  ['index',['index',['../structmxnet_1_1DataInst.html#a548411c4a3dc77475c5ae6bfa6ee3564',1,'mxnet::DataInst::index()'],['../structmxnet_1_1DataBatch.html#a26a2ca473161c2c2a914cbc7ae4eb74e',1,'mxnet::DataBatch::index()']]],
+  ['infer_5fshape',['infer_shape',['../structNativeOpInfo.html#a2d8f03e8586a1a1cb6b46ab8872a214a',1,'NativeOpInfo::infer_shape()'],['../structNDArrayOpInfo.html#a526a6092e581aea808b180758c2c4610',1,'NDArrayOpInfo::infer_shape()']]],
+  ['is_5ftrain',['is_train',['../structmxnet_1_1OpContext.html#a2d550bd138ed08333bebed8dd876644f',1,'mxnet::OpContext']]]
 ];

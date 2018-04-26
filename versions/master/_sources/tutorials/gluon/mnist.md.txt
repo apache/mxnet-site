@@ -32,6 +32,10 @@ The following source code downloads and loads the images and the corresponding l
 
 ```python
 import mxnet as mx
+
+# Fixing the random seed
+mx.random.seed(42)
+
 mnist = mx.test_utils.get_mnist()
 ```
 
@@ -73,7 +77,7 @@ In an MLP, the outputs of most FC layers are fed into an activation function, wh
 The following code declares three fully connected layers with 128, 64 and 10 neurons each.
 The last fully connected layer often has its hidden size equal to the number of output classes in the dataset. Furthermore, these FC layers uses ReLU activation for performing an element-wise ReLU transformation on the FC layer output.
 
-To do this, we will use [Sequential layer](http://mxnet.io/api/python/gluon.html#mxnet.gluon.nn.Sequential) type. This is simply a linear stack of neural network layers. `nn.Dense` layers are nothing but the fully connected layers we discussed above.
+To do this, we will use [Sequential layer](http://mxnet.io/api/python/gluon/gluon.html#mxnet.gluon.nn.Sequential) type. This is simply a linear stack of neural network layers. `nn.Dense` layers are nothing but the fully connected layers we discussed above.
 
 ```python
 # define network
@@ -86,19 +90,20 @@ with net.name_scope():
 
 #### Initialize parameters and optimizer
 
-The following source code initializes all parameters received from parameter dict using [Xavier](http://mxnet.io/api/python/optimization.html#mxnet.initializer.Xavier) initializer
+The following source code initializes all parameters received from parameter dict using [Xavier](http://mxnet.io/api/python/optimization/optimization.html#mxnet.initializer.Xavier) initializer
 to train the MLP network we defined above.
 
-For our training, we will make use of the stochastic gradient descent (SGD) optimizer. In particular, we'll be using mini-batch SGD. Standard SGD processes train data one example at a time. In practice, this is very slow and one can speed up the process by processing examples in small batches. In this case, our batch size will be 100, which is a reasonable choice. Another parameter we select here is the learning rate, which controls the step size the optimizer takes in search of a solution. We'll pick a learning rate of 0.1, again a reasonable choice. Settings such as batch size and learning rate are what are usually referred to as hyper-parameters. What values we give them can have a great impact on training performance.
+For our training, we will make use of the stochastic gradient descent (SGD) optimizer. In particular, we'll be using mini-batch SGD. Standard SGD processes train data one example at a time. In practice, this is very slow and one can speed up the process by processing examples in small batches. In this case, our batch size will be 100, which is a reasonable choice. Another parameter we select here is the learning rate, which controls the step size the optimizer takes in search of a solution. We'll pick a learning rate of 0.02, again a reasonable choice. Settings such as batch size and learning rate are what are usually referred to as hyper-parameters. What values we give them can have a great impact on training performance.
 
-We will use [Trainer](http://mxnet.io/api/python/gluon.html#trainer) class to apply the
-[SGD optimizer](http://mxnet.io/api/python/optimization.html#mxnet.optimizer.SGD) on the
+We will use [Trainer](http://mxnet.io/api/python/gluon/gluon.html#trainer) class to apply the
+[SGD optimizer](http://mxnet.io/api/python/optimization/optimization.html#mxnet.optimizer.SGD) on the
 initialized parameters.
 
 ```python
-ctx = [mx.cpu(0), mx.cpu(1)]
-net.collect_params().initialize(mx.init.Xavier(magnitude=2.24), ctx=ctx)
-trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': 0.1})
+gpus = mx.test_utils.list_gpus()
+ctx =  [mx.gpu()] if gpus else [mx.cpu(0), mx.cpu(1)]
+net.initialize(mx.init.Xavier(magnitude=2.24), ctx=ctx)
+trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': 0.02})
 ```
 
 #### Train the network
@@ -107,7 +112,7 @@ Typically, one runs the training until convergence, which means that we have lea
 
 We will take following steps for training:
 
-- Define [Accuracy evaluation metric](http://mxnet.io/api/python/metric.html#mxnet.metric.Accuracy) over training data.
+- Define [Accuracy evaluation metric](http://mxnet.io/api/python/metric/metric.html#mxnet.metric.Accuracy) over training data.
 - Loop over inputs for every epoch.
 - Forward input through network to get output.
 - Compute loss with output and label inside record scope.
@@ -116,14 +121,15 @@ We will take following steps for training:
 
 Loss function takes (output, label) pairs and computes a scalar loss for each sample in the mini-batch. The scalars measure how far each output is from the label.
 There are many predefined loss functions in gluon.loss. Here we use
-[softmax_cross_entropy_loss](http://mxnet.io/api/python/gluon.html#mxnet.gluon.loss.softmax_cross_entropy_loss) for digit classification. We will compute loss and do backward propagation inside
+[softmax_cross_entropy_loss](http://mxnet.io/api/python/gluon/gluon.html#mxnet.gluon.loss.softmax_cross_entropy_loss) for digit classification. We will compute loss and do backward propagation inside
 training scope which is defined by `autograd.record()`.
 
 ```python
+%%time
 epoch = 10
 # Use Accuracy as the evaluation metric.
 metric = mx.metric.Accuracy()
-
+softmax_cross_entropy_loss = gluon.loss.SoftmaxCrossEntropyLoss()
 for i in range(epoch):
     # Reset the train data iterator.
     train_data.reset()
@@ -141,9 +147,9 @@ for i in range(epoch):
             for x, y in zip(data, label):
                 z = net(x)
                 # Computes softmax cross entropy loss.
-                loss = gluon.loss.softmax_cross_entropy_loss(z, y)
+                loss = softmax_cross_entropy_loss(z, y)
                 # Backpropagate the error for one iteration.
-                ag.backward([loss])
+                loss.backward()
                 outputs.append(z)
         # Updates internal evaluation
         metric.update(label, outputs)
@@ -180,7 +186,7 @@ for batch in val_data:
     # Updates internal evaluation
     metric.update(label, outputs)
 print('validation acc: %s=%f'%metric.get())
-assert metric.get()[1] > 0.96
+assert metric.get()[1] > 0.94
 ```
 
 If everything went well, we should see an accuracy value that is around 0.96, which means that we are able to accurately predict the digit in 96% of test images. This is a pretty good result. But as we will see in the next part of this tutorial, we can do a lot better than that.
@@ -237,7 +243,7 @@ net = Net()
 
 **Figure 3:** First conv + pooling layer in LeNet.
 
-Now we train LeNet with the same hyper-parameters as before. Note that, if a GPU is available, we recommend using it. This greatly speeds up computation given that LeNet is more complex and compute-intensive than the previous multilayer perceptron. To do so, we only need to change `mx.cpu()` to `mx.gpu()` and MXNet takes care of the rest. Just like before, we'll stop training after 10 epochs.
+Now we train LeNet with similar hyper-parameters as before. Note that, if a GPU is available, we recommend using it. This greatly speeds up computation given that LeNet is more complex and compute-intensive than the previous multilayer perceptron. To do so, we only need to change `mx.cpu()` to `mx.gpu()` and MXNet takes care of the rest. Just like before, we'll stop training after 10 epochs.
 
 Training and prediction can be done in the similar way as we did for MLP.
 
@@ -246,9 +252,10 @@ Training and prediction can be done in the similar way as we did for MLP.
 We will initialize the network parameters as follows:
 
 ```python
-ctx = [mx.cpu(0), mx.cpu(1)]
-net.collect_params().initialize(mx.init.Xavier(magnitude=2.24), ctx=ctx)
-trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': 0.1})
+# set the context on GPU is available otherwise CPU
+ctx = [mx.gpu() if mx.test_utils.list_gpus() else mx.cpu()]
+net.initialize(mx.init.Xavier(magnitude=2.24), ctx=ctx)
+trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': 0.03})
 ```
 
 #### Training
@@ -256,6 +263,7 @@ trainer = gluon.Trainer(net.collect_params(), 'sgd', {'learning_rate': 0.1})
 ```python
 # Use Accuracy as the evaluation metric.
 metric = mx.metric.Accuracy()
+softmax_cross_entropy_loss = gluon.loss.SoftmaxCrossEntropyLoss()
 
 for i in range(epoch):
     # Reset the train data iterator.
@@ -274,9 +282,9 @@ for i in range(epoch):
             for x, y in zip(data, label):
                 z = net(x)
                 # Computes softmax cross entropy loss.
-                loss = gluon.loss.softmax_cross_entropy_loss(z, y)
+                loss = softmax_cross_entropy_loss(z, y)
                 # Backpropogate the error for one iteration.
-                ag.backward([loss])
+                loss.backward()
                 outputs.append(z)
         # Updates internal evaluation
         metric.update(label, outputs)

@@ -1,12 +1,16 @@
 var searchBox = $("#search-input-wrap");
-var TITLE = ['/get_started/', '/tutorials/', '/gluon/' , '/api/', '/community/contribute.html', ];
-var DOC_TITLE = ['/faq/', '/architecture/', '/model_zoo/'];
-var APISubmenu, versionSubmenu, docSubmenu;
+var TITLE = ['/install/', '/gluon/', '/api/', '/docs/', '/community/' ];
+var DOC_TITLE = ['/faq/', '/tutorials/', '/architecture/', '/model_zoo/'];
+var APISubmenu, versionSubmenu, docSubmenu, communitySubmenu;
 $("#burgerMenu").children().each(function () {
     if($(this).children().first().html() == 'API') APISubmenu = $(this).clone();
-    if($(this).children().first().html().startsWith('Versions')) versionSubmenu = $(this).clone();
+    if($(this).children().first().html().indexOf('Versions') == 0) versionSubmenu = $(this).clone();
+    if($(this).children().first().html().indexOf('Community') == 0) communitySubmenu = $(this).clone();
     if($(this).children().first().html() == 'Docs') docSubmenu= $(this).clone();
 });
+
+$('.burger-link').on('click', function(e) { e.stopPropagation() });
+$('.burger-link').on('touchstart', function(e) { e.stopPropagation() });
 
 function navbar() {
     var leftOffset = 40;
@@ -50,6 +54,9 @@ function navbar() {
         else if(plusMenuList[i].attr('id') == 'dropdown-menu-position-anchor-docs') {
             $("#plusMenu").append(docSubmenu);
         }
+        else if(plusMenuList[i].attr('id') == 'dropdown-menu-position-anchor-community') {
+            $("#plusMenu").append(communitySubmenu);
+        }
         else {
             $("#plusMenu").append("<li></li>");
             plusMenuList[i].removeClass("main-nav-link");
@@ -72,7 +79,7 @@ function showTab() {
     }
      for(var i = 0; i < DOC_TITLE.length; ++i) {
         if(url.indexOf(DOC_TITLE[i]) != -1) {
-            var tab = $($('#main-nav').children().eq(4));
+            var tab = $($('#main-nav').children().eq(3));
             if(!tab.is('a')) tab = tab.find('a').first();
             tab.css('border-bottom', '3px solid');
         }

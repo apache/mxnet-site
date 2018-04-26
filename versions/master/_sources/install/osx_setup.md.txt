@@ -1,4 +1,4 @@
-# Installing MXNet froum source on OS X (Mac)
+# Installing MXNet from source on OS X (Mac)
 
 **NOTE:** For prebuild MXNet with Python installation, please refer to the [new install guide](http://mxnet.io/install/index.html).
 
@@ -47,7 +47,7 @@ Now we can start to build MXNet.
 ### Install MXNet dependencies
 Install the dependencies, required for MXNet, with the following commands:
 - [Homebrew](http://brew.sh/)
-- OpenBLAS and homebrew/science (for linear algebraic operations)
+- OpenBLAS and homebrew/core (for linear algebraic operations)
 - OpenCV (for computer vision operations)
 
 ```bash
@@ -63,10 +63,10 @@ Install the dependencies, required for MXNet, with the following commands:
 	brew install pkg-config
 	brew install graphviz
 	brew install openblas
-	brew tap homebrew/science
+	brew tap homebrew/core
 	brew install opencv
-	# For getting pip
-	brew install python
+	# Get pip
+	easy_install pip
 	# For visualization of network graphs
 	pip install graphviz
 	# Jupyter notebook
@@ -74,7 +74,7 @@ Install the dependencies, required for MXNet, with the following commands:
 ```
 
 ### Build MXNet Shared Library
-After you have installed the dependencies, pull the MXNet source code from Git and build MXNet to produce an MXNet library called ```libmxnet.so```.
+After you have installed the dependencies, pull the MXNet source code from Git and build MXNet to produce an MXNet library called ```libmxnet.so```. You can clone the repository as described in the following code block, or you may try the <a href="download.html">download links</a> for your desired MXNet version.
 
 The file called ```osx.mk``` has the configuration required for building MXNet on OS X. First copy ```make/osx.mk``` into ```config.mk```, which is used by the ```make``` command:
 
@@ -114,6 +114,7 @@ You have 2 options:
 
 ### Building MXNet with the Prebuilt Binary Package
 
+Install the latest version (3.5.1+) of R from [CRAN](https://cran.r-project.org/bin/macosx/).
 For OS X (Mac) users, MXNet provides a prebuilt binary package for CPUs. The prebuilt package is updated weekly. You can install the package directly in the R console using the following commands:
 
 ```r
@@ -137,14 +138,6 @@ Run the following commands to install the MXNet dependencies and build the MXNet
     make rpkg
 ```
 
-**Note:** R-package is a folder in the MXNet source.
-
-These commands create the MXNet R package as a tar.gz file that you can install as an R package. To install the R package, run the following command, use your MXNet version number:
-
-```bash
-	R CMD INSTALL mxnet_current_r.tar.gz
-```
-
 ## Install the MXNet Package for Julia
 The MXNet package for Julia is hosted in a separate repository, MXNet.jl, which is available on [GitHub](https://github.com/dmlc/MXNet.jl). To use Julia binding it with an existing libmxnet installation, set the ```MXNET_HOME``` environment variable by running the following command:
 
@@ -166,20 +159,15 @@ You might want to add this command to your ```~/.bashrc``` file. If you do, you 
 
 For more details about installing and using MXNet with Julia, see the [MXNet Julia documentation](http://dmlc.ml/MXNet.jl/latest/user-guide/install/).
 
+
 ## Install the MXNet Package for Scala
-Before you build MXNet for Scala from source code, you must complete [building the shared library](#build-the-shared-library). After you build the shared library, run the following command from the MXNet source root directory to build the MXNet Scala package:
 
-```bash
-    make scalapkg
-```
+To use the MXNet-Scala package, you can acquire the Maven package as a dependency.
 
-This command creates the JAR files for the assembly, core, and example modules. It also creates the native library in the ```native/{your-architecture}/target directory```, which you can use to cooperate with the core module.
+Further information is in the [MXNet-Scala Setup Instructions](./scala_setup.md).
 
-To install the MXNet Scala package into your local Maven repository, run the following command from the MXNet source root directory:
+If you use IntelliJ or a similar IDE, you may want to follow the [MXNet-Scala on IntelliJ tutorial](../tutorials/scala/mxnet_scala_on_intellij.md) instead.
 
-```bash
-    make scalainstall
-```
 
 ## Install the MXNet Package for Perl
 Before you build MXNet for Perl from source code, you must complete [building the shared library](#build-the-shared-library).
@@ -188,7 +176,7 @@ After you build the shared library, run the following command from the MXNet sou
 ```bash
     brew install swig
     sudo sh -c 'curl -L https://cpanmin.us | perl - App::cpanminus'
-    sudo cpanm -q -n PDL Mouse Function::Parameters Hash::Ordered
+    sudo cpanm -q -n PDL Mouse Function::Parameters Hash::Ordered PDL::CCS
 
     MXNET_HOME=${PWD}
     export PERL5LIB=${HOME}/perl5/lib/perl5

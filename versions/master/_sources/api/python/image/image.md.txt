@@ -43,7 +43,7 @@ Iterators support loading image from binary `Record IO` and raw image files.
 ...     print(d.shape)
 >>> # we can apply lots of augmentations as well
 >>> data_iter = mx.image.ImageIter(4, (3, 224, 224), path_imglist='data/custom.lst',
-                                   rand_crop=resize=True, rand_mirror=True, mean=True,
+                                   rand_crop=True, rand_resize=True, rand_mirror=True, mean=True,
                                    brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1,
                                    pca_noise=0.1, rand_gray=0.05)
 >>> data = data_iter.next()
@@ -88,6 +88,7 @@ A list of supporting augmenters
     image.CastAug
 ```
 
+#### Image Iterator for Object Detection
 Similar to `ImageIter`, `ImageDetIter` is designed for `Object Detection` tasks.
 ```eval_rst
 .. autosummary::
@@ -155,7 +156,7 @@ and a list of augmenters specific for `Object detection` is provided
 
 ## API Reference
 
-<script type="text/javascript" src='../../_static/js/auto_module_index.js'></script>
+<script type="text/javascript" src='../../../_static/js/auto_module_index.js'></script>
 
 ```eval_rst
 .. automodule:: mxnet.image
@@ -178,6 +179,7 @@ and a list of augmenters specific for `Object detection` is provided
 .. autoclass:: mxnet.image.RandomCropAug
 .. autoclass:: mxnet.image.RandomSizedCropAug
 .. autoclass:: mxnet.image.CenterCropAug
+.. autoclass:: mxnet.image.SequentialAug
 .. autoclass:: mxnet.image.RandomOrderAug
 .. autoclass:: mxnet.image.BrightnessJitterAug
 .. autoclass:: mxnet.image.ContrastJitterAug

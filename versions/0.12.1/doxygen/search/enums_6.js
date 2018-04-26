@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rowsparseauxtype',['RowSparseAuxType',['../namespacemxnet_1_1rowsparse.html#a0ad4c619684fa4d442c7076c18fef232',1,'mxnet::rowsparse']]]
+  ['opreqtype',['OpReqType',['../namespacemxnet.html#a7cd7094ef222e9ae1f520c3b6a214398',1,'mxnet']]]
 ];

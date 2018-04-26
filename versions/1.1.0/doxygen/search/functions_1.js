@@ -6,6 +6,7 @@ var searchData=
   ['allocstate',['AllocState',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4.html#a270a37e7c44ce92030bf9e5a26c30f4d',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::AllocState()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html#a26daf3daa7c4828422b95347d940a4a9',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::AllocState()']]],
   ['arg_5fgrad_5fmap',['arg_grad_map',['../classmxnet_1_1Executor.html#a84552a918a65633678f30c00a2a0ae7f',1,'mxnet::Executor']]],
   ['asarray',['AsArray',['../classmxnet_1_1NDArray.html#a3896fcce89afce4c1d2f825f7853ca0c',1,'mxnet::NDArray']]],
+  ['assigncontext',['AssignContext',['../namespacemxnet_1_1common.html#a19bebfe40260d14068675b893f6b1a6b',1,'mxnet::common']]],
   ['at',['At',['../classmxnet_1_1NDArray.html#a3b615512a8fb89b9edc99b35064ead95',1,'mxnet::NDArray']]],
   ['atwithrecord',['AtWithRecord',['../classmxnet_1_1NDArray.html#aa2a801dd5c47b5bdd01a385d2c4327b8',1,'mxnet::NDArray']]],
   ['aux_5fdata',['aux_data',['../classmxnet_1_1NDArray.html#ad8194805eabb65d8a9d33fda840b66a9',1,'mxnet::NDArray']]],

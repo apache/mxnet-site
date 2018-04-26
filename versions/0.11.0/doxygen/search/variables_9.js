@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['name',['name',['../classmxnet_1_1op_1_1SimpleOpRegEntry.html#a02c180f08b215e9553d3c93fa783f9a4',1,'mxnet::op::SimpleOpRegEntry']]],
-  ['num_5fbatch_5fpadd',['num_batch_padd',['../structmxnet_1_1DataBatch.html#aad93df826690100bb16689952fc83558',1,'mxnet::DataBatch']]],
-  ['num_5fcallbacks',['num_callbacks',['../structMXCallbackList.html#aa593dcc4096dcc38a2af477e057d8861',1,'MXCallbackList']]],
-  ['num_5fmutate_5fvars',['num_mutate_vars',['../structmxnet_1_1NDArrayFunctionReg.html#ad7881779b7807c6357902bdaccfccde2',1,'mxnet::NDArrayFunctionReg']]],
-  ['num_5fscalars',['num_scalars',['../structmxnet_1_1NDArrayFunctionReg.html#a9591e2abf6cbca0903aec582b96b4d95',1,'mxnet::NDArrayFunctionReg']]],
-  ['num_5fuse_5fvars',['num_use_vars',['../structmxnet_1_1NDArrayFunctionReg.html#aa0847438b4f3f600ec61d6d544755a29',1,'mxnet::NDArrayFunctionReg']]]
+  ['list_5farguments',['list_arguments',['../structNativeOpInfo.html#af25c58d65a2350cab76403f1ce21922e',1,'NativeOpInfo::list_arguments()'],['../structNDArrayOpInfo.html#abc701d8c032a1c5b9358de8ab060d9c2',1,'NDArrayOpInfo::list_arguments()']]],
+  ['list_5foutputs',['list_outputs',['../structNativeOpInfo.html#a6a324c4b74a64b295c404ff235fac1e1',1,'NativeOpInfo::list_outputs()'],['../structNDArrayOpInfo.html#ab99abece52b77824dde5df98837f4f7b',1,'NDArrayOpInfo::list_outputs()']]]
 ];

@@ -1,14 +1,13 @@
 var searchData=
 [
-  ['randomseed',['RandomSeed',['../namespacemxnet.html#a5bf83454c8f41259eb9d471f59feda2b',1,'mxnet']]],
-  ['real_5fdev_5fid',['real_dev_id',['../structmxnet_1_1Context.html#ada4cad693c928562d0fd74fba5ddcde3',1,'mxnet::Context']]],
-  ['recordop',['RecordOp',['../classmxnet_1_1Imperative.html#a2b0f55c31882412c44468d8ba1a97fd1',1,'mxnet::Imperative']]],
-  ['request',['Request',['../classmxnet_1_1ResourceManager.html#a276e4e3ae229a118e50a03955f3f1a08',1,'mxnet::ResourceManager']]],
-  ['reset',['reset',['../classmxnet_1_1OpStatePtr.html#ae43213b3a65073a87bf489350a58d78e',1,'mxnet::OpStatePtr']]],
-  ['reshape',['Reshape',['../classmxnet_1_1NDArray.html#ada618436206b59aa3ffcdb8474d5051c',1,'mxnet::NDArray::Reshape()'],['../classmxnet_1_1TBlob.html#a0c66b10f5a17528cc858762b60125789',1,'mxnet::TBlob::reshape()']]],
-  ['reshapeandalloc',['ReshapeAndAlloc',['../classmxnet_1_1NDArray.html#a15af0cf321dbe235b6900417d4847aae',1,'mxnet::NDArray']]],
-  ['reshapewithrecord',['ReshapeWithRecord',['../classmxnet_1_1NDArray.html#a567712180a066b783907b30f1cb2248a',1,'mxnet::NDArray']]],
-  ['resource',['Resource',['../structmxnet_1_1Resource.html#a76a2cc8f2a94b67b3533a048a80396aa',1,'mxnet::Resource']]],
-  ['resourcerequest',['ResourceRequest',['../structmxnet_1_1ResourceRequest.html#a0191250c5891ba487f354df4caf3604d',1,'mxnet::ResourceRequest::ResourceRequest()'],['../structmxnet_1_1ResourceRequest.html#aa01dd9fd716dfbb68c2ee01f5a11aea5',1,'mxnet::ResourceRequest::ResourceRequest(Type type)']]],
-  ['runserver',['RunServer',['../classmxnet_1_1KVStore.html#ae137ab8b5407060529c18a8084946d0b',1,'mxnet::KVStore']]]
+  ['parallelaccumulate',['ParallelAccumulate',['../namespacemxnet_1_1common.html#a1e646ace37016aa994a26d96e739a561',1,'mxnet::common']]],
+  ['parallelsort',['ParallelSort',['../namespacemxnet_1_1common.html#a1f273651755067ca9b1e6b8063c283b0',1,'mxnet::common::ParallelSort(RandomIt first, RandomIt last, size_t num_threads, Compare comp)'],['../namespacemxnet_1_1common.html#af2c7fe2df1babee66696d2b449e2123c',1,'mxnet::common::ParallelSort(RandomIt first, RandomIt last, size_t num_threads)']]],
+  ['parallelsorthelper',['ParallelSortHelper',['../namespacemxnet_1_1common.html#a7343dc26405918db27b8224ce41f05f6',1,'mxnet::common']]],
+  ['partialforward',['PartialForward',['../classmxnet_1_1Executor.html#a3e261d44065848e434c527000d4390c8',1,'mxnet::Executor']]],
+  ['print',['Print',['../classmxnet_1_1Executor.html#a3803afcb87e4c69940c8d3d88a03e6ee',1,'mxnet::Executor']]],
+  ['pull',['Pull',['../classmxnet_1_1KVStore.html#a92c899827e29d647dab3498bbd4d2f1f',1,'mxnet::KVStore::Pull(const std::vector&lt; int &gt; &amp;keys, const std::vector&lt; NDArray * &gt; &amp;values, int priority=0, bool ignore_sparse=true)=0'],['../classmxnet_1_1KVStore.html#ac45fce23d140420083170ab162aa5e70',1,'mxnet::KVStore::Pull(const std::vector&lt; std::string &gt; &amp;str_keys, const std::vector&lt; NDArray * &gt; &amp;values, int priority=0, bool ignore_sparse=true)=0']]],
+  ['pullrowsparse',['PullRowSparse',['../classmxnet_1_1KVStore.html#ade6175a35ee3c660b7d254953d1a0070',1,'mxnet::KVStore::PullRowSparse(const std::vector&lt; int &gt; &amp;str_keys, const std::vector&lt; std::pair&lt; NDArray *, NDArray &gt;&gt; &amp;val_rowids, int priority=0)=0'],['../classmxnet_1_1KVStore.html#acb884ba37491cc7b20152771e93d6c71',1,'mxnet::KVStore::PullRowSparse(const std::vector&lt; std::string &gt; &amp;str_keys, const std::vector&lt; std::pair&lt; NDArray *, NDArray &gt;&gt; &amp;val_rowids, int priority=0)=0']]],
+  ['push',['Push',['../classmxnet_1_1Engine.html#ad213d6b1a7c1e0d4d41275b9efe5f097',1,'mxnet::Engine::Push()'],['../classmxnet_1_1KVStore.html#a56a3b6d687700f7c71310cd47ab5a54c',1,'mxnet::KVStore::Push(const std::vector&lt; int &gt; &amp;keys, const std::vector&lt; NDArray &gt; &amp;values, int priority=0)=0'],['../classmxnet_1_1KVStore.html#aa2a9cf32a8da809bb4ae4abf40159c96',1,'mxnet::KVStore::Push(const std::vector&lt; std::string &gt; &amp;str_keys, const std::vector&lt; NDArray &gt; &amp;values, int priority=0)=0']]],
+  ['pushasync',['PushAsync',['../classmxnet_1_1Engine.html#afbdd4887c046e05aabe9272d0a0953a7',1,'mxnet::Engine']]],
+  ['pushsync',['PushSync',['../classmxnet_1_1Engine.html#ac4c1d74e906699cf074a34dfdc968d8c',1,'mxnet::Engine']]]
 ];

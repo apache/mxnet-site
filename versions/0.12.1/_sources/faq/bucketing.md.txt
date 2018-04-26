@@ -31,9 +31,9 @@ by maintaining the connection of the states and gradients through time.
 However, this implementation approach results in slow processing.
 This approach works with variable length sequences. For more complicated models (e.g., translation that uses a sequence-to-sequence model), explicitly unrolling is the easiest way. In this example, we introduce the MXNet APIs that allows us to implement bucketing.
 
-## Variable-length Sequence Training for PTB
+## Variable-length Sequence Training for Sherlock Holmes
 
-We use the [PennTreeBank language model example](https://github.com/dmlc/mxnet/tree/master/example/rnn) for this example. If you are not familiar with this example, see [this tutorial (in Julia)](http://dmlc.ml/mxnet/2015/11/15/char-lstm-in-julia.html) first.
+We use the [Sherlock Holmes language model example](https://github.com/dmlc/mxnet/tree/master/example/rnn) for this example. If you are not familiar with this example, see [this tutorial (in Julia)](http://dmlc.ml/mxnet/2015/11/15/char-lstm-in-julia.html) first.
 
 In this example, we use a simple architecture
 consisting of a word-embedding layer
@@ -84,7 +84,7 @@ and then randomly chooses sequences from that bucket to form a mini-batch.
 It also applies padding for sequences of different length within the mini-batch as necessary.
 
 For a full, working implementation of a `DataIter`
-that reads text sequences by as described above, see [example/rnn/lstm_ptb_bucketing.py](https://github.com/dmlc/mxnet/blob/master/example/rnn/lstm_bucketing.py).
+that reads text sequences by as described above, see [example/rnn/lstm_ptb_bucketing.py](https://github.com/dmlc/mxnet/blob/master/example/rnn/bucketing/lstm_bucketing.py).
 In this example, you can use bucketing with a static configuration (e.g., `buckets = [10, 20, 30, 40, 50, 60]`), or let MXNet generate buckets automatically according to the characteristics of the dataset (`buckets = []`). The latter approach is implemented by adding a bucket as long as the number of sequences assigned to that bucket is exceeds some minimum count. For more information, see [default_gen_buckets()](https://github.com/dmlc/mxnet/blob/master/example/rnn/old/bucket_io.py#L43).
 
 ## Beyond Sequence Training

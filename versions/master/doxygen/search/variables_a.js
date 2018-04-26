@@ -1,6 +1,7 @@
 var searchData=
 [
   ['name',['name',['../classmxnet_1_1op_1_1SimpleOpRegEntry.html#a02c180f08b215e9553d3c93fa783f9a4',1,'mxnet::op::SimpleOpRegEntry']]],
+  ['need_5fgrad',['need_grad',['../structmxnet_1_1OpContext.html#adffa555a95b50893b5fe7a2930a71d62',1,'mxnet::OpContext']]],
   ['num_5fbatch_5fpadd',['num_batch_padd',['../structmxnet_1_1DataBatch.html#aad93df826690100bb16689952fc83558',1,'mxnet::DataBatch']]],
   ['num_5fcallbacks',['num_callbacks',['../structMXCallbackList.html#aa593dcc4096dcc38a2af477e057d8861',1,'MXCallbackList']]],
   ['num_5fmutate_5fvars',['num_mutate_vars',['../structmxnet_1_1NDArrayFunctionReg.html#ad7881779b7807c6357902bdaccfccde2',1,'mxnet::NDArrayFunctionReg']]],

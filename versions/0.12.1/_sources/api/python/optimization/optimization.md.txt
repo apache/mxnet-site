@@ -96,8 +96,14 @@ implements one weight updating function.
     Adam
     AdaGrad
     AdaDelta
+    Adamax
+    Nadam
     DCASGD
     SGLD
+    Signum
+    FTML
+    LBSGD
+    Ftrl
 ```
 
 ## The ``mxnet.lr_scheduler`` package
@@ -143,7 +149,7 @@ for examples.
 
 ## API Reference
 
-<script type="text/javascript" src='../../_static/js/auto_module_index.js'></script>
+<script type="text/javascript" src='../../../_static/js/auto_module_index.js'></script>
 
 ```eval_rst
 .. automodule:: mxnet.optimizer
