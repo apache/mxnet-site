@@ -17,7 +17,7 @@ var searchData=
   ['infertype',['InferType',['../classmxnet_1_1OperatorProperty.html#ad5c9f53ea70f3eeb1bf27b983f420c0b',1,'mxnet::OperatorProperty']]],
   ['init',['Init',['../classmxnet_1_1IIterator.html#a774e490e5f3eee767fdc11b779bbd1fe',1,'mxnet::IIterator::Init()'],['../classmxnet_1_1KVStore.html#af4e56c1f2b90bdd02e2c4e7d2abf6265',1,'mxnet::KVStore::Init(const std::vector&lt; int &gt; &amp;keys, const std::vector&lt; NDArray &gt; &amp;values)=0'],['../classmxnet_1_1KVStore.html#a164c3314ba04dadab4fa2a7a74c440d4',1,'mxnet::KVStore::Init(const std::vector&lt; std::string &gt; &amp;str_keys, const std::vector&lt; NDArray &gt; &amp;values)=0'],['../classmxnet_1_1OperatorProperty.html#a0fb32e0ab03a86517473db0f0630856c',1,'mxnet::OperatorProperty::Init()']]],
   ['initpsenv',['InitPSEnv',['../classmxnet_1_1KVStore.html#a5d919a7a4c9495e9a569c8d733d6325f',1,'mxnet::KVStore']]],
-  ['inline_5flimit',['inline_limit',['../structmxnet_1_1CachedOpParam.html#a166daee4e0d0d1486a7dca5548147c32',1,'mxnet::CachedOpParam']]],
+  ['inline_5flimit',['inline_limit',['../structmxnet_1_1CachedOpConfig.html#ade87108bb2fb9cd1d15cfdec77953f49',1,'mxnet::CachedOpConfig']]],
   ['input0',['Input0',['../structmxnet_1_1op_1_1Input0.html',1,'mxnet::op']]],
   ['input1',['Input1',['../structmxnet_1_1op_1_1Input1.html',1,'mxnet::op']]],
   ['invoke',['Invoke',['../classmxnet_1_1Imperative.html#ae3a1279e546061bf6062817c93dce0dc',1,'mxnet::Imperative']]],
@@ -31,5 +31,6 @@ var searchData=
   ['isschedulernode',['IsSchedulerNode',['../classmxnet_1_1KVStore.html#a41113b9dfeab6c705ba064cc3f010fb4',1,'mxnet::KVStore']]],
   ['isservernode',['IsServerNode',['../classmxnet_1_1KVStore.html#a101178924ce1d635b0c8c2a5bce0ceaf',1,'mxnet::KVStore']]],
   ['isvariable',['IsVariable',['../classmxnet_1_1Imperative_1_1AGInfo.html#ad5f1d672e9adc8c0be46cc4002c0aafc',1,'mxnet::Imperative::AGInfo']]],
+  ['isview',['IsView',['../classmxnet_1_1NDArray.html#a117e3af0d08abf56ff8852adfb71f413',1,'mxnet::NDArray']]],
   ['isworkernode',['IsWorkerNode',['../classmxnet_1_1KVStore.html#ab216fb292fa77e843e95f474fa671a20',1,'mxnet::KVStore']]]
 ];

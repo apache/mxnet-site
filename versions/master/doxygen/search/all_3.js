@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['backward',['backward',['../structNativeOpInfo.html#a2faec6cfc4510b455de950a4b104ea9f',1,'NativeOpInfo::backward()'],['../structNDArrayOpInfo.html#ac8a4bb0b4a71f372e5abb8ded36dd61c',1,'NDArrayOpInfo::backward()'],['../classmxnet_1_1Executor.html#aa2fd32510a718aff38323e63be0d65e3',1,'mxnet::Executor::Backward()'],['../classmxnet_1_1Imperative_1_1CachedOp.html#ad6fb3783c488a25336b8860b41ec3b1e',1,'mxnet::Imperative::CachedOp::Backward()'],['../classmxnet_1_1Imperative.html#afa4950a3cf57431f1d0d639c3f7afa7d',1,'mxnet::Imperative::Backward()'],['../classmxnet_1_1Operator.html#ad32d74b9bf56caf920b5e6379d2bb259',1,'mxnet::Operator::Backward()']]],
-  ['backward_5fbulk_5fsize',['backward_bulk_size',['../structmxnet_1_1CachedOpParam.html#af79598d711506050306748edf1b12723',1,'mxnet::CachedOpParam']]],
+  ['backward',['Backward',['../classmxnet_1_1Executor.html#aa2fd32510a718aff38323e63be0d65e3',1,'mxnet::Executor::Backward()'],['../classmxnet_1_1Imperative_1_1CachedOp.html#ad6fb3783c488a25336b8860b41ec3b1e',1,'mxnet::Imperative::CachedOp::Backward()'],['../classmxnet_1_1Imperative.html#afa4950a3cf57431f1d0d639c3f7afa7d',1,'mxnet::Imperative::Backward()'],['../classmxnet_1_1Operator.html#ad32d74b9bf56caf920b5e6379d2bb259',1,'mxnet::Operator::Backward()'],['../structNativeOpInfo.html#a2faec6cfc4510b455de950a4b104ea9f',1,'NativeOpInfo::backward()'],['../structNDArrayOpInfo.html#ac8a4bb0b4a71f372e5abb8ded36dd61c',1,'NDArrayOpInfo::backward()']]],
+  ['backward_5fbulk_5fsize',['backward_bulk_size',['../structmxnet_1_1CachedOpConfig.html#a3af435062ed35b05c56bae72b2e6e943',1,'mxnet::CachedOpConfig']]],
   ['backwardinplaceoption',['BackwardInplaceOption',['../classmxnet_1_1OperatorProperty.html#a67231a5a1525ec7480de98a79dce0194',1,'mxnet::OperatorProperty']]],
   ['backwardinputs',['BackwardInputs',['../classmxnet_1_1OperatorProperty.html#a9f488509e132094ce7e79125ce853042',1,'mxnet::OperatorProperty']]],
   ['backwardresource',['BackwardResource',['../classmxnet_1_1OperatorProperty.html#ade7720a3e0ebba67d89978925a77609b',1,'mxnet::OperatorProperty']]],
@@ -14,5 +14,6 @@ var searchData=
   ['binarygradfunctiont1',['BinaryGradFunctionT1',['../namespacemxnet_1_1op.html#a027d1f190d964f7494816733aff6c3f2',1,'mxnet::op']]],
   ['binaryshapefunction',['BinaryShapeFunction',['../namespacemxnet_1_1op.html#a78c7bd2075894ac41351feca1b1e5c94',1,'mxnet::op']]],
   ['bind',['Bind',['../classmxnet_1_1Executor.html#a8217aa9fbdd99d107bd836872d7d9692',1,'mxnet::Executor']]],
-  ['bulk_5fsize',['bulk_size',['../classmxnet_1_1Engine.html#a78baf44fa0dfed3285d6b9b65845825c',1,'mxnet::Engine']]]
+  ['bulk_5fsize',['bulk_size',['../classmxnet_1_1Engine.html#a78baf44fa0dfed3285d6b9b65845825c',1,'mxnet::Engine']]],
+  ['byte_5foffset',['byte_offset',['../classmxnet_1_1NDArray.html#a5dfa016a606afd37b8bc85dc2832b025',1,'mxnet::NDArray']]]
 ];

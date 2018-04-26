@@ -7,7 +7,7 @@ var searchData=
   ['randgenerator_3c_20gpu_2c_20dtype_20_3e',['RandGenerator&lt; gpu, DType &gt;',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4.html',1,'mxnet::common::random']]],
   ['random_5fengine',['RANDOM_ENGINE',['../namespacemxnet_1_1common.html#aceba8f2d6de65796966d7f1d341dcf33',1,'mxnet::common']]],
   ['random_5fgenerator_2eh',['random_generator.h',['../random__generator_8h.html',1,'']]],
-  ['randomseed',['RandomSeed',['../namespacemxnet.html#a5bf83454c8f41259eb9d471f59feda2b',1,'mxnet']]],
+  ['randomseed',['RandomSeed',['../namespacemxnet.html#a5bf83454c8f41259eb9d471f59feda2b',1,'mxnet::RandomSeed(uint32_t seed)'],['../namespacemxnet.html#ab6d578be9be3a2a0d3e21246834d3e71',1,'mxnet::RandomSeed(Context ctx, uint32_t seed)']]],
   ['real_5fdev_5fid',['real_dev_id',['../structmxnet_1_1Context.html#ada4cad693c928562d0fd74fba5ddcde3',1,'mxnet::Context']]],
   ['real_5ft',['real_t',['../namespacemxnet.html#a4421326e33f2a848cb2fa3e70ab24ff4',1,'mxnet']]],
   ['recordiohandle',['RecordIOHandle',['../c__api_8h.html#a4cc6d9b5a408760fc893c0b568d6aeae',1,'c_api.h']]],
