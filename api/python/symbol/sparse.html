@@ -778,7 +778,7 @@ The parameter <cite>grad_scale</cite> can be used to change this scale to <cite>
 <li>abs(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L462</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L491</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -811,7 +811,7 @@ and available at <a class="reference external" href="http://www.jmlr.org/papers/
 </pre></div>
 </div>
 <p>Note that non-zero values for the weight decay option are not supported.</p>
-<p>Defined in src/operator/optimizer_op.cc:L624</p>
+<p>Defined in src/operator/optimizer_op.cc:L628</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -864,7 +864,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, m a
     <span class="n">w</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">+=</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">m</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L454</p>
+<p>Defined in src/operator/optimizer_op.cc:L458</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1187,7 +1187,7 @@ the result is compact, which means:</p>
 <li>ceil(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L540</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L569</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1346,7 +1346,7 @@ Clipping <code class="docutils literal"><span class="pre">x</span></code> betwee
 </dd></dl>
 <dl class="function">
 <dt id="mxnet.symbol.sparse.dot">
-<code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">dot</code><span class="sig-paren">(</span><em>lhs=None</em>, <em>rhs=None</em>, <em>transpose_a=_Null</em>, <em>transpose_b=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.dot" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">dot</code><span class="sig-paren">(</span><em>lhs=None</em>, <em>rhs=None</em>, <em>transpose_a=_Null</em>, <em>transpose_b=_Null</em>, <em>forward_stype=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.dot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dot product of two arrays.</p>
 <p><code class="docutils literal"><span class="pre">dot</span></code>‘s behavior depends on the input array dimensions:</p>
 <ul>
@@ -1370,15 +1370,19 @@ result array will have shape <cite>(n,m,r,s)</cite>. It is computed by:</p>
 </div>
 </li>
 </ul>
-<p>The storage type of <code class="docutils literal"><span class="pre">dot</span></code> output depends on storage types of inputs and transpose options:</p>
-<ul class="simple">
-<li>dot(csr, default) = default</li>
-<li>dot(csr.T, default) = row_sparse</li>
-<li>dot(csr, row_sparse) = default</li>
-<li>dot(default, csr) = csr</li>
-<li>otherwise, <code class="docutils literal"><span class="pre">dot</span></code> generates output with default storage</li>
-</ul>
-<p>Defined in src/operator/tensor/dot.cc:L62</p>
+<p>The storage type of <code class="docutils literal"><span class="pre">dot</span></code> output depends on storage types of inputs, transpose options and given
+hint for output storage type:</p>
+<p>Implemented sprase operations include:
+- dot(csr, default) = default
+- dot(csr, default, transpose_a=True) = row_sparse
+- dot(csr, row_sparse) = default
+- dot(default, csr) = csr on CPU only
+- dot(default, csr, forward_stype=’default’) = default on GPU only
+- dot(default, csr, transpose_b=True, forward_stype=’default’) = default on GPU only
+- if the combination of input storage types and forward_stype_hint
+- does not match any of the above patterns,
+- dot will generate output with default storage</p>
+<p>Defined in src/operator/tensor/dot.cc:L68</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1388,6 +1392,7 @@ result array will have shape <cite>(n,m,r,s)</cite>. It is computed by:</p>
 <li><strong>rhs</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – The second input</li>
 <li><strong>transpose_a</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – If true then transpose the first input before dot.</li>
 <li><strong>transpose_b</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – If true then transpose the second input before dot.</li>
+<li><strong>forward_stype</strong> (<em>{None</em><em>, </em><em>'csr'</em><em>, </em><em>'default'</em><em>, </em><em>'row_sparse'}</em><em>,</em><em>optional</em><em>, </em><em>default='None'</em>) – The desired storage type of the forward output given by user, if thecombination of input storage types and this hint does not matchany implemented ones, the dot operator will perform fallback operationand still produce an output of the desired storage type.</li>
 <li><strong>name</strong> (<em>string</em><em>, </em><em>optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>
@@ -1540,7 +1545,7 @@ result array will have shape <cite>(n,m,r,s)</cite>. It is computed by:</p>
 </pre></div>
 </div>
 <p>The storage type of <code class="docutils literal"><span class="pre">exp</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L718</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L747</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1572,7 +1577,7 @@ result array will have shape <cite>(n,m,r,s)</cite>. It is computed by:</p>
 <li>expm1(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L797</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L826</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1607,7 +1612,7 @@ result array will have shape <cite>(n,m,r,s)</cite>. It is computed by:</p>
 <li>fix(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L597</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L626</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1643,7 +1648,7 @@ result array will have shape <cite>(n,m,r,s)</cite>. It is computed by:</p>
 <li>floor(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L559</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L588</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1685,7 +1690,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
     <span class="n">w</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sign</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">*</span> <span class="n">lamda1</span> <span class="o">-</span> <span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">/</span> <span class="p">((</span><span class="n">beta</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">row</span><span class="p">]))</span> <span class="o">/</span> <span class="n">learning_rate</span> <span class="o">+</span> <span class="n">wd</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">row</span><span class="p">])</span> <span class="o">></span> <span class="n">lamda1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/optimizer_op.cc:L591</p>
+<p>Defined in src/operator/optimizer_op.cc:L595</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1768,7 +1773,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
 <dd><p>Returns element-wise Natural logarithmic value of the input.</p>
 <p>The natural logarithm is logarithm in base <em>e</em>, so that <code class="docutils literal"><span class="pre">log(exp(x))</span> <span class="pre">=</span> <span class="pre">x</span></code></p>
 <p>The storage type of <code class="docutils literal"><span class="pre">log</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L730</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L759</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1794,7 +1799,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
 <dd><p>Returns element-wise Base-10 logarithmic value of the input.</p>
 <p><code class="docutils literal"><span class="pre">10**log10(x)</span> <span class="pre">=</span> <span class="pre">x</span></code></p>
 <p>The storage type of <code class="docutils literal"><span class="pre">log10</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L742</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L771</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1827,7 +1832,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
 <li>log1p(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L779</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L808</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1853,7 +1858,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
 <dd><p>Returns element-wise Base-2 logarithmic value of the input.</p>
 <p><code class="docutils literal"><span class="pre">2**log2(x)</span> <span class="pre">=</span> <span class="pre">x</span></code></p>
 <p>The storage type of <code class="docutils literal"><span class="pre">log2</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L754</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L783</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1896,7 +1901,7 @@ from backpropagation. See more detail in <code class="docutils literal"><span cl
 <li>make_loss(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L275</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L304</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2167,7 +2172,7 @@ and save them in the output sparse matrix.</p>
 <li>rint(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L521</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L550</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2202,7 +2207,7 @@ and save them in the output sparse matrix.</p>
 <li>round(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L500</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L529</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2233,7 +2238,7 @@ and save them in the output sparse matrix.</p>
 </pre></div>
 </div>
 <p>The storage type of <code class="docutils literal"><span class="pre">rsqrt</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L661</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L690</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2387,7 +2392,7 @@ only the row slices whose indices appear in grad.indices are updated:</p>
 <li>sign(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L481</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L510</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2551,7 +2556,7 @@ a dense tensor.</p>
 <div class="math">
 \[y = x / (1 + abs(x))\]</div>
 <p>The storage type of <code class="docutils literal"><span class="pre">softsign</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L120</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L149</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2588,7 +2593,7 @@ a dense tensor.</p>
 <li>sqrt(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L641</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L670</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2626,7 +2631,7 @@ a dense tensor.</p>
 <li>square(csr) = csr</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L618</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L647</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2672,7 +2677,7 @@ of its inputs to be taken into account for computing gradients.</p>
 <span class="p">[</span> <span class="mf">1.</span>  <span class="mf">1.</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L242</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L271</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2845,7 +2850,7 @@ zero than x is. In short, the fractional part of the signed number x is discarde
 <li>trunc(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L579</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L608</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>

@@ -214,9 +214,9 @@ https://mxnet.incubator.apache.org/versions/1.2.0 redirects to this site and adv
 <span id="how-to-build-the-mxnet-website-for-development-and-qa"></span><h2>How to Build the MXNet Website for Development and QA<a class="headerlink" href="#how-to-build-the-mxnet-website-for-development-and-qa" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://mxnet.incubator.apache.org/versions/1.2.0/build_doc_version/README.md#dependencies">Dependencies</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://mxnet.incubator.apache.org/versions/1.2.0/build_doc_version/README.md#developer-instructions">Developer Build Instructions</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://mxnet.incubator.apache.org/versions/1.2.0/build_doc_version/README.md#full-website-build">Full Site Build Instructions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/docs/build_version_doc#dependencies">Dependencies</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/docs/build_version_doc#developer-instructions">Developer Build Instructions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/docs/build_version_doc#full-website-build">Full Site Build Instructions</a></li>
 </ul>
 </div>
 </div>
@@ -230,23 +230,33 @@ https://mxnet.incubator.apache.org/versions/1.2.0 redirects to this site and adv
 </ul>
 </li>
 <li>Page contents originate as markdown files. Sphinx converts markdown files to html through an <code class="docutils literal"><span class="pre">rst</span></code> intermediate format. Each content folder should contain an index file as landing page.</li>
-<li>There are some utility scripts to help building website, such as <code class="docutils literal"><span class="pre">mxdoc.py</span></code> and <code class="docutils literal"><span class="pre">build_version_doc/</span></code>. They are used to manipulate website contents during building. Refer to <a class="reference external" href="https://mxnet.incubator.apache.org/versions/1.2.0/build_doc_version/README.md#developer-instructions">Developer Build Instructions</a> for more information.</li>
+<li>There are some utility scripts to help building website, such as <code class="docutils literal"><span class="pre">mxdoc.py</span></code> and <code class="docutils literal"><span class="pre">build_version_doc/</span></code>. They are used to manipulate website contents during building. Refer to <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/docs/build_version_doc#developer-instructions">Developer Build Instructions</a> for more information.</li>
 </ul>
 </div>
-<div class="section" id="production-website-building-process">
-<span id="production-website-building-process"></span><h2>Production Website Building Process<a class="headerlink" href="#production-website-building-process" title="Permalink to this headline">¶</a></h2>
-<p><strong>IMPORTANT</strong>: this is currently offline.</p>
-<p><a class="reference external" href="https://builds.apache.org/job/incubator-mxnet-build-site/">Apache Jenkins MXNet website building job</a> is used to build MXNet website.
-There are two ways to trigger this job.
-First is nightly build for master branch.
-Second is manually trigger job when a new version is released. This will build for new version.</p>
-<p>The job will fetch mxnet repository, build MXNet website and push all static files to <a class="reference external" href="https://github.com/apache/incubator-mxnet-site.git">host repository</a>.
+<div class="section" id="production-website-deployment-process">
+<span id="production-website-deployment-process"></span><h2>Production Website Deployment Process<a class="headerlink" href="#production-website-deployment-process" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://builds.apache.org/job/incubator-mxnet-build-site/">Apache Jenkins MXNet website building job</a> is used to build MXNet website.</p>
+<p>The Jenkins docs build job will fetch MXNet repository, build MXNet website and push all static files to <a class="reference external" href="https://github.com/apache/incubator-mxnet-site.git">host repository</a>.
 The host repo is hooked with <a class="reference external" href="https://gitbox.apache.org/repos/asf?p=incubator-mxnet-site.git;a=summary">Apache gitbox</a> to host website.</p>
+<div class="section" id="process-for-running-the-docs-build-job">
+<span id="process-for-running-the-docs-build-job"></span><h3>Process for Running the Docs Build Job<a class="headerlink" href="#process-for-running-the-docs-build-job" title="Permalink to this headline">¶</a></h3>
+<ol class="simple">
+<li>Login to <a class="reference external" href="http://jenkins.mxnet-ci.amazon-ml.com/">Jenkins</a>.</li>
+<li>View the pipeline currently called <code class="docutils literal"><span class="pre">website</span> <span class="pre">build</span> <span class="pre">pipeline</span></code>.</li>
+<li>Click <code class="docutils literal"><span class="pre">Build</span> <span class="pre">with</span> <span class="pre">Parameters</span></code>.</li>
+<li>Use the defaults, or change the domain to be your staging server’s IP/DNS web address.</li>
+<li>Wait about 20-30 minutes while it builds the full site.</li>
+<li>On your staging server, clone the <a class="reference external" href="https://github.com/apache/incubator-mxnet-site.git">mxnet site repo</a>.</li>
+<li>When you ran <code class="docutils literal"><span class="pre">website</span> <span class="pre">build</span> <span class="pre">pipeline</span></code> it followed up with website build - test publish which pushed the changes to the incubator-mxnet-site repo.</li>
+<li>Make sure you git pull if you had already cloned the site repo before this first run-through.</li>
+<li>Copy the files to your webroot. For more info on this see the developer instructions for docs build.</li>
+<li>Preview the site on your staging server. Note, use the domain default before you try to use this for production, but using your own is helpful for QA’ing the site.</li>
+</ol>
+</div>
 </div>
 <div class="section" id="build-versioning-website">
 <span id="build-versioning-website"></span><h2>Build Versioning Website<a class="headerlink" href="#build-versioning-website" title="Permalink to this headline">¶</a></h2>
-<p><strong>IMPORTANT</strong>: Refer to <a class="reference external" href="https://mxnet.incubator.apache.org/versions/1.2.0/build_doc_version/README.md#full-website-build">Full Site Build Instructions</a> for a working site build with the versions dropdown in the UI.</p>
-<p><code class="docutils literal"><span class="pre">build_doc.sh</span></code> is used by Apache Jenkins MXNet website building job to incremental adding of versions. We don’t need it for local website development. <strong>Currently offline due to site rendering problems.</strong></p>
+<p><strong>IMPORTANT</strong>: Refer to <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/docs/build_version_doc#full-website-build">Full Site Build Instructions</a> for a working site build with the versions dropdown in the UI.</p>
 </div>
 <div class="section" id="troubleshooting">
 <span id="troubleshooting"></span><h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
@@ -267,7 +277,10 @@ The host repo is hooked with <a class="reference external" href="https://gitbox.
 <li><a class="reference internal" href="#">MXNet Documentation</a><ul>
 <li><a class="reference internal" href="#how-to-build-the-mxnet-website-for-development-and-qa">How to Build the MXNet Website for Development and QA</a></li>
 <li><a class="reference internal" href="#file-structure">File Structure</a></li>
-<li><a class="reference internal" href="#production-website-building-process">Production Website Building Process</a></li>
+<li><a class="reference internal" href="#production-website-deployment-process">Production Website Deployment Process</a><ul>
+<li><a class="reference internal" href="#process-for-running-the-docs-build-job">Process for Running the Docs Build Job</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#build-versioning-website">Build Versioning Website</a></li>
 <li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>

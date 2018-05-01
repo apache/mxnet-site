@@ -300,7 +300,7 @@
             <span class="n">s</span> <span class="o">+=</span> <span class="s1">', bidirectional'</span>
         <span class="n">s</span> <span class="o">+=</span> <span class="s1">')'</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2h_weight</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">mapping</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1"> -> </span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gates</span><span class="p">)</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1"> -> </span><span class="si">{1}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gates</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                         <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span>
                         <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
@@ -494,7 +494,10 @@
 
 <span class="sd">    Inputs:</span>
 <span class="sd">        - **data**: input tensor with shape `(sequence_length, batch_size, input_size)`</span>
-<span class="sd">          when `layout` is "TNC". For other layouts dimensions are permuted accordingly.</span>
+<span class="sd">          when `layout` is "TNC". For other layouts, dimensions are permuted accordingly</span>
+<span class="sd">          using transpose() operator which adds performance overhead. Consider creating</span>
+<span class="sd">          batches in TNC layout during data batching step.</span>
+
 <span class="sd">        - **states**: initial recurrent state tensor with shape</span>
 <span class="sd">          `(num_layers, batch_size, num_hidden)`. If `bidirectional` is True,</span>
 <span class="sd">          shape will instead be `(2*num_layers, batch_size, num_hidden)`. If</span>
@@ -594,7 +597,9 @@
 
 <span class="sd">    Inputs:</span>
 <span class="sd">        - **data**: input tensor with shape `(sequence_length, batch_size, input_size)`</span>
-<span class="sd">          when `layout` is "TNC". For other layouts dimensions are permuted accordingly.</span>
+<span class="sd">          when `layout` is "TNC". For other layouts, dimensions are permuted accordingly</span>
+<span class="sd">          using transpose() operator which adds performance overhead. Consider creating</span>
+<span class="sd">          batches in TNC layout during data batching step.</span>
 <span class="sd">        - **states**: a list of two initial recurrent state tensors. Each has shape</span>
 <span class="sd">          `(num_layers, batch_size, num_hidden)`. If `bidirectional` is True,</span>
 <span class="sd">          shape will instead be `(2*num_layers, batch_size, num_hidden)`. If</span>
@@ -691,7 +696,9 @@
 
 <span class="sd">    Inputs:</span>
 <span class="sd">        - **data**: input tensor with shape `(sequence_length, batch_size, input_size)`</span>
-<span class="sd">          when `layout` is "TNC". For other layouts dimensions are permuted accordingly.</span>
+<span class="sd">          when `layout` is "TNC". For other layouts, dimensions are permuted accordingly</span>
+<span class="sd">          using transpose() operator which adds performance overhead. Consider creating</span>
+<span class="sd">          batches in TNC layout during data batching step.</span>
 <span class="sd">        - **states**: initial recurrent state tensor with shape</span>
 <span class="sd">          `(num_layers, batch_size, num_hidden)`. If `bidirectional` is True,</span>
 <span class="sd">          shape will instead be `(2*num_layers, batch_size, num_hidden)`. If</span>
