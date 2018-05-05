@@ -201,6 +201,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#gluon-api">Gluon API</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Gluon Package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#contents">Contents</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#parameter">Parameter</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#containers">Containers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#trainer">Trainer</a></li>
@@ -244,10 +245,65 @@
 <span id="gluon-package"></span><h1>Gluon Package<a class="headerlink" href="#gluon-package" title="Permalink to this headline">¶</a></h1>
 <script src="../../_static/js/auto_module_index.js" type="text/javascript"></script><div class="section" id="overview">
 <span id="overview"></span><h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>Gluon package is a high-level interface for MXNet designed to be easy to use while
-keeping most of the flexibility of low level API. Gluon supports both imperative
-and symbolic programming, making it easy to train complex models imperatively
-in Python and then deploy with symbolic graph in C++ and Scala.</p>
+<p>The Gluon package is a high-level interface for MXNet designed to be easy to use, while keeping most of the flexibility of a low level API. Gluon supports both imperative and symbolic programming, making it easy to train complex models imperatively in Python and then deploy with a symbolic graph in C++ and Scala.</p>
+<p>Based on the the <a class="reference external" href="https://github.com/gluon-api/gluon-api">Gluon API specification</a>, the Gluon API in Apache MXNet provides a clear, concise, and simple API for deep learning. It makes it easy to prototype, build, and train deep learning models without sacrificing training speed.</p>
+<p><strong>Advantages</strong></p>
+<ol class="simple">
+<li>Simple, Easy-to-Understand Code: Gluon offers a full set of plug-and-play neural network building blocks, including predefined layers, optimizers, and initializers.</li>
+<li>Flexible, Imperative Structure: Gluon does not require the neural network model to be rigidly defined, but rather brings the training algorithm and model closer together to provide flexibility in the development process.</li>
+<li>Dynamic Graphs: Gluon enables developers to define neural network models that are dynamic, meaning they can be built on the fly, with any structure, and using any of Python’s native control flow.</li>
+<li>High Performance: Gluon provides all of the above benefits without impacting the training speed that the underlying engine provides.</li>
+</ol>
+<p><strong>Examples</strong></p>
+<p><em>Simple, Easy-to-Understand Code</em></p>
+<p>Use plug-and-play neural network building blocks, including predefined layers, optimizers, and initializers:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+<span class="c1"># When instantiated, Sequential stores a chain of neural network layers. </span>
+<span class="c1"># Once presented with data, Sequential executes each layer in turn, using </span>
+<span class="c1"># the output of one layer as the input for the next</span>
+<span class="k">with</span> <span class="n">net</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">))</span> <span class="c1"># 1st layer (256 nodes)</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">))</span> <span class="c1"># 2nd hidden layer</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">num_outputs</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><em>Flexible, Imperative Structure</em></p>
+<p>Prototype, build, and train neural networks in fully imperative manner using the MXNet autograd package and the Gluon trainer method:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">epochs</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_data</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">autograd</span><span class="o">.</span><span class="n">record</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1"># the forward iteration</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">softmax_cross_entropy</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><em>Dynamic Graphs</em></p>
+<p>Build neural networks on the fly for use cases where neural networks must change in size and shape during model training:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+    <span class="n">children_outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">child</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">]</span>
+    <span class="c1">#Recursively builds the neural network based on each input sentence’s</span>
+    <span class="c1">#syntactic structure during the model definition and training process</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p><em>High Performance</em></p>
+<p>Easily cache the neural network to achieve high performance by defining your neural network with <em>HybridSequential</em> and calling the <em>hybridize</em> method:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">net</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">))</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">))</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+    
+<span class="n">net</span><span class="o">.</span><span class="n">hybridize</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contents">
+<span id="contents"></span><h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="nn.html">Gluon Neural Network Layers</a></li>
@@ -1370,6 +1426,7 @@ but doesn’t match.</li>
 <ul>
 <li><a class="reference internal" href="#">Gluon Package</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#contents">Contents</a></li>
 <li><a class="reference internal" href="#parameter">Parameter</a></li>
 <li><a class="reference internal" href="#containers">Containers</a></li>
 <li><a class="reference internal" href="#trainer">Trainer</a></li>

@@ -116,7 +116,7 @@ var searchData=
   ['mxndarrayloadfrombuffer',['MXNDArrayLoadFromBuffer',['../c__api_8h.html#adb9eaeff5791b6c74861c8564c900353',1,'c_api.h']]],
   ['mxndarrayloadfromrawbytes',['MXNDArrayLoadFromRawBytes',['../c__api_8h.html#a27c9353672df26b68c169fbb857f3a3f',1,'c_api.h']]],
   ['mxndarrayreshape',['MXNDArrayReshape',['../c__api_8h.html#a3743a54910b1862400c3ec4cbf7e9d80',1,'c_api.h']]],
-  ['mxndarrayreshape64',['MXNDArrayReshape64',['../c__api_8h.html#a50424df0d4fd850c4d0901e3a986d7a8',1,'c_api.h']]],
+  ['mxndarrayreshape64',['MXNDArrayReshape64',['../c__api_8h.html#a19b4db698bcd1ed87269aec17e5a16cb',1,'c_api.h']]],
   ['mxndarraysave',['MXNDArraySave',['../c__api_8h.html#a5dc95ef008b73103b86f4576fcf9117d',1,'c_api.h']]],
   ['mxndarraysaverawbytes',['MXNDArraySaveRawBytes',['../c__api_8h.html#ab180057ee7a43918d021adfc468150a0',1,'c_api.h']]],
   ['mxndarraysetgradstate',['MXNDArraySetGradState',['../c__api_8h.html#a2ff7ded9017ac7617be4eeebffae06a1',1,'c_api.h']]],

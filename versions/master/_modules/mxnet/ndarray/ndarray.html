@@ -1198,6 +1198,19 @@
 <span class="sd">              - input shape = (2,3,4), shape = (-4,1,2,-2), output shape =(1,2,3,4)</span>
 <span class="sd">              - input shape = (2,3,4), shape = (2,-4,-1,3,-2), output shape = (2,1,3,4)</span>
 
+<span class="sd">            - If the argument `reverse` is set to 1, then the special values are inferred from right</span>
+<span class="sd">              to left.</span>
+
+<span class="sd">              Example::</span>
+
+<span class="sd">              - without reverse=1, for input shape = (10,5,4), shape = (-1,0), output shape would be</span>
+<span class="sd">                (40,5).</span>
+<span class="sd">              - with reverse=1, output shape will be (50,4).</span>
+
+<span class="sd">        reverse : bool, default False</span>
+<span class="sd">            If true then the special values are inferred from right to left. Only supported as</span>
+<span class="sd">            keyword argument.</span>
+
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1238,18 +1251,19 @@
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">shape</span><span class="p">:</span>
             <span class="n">shape</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'shape'</span><span class="p">)</span>
             <span class="k">assert</span> <span class="n">shape</span><span class="p">,</span> <span class="s2">"Shape must be provided."</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Only 'shape' is supported as keyword argument. Got: </span><span class="si">{}</span><span class="s2">."</span>
-                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">,</span>\
-                <span class="s2">"Specifying both positional and keyword arguments is not allowed in reshape."</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'shape'</span><span class="p">,</span> <span class="s1">'reverse'</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">"Got unknown keywords in reshape: </span><span class="si">{}</span><span class="s2">. "</span> \
+                <span class="s2">"Accepted keyword arguments are 'shape' and 'reverse'."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'shape'</span><span class="p">,</span> <span class="s1">'reverse'</span><span class="p">]])))</span>
+        <span class="n">reverse</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'reverse'</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="n">handle</span> <span class="o">=</span> <span class="n">NDArrayHandle</span><span class="p">()</span>
 
         <span class="c1"># Actual reshape</span>
         <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayReshape64</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
                                            <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">),</span>
                                            <span class="n">c_array</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_int64</span><span class="p">,</span> <span class="n">shape</span><span class="p">),</span>
+                                           <span class="n">reverse</span><span class="p">,</span>
                                            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">NDArray</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">writable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">)</span></div>
 
