@@ -6,7 +6,7 @@ set -e
 apt-get install -y npm
 
 # Install nodejs- v 7.10.1
-apt-get install -y curl python-software-properties
+#apt-get install -y curl python-software-properties
 curl -sL https://deb.nodesource.com/setup_7.x | bash -
 apt-get install -y nodejs
 
