@@ -1467,7 +1467,7 @@ explicitly.</li>
 <td>Batch normalization.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#mxnet.symbol.Pooling" title="mxnet.symbol.Pooling"><code class="xref py py-obj docutils literal"><span class="pre">Pooling</span></code></a></td>
-<td>Pooling operator for input and output data type of int8.</td>
+<td>Performs pooling on the input.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.symbol.SoftmaxOutput" title="mxnet.symbol.SoftmaxOutput"><code class="xref py py-obj docutils literal"><span class="pre">SoftmaxOutput</span></code></a></td>
 <td>Computes the gradient of cross entropy loss with respect to softmax output.</td>
@@ -4378,7 +4378,7 @@ over local input regions.</p>
 <span class="math">\((x, y)\)</span> and then applying the ReLU nonlinearity, the response-normalized
 activity <span class="math">\(b_{x,y}^{i}\)</span> is given by the expression:</p>
 <div class="math">
-\[b_{x,y}^{i} = \frac{a_{x,y}^{i}}{\Bigg({k + \alpha \sum_{j=max(0, i-\frac{n}{2})}^{min(N-1, i+\frac{n}{2})} (a_{x,y}^{j})^{2}}\Bigg)^{\beta}}\]</div>
+\[b_{x,y}^{i} = \frac{a_{x,y}^{i}}{\Bigg({k + \frac{\alpha}{n} \sum_{j=max(0, i-\frac{n}{2})}^{min(N-1, i+\frac{n}{2})} (a_{x,y}^{j})^{2}}\Bigg)^{\beta}}\]</div>
 <p>where the sum runs over <span class="math">\(n\)</span> “adjacent” kernel maps at the same spatial position, and <span class="math">\(N\)</span> is the total
 number of kernels in the layer.</p>
 <p>Defined in src/operator/nn/lrn.cc:L175</p>
@@ -4767,15 +4767,48 @@ The widths of the higher two dimensions <code class="docutils literal"><span cla
 <dl class="function">
 <dt id="mxnet.symbol.Pooling">
 <code class="descclassname">mxnet.symbol.</code><code class="descname">Pooling</code><span class="sig-paren">(</span><em>data=None</em>, <em>kernel=_Null</em>, <em>pool_type=_Null</em>, <em>global_pool=_Null</em>, <em>cudnn_off=_Null</em>, <em>pooling_convention=_Null</em>, <em>stride=_Null</em>, <em>pad=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.Pooling" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pooling operator for input and output data type of int8.
-The input and output data comes with min and max thresholds for quantizing
-the float32 data into int8.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This operator only supports forward propogation. DO NOT use it in training.
-This operator only supports <cite>pool_type</cite> of <cite>avg</cite> or <cite>max</cite>.</p>
+<dd><p>Performs pooling on the input.</p>
+<p>The shapes for 1-D pooling are</p>
+<ul class="simple">
+<li><strong>data</strong>: <em>(batch_size, channel, width)</em>,</li>
+<li><strong>out</strong>: <em>(batch_size, num_filter, out_width)</em>.</li>
+</ul>
+<p>The shapes for 2-D pooling are</p>
+<ul>
+<li><p class="first"><strong>data</strong>: <em>(batch_size, channel, height, width)</em></p>
+</li>
+<li><p class="first"><strong>out</strong>: <em>(batch_size, num_filter, out_height, out_width)</em>, with:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_height</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">kernel</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pad</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stride</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">out_width</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">kernel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pad</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">stride</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
 </div>
-<p>Defined in src/operator/quantization/quantized_pooling.cc:L127</p>
+</li>
+</ul>
+<p>The definition of <em>f</em> depends on <code class="docutils literal"><span class="pre">pooling_convention</span></code>, which has two options:</p>
+<ul>
+<li><p class="first"><strong>valid</strong> (default):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="o">-</span><span class="n">k</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>full</strong>, which is compatible with Caffe:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="o">-</span><span class="n">k</span><span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>But <code class="docutils literal"><span class="pre">global_pool</span></code> is set to be true, then do a global pooling, namely reset
+<code class="docutils literal"><span class="pre">kernel=(height,</span> <span class="pre">width)</span></code>.</p>
+<p>Three pooling options are supported by <code class="docutils literal"><span class="pre">pool_type</span></code>:</p>
+<ul class="simple">
+<li><strong>avg</strong>: average pooling</li>
+<li><strong>max</strong>: max pooling</li>
+<li><strong>sum</strong>: sum pooling</li>
+</ul>
+<p>For 3-D pooling, an additional <em>depth</em> dimension is added before
+<em>height</em>. Namely the input data will have shape <em>(batch_size, channel, depth,
+height, width)</em>.</p>
+<p>Defined in src/operator/nn/pooling.cc:L352</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>

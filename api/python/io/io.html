@@ -873,6 +873,9 @@ the call is ignored and remaining examples are returned in the second round.</p>
 to set <cite>round_batch</cite> to False.</p>
 <p>If <code class="docutils literal"><span class="pre">data_csv</span> <span class="pre">=</span> <span class="pre">'data/'</span></code> is set, then all the files in this directory will be read.</p>
 <p><code class="docutils literal"><span class="pre">reset()</span></code> is expected to be called only after a complete pass of data.</p>
+<p>By default, the CSVIter parses all entries in the data file as float32 data type,
+if <cite>dtype</cite> argument is set to be ‘int32’ then CSVIter will parse all entries in the file
+as int32 data type.</p>
 <p>Examples:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>// Contents of CSV file ``data/data.csv``.
 1,2,3
@@ -924,9 +927,23 @@ batch_size = 3, round_batch=False)
 [[4.  5.  6.]
 [2.  3.  4.]
 [3.  4.  5.]]
+
+// Creates a 'CSVIter' with `dtype`='int32'
+CSVIter = mx.io.CSVIter(data_csv = 'data/data.csv', data_shape = (3,),
+batch_size = 3, round_batch=False, dtype='int32')
+
+// Contents of two batches read from the above iterator in both passes, after calling
+// `reset` method before second pass, is as follows:
+[[1  2  3]
+[2  3  4]
+[3  4  5]]
+
+[[4  5  6]
+[2  3  4]
+[3  4  5]]
 </pre></div>
 </div>
-<p>Defined in src/io/iter_csv.cc:L223</p>
+<p>Defined in src/io/iter_csv.cc:L302</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
