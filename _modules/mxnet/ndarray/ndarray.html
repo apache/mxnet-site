@@ -96,7 +96,6 @@
 <ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
 <li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
 <li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet">Github</a></li>
-<li><a class="main-nav-link" href="../../../community/index.html">Community</a></li>
 <li><a class="main-nav-link" href="../../../community/contribute.html">Contribute</a></li>
 <li><a class="main-nav-link" href="../../../community/powered_by.html">Powered By</a></li>
 </ul>
@@ -200,7 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">HowTo Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">System Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://mxnet.incubator.apache.org/community/index.md">Community</a></li>
 </ul>
 </div>
 </div>
@@ -891,17 +890,20 @@
 <span class="sd">        on the values of slices' steps."""</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">):</span>
-            <span class="n">sliced_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_at</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-            <span class="n">sliced_arr</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">value</span>
-            <span class="k">return</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">py_slice</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># trivial step</span>
-                <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">sliced_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slice</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span>
-                    <span class="n">sliced_arr</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">value</span>
-                    <span class="k">return</span>
-                <span class="c1"># assign value to the whole NDArray</span>
-                <span class="c1"># may need to broadcast first</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o"><</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">+=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o"><</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">>=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o"><</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">-=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">'index </span><span class="si">%d</span><span class="s1"> is out of bounds for axis 0 with size </span><span class="si">%d</span><span class="s1">'</span>
+                                 <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">py_slice</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">key</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># key must be >= 0 here</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">py_slice</span><span class="p">):</span>
+            <span class="n">assign_to_self</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="n">assign_to_self</span> <span class="o">&amp;=</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="n">assign_to_self</span> <span class="o">&amp;=</span> <span class="n">key</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">stop</span> <span class="o">==</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">assign_to_self</span><span class="p">:</span>  <span class="c1"># trivial case, assign value to self</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">shape</span><span class="p">:</span>
@@ -918,7 +920,7 @@
                     <span class="n">value_nd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_value_nd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
                     <span class="n">value_nd</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                 <span class="k">return</span>
-            <span class="k">else</span><span class="p">:</span>  <span class="c1"># non-trivial step, use _slice_assign or _slice_assign_scalar</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># non-trivial case, use _slice_assign or _slice_assign_scalar</span>
                 <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">key</span><span class="p">,)</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span> <span class="s2">"key=</span><span class="si">%s</span><span class="s2"> must be a tuple of slices and integers"</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
@@ -971,7 +973,8 @@
         <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_nd</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="n">vshape</span> <span class="o">=</span> <span class="n">_get_oshape_of_gather_nd_op</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">value_nd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_value_nd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">vshape</span><span class="p">)</span>
-        <span class="n">_internal</span><span class="o">.</span><span class="n">_scatter_set_nd</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">value_nd</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="n">indices</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">_internal</span><span class="o">.</span><span class="n">_scatter_set_nd</span><span class="p">(</span><span class="n">lhs</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="n">value_nd</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="n">indices</span><span class="p">,</span>
+                                  <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_nd_basic_indexing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">"""This function is called when key is a slice, or an integer,</span>

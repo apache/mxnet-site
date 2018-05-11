@@ -96,7 +96,6 @@
 <ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
 <li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
 <li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet">Github</a></li>
-<li><a class="main-nav-link" href="../../../community/index.html">Community</a></li>
 <li><a class="main-nav-link" href="../../../community/contribute.html">Contribute</a></li>
 <li><a class="main-nav-link" href="../../../community/powered_by.html">Powered By</a></li>
 </ul>
@@ -200,7 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../faq/index.html">HowTo Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../architecture/index.html">System Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../community/index.html">Community</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://mxnet.incubator.apache.org/community/index.md">Community</a></li>
 </ul>
 </div>
 </div>
@@ -234,6 +233,7 @@
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -641,7 +641,7 @@
     <span class="k">return</span> <span class="n">src</span>
 
 
-<span class="k">def</span> <span class="nf">random_size_crop</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">min_area</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">random_size_crop</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">"""Randomly crop src with size. Randomize area and aspect ratio.</span>
 
 <span class="sd">    Parameters</span>
@@ -650,8 +650,9 @@
 <span class="sd">        Input image</span>
 <span class="sd">    size : tuple of (int, int)</span>
 <span class="sd">        Size of the crop formatted as (width, height).</span>
-<span class="sd">    min_area : int</span>
-<span class="sd">        Minimum area to be maintained after cropping</span>
+<span class="sd">    area : float in (0, 1] or tuple of (float, float)</span>
+<span class="sd">        If tuple, minimum area and maximum area to be maintained after cropping</span>
+<span class="sd">        If float, minimum area to be maintained after cropping, maximum area is set to 1.0</span>
 <span class="sd">    ratio : tuple of (float, float)</span>
 <span class="sd">        Aspect ratio range as (min_aspect_ratio, max_aspect_ratio)</span>
 <span class="sd">    interp: int, optional, default=2</span>
@@ -666,9 +667,18 @@
 
 <span class="sd">    """</span>
     <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">area</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">w</span>
+    <span class="n">src_area</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">w</span>
+
+    <span class="k">if</span> <span class="s1">'min_area'</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'`min_area` is deprecated. Please use `area` instead.'</span><span class="p">,</span>
+                      <span class="ne">DeprecationWarning</span><span class="p">)</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'min_area'</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">,</span> <span class="s2">"unexpected keyword arguments for `random_size_crop`."</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="p">(</span><span class="n">area</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-        <span class="n">target_area</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">min_area</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">area</span>
+        <span class="n">target_area</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">area</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">src_area</span>
         <span class="n">new_ratio</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">*</span><span class="n">ratio</span><span class="p">)</span>
 
         <span class="n">new_w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">target_area</span> <span class="o">*</span> <span class="n">new_ratio</span><span class="p">)))</span>
@@ -805,24 +815,31 @@
 <span class="sd">    ----------</span>
 <span class="sd">    size : tuple of (int, int)</span>
 <span class="sd">        Size of the crop formatted as (width, height).</span>
-<span class="sd">    min_area : int</span>
-<span class="sd">        Minimum area to be maintained after cropping</span>
+<span class="sd">    area : float in (0, 1] or tuple of (float, float)</span>
+<span class="sd">        If tuple, minimum area and maximum area to be maintained after cropping</span>
+<span class="sd">        If float, minimum area to be maintained after cropping, maximum area is set to 1.0</span>
 <span class="sd">    ratio : tuple of (float, float)</span>
 <span class="sd">        Aspect ratio range as (min_aspect_ratio, max_aspect_ratio)</span>
 <span class="sd">    interp: int, optional, default=2</span>
 <span class="sd">        Interpolation method. See resize_short for details.</span>
 <span class="sd">    """</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">min_area</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">RandomSizedCropAug</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">min_area</span><span class="o">=</span><span class="n">min_area</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">ratio</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RandomSizedCropAug</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="n">area</span><span class="p">,</span>
                                                  <span class="n">ratio</span><span class="o">=</span><span class="n">ratio</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="n">interp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_area</span> <span class="o">=</span> <span class="n">min_area</span>
+        <span class="k">if</span> <span class="s1">'min_area'</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'`min_area` is deprecated. Please use `area` instead.'</span><span class="p">,</span>
+                          <span class="ne">DeprecationWarning</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">'min_area'</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">area</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="n">ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="n">interp</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">kwargs</span><span class="p">,</span> <span class="s2">"unexpected keyword arguments for `RandomSizedCropAug`."</span>
 
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src</span><span class="p">):</span>
         <span class="sd">"""Augmenter body"""</span>
-        <span class="k">return</span> <span class="n">random_size_crop</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_area</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interp</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">random_size_crop</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ratio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interp</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="CenterCropAug"><a class="viewcode-back" href="../../../api/python/image/image.html#mxnet.image.CenterCropAug">[docs]</a><span class="k">class</span> <span class="nc">CenterCropAug</span><span class="p">(</span><span class="n">Augmenter</span><span class="p">):</span>

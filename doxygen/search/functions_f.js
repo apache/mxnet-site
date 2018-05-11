@@ -55,6 +55,7 @@ var searchData=
   ['storage_5fhandle',['storage_handle',['../classmxnet_1_1NDArray.html#ad330f5e35c41078cb64cd84ae59a0bc3',1,'mxnet::NDArray']]],
   ['storage_5finitialized',['storage_initialized',['../classmxnet_1_1NDArray.html#a0f59c72c8caefcc069d5839d35288cd1',1,'mxnet::NDArray']]],
   ['storage_5fshape',['storage_shape',['../classmxnet_1_1NDArray.html#a72059301dd967ecdd0fca19eaa7024d9',1,'mxnet::NDArray']]],
+  ['storage_5fstr',['storage_str',['../namespacemxnet_1_1common.html#ab24b30a630e9ebf963f763a99b48ebc5',1,'mxnet::common']]],
   ['storage_5ftype',['storage_type',['../classmxnet_1_1NDArray.html#a4d8f894c0306ad693ccf29278a613732',1,'mxnet::NDArray']]],
   ['stype_5fstring',['stype_string',['../namespacemxnet_1_1common.html#ab379cd302d59005010ae29aff6e55009',1,'mxnet::common']]],
   ['supportsfloat16compute',['SupportsFloat16Compute',['../cuda__utils_8h.html#afb4268417c1d8886a39142c85c8f188f',1,'cuda_utils.h']]],
