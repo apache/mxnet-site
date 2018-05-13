@@ -228,6 +228,7 @@
 <span class="sd">"""Base container class for all neural network models."""</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Block'</span><span class="p">,</span> <span class="s1">'HybridBlock'</span><span class="p">,</span> <span class="s1">'SymbolBlock'</span><span class="p">]</span>
 
+<span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">re</span>
@@ -243,7 +244,7 @@
 
 <span class="k">class</span> <span class="nc">_BlockScope</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">"""Scope for collecting child `Block` s."""</span>
-    <span class="n">_current</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_current</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_block</span> <span class="o">=</span> <span class="n">block</span>
@@ -254,10 +255,10 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">hint</span><span class="p">):</span>
         <span class="sd">"""Creates prefix and params for new `Block`."""</span>
-        <span class="n">current</span> <span class="o">=</span> <span class="n">_BlockScope</span><span class="o">.</span><span class="n">_current</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_BlockScope</span><span class="o">.</span><span class="n">_current</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">prefix</span> <span class="o">=</span> <span class="n">_name</span><span class="o">.</span><span class="n">NameManager</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">hint</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'_'</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="n">_name</span><span class="o">.</span><span class="n">NameManager</span><span class="o">.</span><span class="n">_current</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">hint</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'_'</span>
             <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">params</span> <span class="o">=</span> <span class="n">ParameterDict</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -278,8 +279,8 @@
     <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">_empty_prefix</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_old_scope</span> <span class="o">=</span> <span class="n">_BlockScope</span><span class="o">.</span><span class="n">_current</span>
-        <span class="n">_BlockScope</span><span class="o">.</span><span class="n">_current</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_old_scope</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_BlockScope</span><span class="o">.</span><span class="n">_current</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">_BlockScope</span><span class="o">.</span><span class="n">_current</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_scope</span> <span class="o">=</span> <span class="n">_name</span><span class="o">.</span><span class="n">Prefix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_block</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_scope</span><span class="o">.</span><span class="fm">__enter__</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
@@ -289,7 +290,7 @@
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_scope</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">ptype</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">trace</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_name_scope</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">_BlockScope</span><span class="o">.</span><span class="n">_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_scope</span>
+        <span class="n">_BlockScope</span><span class="o">.</span><span class="n">_current</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_scope</span>
 
 
 <span class="k">def</span> <span class="nf">_flatten</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">inout_str</span><span class="p">):</span>

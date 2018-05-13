@@ -553,7 +553,7 @@ Please refer to the API reference section for further details on specific operat
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.symbol.sparse.stop_gradient" title="mxnet.symbol.sparse.stop_gradient"><code class="xref py py-obj docutils literal"><span class="pre">stop_gradient</span></code></a></td>
 <td>Stops gradient computation.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="contrib.html#mxnet.symbol.contrib.SparseEmbedding" title="mxnet.symbol.contrib.SparseEmbedding"><code class="xref py py-obj docutils literal"><span class="pre">mxnet.symbol.contrib.SparseEmbedding</span></code></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="#mxnet.symbol.sparse.Embedding" title="mxnet.symbol.sparse.Embedding"><code class="xref py py-obj docutils literal"><span class="pre">Embedding</span></code></a></td>
 <td>Maps integer indices to vector representations (embeddings).</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.symbol.sparse.LinearRegressionOutput" title="mxnet.symbol.sparse.LinearRegressionOutput"><code class="xref py py-obj docutils literal"><span class="pre">LinearRegressionOutput</span></code></a></td>
@@ -589,6 +589,70 @@ This function support variable length of positional input.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>args</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em>[</em><em>]</em>) – Positional input arguments</li>
+<li><strong>name</strong> (<em>string</em><em>, </em><em>optional.</em>) – Name of the resulting symbol.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The result symbol.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol">Symbol</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
+<dt id="mxnet.symbol.sparse.Embedding">
+<code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">Embedding</code><span class="sig-paren">(</span><em>data=None</em>, <em>weight=None</em>, <em>input_dim=_Null</em>, <em>output_dim=_Null</em>, <em>dtype=_Null</em>, <em>sparse_grad=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.Embedding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maps integer indices to vector representations (embeddings).</p>
+<p>This operator maps words to real-valued vectors in a high-dimensional space,
+called word embeddings. These embeddings can capture semantic and syntactic properties of the words.
+For example, it has been noted that in the learned embedding spaces, similar words tend
+to be close to each other and dissimilar words far apart.</p>
+<p>For an input array of shape (d1, ..., dK),
+the shape of an output array is (d1, ..., dK, output_dim).
+All the input values should be integers in the range [0, input_dim).</p>
+<p>If the input_dim is ip0 and output_dim is op0, then shape of the embedding weight matrix must be
+(ip0, op0).</p>
+<p>By default, if any index mentioned is too large, it is replaced by the index that addresses
+the last vector in an embedding matrix.</p>
+<p>Examples:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">input_dim</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">output_dim</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="o">//</span> <span class="n">Each</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">weight</span> <span class="n">matrix</span> <span class="n">y</span> <span class="n">represents</span> <span class="n">a</span> <span class="n">word</span><span class="o">.</span> <span class="n">So</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">w0</span><span class="p">,</span><span class="n">w1</span><span class="p">,</span><span class="n">w2</span><span class="p">,</span><span class="n">w3</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[[</span>  <span class="mf">0.</span><span class="p">,</span>   <span class="mf">1.</span><span class="p">,</span>   <span class="mf">2.</span><span class="p">,</span>   <span class="mf">3.</span><span class="p">,</span>   <span class="mf">4.</span><span class="p">],</span>
+     <span class="p">[</span>  <span class="mf">5.</span><span class="p">,</span>   <span class="mf">6.</span><span class="p">,</span>   <span class="mf">7.</span><span class="p">,</span>   <span class="mf">8.</span><span class="p">,</span>   <span class="mf">9.</span><span class="p">],</span>
+     <span class="p">[</span> <span class="mf">10.</span><span class="p">,</span>  <span class="mf">11.</span><span class="p">,</span>  <span class="mf">12.</span><span class="p">,</span>  <span class="mf">13.</span><span class="p">,</span>  <span class="mf">14.</span><span class="p">],</span>
+     <span class="p">[</span> <span class="mf">15.</span><span class="p">,</span>  <span class="mf">16.</span><span class="p">,</span>  <span class="mf">17.</span><span class="p">,</span>  <span class="mf">18.</span><span class="p">,</span>  <span class="mf">19.</span><span class="p">]]</span>
+
+<span class="o">//</span> <span class="n">Input</span> <span class="n">array</span> <span class="n">x</span> <span class="n">represents</span> <span class="n">n</span><span class="o">-</span><span class="n">grams</span><span class="p">(</span><span class="mi">2</span><span class="o">-</span><span class="n">gram</span><span class="p">)</span><span class="o">.</span> <span class="n">So</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="p">[(</span><span class="n">w1</span><span class="p">,</span><span class="n">w3</span><span class="p">),</span> <span class="p">(</span><span class="n">w0</span><span class="p">,</span><span class="n">w2</span><span class="p">)]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="p">[[</span> <span class="mf">1.</span><span class="p">,</span>  <span class="mf">3.</span><span class="p">],</span>
+     <span class="p">[</span> <span class="mf">0.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">]]</span>
+
+<span class="o">//</span> <span class="n">Mapped</span> <span class="nb">input</span> <span class="n">x</span> <span class="n">to</span> <span class="n">its</span> <span class="n">vector</span> <span class="n">representation</span> <span class="n">y</span><span class="o">.</span>
+<span class="n">Embedding</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span>  <span class="mf">5.</span><span class="p">,</span>   <span class="mf">6.</span><span class="p">,</span>   <span class="mf">7.</span><span class="p">,</span>   <span class="mf">8.</span><span class="p">,</span>   <span class="mf">9.</span><span class="p">],</span>
+                          <span class="p">[</span> <span class="mf">15.</span><span class="p">,</span>  <span class="mf">16.</span><span class="p">,</span>  <span class="mf">17.</span><span class="p">,</span>  <span class="mf">18.</span><span class="p">,</span>  <span class="mf">19.</span><span class="p">]],</span>
+
+                         <span class="p">[[</span>  <span class="mf">0.</span><span class="p">,</span>   <span class="mf">1.</span><span class="p">,</span>   <span class="mf">2.</span><span class="p">,</span>   <span class="mf">3.</span><span class="p">,</span>   <span class="mf">4.</span><span class="p">],</span>
+                          <span class="p">[</span> <span class="mf">10.</span><span class="p">,</span>  <span class="mf">11.</span><span class="p">,</span>  <span class="mf">12.</span><span class="p">,</span>  <span class="mf">13.</span><span class="p">,</span>  <span class="mf">14.</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>The storage type of weight can be either row_sparse or default, while
+the storage type of weight’s grad depends on the value of “sparse_grad”.</p>
+<p>Defined in src/operator/tensor/indexing_op.cc:L232</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – The input array to the embedding operator.</li>
+<li><strong>weight</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – The embedding weight matrix.</li>
+<li><strong>input_dim</strong> (<em>int</em><em>, </em><em>required</em>) – Vocabulary size of the input indices.</li>
+<li><strong>output_dim</strong> (<em>int</em><em>, </em><em>required</em>) – Dimension of the embedding vectors.</li>
+<li><strong>dtype</strong> (<em>{'float16'</em><em>, </em><em>'float32'</em><em>, </em><em>'float64'</em><em>, </em><em>'int32'</em><em>, </em><em>'int64'</em><em>, </em><em>'int8'</em><em>, </em><em>'uint8'}</em><em>,</em><em>optional</em><em>, </em><em>default='float32'</em>) – Data type of weight.</li>
+<li><strong>sparse_grad</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Compute row sparse gradient in the backward calculation. If set to True, the grad’s storage type is row_sparse.</li>
 <li><strong>name</strong> (<em>string</em><em>, </em><em>optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>
@@ -789,7 +853,7 @@ The parameter <cite>grad_scale</cite> can be used to change this scale to <cite>
 <li>abs(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L491</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L490</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1454,7 +1518,7 @@ the result is compact, which means:</p>
 <li>ceil(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L569</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L568</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1637,18 +1701,19 @@ result array will have shape <cite>(n,m,r,s)</cite>. It is computed by:</p>
 </div>
 </li>
 </ul>
-<p>The storage type of <code class="docutils literal"><span class="pre">dot</span></code> output depends on storage types of inputs, transpose options and given
-hint for output storage type:</p>
-<p>Implemented sprase operations include:
-- dot(csr, default) = default
-- dot(csr, default, transpose_a=True) = row_sparse
-- dot(csr, row_sparse) = default
-- dot(default, csr) = csr on CPU only
-- dot(default, csr, forward_stype=’default’) = default on GPU only
-- dot(default, csr, transpose_b=True, forward_stype=’default’) = default on GPU only
-- if the combination of input storage types and forward_stype_hint
-- does not match any of the above patterns,
-- dot will generate output with default storage</p>
+<p>The storage type of <code class="docutils literal"><span class="pre">dot</span></code> output depends on storage types of inputs, transpose option and
+forward_stype option for output storage type. Implemented sparse operations include:</p>
+<ul class="simple">
+<li>dot(default, default, transpose_a=True/False, transpose_b=True/False) = default</li>
+<li>dot(csr, default, transpose_a=True) = default</li>
+<li>dot(csr, default, transpose_a=True) = row_sparse</li>
+<li>dot(csr, row_sparse) = default</li>
+<li>dot(default, csr) = csr (CPU only)</li>
+<li>dot(default, csr, forward_stype=’default’) = default (GPU only)</li>
+<li>dot(default, csr, transpose_b=True, forward_stype=’default’) = default (GPU only)</li>
+</ul>
+<p>If the combination of input storage types and forward_stype does not match any of the
+above patterns, <code class="docutils literal"><span class="pre">dot</span></code> will fallback and generate output with default storage.</p>
 <p>Defined in src/operator/tensor/dot.cc:L68</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
@@ -1816,7 +1881,7 @@ hint for output storage type:</p>
 </pre></div>
 </div>
 <p>The storage type of <code class="docutils literal"><span class="pre">exp</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L747</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L746</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1848,7 +1913,7 @@ hint for output storage type:</p>
 <li>expm1(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L826</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L825</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1883,7 +1948,7 @@ hint for output storage type:</p>
 <li>fix(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L626</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L625</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -1919,7 +1984,7 @@ hint for output storage type:</p>
 <li>floor(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L588</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L587</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2044,7 +2109,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
 <dd><p>Returns element-wise Natural logarithmic value of the input.</p>
 <p>The natural logarithm is logarithm in base <em>e</em>, so that <code class="docutils literal"><span class="pre">log(exp(x))</span> <span class="pre">=</span> <span class="pre">x</span></code></p>
 <p>The storage type of <code class="docutils literal"><span class="pre">log</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L759</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L758</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2070,7 +2135,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
 <dd><p>Returns element-wise Base-10 logarithmic value of the input.</p>
 <p><code class="docutils literal"><span class="pre">10**log10(x)</span> <span class="pre">=</span> <span class="pre">x</span></code></p>
 <p>The storage type of <code class="docutils literal"><span class="pre">log10</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L771</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L770</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2103,7 +2168,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
 <li>log1p(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L808</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L807</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2129,7 +2194,7 @@ only the row slices whose indices appear in grad.indices are updated (for w, z a
 <dd><p>Returns element-wise Base-2 logarithmic value of the input.</p>
 <p><code class="docutils literal"><span class="pre">2**log2(x)</span> <span class="pre">=</span> <span class="pre">x</span></code></p>
 <p>The storage type of <code class="docutils literal"><span class="pre">log2</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L783</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L782</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2172,7 +2237,7 @@ from backpropagation. See more detail in <code class="docutils literal"><span cl
 <li>make_loss(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L304</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L303</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2443,7 +2508,7 @@ and save them in the output sparse matrix.</p>
 <li>rint(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L550</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L549</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2478,7 +2543,7 @@ and save them in the output sparse matrix.</p>
 <li>round(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L529</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L528</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2509,7 +2574,7 @@ and save them in the output sparse matrix.</p>
 </pre></div>
 </div>
 <p>The storage type of <code class="docutils literal"><span class="pre">rsqrt</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L690</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L689</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2663,7 +2728,7 @@ only the row slices whose indices appear in grad.indices are updated:</p>
 <li>sign(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L510</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L509</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2821,33 +2886,6 @@ a dense tensor.</p>
 </table>
 </dd></dl>
 <dl class="function">
-<dt id="mxnet.symbol.sparse.softsign">
-<code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">softsign</code><span class="sig-paren">(</span><em>data=None</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.softsign" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes softsign of x element-wise.</p>
-<div class="math">
-\[y = x / (1 + abs(x))\]</div>
-<p>The storage type of <code class="docutils literal"><span class="pre">softsign</span></code> output is always dense</p>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L149</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name"/>
-<col class="field-body"/>
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – The input array.</li>
-<li><strong>name</strong> (<em>string</em><em>, </em><em>optional.</em>) – Name of the resulting symbol.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The result symbol.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol">Symbol</a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-<dl class="function">
 <dt id="mxnet.symbol.sparse.sqrt">
 <code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">sqrt</code><span class="sig-paren">(</span><em>data=None</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.sqrt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns element-wise square-root value of the input.</p>
@@ -2864,7 +2902,7 @@ a dense tensor.</p>
 <li>sqrt(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L670</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L669</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2902,7 +2940,7 @@ a dense tensor.</p>
 <li>square(csr) = csr</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L647</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L646</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -2948,7 +2986,7 @@ of its inputs to be taken into account for computing gradients.</p>
 <span class="p">[</span> <span class="mf">1.</span>  <span class="mf">1.</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L271</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L270</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -3121,7 +3159,7 @@ zero than x is. In short, the fractional part of the signed number x is discarde
 <li>trunc(row_sparse) = row_sparse</li>
 </ul>
 </div></blockquote>
-<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L608</p>
+<p>Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L607</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>

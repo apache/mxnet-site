@@ -250,7 +250,7 @@
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">_LIB</span><span class="p">,</span> <span class="n">numeric_types</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">c_array_buf</span><span class="p">,</span> <span class="n">mx_real_t</span><span class="p">,</span> <span class="n">integer_types</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">mx_uint</span><span class="p">,</span> <span class="n">NDArrayHandle</span><span class="p">,</span> <span class="n">check_call</span>
-<span class="kn">from</span> <span class="nn">..context</span> <span class="k">import</span> <span class="n">Context</span>
+<span class="kn">from</span> <span class="nn">..context</span> <span class="k">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">current_context</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_internal</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">op</span>
 <span class="k">try</span><span class="p">:</span>
@@ -1185,7 +1185,7 @@
     <span class="c1"># pylint: disable= no-member, protected-access</span>
     <span class="n">storage_type</span> <span class="o">=</span> <span class="s1">'csr'</span>
     <span class="c1"># context</span>
-    <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">()</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
     <span class="c1"># types</span>
     <span class="n">dtype</span> <span class="o">=</span> <span class="n">_prepare_default_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
     <span class="n">indptr_type</span> <span class="o">=</span> <span class="n">_STORAGE_AUX_TYPES</span><span class="p">[</span><span class="n">storage_type</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">indptr_type</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">indptr_type</span>
@@ -1348,7 +1348,7 @@
     <span class="sd">"""Create a `RowSparseNDArray` based on data and indices"""</span>
     <span class="n">storage_type</span> <span class="o">=</span> <span class="s1">'row_sparse'</span>
     <span class="c1"># context</span>
-    <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">()</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
     <span class="c1"># types</span>
     <span class="n">dtype</span> <span class="o">=</span> <span class="n">_prepare_default_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
     <span class="n">indices_type</span> <span class="o">=</span> <span class="n">_STORAGE_AUX_TYPES</span><span class="p">[</span><span class="n">storage_type</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">indices_type</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">indices_type</span>
@@ -1737,7 +1737,7 @@
     <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'default'</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_zeros_ndarray</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">()</span>
     <span class="n">dtype</span> <span class="o">=</span> <span class="n">mx_real_t</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dtype</span>
     <span class="k">if</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'row_sparse'</span> <span class="ow">or</span> <span class="n">stype</span> <span class="o">==</span> <span class="s1">'csr'</span><span class="p">:</span>
         <span class="n">aux_types</span> <span class="o">=</span> <span class="n">_STORAGE_AUX_TYPES</span><span class="p">[</span><span class="n">stype</span><span class="p">]</span>
@@ -1770,7 +1770,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="p">)</span>
     <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span>
+        <span class="n">ctx</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dtype</span> <span class="o">=</span> <span class="n">mx_real_t</span>
     <span class="k">assert</span><span class="p">(</span><span class="n">stype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
@@ -1811,7 +1811,7 @@
 <span class="sd">    >>> mx.nd.sparse.array(mx.nd.sparse.zeros('row_sparse', (3, 2)))</span>
 <span class="sd">    <RowSparseNDArray 3x2 @cpu(0)></span>
 <span class="sd">    """</span>
-    <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">()</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source_array</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">):</span>
         <span class="k">assert</span><span class="p">(</span><span class="n">source_array</span><span class="o">.</span><span class="n">stype</span> <span class="o">!=</span> <span class="s1">'default'</span><span class="p">),</span> \
                <span class="s2">"Please use `tostype` to create RowSparseNDArray or CSRNDArray from an NDArray"</span>
