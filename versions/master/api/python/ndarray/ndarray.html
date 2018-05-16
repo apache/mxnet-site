@@ -1505,7 +1505,7 @@ broadcasting enabled by default.</li>
 <td>Computes 1D or 2D transposed convolution (aka fractionally strided convolution) of the input tensor.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#mxnet.ndarray.RNN" title="mxnet.ndarray.RNN"><code class="xref py py-obj docutils literal"><span class="pre">RNN</span></code></a></td>
-<td>Applies a recurrent layer to input.</td>
+<td>Applies recurrent layers to input.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.ndarray.Embedding" title="mxnet.ndarray.Embedding"><code class="xref py py-obj docutils literal"><span class="pre">Embedding</span></code></a></td>
 <td>Maps integer indices to vector representations (embeddings).</td>
@@ -4493,7 +4493,48 @@ height, width)</em>.</p>
 <dl class="function">
 <dt id="mxnet.ndarray.RNN">
 <code class="descclassname">mxnet.ndarray.</code><code class="descname">RNN</code><span class="sig-paren">(</span><em>data=None</em>, <em>parameters=None</em>, <em>state=None</em>, <em>state_cell=None</em>, <em>state_size=_Null</em>, <em>num_layers=_Null</em>, <em>bidirectional=_Null</em>, <em>mode=_Null</em>, <em>p=_Null</em>, <em>state_outputs=_Null</em>, <em>out=None</em>, <em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.RNN" title="Permalink to this definition">¶</a></dt>
-<dd><p>Applies a recurrent layer to input.</p>
+<dd><p>Applies recurrent layers to input.
+Currently, vanilla RNN, LSTM and GRU are implemented, with</p>
+<blockquote>
+<div>both multi-layer and bidirectional support.</div></blockquote>
+<p><strong>Vanilla RNN</strong>
+Applies a single-gate recurrent layer to input X. Two kinds of</p>
+<blockquote>
+<div>activation function are supported: ReLU and tanh.</div></blockquote>
+<p>ReLU activation function:</p>
+<div class="math">
+\[$h_t = relu(w_{ih} * x_t + b_{ih}  +  w_{hh} * h_{(t-1)} + b_{hh})$\]</div>
+<p>Tanh activtion function:</p>
+<div class="math">
+\[$h_t = \tanh(w_{ih} * x_t + b_{ih}  +  w_{hh} * h_{(t-1)} + b_{hh})$\]</div>
+<dl class="docutils">
+<dt>Reference paper: Finding structure in time - Elman, 1988.</dt>
+<dd><a class="reference external" href="https://crl.ucsd.edu/~elman/Papers/fsit.pdf">https://crl.ucsd.edu/~elman/Papers/fsit.pdf</a></dd>
+</dl>
+<p><strong>LSTM</strong>
+Long Short-Term Memory - Hochreiter, 1997.</p>
+<div class="math">
+\[\begin{split}\begin{array}{ll}
+          i_t = \mathrm{sigmoid}(W_{ii} x_t + b_{ii} + W_{hi} h_{(t-1)} + b_{hi}) \\
+          f_t = \mathrm{sigmoid}(W_{if} x_t + b_{if} + W_{hf} h_{(t-1)} + b_{hf}) \\
+          g_t = \tanh(W_{ig} x_t + b_{ig} + W_{hc} h_{(t-1)} + b_{hg}) \\
+          o_t = \mathrm{sigmoid}(W_{io} x_t + b_{io} + W_{ho} h_{(t-1)} + b_{ho}) \\
+          c_t = f_t * c_{(t-1)} + i_t * g_t \\
+          h_t = o_t * \tanh(c_t)
+          \end{array}\end{split}\]</div>
+<p><strong>GRU</strong>
+Gated Recurrent Unit - Cho et al. 2014.
+<a class="reference external" href="http://arxiv.org/abs/1406.1078">http://arxiv.org/abs/1406.1078</a></p>
+<div class="math">
+\[\]</div>
+<dl class="docutils">
+<dt>begin{array}{ll}</dt>
+<dd>r_t = mathrm{sigmoid}(W_{ir} x_t + b_{ir} + W_{hr} h_{(t-1)} + b_{hr}) \
+z_t = mathrm{sigmoid}(W_{iz} x_t + b_{iz} + W_{hz} h_{(t-1)} + b_{hz}) \
+n_t = tanh(W_{in} x_t + b_{in} + r_t * (W_{hn} h_{(t-1)}+ b_{hn})) \
+h_t = (1 - z_t) * n_t + z_t * h_{(t-1)} \
+end{array}</dd>
+</dl>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -11199,7 +11240,7 @@ is 3.</p>
 \end{cases}\end{split}\]</div>
 <p>where <span class="math">\(x\)</span> is an element of the tensor <em>lhs</em> and <span class="math">\(\sigma\)</span> is the scalar.</p>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">smooth_l1</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">smooth_l1</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">scalar</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Defined in src/operator/tensor/elemwise_binary_scalar_op_extended.cc:L103</p>
