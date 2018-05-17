@@ -46,6 +46,7 @@ var searchData=
   ['mxfuncinvoke',['MXFuncInvoke',['../c__api_8h.html#a527f90a410f66db7136e91d27e7ea45c',1,'c_api.h']]],
   ['mxfuncinvokeex',['MXFuncInvokeEx',['../c__api_8h.html#a9afe2f46b1fcd8016c8bfb11a84c6240',1,'c_api.h']]],
   ['mxgetfunction',['MXGetFunction',['../c__api_8h.html#a9e2a1cb559d69daf541dac88c07409a8',1,'c_api.h']]],
+  ['mxgetgpucount',['MXGetGPUCount',['../c__api_8h.html#ac9f06859cc4a873e91db76e0b6d08a6e',1,'c_api.h']]],
   ['mxgetlasterror',['MXGetLastError',['../c__api_8h.html#acab1874f3e3077710b77d1a005abf36c',1,'MXGetLastError():&#160;c_api.h'],['../c__predict__api_8h.html#acab1874f3e3077710b77d1a005abf36c',1,'MXGetLastError():&#160;c_predict_api.h']]],
   ['mxgetversion',['MXGetVersion',['../c__api_8h.html#ae33ec9d5238ae89745ca6b1456e005f1',1,'c_api.h']]],
   ['mximperativeinvoke',['MXImperativeInvoke',['../c__api_8h.html#a6a9a4608136959389db02ad938201a67',1,'c_api.h']]],

@@ -589,7 +589,8 @@
 <span class="sd">        Data type of output embeddings.</span>
 <span class="sd">    weight_initializer : Initializer</span>
 <span class="sd">        Initializer for the `embeddings` matrix.</span>
-
+<span class="sd">    sparse_grad: bool</span>
+<span class="sd">        If True, gradient w.r.t. weight will be a 'row_sparse' NDArray.</span>
 
 <span class="sd">    Inputs:</span>
 <span class="sd">        - **data**: (N-1)-D tensor with shape: `(x1, x2, ..., xN-1)`.</span>
@@ -598,13 +599,14 @@
 <span class="sd">        - **out**: N-D tensor with shape: `(x1, x2, ..., xN-1, output_dim)`.</span>
 <span class="sd">    """</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'float32'</span><span class="p">,</span>
-                 <span class="n">weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sparse_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Embedding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">grad_stype</span> <span class="o">=</span> <span class="s1">'row_sparse'</span> <span class="k">if</span> <span class="n">sparse_grad</span> <span class="k">else</span> <span class="s1">'default'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'input_dim'</span><span class="p">:</span> <span class="n">input_dim</span><span class="p">,</span> <span class="s1">'output_dim'</span><span class="p">:</span> <span class="n">output_dim</span><span class="p">,</span>
-                        <span class="s1">'dtype'</span><span class="p">:</span> <span class="n">dtype</span><span class="p">}</span>
+                        <span class="s1">'dtype'</span><span class="p">:</span> <span class="n">dtype</span><span class="p">,</span> <span class="s1">'sparse_grad'</span><span class="p">:</span> <span class="n">sparse_grad</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'weight'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">),</span>
                                       <span class="n">init</span><span class="o">=</span><span class="n">weight_initializer</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
-                                      <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                                      <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grad_stype</span><span class="o">=</span><span class="n">grad_stype</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'fwd'</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>

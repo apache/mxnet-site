@@ -289,6 +289,8 @@
 <span class="sd">        Weight decay multiplier (L2 regularizer coefficient). Works similar to lr_mult.</span>
 <span class="sd">    init : Initializer, default None</span>
 <span class="sd">        Initializer of this parameter. Will use the global initializer by default.</span>
+<span class="sd">    grad_stype: {'default', 'row_sparse', 'csr'}, defaults to 'default'.</span>
+<span class="sd">        The storage type of the parameter's gradient.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -305,7 +307,7 @@
 <span class="sd">    """</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">grad_req</span><span class="o">=</span><span class="s1">'write'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mx_real_t</span><span class="p">,</span>
                  <span class="n">lr_mult</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">wd_mult</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">differentiable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                 <span class="n">differentiable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grad_stype</span><span class="o">=</span><span class="s1">'default'</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_var</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_grad</span> <span class="o">=</span> <span class="kc">None</span>
@@ -322,6 +324,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">wd_mult</span> <span class="o">=</span> <span class="n">wd_mult</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grad_req</span> <span class="o">=</span> <span class="n">grad_req</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">=</span> <span class="n">init</span>
+        <span class="k">assert</span> <span class="n">grad_stype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'default'</span><span class="p">,</span> <span class="s1">'row_sparse'</span><span class="p">,</span> <span class="s1">'csr'</span><span class="p">],</span> \
+            <span class="s2">"grad_stype for Parameter '</span><span class="si">%s</span><span class="s2">' must be one of 'default', 'row_sparse', or 'csr',"</span> \
+            <span class="s2">" but got '</span><span class="si">%s</span><span class="s2">'"</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">grad_stype</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grad_stype</span> <span class="o">=</span> <span class="n">grad_stype</span>
+
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s1">'Parameter </span><span class="si">{name}</span><span class="s1"> (shape=</span><span class="si">{shape}</span><span class="s1">, dtype=</span><span class="si">{dtype}</span><span class="s1">)'</span>
@@ -469,7 +476,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_grad</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">return</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_grad</span> <span class="o">=</span> <span class="p">[</span><span class="n">ndarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_grad</span> <span class="o">=</span> <span class="p">[</span><span class="n">ndarray</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">i</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">i</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">i</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+                                    <span class="n">stype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_grad_stype</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">]</span>
+
         <span class="n">autograd</span><span class="o">.</span><span class="n">mark_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_data</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_grad</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_req</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_reduce</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -639,7 +648,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grad</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grad</span><span class="p">:</span>
-            <span class="n">i</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span></div>
+            <span class="n">ndarray</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">i</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Parameter.var"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Parameter.var">[docs]</a>    <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Returns a symbol representing this parameter."""</span>

@@ -283,6 +283,12 @@
 <tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.nn.Flatten" title="mxnet.gluon.nn.Flatten"><code class="xref py py-obj docutils literal"><span class="pre">Flatten</span></code></a></td>
 <td>Flattens the input to two dimensional.</td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#mxnet.gluon.nn.Lambda" title="mxnet.gluon.nn.Lambda"><code class="xref py py-obj docutils literal"><span class="pre">Lambda</span></code></a></td>
+<td>Wraps an operator or an expression as a Block object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.nn.HybridLambda" title="mxnet.gluon.nn.HybridLambda"><code class="xref py py-obj docutils literal"><span class="pre">HybridLambda</span></code></a></td>
+<td>Wraps an operator or an expression as a HybridBlock object.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -437,7 +443,7 @@ See <a class="reference internal" href="../ndarray/ndarray.html#mxnet.ndarray.Ac
 If <cite>None</cite>, it will default to <cite>pool_size</cite>.</li>
 <li><strong>padding</strong> (<em>int</em>) – If padding is non-zero, then the input is implicitly
 zero-padded on both sides for padding number of points.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCW'</em>) – Dimension ordering of data and weight. Can be ‘NCW’, ‘NWC’, etc.
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCW'</em>) – Dimension ordering of data and weight. Only supports ‘NCW’ layout for now.
 ‘N’, ‘C’, ‘W’ stands for batch, channel, and width (time) dimensions
 respectively. padding is applied on ‘W’ dimension.</li>
 <li><strong>ceil_mode</strong> (<em>bool</em><em>, </em><em>default False</em>) – When <cite>True</cite>, will use ceil instead of floor to compute the output shape.</li>
@@ -481,7 +487,7 @@ equation.</p>
 If <cite>None</cite>, it will default to <cite>pool_size</cite>.</li>
 <li><strong>padding</strong> (<em>int</em><em> or </em><em>list/tuple of 2 ints</em><em>,</em>) – If padding is non-zero, then the input is implicitly
 zero-padded on both sides for padding number of points.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCHW'</em>) – Dimension ordering of data and weight. Can be ‘NCHW’, ‘NHWC’, etc.
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCHW'</em>) – Dimension ordering of data and weight. Only supports ‘NCHW’ layout for now.
 ‘N’, ‘C’, ‘H’, ‘W’ stands for batch, channel, height, and width
 dimensions respectively. padding is applied on ‘H’ and ‘W’ dimension.</li>
 <li><strong>ceil_mode</strong> (<em>bool</em><em>, </em><em>default False</em>) – When True, will use ceil instead of floor to compute the output shape.</li>
@@ -494,14 +500,14 @@ dimensions respectively. padding is applied on ‘H’ and ‘W’ dimension.</l
 <dt>Inputs:</dt>
 <dd><ul class="first last simple">
 <li><strong>data</strong>: 4D input tensor with shape
-<cite>(batch_size, in_channels, height, width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, in_channels, height, width)</cite> when <cite>layout</cite> is <cite>NCHW</cite>.
 For other layouts shape is permuted accordingly.</li>
 </ul>
 </dd>
 <dt>Outputs:</dt>
 <dd><ul class="first last">
 <li><p class="first"><strong>out</strong>: 4D output tensor with shape
-<cite>(batch_size, channels, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, channels, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCHW</cite>.
 out_height and out_width are calculated as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_height</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">height</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">pool_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
 <span class="n">out_width</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">width</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">pool_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
@@ -542,14 +548,14 @@ dimension.</li>
 <dt>Inputs:</dt>
 <dd><ul class="first last simple">
 <li><strong>data</strong>: 5D input tensor with shape
-<cite>(batch_size, in_channels, depth, height, width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, in_channels, depth, height, width)</cite> when <cite>layout</cite> is <cite>NCDHW</cite>.
 For other layouts shape is permuted accordingly.</li>
 </ul>
 </dd>
 <dt>Outputs:</dt>
 <dd><ul class="first last">
 <li><p class="first"><strong>out</strong>: 5D output tensor with shape
-<cite>(batch_size, channels, out_depth, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, channels, out_depth, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCDHW</cite>.
 out_depth, out_height and out_width are calculated as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_depth</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">depth</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">pool_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
 <span class="n">out_height</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">height</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">pool_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
@@ -644,7 +650,7 @@ At groups=1, all inputs are convolved to all outputs.
 At groups=2, the operation becomes equivalent to having two conv
 layers side by side, each seeing half the input channels, and producing
 half the output channels, and both subsequently concatenated.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCW'</em>) – Dimension ordering of data and weight. Can be ‘NCW’, ‘NWC’, etc.
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCW'</em>) – Dimension ordering of data and weight. Only supports ‘NCW’ layout for now.
 ‘N’, ‘C’, ‘W’ stands for batch, channel, and width (time) dimensions
 respectively. Convolution is applied on the ‘W’ dimension.</li>
 <li><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – The number of input channels to this layer. If not specified,
@@ -710,7 +716,7 @@ At groups=1, all inputs are convolved to all outputs.
 At groups=2, the operation becomes equivalent to having two conv
 layers side by side, each seeing half the input channels, and producing
 half the output channels, and both subsequently concatenated.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCW'</em>) – Dimension ordering of data and weight. Can be ‘NCW’, ‘NWC’, etc.
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCW'</em>) – Dimension ordering of data and weight. Only supports ‘NCW’ layout for now.
 ‘N’, ‘C’, ‘W’ stands for batch, channel, and width (time) dimensions
 respectively. Convolution is applied on the ‘W’ dimension.</li>
 <li><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – The number of input channels to this layer. If not specified,
@@ -775,9 +781,9 @@ At groups=1, all inputs are convolved to all outputs.
 At groups=2, the operation becomes equivalent to having two conv
 layers side by side, each seeing half the input channels, and producing
 half the output channels, and both subsequently concatenated.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCHW'</em>) – Dimension ordering of data and weight. Can be ‘NCHW’, ‘NHWC’, etc.
-‘N’, ‘C’, ‘H’, ‘W’ stands for batch, channel, height, and width
-dimensions respectively. Convolution is applied on the ‘H’ and
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCHW'</em>) – Dimension ordering of data and weight. Only supports ‘NCHW’ and ‘NHWC’
+layout for now. ‘N’, ‘C’, ‘H’, ‘W’ stands for batch, channel, height,
+and width dimensions respectively. Convolution is applied on the ‘H’ and
 ‘W’ dimensions.</li>
 <li><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – The number of input channels to this layer. If not specified,
 initialization will be deferred to the first time <cite>forward</cite> is called
@@ -797,14 +803,14 @@ If you don’t specify anything, no activation is applied
 <dt>Inputs:</dt>
 <dd><ul class="first last simple">
 <li><strong>data</strong>: 4D input tensor with shape
-<cite>(batch_size, in_channels, height, width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, in_channels, height, width)</cite> when <cite>layout</cite> is <cite>NCHW</cite>.
 For other layouts shape is permuted accordingly.</li>
 </ul>
 </dd>
 <dt>Outputs:</dt>
 <dd><ul class="first last">
 <li><p class="first"><strong>out</strong>: 4D output tensor with shape
-<cite>(batch_size, channels, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, channels, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCHW</cite>.
 out_height and out_width are calculated as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_height</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">height</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">dilation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
 <span class="n">out_width</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">width</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">dilation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
@@ -845,9 +851,9 @@ At groups=1, all inputs are convolved to all outputs.
 At groups=2, the operation becomes equivalent to having two conv
 layers side by side, each seeing half the input channels, and producing
 half the output channels, and both subsequently concatenated.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCHW'</em>) – Dimension ordering of data and weight. Can be ‘NCHW’, ‘NHWC’, etc.
-‘N’, ‘C’, ‘H’, ‘W’ stands for batch, channel, height, and width
-dimensions respectively. Convolution is applied on the ‘H’ and
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCHW'</em>) – Dimension ordering of data and weight. Only supports ‘NCHW’ and ‘NHWC’
+layout for now. ‘N’, ‘C’, ‘H’, ‘W’ stands for batch, channel, height,
+and width dimensions respectively. Convolution is applied on the ‘H’ and
 ‘W’ dimensions.</li>
 <li><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – The number of input channels to this layer. If not specified,
 initialization will be deferred to the first time <cite>forward</cite> is called
@@ -867,14 +873,14 @@ If you don’t specify anything, no activation is applied
 <dt>Inputs:</dt>
 <dd><ul class="first last simple">
 <li><strong>data</strong>: 4D input tensor with shape
-<cite>(batch_size, in_channels, height, width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, in_channels, height, width)</cite> when <cite>layout</cite> is <cite>NCHW</cite>.
 For other layouts shape is permuted accordingly.</li>
 </ul>
 </dd>
 <dt>Outputs:</dt>
 <dd><ul class="first last">
 <li><p class="first"><strong>out</strong>: 4D output tensor with shape
-<cite>(batch_size, channels, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, channels, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCHW</cite>.
 out_height and out_width are calculated as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_height</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">output_padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">out_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">output_padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -914,9 +920,9 @@ At groups=1, all inputs are convolved to all outputs.
 At groups=2, the operation becomes equivalent to having two conv
 layers side by side, each seeing half the input channels, and producing
 half the output channels, and both subsequently concatenated.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCDHW'</em>) – Dimension ordering of data and weight. Can be ‘NCDHW’, ‘NDHWC’, etc.
-‘N’, ‘C’, ‘H’, ‘W’, ‘D’ stands for batch, channel, height, width and
-depth dimensions respectively. Convolution is applied on the ‘D’,
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCDHW'</em>) – Dimension ordering of data and weight. Only supports ‘NCDHW’ and ‘NDHWC’
+layout for now. ‘N’, ‘C’, ‘H’, ‘W’, ‘D’ stands for batch, channel, height,
+width and depth dimensions respectively. Convolution is applied on the ‘D’,
 ‘H’ and ‘W’ dimensions.</li>
 <li><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – The number of input channels to this layer. If not specified,
 initialization will be deferred to the first time <cite>forward</cite> is called
@@ -936,14 +942,14 @@ If you don’t specify anything, no activation is applied
 <dt>Inputs:</dt>
 <dd><ul class="first last simple">
 <li><strong>data</strong>: 5D input tensor with shape
-<cite>(batch_size, in_channels, depth, height, width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, in_channels, depth, height, width)</cite> when <cite>layout</cite> is <cite>NCDHW</cite>.
 For other layouts shape is permuted accordingly.</li>
 </ul>
 </dd>
 <dt>Outputs:</dt>
 <dd><ul class="first last">
 <li><p class="first"><strong>out</strong>: 5D output tensor with shape
-<cite>(batch_size, channels, out_depth, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, channels, out_depth, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCDHW</cite>.
 out_depth, out_height and out_width are calculated as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_depth</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">depth</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">dilation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
 <span class="n">out_height</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">height</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">dilation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">stride</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
@@ -985,10 +991,10 @@ At groups=1, all inputs are convolved to all outputs.
 At groups=2, the operation becomes equivalent to having two conv
 layers side by side, each seeing half the input channels, and producing
 half the output channels, and both subsequently concatenated.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCDHW'</em>) – Dimension ordering of data and weight. Can be ‘NCDHW’, ‘NDHWC’, etc.
-‘N’, ‘C’, ‘H’, ‘W’, ‘D’ stands for batch, channel, height, width and
-depth dimensions respectively. Convolution is applied on the ‘D’,
-‘H’, and ‘W’ dimensions.</li>
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCDHW'</em>) – Dimension ordering of data and weight. Only supports ‘NCDHW’ and ‘NDHWC’
+layout for now. ‘N’, ‘C’, ‘H’, ‘W’, ‘D’ stands for batch, channel, height,
+width and depth dimensions respectively. Convolution is applied on the ‘D’,
+‘H’ and ‘W’ dimensions.</li>
 <li><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – The number of input channels to this layer. If not specified,
 initialization will be deferred to the first time <cite>forward</cite> is called
 and <cite>in_channels</cite> will be inferred from the shape of input data.</li>
@@ -1007,14 +1013,14 @@ If you don’t specify anything, no activation is applied
 <dt>Inputs:</dt>
 <dd><ul class="first last simple">
 <li><strong>data</strong>: 5D input tensor with shape
-<cite>(batch_size, in_channels, depth, height, width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, in_channels, depth, height, width)</cite> when <cite>layout</cite> is <cite>NCDHW</cite>.
 For other layouts shape is permuted accordingly.</li>
 </ul>
 </dd>
 <dt>Outputs:</dt>
 <dd><ul class="first last">
 <li><p class="first"><strong>out</strong>: 5D output tensor with shape
-<cite>(batch_size, channels, out_depth, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, channels, out_depth, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCDHW</cite>.
 out_depth, out_height and out_width are calculated as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_depth</span> <span class="o">=</span> <span class="p">(</span><span class="n">depth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">output_padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">out_height</span> <span class="o">=</span> <span class="p">(</span><span class="n">height</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">output_padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1148,7 +1154,7 @@ Published as a conference paper at ICLR 2016</dd>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.nn.Embedding">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.nn.</code><code class="descname">Embedding</code><span class="sig-paren">(</span><em>input_dim</em>, <em>output_dim</em>, <em>dtype='float32'</em>, <em>weight_initializer=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/nn/basic_layers.html#Embedding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.nn.Embedding" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mxnet.gluon.nn.</code><code class="descname">Embedding</code><span class="sig-paren">(</span><em>input_dim</em>, <em>output_dim</em>, <em>dtype='float32'</em>, <em>weight_initializer=None</em>, <em>sparse_grad=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/nn/basic_layers.html#Embedding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.nn.Embedding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turns non-negative integers (indexes/tokens) into dense vectors
 of fixed size. eg. [4, 20] -> [[0.25, 0.1], [0.6, -0.2]]</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1160,23 +1166,20 @@ of fixed size. eg. [4, 20] -> [[0.25, 0.1], [0.6, -0.2]]</p>
 <li><strong>output_dim</strong> (<em>int</em>) – Dimension of the dense embedding.</li>
 <li><strong>dtype</strong> (<em>str</em><em> or </em><em>np.dtype</em><em>, </em><em>default 'float32'</em>) – Data type of output embeddings.</li>
 <li><strong>weight_initializer</strong> (<a class="reference internal" href="../optimization/optimization.html#mxnet.initializer.Initializer" title="mxnet.initializer.Initializer"><em>Initializer</em></a>) – Initializer for the <cite>embeddings</cite> matrix.</li>
+<li><strong>sparse_grad</strong> (<em>bool</em>) – If True, gradient w.r.t. weight will be a ‘row_sparse’ NDArray.</li>
+<li><strong>Inputs</strong> – <ul>
+<li><strong>data</strong>: (N-1)-D tensor with shape: <cite>(x1, x2, ..., xN-1)</cite>.</li>
+</ul>
+</li>
+<li><strong>Output</strong> – <ul>
+<li><strong>out</strong>: N-D tensor with shape: <cite>(x1, x2, ..., xN-1, output_dim)</cite>.</li>
+</ul>
+</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<dl class="docutils">
-<dt>Inputs:</dt>
-<dd><ul class="first last simple">
-<li><strong>data</strong>: (N-1)-D tensor with shape: <cite>(x1, x2, ..., xN-1)</cite>.</li>
-</ul>
-</dd>
-<dt>Output:</dt>
-<dd><ul class="first last simple">
-<li><strong>out</strong>: N-D tensor with shape: <cite>(x1, x2, ..., xN-1, output_dim)</cite>.</li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.nn.Flatten">
@@ -1461,7 +1464,7 @@ and <cite>in_channels</cite> will be inferred from the shape of input data.</li>
 If <cite>None</cite>, it will default to <cite>pool_size</cite>.</li>
 <li><strong>padding</strong> (<em>int</em>) – If padding is non-zero, then the input is implicitly
 zero-padded on both sides for padding number of points.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCW'</em>) – Dimension ordering of data and weight. Can be ‘NCW’, ‘NWC’, etc.
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCW'</em>) – Dimension ordering of data and weight. Only supports ‘NCW’ layout for now.
 ‘N’, ‘C’, ‘W’ stands for batch, channel, and width (time) dimensions
 respectively. Pooling is applied on the W dimension.</li>
 <li><strong>ceil_mode</strong> (<em>bool</em><em>, </em><em>default False</em>) – When <cite>True</cite>, will use ceil instead of floor to compute the output shape.</li>
@@ -1505,7 +1508,7 @@ equation.</p>
 If <cite>None</cite>, it will default to <cite>pool_size</cite>.</li>
 <li><strong>padding</strong> (<em>int</em><em> or </em><em>list/tuple of 2 ints</em><em>,</em>) – If padding is non-zero, then the input is implicitly
 zero-padded on both sides for padding number of points.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCHW'</em>) – Dimension ordering of data and weight. Can be ‘NCHW’, ‘NHWC’, etc.
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCHW'</em>) – Dimension ordering of data and weight. Only supports ‘NCHW’ layout for now.
 ‘N’, ‘C’, ‘H’, ‘W’ stands for batch, channel, height, and width
 dimensions respectively. padding is applied on ‘H’ and ‘W’ dimension.</li>
 <li><strong>ceil_mode</strong> (<em>bool</em><em>, </em><em>default False</em>) – When <cite>True</cite>, will use ceil instead of floor to compute the output shape.</li>
@@ -1518,14 +1521,14 @@ dimensions respectively. padding is applied on ‘H’ and ‘W’ dimension.</l
 <dt>Inputs:</dt>
 <dd><ul class="first last simple">
 <li><strong>data</strong>: 4D input tensor with shape
-<cite>(batch_size, in_channels, height, width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, in_channels, height, width)</cite> when <cite>layout</cite> is <cite>NCHW</cite>.
 For other layouts shape is permuted accordingly.</li>
 </ul>
 </dd>
 <dt>Outputs:</dt>
 <dd><ul class="first last">
 <li><p class="first"><strong>out</strong>: 4D output tensor with shape
-<cite>(batch_size, channels, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, channels, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCHW</cite>.
 out_height and out_width are calculated as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_height</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">height</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">pool_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
 <span class="n">out_width</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">width</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">pool_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
@@ -1552,7 +1555,7 @@ equation.</p>
 If <cite>None</cite>, it will default to <cite>pool_size</cite>.</li>
 <li><strong>padding</strong> (<em>int</em><em> or </em><em>list/tuple of 3 ints</em><em>,</em>) – If padding is non-zero, then the input is implicitly
 zero-padded on both sides for padding number of points.</li>
-<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCDHW'</em>) – Dimension ordering of data and weight. Can be ‘NCDHW’, ‘NDHWC’, etc.
+<li><strong>layout</strong> (<em>str</em><em>, </em><em>default 'NCDHW'</em>) – Dimension ordering of data and weight. Only supports ‘NCDHW’ layout for now.
 ‘N’, ‘C’, ‘H’, ‘W’, ‘D’ stands for batch, channel, height, width and
 depth dimensions respectively. padding is applied on ‘D’, ‘H’ and ‘W’
 dimension.</li>
@@ -1573,7 +1576,7 @@ For other layouts shape is permuted accordingly.</li>
 <dt>Outputs:</dt>
 <dd><ul class="first last">
 <li><p class="first"><strong>out</strong>: 5D output tensor with shape
-<cite>(batch_size, channels, out_depth, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCW</cite>.
+<cite>(batch_size, channels, out_depth, out_height, out_width)</cite> when <cite>layout</cite> is <cite>NCDHW</cite>.
 out_depth, out_height and out_width are calculated as:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">out_depth</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">depth</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">pool_size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">strides</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
 <span class="n">out_height</span> <span class="o">=</span> <span class="n">floor</span><span class="p">((</span><span class="n">height</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">padding</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">pool_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">strides</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
