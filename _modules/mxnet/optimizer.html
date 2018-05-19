@@ -632,7 +632,18 @@
             <span class="n">wd</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wd_mult</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">elif</span> <span class="n">index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">idx2name</span><span class="p">:</span>
             <span class="n">wd</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wd_mult</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">idx2name</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">wd</span></div>
+        <span class="k">return</span> <span class="n">wd</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># do not include param_dict in the state</span>
+        <span class="k">del</span> <span class="n">ret</span><span class="p">[</span><span class="s1">'param_dict'</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="c1"># param_dict needs to be explicitly set by the trainer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_dict</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 <span class="c1"># convenience wrapper for Optimizer.Register</span>
 <span class="n">register</span> <span class="o">=</span> <span class="n">Optimizer</span><span class="o">.</span><span class="n">register</span>   <span class="c1"># pylint: disable=invalid-name</span>

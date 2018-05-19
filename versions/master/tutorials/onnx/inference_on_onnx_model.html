@@ -282,9 +282,9 @@
 </div>
 <div class="section" id="downloading-a-model-from-the-onnx-model-zoo">
 <span id="downloading-a-model-from-the-onnx-model-zoo"></span><h2>Downloading a model from the ONNX model zoo<a class="headerlink" href="#downloading-a-model-from-the-onnx-model-zoo" title="Permalink to this headline">¶</a></h2>
-<p>We download a pre-trained model, in our case the <a class="reference external" href="https://arxiv.org/abs/1409.1556">vgg16</a> model, trained on <a class="reference external" href="http://www.image-net.org/">ImageNet</a> from the <a class="reference external" href="https://github.com/onnx/models">ONNX model zoo</a>. The model comes packaged in an archive <code class="docutils literal"><span class="pre">tar.gz</span></code> file containing an <code class="docutils literal"><span class="pre">model.onnx</span></code> model file and some sample input/output data.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">base_url</span> <span class="o">=</span> <span class="s2">"https://s3.amazonaws.com/download.onnx/models/"</span> 
-<span class="n">current_model</span> <span class="o">=</span> <span class="s2">"vgg16"</span>
+<p>We download a pre-trained model, in our case the <a class="reference external" href="https://arxiv.org/abs/1409.4842">GoogleNet</a> model, trained on <a class="reference external" href="http://www.image-net.org/">ImageNet</a> from the <a class="reference external" href="https://github.com/onnx/models">ONNX model zoo</a>. The model comes packaged in an archive <code class="docutils literal"><span class="pre">tar.gz</span></code> file containing an <code class="docutils literal"><span class="pre">model.onnx</span></code> model file.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">base_url</span> <span class="o">=</span> <span class="s2">"https://s3.amazonaws.com/download.onnx/models/opset_3/"</span> 
+<span class="n">current_model</span> <span class="o">=</span> <span class="s2">"bvlc_googlenet"</span>
 <span class="n">model_folder</span> <span class="o">=</span> <span class="s2">"model"</span>
 <span class="n">archive</span> <span class="o">=</span> <span class="s2">"{}.tar.gz"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">current_model</span><span class="p">)</span>
 <span class="n">archive_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_folder</span><span class="p">,</span> <span class="n">archive</span><span class="p">)</span>
@@ -315,19 +315,26 @@
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sym</span><span class="p">,</span> <span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span> <span class="o">=</span> <span class="n">onnx_mxnet</span><span class="o">.</span><span class="n">import_model</span><span class="p">(</span><span class="n">onnx_path</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We pick a context, GPU if available, otherwise CPU</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ctx</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">()</span> <span class="k">if</span> <span class="n">mx</span><span class="o">.</span><span class="n">test_utils</span><span class="o">.</span><span class="n">list_gpus</span><span class="p">()</span> <span class="k">else</span> <span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+<p>We pick a context, CPU is fine for inference, switch to mx.gpu() if you want to use your GPU.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ctx</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>We obtain the data names of the inputs to the model, by listing all the inputs to the symbol graph and excluding the argument and auxiliary parameters from that list:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">data_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">graph_input</span> <span class="k">for</span> <span class="n">graph_input</span> <span class="ow">in</span> <span class="n">sym</span><span class="o">.</span><span class="n">list_inputs</span><span class="p">()</span>
-                      <span class="k">if</span> <span class="n">graph_input</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">arg_params</span> <span class="ow">and</span> <span class="n">graph_input</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">aux_params</span><span class="p">]</span>
+<p>We obtain the data names of the inputs to the model by using the model metadata API:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model_metadata</span> <span class="o">=</span> <span class="n">onnx_mxnet</span><span class="o">.</span><span class="n">get_model_metadata</span><span class="p">(</span><span class="n">onnx_path</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">model_metadata</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">'output_tensor_data'</span><span class="p">:</span> <span class="p">[(</span><span class="sa">u</span><span class="s1">'gpu_0/softmax_1'</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="n">L</span><span class="p">,</span> <span class="mi">1000</span><span class="n">L</span><span class="p">))],</span>
+ <span class="s1">'input_tensor_data'</span><span class="p">:</span> <span class="p">[(</span><span class="sa">u</span><span class="s1">'gpu_0/data_0'</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="n">L</span><span class="p">,</span> <span class="mi">3</span><span class="n">L</span><span class="p">,</span> <span class="mi">224</span><span class="n">L</span><span class="p">,</span> <span class="mi">224</span><span class="n">L</span><span class="p">))]}</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">data_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">inputs</span> <span class="ow">in</span> <span class="n">model_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'input_tensor_data'</span><span class="p">)]</span>
 <span class="k">print</span><span class="p">(</span><span class="n">data_names</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">['gpu_0/data_0']</span></code></p>
+<p><code class="docutils literal"><span class="pre">[u'data_0']</span></code><!--notebook-skip-line--></p>
 <p>And load them into a MXNet Gluon symbol block.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">SymbolBlock</span><span class="p">(</span><span class="n">outputs</span><span class="o">=</span><span class="n">sym</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s1">'gpu_0/data_0'</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">SymbolBlock</span><span class="p">(</span><span class="n">outputs</span><span class="o">=</span><span class="n">sym</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s1">'data_0'</span><span class="p">))</span>
 <span class="n">net_params</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">arg_params</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">net_params</span><span class="p">:</span>
@@ -341,27 +348,11 @@
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">hybridize</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="test-using-sample-inputs-and-outputs">
-<span id="test-using-sample-inputs-and-outputs"></span><h2>Test using sample inputs and outputs<a class="headerlink" href="#test-using-sample-inputs-and-outputs" title="Permalink to this headline">¶</a></h2>
-<p>The model comes with sample input/output we can use to test that whether model is correctly loaded</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">numpy_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model_folder</span><span class="p">,</span> <span class="n">current_model</span><span class="p">,</span> <span class="s1">'test_data_0.npz'</span><span class="p">)</span>
-<span class="n">sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">numpy_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'bytes'</span><span class="p">)</span>
-<span class="n">inputs</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'inputs'</span><span class="p">]</span>
-<span class="n">outputs</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s1">'outputs'</span><span class="p">]</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">"Input format: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">"Output format: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">Input</span> <span class="pre">format:</span> <span class="pre">(1,</span> <span class="pre">3,</span> <span class="pre">224,</span> <span class="pre">224)</span></code> <!--notebook-skip-line--></p>
-<p><code class="docutils literal"><span class="pre">Output</span> <span class="pre">format:</span> <span class="pre">(1,</span> <span class="pre">1000)</span></code> <!--notebook-skip-line--></p>
 <p>We can visualize the network (requires graphviz installed)</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">mx</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_network</span><span class="p">(</span><span class="n">sym</span><span class="p">,</span>  <span class="n">node_attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">"shape"</span><span class="p">:</span><span class="s2">"oval"</span><span class="p">,</span><span class="s2">"fixedsize"</span><span class="p">:</span><span class="s2">"false"</span><span class="p">})</span>
 </pre></div>
 </div>
-<p><img alt="png" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/doc/tutorials/onnx/network.png?raw=true"><!--notebook-skip-line--></img></p>
+<p><img alt="png" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/doc/tutorials/onnx/network2.png?raw=true"><!--notebook-skip-line--></img></p>
 <p>This is a helper function to run M batches of data of batch-size N through the net and collate the outputs into an array of shape (K, 1000) where K=MxN is the total number of examples (mumber of batches x batch-size) run through the network.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_batch</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
@@ -371,14 +362,6 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">run_batch</span><span class="p">(</span><span class="n">net</span><span class="p">,</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">ctx</span><span class="p">))</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="s2">"Loaded model and sample output predict the same class: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
-</pre></div>
-</div>
-<p>Loaded model and sample output predict the same class: True <!--notebook-skip-line--></p>
-<p>Good the sample output and our prediction match, now we can run against real data</p>
 </div>
 <div class="section" id="test-using-real-images">
 <span id="test-using-real-images"></span><h2>Test using real images<a class="headerlink" href="#test-using-real-images" title="Permalink to this headline">¶</a></h2>
@@ -435,7 +418,6 @@
 </li>
 <li><a class="reference internal" href="#downloading-a-model-from-the-onnx-model-zoo">Downloading a model from the ONNX model zoo</a></li>
 <li><a class="reference internal" href="#loading-the-model-into-mxnet-gluon">Loading the model into MXNet Gluon</a></li>
-<li><a class="reference internal" href="#test-using-sample-inputs-and-outputs">Test using sample inputs and outputs</a></li>
 <li><a class="reference internal" href="#test-using-real-images">Test using real images</a></li>
 </ul>
 </li>
