@@ -228,27 +228,49 @@
 <span class="sd">"""Dataset generator."""</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'DataLoader'</span><span class="p">]</span>
 
-<span class="kn">import</span> <span class="nn">multiprocessing</span>
-<span class="kn">import</span> <span class="nn">multiprocessing.queues</span>
-<span class="kn">from</span> <span class="nn">multiprocessing.reduction</span> <span class="k">import</span> <span class="n">ForkingPickler</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">multiprocessing.queues</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.reduction</span> <span class="k">import</span> <span class="n">ForkingPickler</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">multiprocessing.resource_sharer</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">sampler</span> <span class="k">as</span> <span class="n">_sampler</span>
 <span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">nd</span><span class="p">,</span> <span class="n">context</span>
 
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">'darwin'</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">'win32'</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">rebuild_ndarray</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">"""Rebuild ndarray from pickled shared memory"""</span>
+        <span class="c1"># pylint: disable=no-value-for-parameter</span>
+        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">NDArray</span><span class="p">(</span><span class="n">nd</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">_new_from_shared_mem</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">rebuild_ndarray</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-    <span class="sd">"""Rebuild ndarray from pickled shared memory"""</span>
-    <span class="c1"># pylint: disable=no-value-for-parameter</span>
-    <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">NDArray</span><span class="p">(</span><span class="n">nd</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">_new_from_shared_mem</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">reduce_ndarray</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="sd">"""Reduce ndarray to shared memory handle"""</span>
+        <span class="k">return</span> <span class="n">rebuild_ndarray</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">_to_shared_mem</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">rebuild_ndarray</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
+        <span class="sd">"""Rebuild ndarray from pickled shared memory"""</span>
+        <span class="c1"># pylint: disable=no-value-for-parameter</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">rebuild_handle</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">NDArray</span><span class="p">(</span><span class="n">nd</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">_new_from_shared_mem</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">))</span>
 
-
-<span class="k">def</span> <span class="nf">reduce_ndarray</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">"""Reduce ndarray to shared memory handle"""</span>
-    <span class="k">return</span> <span class="n">rebuild_ndarray</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">_to_shared_mem</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">reduce_ndarray</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="sd">"""Reduce ndarray to shared memory handle"""</span>
+        <span class="n">pid</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_to_shared_mem</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">reduce_handle</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fd</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">DupFd</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rebuild_ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
 
 <span class="n">ForkingPickler</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">nd</span><span class="o">.</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">reduce_ndarray</span><span class="p">)</span>
 

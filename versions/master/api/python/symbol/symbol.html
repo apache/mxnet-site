@@ -4767,7 +4767,7 @@ The widths of the higher two dimensions <code class="docutils literal"><span cla
 </dd></dl>
 <dl class="function">
 <dt id="mxnet.symbol.Pooling">
-<code class="descclassname">mxnet.symbol.</code><code class="descname">Pooling</code><span class="sig-paren">(</span><em>data=None</em>, <em>kernel=_Null</em>, <em>pool_type=_Null</em>, <em>global_pool=_Null</em>, <em>cudnn_off=_Null</em>, <em>pooling_convention=_Null</em>, <em>stride=_Null</em>, <em>pad=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.Pooling" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mxnet.symbol.</code><code class="descname">Pooling</code><span class="sig-paren">(</span><em>data=None</em>, <em>kernel=_Null</em>, <em>pool_type=_Null</em>, <em>global_pool=_Null</em>, <em>cudnn_off=_Null</em>, <em>pooling_convention=_Null</em>, <em>stride=_Null</em>, <em>pad=_Null</em>, <em>p_value=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.Pooling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs pooling on the input.</p>
 <p>The shapes for 1-D pooling are</p>
 <ul class="simple">
@@ -4805,11 +4805,21 @@ The widths of the higher two dimensions <code class="docutils literal"><span cla
 <li><strong>avg</strong>: average pooling</li>
 <li><strong>max</strong>: max pooling</li>
 <li><strong>sum</strong>: sum pooling</li>
+<li><strong>lp</strong>: Lp pooling</li>
 </ul>
 <p>For 3-D pooling, an additional <em>depth</em> dimension is added before
 <em>height</em>. Namely the input data will have shape <em>(batch_size, channel, depth,
 height, width)</em>.</p>
-<p>Defined in src/operator/nn/pooling.cc:L352</p>
+<p>Notes on Lp pooling:</p>
+<p>Lp pooling was first introduced by this paper: <a class="reference external" href="https://arxiv.org/pdf/1204.3968.pdf">https://arxiv.org/pdf/1204.3968.pdf</a>.
+L-1 pooling is simply sum pooling, while L-inf pooling is simply max pooling.
+We can see that Lp pooling stands between those two, in practice the most common value for p is 2.</p>
+<p>For each window <code class="docutils literal"><span class="pre">X</span></code>, the mathematical expression for Lp pooling is:</p>
+<dl class="docutils">
+<dt>..math::</dt>
+<dd>f(X) = sqrt{p}{sumlimits_{x in X} x^p}</dd>
+</dl>
+<p>Defined in src/operator/nn/pooling.cc:L367</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -4817,12 +4827,13 @@ height, width)</em>.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>data</strong> (<a class="reference internal" href="#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a>) – Input data to the pooling operator.</li>
 <li><strong>kernel</strong> (<em>Shape</em><em>(</em><em>tuple</em><em>)</em><em>, </em><em>optional</em><em>, </em><em>default=</em><em>[</em><em>]</em>) – Pooling kernel size: (y, x) or (d, y, x)</li>
-<li><strong>pool_type</strong> (<em>{'avg'</em><em>, </em><em>'max'</em><em>, </em><em>'sum'}</em><em>,</em><em>optional</em><em>, </em><em>default='max'</em>) – Pooling type to be applied.</li>
+<li><strong>pool_type</strong> (<em>{'avg'</em><em>, </em><em>'lp'</em><em>, </em><em>'max'</em><em>, </em><em>'sum'}</em><em>,</em><em>optional</em><em>, </em><em>default='max'</em>) – Pooling type to be applied.</li>
 <li><strong>global_pool</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Ignore kernel size, do global pooling based on current input feature map.</li>
 <li><strong>cudnn_off</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Turn off cudnn pooling and use MXNet pooling operator.</li>
 <li><strong>pooling_convention</strong> (<em>{'full'</em><em>, </em><em>'valid'}</em><em>,</em><em>optional</em><em>, </em><em>default='valid'</em>) – Pooling convention to be applied.</li>
 <li><strong>stride</strong> (<em>Shape</em><em>(</em><em>tuple</em><em>)</em><em>, </em><em>optional</em><em>, </em><em>default=</em><em>[</em><em>]</em>) – Stride: for pooling (y, x) or (d, y, x). Defaults to 1 for each dimension.</li>
 <li><strong>pad</strong> (<em>Shape</em><em>(</em><em>tuple</em><em>)</em><em>, </em><em>optional</em><em>, </em><em>default=</em><em>[</em><em>]</em>) – Pad for pooling: (y, x) or (d, y, x). Defaults to no padding.</li>
+<li><strong>p_value</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em><em>, </em><em>default='None'</em>) – Value of p for Lp pooling, can be 1 or 2, required for Lp Pooling</li>
 <li><strong>name</strong> (<em>string</em><em>, </em><em>optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>
