@@ -239,7 +239,7 @@
 <span class="kn">from</span> <span class="nn">..ndarray</span> <span class="k">import</span> <span class="n">NDArray</span>
 <span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">name</span> <span class="k">as</span> <span class="n">_name</span>
 <span class="kn">from</span> <span class="nn">.parameter</span> <span class="k">import</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">ParameterDict</span><span class="p">,</span> <span class="n">DeferredInitializationError</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">_indent</span><span class="p">,</span> <span class="n">_brief_print_list</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">_indent</span><span class="p">,</span> <span class="n">_brief_print_list</span><span class="p">,</span> <span class="n">HookHandle</span>
 
 
 <span class="k">class</span> <span class="nc">_BlockScope</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -381,6 +381,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_scope</span> <span class="o">=</span> <span class="n">_BlockScope</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_children</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reg_params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{name}</span><span class="s1">(</span><span class="se">\n</span><span class="si">{modstr}</span><span class="se">\n</span><span class="s1">)'</span>
@@ -563,13 +565,67 @@
                         <span class="n">name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">_brief_print_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
             <span class="n">params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">_load_init</span><span class="p">(</span><span class="n">loaded</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">ctx</span><span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="Block.register_child"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.register_child">[docs]</a>    <span class="k">def</span> <span class="nf">register_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">"""Registers block as a child of self. :py:class:`Block` s assigned to self as</span>
 <span class="sd">        attributes will be registered automatically."""</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">block</span></div>
+
+<div class="viewcode-block" id="Block.register_forward_pre_hook"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.register_forward_pre_hook">[docs]</a>    <span class="k">def</span> <span class="nf">register_forward_pre_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">"""Registers a forward pre-hook on the block.</span>
+
+<span class="sd">        The hook function is called immediately before :func:`forward`.</span>
+<span class="sd">        It should not modify the input or output.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hook : callable</span>
+<span class="sd">            The forward hook function of form `hook(block, input) -> None`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`mxnet.gluon.utils.HookHandle`</span>
+<span class="sd">        """</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">HookHandle</span><span class="p">()</span>
+        <span class="n">handle</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span><span class="p">,</span> <span class="n">hook</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">handle</span></div>
+
+<div class="viewcode-block" id="Block.register_forward_hook"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.register_forward_hook">[docs]</a>    <span class="k">def</span> <span class="nf">register_forward_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hook</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">"""Registers a forward hook on the block.</span>
+
+<span class="sd">        The hook function is called immediately after :func:`forward`.</span>
+<span class="sd">        It should not modify the input or output.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hook : callable</span>
+<span class="sd">            The forward hook function of form `hook(block, input, output) -> None`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        :class:`mxnet.gluon.utils.HookHandle`</span>
+<span class="sd">        """</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">HookHandle</span><span class="p">()</span>
+        <span class="n">handle</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span><span class="p">,</span> <span class="n">hook</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">handle</span></div>
+
+<div class="viewcode-block" id="Block.apply"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">"""Applies ``fn`` recursively to every child block as well as self.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fn : callable</span>
+<span class="sd">            Function to be applied to each submodule, of form `fn(block)`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        this block</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">cld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">cld</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+        <span class="n">fn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Block.initialize"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="n">initializer</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(),</span> <span class="n">ctx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                    <span class="n">force_reinit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -619,7 +675,15 @@
 
 <div class="viewcode-block" id="Block.__call__"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">"""Calls forward. Only accepts positional arguments."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">hook</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">hook</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
 
 <div class="viewcode-block" id="Block.forward"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">"""Overrides to implement forward computation using :py:class:`NDArray`. Only</span>
@@ -631,7 +695,106 @@
 <span class="sd">            Input tensors.</span>
 <span class="sd">        """</span>
         <span class="c1"># pylint: disable= invalid-name</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Block.summary"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Block.summary">[docs]</a>    <span class="k">def</span> <span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="sd">"""Print the summary of the model's output and parameters.</span>
+
+<span class="sd">        The network must have been initialized, and must not have been hybridized.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inputs : object</span>
+<span class="sd">            Any input that the model supports. For any tensor in the input, only</span>
+<span class="sd">            :class:`mxnet.ndarray.NDArray` is supported.</span>
+<span class="sd">        """</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">hooks</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">def</span> <span class="nf">_get_shape_str</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                    <span class="k">return</span> <span class="p">[</span><span class="n">args</span><span class="p">],</span> <span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">flat</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">fmts</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+                    <span class="n">arg</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                    <span class="n">flat</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+                    <span class="n">fmts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">flat</span><span class="p">,</span> <span class="n">fmts</span>
+
+            <span class="k">def</span> <span class="nf">regroup</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">fmt</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fmt</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">fmt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                    <span class="k">return</span> <span class="n">args</span><span class="p">[:</span><span class="n">fmt</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="n">fmt</span><span class="p">:]</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fmt</span><span class="p">:</span>
+                    <span class="n">res</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">regroup</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                    <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">ret</span><span class="p">,</span> <span class="n">args</span>
+
+            <span class="n">flat_args</span><span class="p">,</span> <span class="n">fmts</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">flat_arg_shapes</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">NDArray</span><span class="p">)</span> <span class="k">else</span> <span class="n">x</span>
+                               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">flat_args</span><span class="p">]</span>
+            <span class="n">shapes</span> <span class="o">=</span> <span class="n">regroup</span><span class="p">(</span><span class="n">flat_arg_shapes</span><span class="p">,</span> <span class="n">fmts</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shapes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">shape_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">shapes</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shape_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">shapes</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">shape_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'L'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_register_summary_hook</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">HybridBlock</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">block</span><span class="o">.</span><span class="n">_active</span><span class="p">,</span> \
+                    <span class="s1">'"</span><span class="si">{}</span><span class="s1">" must not be hybridized to print summary.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">_summary_hook</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+                <span class="n">class_name</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+                <span class="n">block_idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+                <span class="n">m_key</span> <span class="o">=</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">-</span><span class="si">%i</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">block_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">summary</span><span class="p">[</span><span class="n">m_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+                <span class="n">summary</span><span class="p">[</span><span class="n">m_key</span><span class="p">][</span><span class="s1">'output_shape'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_shape_str</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+
+                <span class="n">params</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">summary</span><span class="p">[</span><span class="n">m_key</span><span class="p">][</span><span class="s1">'trainable'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">_reg_params</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="n">params</span> <span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">data</span><span class="p">()</span><span class="o">.</span><span class="n">size</span>
+                    <span class="n">summary</span><span class="p">[</span><span class="n">m_key</span><span class="p">][</span><span class="s1">'trainable'</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">grad_req</span> <span class="o">==</span> <span class="s1">'null'</span> <span class="k">else</span> <span class="n">p</span><span class="o">.</span><span class="n">data</span><span class="p">()</span><span class="o">.</span><span class="n">size</span>
+                <span class="n">summary</span><span class="p">[</span><span class="n">m_key</span><span class="p">][</span><span class="s1">'n_params'</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+
+            <span class="kn">from</span> <span class="nn">.nn.basic_layers</span> <span class="k">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">HybridSequential</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="p">(</span><span class="n">Sequential</span><span class="p">,</span> <span class="n">HybridSequential</span><span class="p">)):</span>
+                <span class="n">hooks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">register_forward_hook</span><span class="p">(</span><span class="n">_summary_hook</span><span class="p">))</span>
+
+        <span class="n">summary</span><span class="p">[</span><span class="s1">'Input'</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">'Input'</span><span class="p">][</span><span class="s1">'output_shape'</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_shape_str</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">'Input'</span><span class="p">][</span><span class="s1">'n_params'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">'Input'</span><span class="p">][</span><span class="s1">'trainable'</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">_register_summary_hook</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+
+            <span class="n">line_format</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:>20}</span><span class="s1">  </span><span class="si">{:>42}</span><span class="s1"> </span><span class="si">{:>15}</span><span class="s1">'</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'-'</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">line_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">'Layer (type)'</span><span class="p">,</span> <span class="s1">'Output Shape'</span><span class="p">,</span> <span class="s1">'Param #'</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'='</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+            <span class="n">total_params</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">trainable_params</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">summary</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">line_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span>
+                                         <span class="nb">str</span><span class="p">(</span><span class="n">summary</span><span class="p">[</span><span class="n">layer</span><span class="p">][</span><span class="s1">'output_shape'</span><span class="p">]),</span>
+                                         <span class="n">summary</span><span class="p">[</span><span class="n">layer</span><span class="p">][</span><span class="s1">'n_params'</span><span class="p">]))</span>
+                <span class="n">total_params</span> <span class="o">+=</span> <span class="n">summary</span><span class="p">[</span><span class="n">layer</span><span class="p">][</span><span class="s1">'n_params'</span><span class="p">]</span>
+                <span class="n">trainable_params</span> <span class="o">+=</span> <span class="n">summary</span><span class="p">[</span><span class="n">layer</span><span class="p">][</span><span class="s1">'trainable'</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'='</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Total params: '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">total_params</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Trainable params: '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">trainable_params</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'Non-trainable params: '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">total_params</span> <span class="o">-</span> <span class="n">trainable_params</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'-'</span><span class="o">*</span><span class="mi">80</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">hooks</span><span class="p">:</span>
+                <span class="n">h</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="HybridBlock"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.HybridBlock">[docs]</a><span class="k">class</span> <span class="nc">HybridBlock</span><span class="p">(</span><span class="n">Block</span><span class="p">):</span>
@@ -757,6 +920,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cached_op</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">active</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'"</span><span class="si">{}</span><span class="s1">" is being hybridized while still having forward hook/pre-hook. '</span>
+                          <span class="s1">'If "</span><span class="si">{}</span><span class="s1">" is a child of HybridBlock, the hooks will not take effect.'</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
