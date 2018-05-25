@@ -1467,9 +1467,12 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg_names</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Length of </span><span class="si">%s</span><span class="s1"> does not match the number of arguments'</span> <span class="o">%</span> <span class="n">arg_key</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">narr</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">narr</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">narr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">allow_missing</span><span class="p">:</span>
+                    <span class="n">arg_handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">narr</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Only accept list of NDArrays or dict of str to NDArray'</span><span class="p">)</span>
-                <span class="n">arg_handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">narr</span><span class="o">.</span><span class="n">handle</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">arg_handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">narr</span><span class="o">.</span><span class="n">handle</span><span class="p">)</span>
             <span class="n">arg_arrays</span> <span class="o">=</span> <span class="n">args</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">arg_names</span><span class="p">:</span>
