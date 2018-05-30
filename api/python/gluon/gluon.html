@@ -800,7 +800,7 @@ will be created, where xxxx is the 4 digits epoch number.</li>
 </dd></dl>
 <dl class="class">
 <dt id="mxnet.gluon.Parameter">
-<em class="property">class </em><code class="descclassname">mxnet.gluon.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>grad_req='write'</em>, <em>shape=None</em>, <em>dtype=<type 'numpy.float32'></em>, <em>lr_mult=1.0</em>, <em>wd_mult=1.0</em>, <em>init=None</em>, <em>allow_deferred_init=False</em>, <em>differentiable=True</em>, <em>grad_stype='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/parameter.html#Parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Parameter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">mxnet.gluon.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>grad_req='write'</em>, <em>shape=None</em>, <em>dtype=<type 'numpy.float32'></em>, <em>lr_mult=1.0</em>, <em>wd_mult=1.0</em>, <em>init=None</em>, <em>allow_deferred_init=False</em>, <em>differentiable=True</em>, <em>stype='default'</em>, <em>grad_stype='default'</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/parameter.html#Parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Container holding parameters (weights) of Blocks.</p>
 <p><a class="reference internal" href="#mxnet.gluon.Parameter" title="mxnet.gluon.Parameter"><code class="xref py py-class docutils literal"><span class="pre">Parameter</span></code></a> holds a copy of the parameter on each <code class="xref py py-class docutils literal"><span class="pre">Context</span></code> after
 it is initialized with <code class="docutils literal"><span class="pre">Parameter.initialize(...)</span></code>. If <a class="reference internal" href="#mxnet.gluon.Parameter.grad_req" title="mxnet.gluon.Parameter.grad_req"><code class="xref py py-attr docutils literal"><span class="pre">grad_req</span></code></a> is
@@ -838,6 +838,7 @@ when using <code class="xref py py-class docutils literal"><span class="pre">NDA
 when updating this parameter with optimizer.</li>
 <li><strong>wd_mult</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – Weight decay multiplier (L2 regularizer coefficient). Works similar to lr_mult.</li>
 <li><strong>init</strong> (<a class="reference internal" href="../optimization/optimization.html#mxnet.initializer.Initializer" title="mxnet.initializer.Initializer"><em>Initializer</em></a><em>, </em><em>default None</em>) – Initializer of this parameter. Will use the global initializer by default.</li>
+<li><strong>stype</strong> (<em>{'default'</em><em>, </em><em>'row_sparse'</em><em>, </em><em>'csr'}</em><em>, </em><em>defaults to 'default'.</em>) – The storage type of the parameter.</li>
 <li><strong>grad_stype</strong> (<em>{'default'</em><em>, </em><em>'row_sparse'</em><em>, </em><em>'csr'}</em><em>, </em><em>defaults to 'default'.</em>) – The storage type of the parameter’s gradient.</li>
 </ul>
 </td>
@@ -885,7 +886,8 @@ is calculated with <code class="docutils literal"><span class="pre">learning_rat
 <dt id="mxnet.gluon.Parameter.data">
 <code class="descname">data</code><span class="sig-paren">(</span><em>ctx=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/parameter.html#Parameter.data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Parameter.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a copy of this parameter on one context. Must have been
-initialized on this context before.</p>
+initialized on this context before. For sparse parameters, use
+<a class="reference internal" href="#mxnet.gluon.Parameter.row_sparse_data" title="mxnet.gluon.Parameter.row_sparse_data"><code class="xref py py-meth docutils literal"><span class="pre">Parameter.row_sparse_data()</span></code></a> instead.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -971,13 +973,43 @@ and <code class="xref py py-meth docutils literal"><span class="pre">Parameter.i
 <dt id="mxnet.gluon.Parameter.list_data">
 <code class="descname">list_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/parameter.html#Parameter.list_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Parameter.list_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns copies of this parameter on all contexts, in the same order
-as creation.</p>
+as creation. For sparse parameters, use <a class="reference internal" href="#mxnet.gluon.Parameter.list_row_sparse_data" title="mxnet.gluon.Parameter.list_row_sparse_data"><code class="xref py py-meth docutils literal"><span class="pre">Parameter.list_row_sparse_data()</span></code></a>
+instead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of NDArrays</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 <dl class="method">
 <dt id="mxnet.gluon.Parameter.list_grad">
 <code class="descname">list_grad</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/parameter.html#Parameter.list_grad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Parameter.list_grad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns gradient buffers on all contexts, in the same order
 as <code class="xref py py-meth docutils literal"><span class="pre">values()</span></code>.</p>
+</dd></dl>
+<dl class="method">
+<dt id="mxnet.gluon.Parameter.list_row_sparse_data">
+<code class="descname">list_row_sparse_data</code><span class="sig-paren">(</span><em>row_id</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/parameter.html#Parameter.list_row_sparse_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Parameter.list_row_sparse_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns copies of the ‘row_sparse’ parameter on all contexts, in the same order
+as creation. The copy only retains rows whose ids occur in provided row ids.
+The parameter must have been initialized before.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row_id</strong> (<a class="reference internal" href="../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Row ids to retain for the ‘row_sparse’ parameter.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of NDArrays</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 <dl class="method">
 <dt id="mxnet.gluon.Parameter.reset_ctx">
@@ -988,6 +1020,25 @@ as <code class="xref py py-meth docutils literal"><span class="pre">values()</sp
 <dd>Assign Parameter to given context. If ctx is a list of Context, a
 copy will be made for each context.</dd>
 </dl>
+</dd></dl>
+<dl class="method">
+<dt id="mxnet.gluon.Parameter.row_sparse_data">
+<code class="descname">row_sparse_data</code><span class="sig-paren">(</span><em>row_id</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/parameter.html#Parameter.row_sparse_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Parameter.row_sparse_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the ‘row_sparse’ parameter on the same context as row_id’s.
+The copy only retains rows whose ids occur in provided row ids.
+The parameter must have been initialized on this context before.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>row_id</strong> (<a class="reference internal" href="../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Row ids to retain for the ‘row_sparse’ parameter.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">NDArray on row_id’s context</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 <dl class="method">
 <dt id="mxnet.gluon.Parameter.set_data">

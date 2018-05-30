@@ -263,6 +263,25 @@
                             <span class="s1">'eval_metric'</span><span class="p">,</span>
                             <span class="s1">'locals'</span><span class="p">])</span>
 
+<span class="k">def</span> <span class="nf">_create_sparse_kvstore</span><span class="p">(</span><span class="n">kvstore</span><span class="p">):</span>
+    <span class="sd">"""Create kvstore assuming some parameters' storage types are row_sparse.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    kvstore : KVStore or str</span>
+<span class="sd">        The kvstore.</span>
+<span class="sd">    """</span>
+    <span class="c1"># always update on kvstore</span>
+    <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kvstore</span><span class="p">,</span> <span class="n">kvs</span><span class="o">.</span><span class="n">KVStore</span><span class="p">):</span>
+        <span class="n">kv</span> <span class="o">=</span> <span class="n">kvstore</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kvstore</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">kv</span> <span class="o">=</span> <span class="n">kvs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">kvstore</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Cannot create '</span><span class="si">%s</span><span class="s2">' KVStore with row_sparse parameters. "</span>
+                        <span class="s2">"The type must be KVStore or str."</span> <span class="o">%</span> <span class="n">kvstore</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">kv</span><span class="p">,</span> <span class="n">update_on_kvstore</span><span class="p">)</span>
+
 <span class="k">def</span> <span class="nf">_create_kvstore</span><span class="p">(</span><span class="n">kvstore</span><span class="p">,</span> <span class="n">num_device</span><span class="p">,</span> <span class="n">arg_params</span><span class="p">):</span>
     <span class="sd">"""Create kvstore</span>
 <span class="sd">    This function select and create a proper kvstore if given the kvstore type.</span>

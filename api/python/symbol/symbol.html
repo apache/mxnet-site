@@ -3128,7 +3128,7 @@ this array as data.</p>
 <li><cite>softrelu</cite>: Soft ReLU, or SoftPlus, <span class="math">\(y = log(1 + exp(x))\)</span></li>
 <li><cite>softsign</cite>: <span class="math">\(y = \frac{x}{1 + abs(x)}\)</span></li>
 </ul>
-<p>Defined in src/operator/nn/activation.cc:L163</p>
+<p>Defined in src/operator/nn/activation.cc:L161</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8484,7 +8484,7 @@ inputs (batch mode).</p>
       <span class="p">[</span><span class="o">-</span><span class="mf">19.09768702</span><span class="p">,</span> <span class="mf">0.52758934</span><span class="p">]]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L529</p>
+<p>Defined in src/operator/tensor/la_op.cc:L552</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8506,7 +8506,7 @@ inputs (batch mode).</p>
 </dd></dl>
 <dl class="function">
 <dt id="mxnet.symbol.linalg_gemm">
-<code class="descclassname">mxnet.symbol.</code><code class="descname">linalg_gemm</code><span class="sig-paren">(</span><em>A=None</em>, <em>B=None</em>, <em>C=None</em>, <em>transpose_a=_Null</em>, <em>transpose_b=_Null</em>, <em>alpha=_Null</em>, <em>beta=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.linalg_gemm" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mxnet.symbol.</code><code class="descname">linalg_gemm</code><span class="sig-paren">(</span><em>A=None</em>, <em>B=None</em>, <em>C=None</em>, <em>transpose_a=_Null</em>, <em>transpose_b=_Null</em>, <em>alpha=_Null</em>, <em>beta=_Null</em>, <em>axis=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.linalg_gemm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs general matrix multiplication and accumulation.
 Input are tensors <em>A</em>, <em>B</em>, <em>C</em>, each of dimension <em>n >= 2</em> and having the same shape
 on the leading <em>n-2</em> dimensions.</p>
@@ -8515,8 +8515,18 @@ on the leading <em>n-2</em> dimensions.</p>
 <div><em>out</em> = <em>alpha</em> * <em>op</em>(<em>A</em>) * <em>op</em>(<em>B</em>) + <em>beta</em> * <em>C</em></div></blockquote>
 <p>Here, <em>alpha</em> and <em>beta</em> are scalar parameters, and <em>op()</em> is either the identity or
 matrix transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).</p>
-<p>If <em>n>2</em>, <em>gemm</em> is performed separately on the trailing two dimensions for all inputs
-(batch mode).</p>
+<p>If <em>n>2</em>, <em>gemm</em> is performed separately for a batch of matrices. The column indices of the matrices
+are given by the last dimensions of the tensors, the row indices by the axis specified with the <em>axis</em>
+parameter. By default, the trailing two dimensions will be used for matrix encoding.</p>
+<p>For a non-default axis parameter, the operation performed is equivalent to a series of swapaxes/gemm/swapaxes
+calls. For example let <em>A</em>, <em>B</em>, <em>C</em> be 5 dimensional tensors. Then gemm(<em>A</em>, <em>B</em>, <em>C</em>, axis=1) is equivalent to</p>
+<blockquote>
+<div>A1 = swapaxes(A, dim1=1, dim2=3)
+B1 = swapaxes(B, dim1=1, dim2=3)
+C = swapaxes(C, dim1=1, dim2=3)
+C = gemm(A1, B1, C)
+C = swapaxis(C, dim1=1, dim2=3)</div></blockquote>
+<p>without the overhead of the additional swapaxis operations.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The operator supports float32 and float64 data types only.</p>
@@ -8537,7 +8547,7 @@ matrix transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).<
         <span class="o">=</span> <span class="p">[[[</span><span class="mf">104.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.14</span><span class="p">]]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L69</p>
+<p>Defined in src/operator/tensor/la_op.cc:L81</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8550,6 +8560,7 @@ matrix transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).<
 <li><strong>transpose_b</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply with transposed of second input (B).</li>
 <li><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor multiplied with A*B.</li>
 <li><strong>beta</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor multiplied with C.</li>
+<li><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='-2'</em>) – Axis corresponding to the matrix rows.</li>
 <li><strong>name</strong> (<em>string</em><em>, </em><em>optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>
@@ -8565,7 +8576,7 @@ matrix transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).<
 </dd></dl>
 <dl class="function">
 <dt id="mxnet.symbol.linalg_gemm2">
-<code class="descclassname">mxnet.symbol.</code><code class="descname">linalg_gemm2</code><span class="sig-paren">(</span><em>A=None</em>, <em>B=None</em>, <em>transpose_a=_Null</em>, <em>transpose_b=_Null</em>, <em>alpha=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.linalg_gemm2" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">mxnet.symbol.</code><code class="descname">linalg_gemm2</code><span class="sig-paren">(</span><em>A=None</em>, <em>B=None</em>, <em>transpose_a=_Null</em>, <em>transpose_b=_Null</em>, <em>alpha=_Null</em>, <em>axis=_Null</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.linalg_gemm2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs general matrix multiplication.
 Input are tensors <em>A</em>, <em>B</em>, each of dimension <em>n >= 2</em> and having the same shape
 on the leading <em>n-2</em> dimensions.</p>
@@ -8574,8 +8585,17 @@ on the leading <em>n-2</em> dimensions.</p>
 <div><em>out</em> = <em>alpha</em> * <em>op</em>(<em>A</em>) * <em>op</em>(<em>B</em>)</div></blockquote>
 <p>Here <em>alpha</em> is a scalar parameter and <em>op()</em> is either the identity or the matrix
 transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).</p>
-<p>If <em>n>2</em>, <em>gemm</em> is performed separately on the trailing two dimensions for all inputs
-(batch mode).</p>
+<p>If <em>n>2</em>, <em>gemm</em> is performed separately for a batch of matrices. The column indices of the matrices
+are given by the last dimensions of the tensors, the row indices by the axis specified with the <em>axis</em>
+parameter. By default, the trailing two dimensions will be used for matrix encoding.</p>
+<p>For a non-default axis parameter, the operation performed is equivalent to a series of swapaxes/gemm/swapaxes
+calls. For example let <em>A</em>, <em>B</em> be 5 dimensional tensors. Then gemm(<em>A</em>, <em>B</em>, axis=1) is equivalent to</p>
+<blockquote>
+<div>A1 = swapaxes(A, dim1=1, dim2=3)
+B1 = swapaxes(B, dim1=1, dim2=3)
+C = gemm2(A1, B1)
+C = swapaxis(C, dim1=1, dim2=3)</div></blockquote>
+<p>without the overhead of the additional swapaxis operations.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The operator supports float32 and float64 data types only.</p>
@@ -8594,7 +8614,7 @@ transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).</p>
         <span class="o">=</span> <span class="p">[[[</span><span class="mf">4.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.04</span> <span class="p">]]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L128</p>
+<p>Defined in src/operator/tensor/la_op.cc:L151</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8605,6 +8625,7 @@ transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).</p>
 <li><strong>transpose_a</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply with transposed of first input (A).</li>
 <li><strong>transpose_b</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply with transposed of second input (B).</li>
 <li><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor multiplied with A*B.</li>
+<li><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='-2'</em>) – Axis corresponding to the matrix row indices.</li>
 <li><strong>name</strong> (<em>string</em><em>, </em><em>optional.</em>) – Name of the resulting symbol.</li>
 </ul>
 </td>
@@ -8644,7 +8665,7 @@ positive diagonal entries, and:</p>
 <span class="n">potrf</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L178</p>
+<p>Defined in src/operator/tensor/la_op.cc:L201</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8700,7 +8721,7 @@ cannot use the Cholesky factor <em>A</em> (<em>potrf</em>), together with backsu
             <span class="p">[[</span><span class="mf">0.06641</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01562</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.01562</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0625</span><span class="p">]]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L236</p>
+<p>Defined in src/operator/tensor/la_op.cc:L259</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8743,7 +8764,7 @@ inputs (batch mode).</p>
 <span class="n">sumlogdiag</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.9459</span><span class="p">,</span> <span class="mf">3.9318</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L405</p>
+<p>Defined in src/operator/tensor/la_op.cc:L428</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8797,7 +8818,7 @@ inputs (batch mode).</p>
 <span class="n">syrk</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">4.</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.04</span><span class="p">]]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L461</p>
+<p>Defined in src/operator/tensor/la_op.cc:L484</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8853,7 +8874,7 @@ identity or the matrix transposition (depending on <em>transpose</em>).</p>
                          <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L293</p>
+<p>Defined in src/operator/tensor/la_op.cc:L316</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>
@@ -8912,7 +8933,7 @@ identity or the matrix transposition (depending on <em>transpose</em>).</p>
                          <span class="p">[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]]]</span>
 </pre></div>
 </div>
-<p>Defined in src/operator/tensor/la_op.cc:L356</p>
+<p>Defined in src/operator/tensor/la_op.cc:L379</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
 <col class="field-body"/>

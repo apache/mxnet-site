@@ -814,6 +814,7 @@
 
 <span class="sd">    Refer `Hybrid tutorial <https://mxnet.incubator.apache.org/tutorials/gluon/hybrid.html>`_ to see</span>
 <span class="sd">    the end-to-end usage.</span>
+
 <span class="sd">    """</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
@@ -1086,6 +1087,14 @@
             <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get_internals</span><span class="p">()</span><span class="o">.</span><span class="n">list_outputs</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
                 <span class="s2">"Input symbols must be variable, but </span><span class="si">%s</span><span class="s2"> is an output of operators"</span><span class="o">%</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="n">input_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># check if any symbol is row_sparse</span>
+        <span class="n">row_sparse_storage</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">_STORAGE_TYPE_STR_TO_ID</span><span class="p">[</span><span class="s1">'row_sparse'</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">get_internals</span><span class="p">():</span>
+                <span class="k">assert</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">attr</span><span class="p">(</span><span class="s2">"__storage_type__"</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">row_sparse_storage</span><span class="p">)),</span> \
+                    <span class="s2">"SymbolBlock doesn't support Parameter '</span><span class="si">%s</span><span class="s2">' because its storage "</span> \
+                    <span class="s2">"type is 'row_sparse'."</span> <span class="o">%</span> <span class="n">j</span><span class="o">.</span><span class="n">name</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">list_arguments</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">input_names</span><span class="p">:</span>

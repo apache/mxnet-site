@@ -229,7 +229,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Trainer'</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">optimizer</span> <span class="k">as</span> <span class="n">opt</span>
-<span class="kn">from</span> <span class="nn">..model</span> <span class="k">import</span> <span class="n">_create_kvstore</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="k">import</span> <span class="n">_create_kvstore</span><span class="p">,</span> <span class="n">_create_sparse_kvstore</span>
 <span class="kn">from</span> <span class="nn">.parameter</span> <span class="k">import</span> <span class="n">ParameterDict</span><span class="p">,</span> <span class="n">Parameter</span>
 
 <div class="viewcode-block" id="Trainer"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Trainer">[docs]</a><span class="k">class</span> <span class="nc">Trainer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -276,20 +276,30 @@
                 <span class="s2">"First argument must be a list or dict of Parameters, "</span> \
                 <span class="s2">"got </span><span class="si">%s</span><span class="s2">."</span><span class="o">%</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">params</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_params</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+        <span class="c1"># parameters to initialize on the kvstore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_contains_sparse</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_param2idx</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">Parameter</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">"First argument must be a list or dict of Parameters, "</span> \
                     <span class="s2">"got list of </span><span class="si">%s</span><span class="s2">."</span><span class="o">%</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_param2idx</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+            <span class="n">param</span><span class="o">.</span><span class="n">_set_trainer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">_stype</span> <span class="o">!=</span> <span class="s1">'default'</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_contains_sparse</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span> <span class="o">=</span> <span class="n">compression_params</span>
         <span class="n">optimizer_params</span> <span class="o">=</span> <span class="n">optimizer_params</span> <span class="k">if</span> <span class="n">optimizer_params</span> <span class="k">else</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">optimizer_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'rescale_grad'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_contexts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_contexts</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">optimizer_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'kvstore'</span><span class="p">:</span> <span class="n">kvstore</span><span class="p">,</span> <span class="s1">'update_on_kvstore'</span><span class="p">:</span> <span class="n">update_on_kvstore</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="o">=</span> <span class="n">kvstore</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span> <span class="o">=</span> <span class="n">update_on_kvstore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_kvstore</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_check_contexts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">contexts</span> <span class="o">=</span> <span class="kc">None</span>
@@ -317,38 +327,62 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_updaters</span> <span class="o">=</span> <span class="p">[</span><span class="n">opt</span><span class="o">.</span><span class="n">get_updater</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">)</span> \
                             <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contexts</span><span class="p">]</span>
 
+    <span class="k">def</span> <span class="nf">_init_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Initialize parameters in the KVStore.</span>
+
+<span class="sd">        Parameters with incomplete initialization are ignored.</span>
+
+<span class="sd">        """</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span><span class="p">,</span> <span class="s2">"Cannot initialize parameters in KVStore "</span> \
+                                     <span class="s2">"when KVStore is not initialized."</span>
+        <span class="n">params_to_init</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">_deferred_init</span><span class="p">:</span>
+                    <span class="n">params_to_init</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">param_arrays</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">_check_and_get</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_param2idx</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">param_arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">_stype</span> <span class="o">==</span> <span class="s1">'default'</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">param_arrays</span><span class="p">,</span> <span class="n">priority</span><span class="o">=-</span><span class="n">idx</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span> <span class="o">=</span> <span class="n">params_to_init</span>
+
+    <span class="k">def</span> <span class="nf">_reset_kvstore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Reset kvstore."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="ow">and</span> <span class="s1">'dist'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Cannot reset distributed KVStore."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">]</span>
+
     <span class="k">def</span> <span class="nf">_init_kvstore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Create kvstore."""</span>
         <span class="n">arg_arrays</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">contains_sparse</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">:</span>
-            <span class="n">arg_arrays</span><span class="p">[</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_contexts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">_grad_stype</span> <span class="o">!=</span> <span class="s1">'default'</span><span class="p">:</span>
-                <span class="n">contains_sparse</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="c1"># update_on_kvstore is set to False by the user</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Cannot set update_on_kvstore to False when sparse "</span>
-                                       <span class="s2">"gradients and/or sparse weights are present for "</span>
-                                       <span class="s2">"Parameter </span><span class="si">%s</span><span class="s2">."</span> <span class="o">%</span> <span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">kvstore</span><span class="p">,</span> <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="n">_create_kvstore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_contexts</span><span class="p">),</span>
-                                                     <span class="n">arg_arrays</span><span class="p">)</span>
-        <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
-                            <span class="k">else</span> <span class="n">update_on_kvstore</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore_params</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contains_sparse</span><span class="p">:</span>
+            <span class="n">kvstore</span><span class="p">,</span> <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="n">_create_sparse_kvstore</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">'kvstore'</span><span class="p">])</span>
+            <span class="c1"># update_on_kvstore is set to False by the user</span>
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">'update_on_kvstore'</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Cannot set update_on_kvstore to False when sparse "</span>
+                                   <span class="s2">"gradients and/or sparse weights are present for "</span>
+                                   <span class="s2">"Parameter '</span><span class="si">%s</span><span class="s2">'."</span><span class="o">%</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kvstore</span><span class="p">,</span> <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="n">_create_kvstore</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">'kvstore'</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_contexts</span><span class="p">),</span>
+                                                         <span class="n">arg_arrays</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">'update_on_kvstore'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">'update_on_kvstore'</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">kvstore</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span><span class="p">:</span>
                 <span class="n">kvstore</span><span class="o">.</span><span class="n">set_gradient_compression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span><span class="p">)</span>
             <span class="c1"># kv.pull(row_sparse_grad) is not supported</span>
-            <span class="k">if</span> <span class="n">contains_sparse</span><span class="p">:</span>
-                <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s1">'dist'</span> <span class="ow">in</span> <span class="n">kvstore</span><span class="o">.</span><span class="n">type</span><span class="p">:</span>
-                    <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="s1">'dist'</span> <span class="ow">in</span> <span class="n">kvstore</span><span class="o">.</span><span class="n">type</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_contains_sparse</span><span class="p">:</span>
+                <span class="n">update_on_kvstore</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">if</span> <span class="n">update_on_kvstore</span><span class="p">:</span>
+                <span class="c1"># optimizer preferably needs to be set before init for multiprecision</span>
                 <span class="n">kvstore</span><span class="o">.</span><span class="n">set_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="p">)</span>
-            <span class="c1"># optimizer preferably needs to be set before init for multiprecision</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_params</span><span class="p">):</span>
-                <span class="n">param_arrays</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">list_data</span><span class="p">()</span>
-                <span class="n">kvstore</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">param_arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-                <span class="n">kvstore</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">param_arrays</span><span class="p">,</span> <span class="n">priority</span><span class="o">=-</span><span class="n">i</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="o">=</span> <span class="n">kvstore</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span> <span class="o">=</span> <span class="n">update_on_kvstore</span>
         <span class="k">else</span><span class="p">:</span>
@@ -379,6 +413,15 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">set_learning_rate</span><span class="p">(</span><span class="n">lr</span><span class="p">)</span></div>
 
+    <span class="k">def</span> <span class="nf">_row_sparse_pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">row_id</span><span class="p">):</span>
+        <span class="c1"># initialize kv and params if not already</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_kvstore</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="o">.</span><span class="n">row_sparse_pull</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_param2idx</span><span class="p">[</span><span class="n">parameter</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> \
+                                      <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="n">row_ids</span><span class="o">=</span><span class="n">row_id</span><span class="p">)</span>
+
 <div class="viewcode-block" id="Trainer.step"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.Trainer.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">ignore_stale_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">"""Makes one step of parameter update. Should be called after</span>
 <span class="sd">        `autograd.backward()` and outside of `record()` scope.</span>
@@ -399,6 +442,8 @@
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_kvstore</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer</span><span class="o">.</span><span class="n">rescale_grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="o">/</span> <span class="n">batch_size</span>
 
@@ -418,6 +463,8 @@
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_kvstore</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span><span class="p">()</span>
         <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span><span class="p">),</span> \
                 <span class="s1">'allreduce_grads() when parameters are updated on kvstore '</span> \
                 <span class="s1">'is not supported. Try setting `update_on_kvstore` '</span> \
@@ -458,6 +505,8 @@
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_kvstore</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span><span class="p">()</span>
         <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span><span class="p">),</span> \
                 <span class="s1">'update() when parameters are updated on kvstore '</span> \
                 <span class="s1">'is not supported. Try setting `update_on_kvstore` '</span> \
@@ -472,7 +521,7 @@
                 <span class="k">continue</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">ignore_stale_grad</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">param</span><span class="o">.</span><span class="n">list_data</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">param</span><span class="o">.</span><span class="n">_check_and_get</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">_fresh_grad</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span>
                             <span class="s2">"Gradient of Parameter `</span><span class="si">%s</span><span class="s2">` on context </span><span class="si">%s</span><span class="s2"> has not been updated "</span>
@@ -484,7 +533,10 @@
                             <span class="o">%</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">context</span><span class="p">)))</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">list_data</span><span class="p">(),</span> <span class="n">priority</span><span class="o">=-</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">_stype</span> <span class="o">==</span> <span class="s1">'default'</span><span class="p">:</span>
+                    <span class="c1"># 'row_sparse' parameters are not pulled immediately - they're pulled</span>
+                    <span class="c1"># in `SparseBlock.sparse_forward`</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">list_data</span><span class="p">(),</span> <span class="n">priority</span><span class="o">=-</span><span class="n">i</span><span class="p">)</span>
                 <span class="k">continue</span>
 
             <span class="k">for</span> <span class="n">upd</span><span class="p">,</span> <span class="n">arr</span><span class="p">,</span> <span class="n">grad</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_updaters</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">list_data</span><span class="p">(),</span> <span class="n">param</span><span class="o">.</span><span class="n">list_grad</span><span class="p">()):</span>
@@ -504,8 +556,12 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_kvstore</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span><span class="p">,</span> <span class="s2">"Cannot save trainer states when some "</span> \
+                                             <span class="s2">"parameters are not yet initialized in kvstore."</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="o">.</span><span class="n">save_optimizer_states</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dump_optimizer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
@@ -521,6 +577,8 @@
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kv_initialized</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_kvstore</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_to_init</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_params</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_on_kvstore</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_kvstore</span><span class="o">.</span><span class="n">load_optimizer_states</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
