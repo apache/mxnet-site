@@ -12,6 +12,7 @@ var searchData=
   ['is_5frecording',['is_recording',['../classmxnet_1_1Imperative.html#a62790da5baceaad22abdf23326770239',1,'mxnet::Imperative']]],
   ['is_5ftraining',['is_training',['../classmxnet_1_1Imperative.html#a05de0382a6aecf2cb8ee1c0a7c021bae',1,'mxnet::Imperative']]],
   ['isnone',['IsNone',['../classmxnet_1_1Imperative_1_1AGInfo.html#afca370cc8b3e93f950d04df6e29f1fdc',1,'mxnet::Imperative::AGInfo']]],
+  ['issame',['IsSame',['../classmxnet_1_1NDArray.html#a382ce4df6145c9d8540ca02956acdd2e',1,'mxnet::NDArray']]],
   ['isschedulernode',['IsSchedulerNode',['../classmxnet_1_1KVStore.html#a41113b9dfeab6c705ba064cc3f010fb4',1,'mxnet::KVStore']]],
   ['isservernode',['IsServerNode',['../classmxnet_1_1KVStore.html#a101178924ce1d635b0c8c2a5bce0ceaf',1,'mxnet::KVStore']]],
   ['isvariable',['IsVariable',['../classmxnet_1_1Imperative_1_1AGInfo.html#ad5f1d672e9adc8c0be46cc4002c0aafc',1,'mxnet::Imperative::AGInfo']]],

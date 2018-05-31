@@ -654,8 +654,16 @@
 <span class="sd">        ----------</span>
 <span class="sd">        active : bool, default True</span>
 <span class="sd">            Whether to turn hybrid on or off.</span>
-<span class="sd">        **kwargs : string</span>
-<span class="sd">            Additional flags for hybridized operator.</span>
+<span class="sd">        static_alloc : bool, default False</span>
+<span class="sd">            Statically allocate memory to improve speed. Memory usage may increase.</span>
+<span class="sd">        static_shape : bool, default False</span>
+<span class="sd">            Optimize for invariant input shapes between iterations. Must also</span>
+<span class="sd">            set static_alloc to True. Change of input shapes is still allowed</span>
+<span class="sd">            but slower.</span>
+<span class="sd">        forward_bulk_size : int, default 15</span>
+<span class="sd">            Segment size of bulk execution during forward pass.</span>
+<span class="sd">        backward_bulk_size : int, default 15</span>
+<span class="sd">            Segment size of bulk execution during backward pass.</span>
 <span class="sd">        """</span>
         <span class="k">for</span> <span class="n">cld</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">cld</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">active</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -823,7 +831,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_out_format</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_format</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="HybridBlock.__setattr__"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.HybridBlock.__setattr__">[docs]</a>    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">"""Registers parameters."""</span>
@@ -850,39 +858,43 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_graph</span>
 
     <span class="k">def</span> <span class="nf">_build_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">inputs</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_graph</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-        <span class="n">input_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]</span>
-
+        <span class="n">data</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_graph</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">data_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">)}</span>
         <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span>
+        <span class="n">input_names</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">list_inputs</span><span class="p">()</span>
+
         <span class="n">param_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">expected_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">list_inputs</span><span class="p">())</span>
+        <span class="n">expected_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">input_names</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">expected_names</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">param_names</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">input_names</span><span class="p">,</span> \
+            <span class="k">assert</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">param_names</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data_names</span><span class="p">,</span> \
                 <span class="s2">"Unknown input to HybridBlock: </span><span class="si">%s</span><span class="s2">"</span><span class="o">%</span><span class="n">name</span>
 
-        <span class="n">used_input_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">input_names</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">expected_names</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">used_input_names</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_names</span><span class="p">):</span>
-            <span class="n">unused</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">'</span><span class="si">%d</span><span class="s1">-th'</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_names</span><span class="p">)</span>
+        <span class="n">used_data_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_names</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">expected_names</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">used_data_names</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_names</span><span class="p">):</span>
+            <span class="n">unused</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">'</span><span class="si">%d</span><span class="s1">-th'</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_names</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
                                 <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">expected_names</span><span class="p">])</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"The </span><span class="si">%s</span><span class="s2"> input to HybridBlock is not used by any "</span>
                           <span class="s2">"computation. Is this intended?"</span><span class="o">%</span><span class="n">unused</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
-        <span class="n">used_param_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">param_names</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">expected_names</span><span class="p">)</span>
+        <span class="n">used_param_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">param_names</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">expected_names</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">used_param_names</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_names</span><span class="p">):</span>
-            <span class="n">unused</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">param_names</span> <span class="o">-</span> <span class="n">used_param_names</span><span class="p">))</span>
+            <span class="n">unused</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">param_names</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">used_param_names</span><span class="p">)))</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">"Parameter </span><span class="si">%s</span><span class="s2"> is not used by any computation. "</span>
                           <span class="s2">"Is this intended?"</span><span class="o">%</span><span class="n">unused</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
-        <span class="n">used_params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">used_param_names</span><span class="p">}</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">param_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">list_data</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">used_params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-        <span class="k">except</span> <span class="n">DeferredInitializationError</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_deferred_infer_shape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">used_params</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">i</span><span class="o">.</span><span class="n">_finish_deferred_init</span><span class="p">()</span>
-            <span class="n">param_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">list_data</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">used_params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">CachedOp</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span><span class="p">,</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">)</span>
+        <span class="n">data_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">param_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op_args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_names</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data_names</span><span class="p">:</span>
+                <span class="n">data_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op_args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_names</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">param_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op_args</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="kc">False</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span>
+        <span class="n">flags</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">'data_indices'</span><span class="p">,</span> <span class="n">data_indices</span><span class="p">),</span> <span class="p">(</span><span class="s1">'param_indices'</span><span class="p">,</span> <span class="n">param_indices</span><span class="p">)]</span> <span class="o">+</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">CachedOp</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_deferred_infer_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -898,7 +910,19 @@
 
         <span class="n">args</span><span class="p">,</span> <span class="n">fmt</span> <span class="o">=</span> <span class="n">_flatten</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">"input"</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">fmt</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_format</span><span class="p">,</span> <span class="s2">"Invalid input format"</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cargs</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">is_arg</span> <span class="k">else</span> <span class="n">i</span><span class="o">.</span><span class="n">data</span><span class="p">()</span>
+                     <span class="k">for</span> <span class="n">is_arg</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op_args</span><span class="p">]</span>
+        <span class="k">except</span> <span class="n">DeferredInitializationError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_deferred_infer_shape</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">cargs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">is_arg</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op_args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">is_arg</span><span class="p">:</span>
+                    <span class="n">cargs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">i</span><span class="o">.</span><span class="n">_finish_deferred_init</span><span class="p">()</span>
+                    <span class="n">cargs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">data</span><span class="p">())</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_op</span><span class="p">(</span><span class="o">*</span><span class="n">cargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">):</span>
             <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">out</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">_regroup</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_format</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -919,7 +943,7 @@
 
     <span class="k">def</span> <span class="nf">hybridize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_active</span> <span class="o">=</span> <span class="n">active</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flags</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_cached_op</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">active</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_hooks</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_forward_pre_hooks</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'"</span><span class="si">{}</span><span class="s1">" is being hybridized while still having forward hook/pre-hook. '</span>

@@ -7,7 +7,7 @@ var searchData=
   ['flatto3d',['FlatTo3D',['../classmxnet_1_1TBlob.html#ac5cd4953869cb66ed374854a34da40f8',1,'mxnet::TBlob::FlatTo3D(int axis, mshadow::Stream&lt; Device &gt; *stream=NULL) const '],['../classmxnet_1_1TBlob.html#ada83447eb80b913592e9ac2bf8c5740f',1,'mxnet::TBlob::FlatTo3D(int axis_begin, int axis_end, mshadow::Stream&lt; Device &gt; *stream=NULL) const ']]],
   ['flattokd',['FlatToKD',['../classmxnet_1_1TBlob.html#aa2f8e15eb1fc21e159c496ec0d499b6f',1,'mxnet::TBlob']]],
   ['foreach',['ForEach',['../classmxnet_1_1common_1_1LazyAllocArray.html#a43a89c8e7b4e1a09f346694073a2d998',1,'mxnet::common::LazyAllocArray']]],
-  ['forward',['Forward',['../classmxnet_1_1Executor.html#ab3716be8e6c265b091e618f46eeb6f9b',1,'mxnet::Executor::Forward()'],['../classmxnet_1_1Imperative_1_1CachedOp.html#aeb2c6bdbb7db84b25fc1b7429c195bb5',1,'mxnet::Imperative::CachedOp::Forward()'],['../classmxnet_1_1Operator.html#a3dbe23d985df86da51eeb868439872dd',1,'mxnet::Operator::Forward()']]],
+  ['forward',['Forward',['../classmxnet_1_1Executor.html#ab3716be8e6c265b091e618f46eeb6f9b',1,'mxnet::Executor::Forward()'],['../classmxnet_1_1Operator.html#a3dbe23d985df86da51eeb868439872dd',1,'mxnet::Operator::Forward()']]],
   ['forwardinplaceoption',['ForwardInplaceOption',['../classmxnet_1_1OperatorProperty.html#aad7a3e87866515a2b7100e849a2fe966',1,'mxnet::OperatorProperty']]],
   ['forwardresource',['ForwardResource',['../classmxnet_1_1OperatorProperty.html#a623210dd1b9495ca73f223e0b06f998c',1,'mxnet::OperatorProperty']]],
   ['free',['Free',['../classmxnet_1_1Storage.html#a5bdbd7b3ab712cd9e087ab007bdc64dd',1,'mxnet::Storage']]],
