@@ -107,16 +107,17 @@
 <ul class="dropdown-menu" id="burgerMenu">
 <li><a href="../../../../install/index.html">Install</a></li>
 <li><a class="main-nav-link" href="../../../../tutorials/index.html">Tutorials</a></li>
-<li class="dropdown-submenu">
-<a href="#" tabindex="-1">Community</a>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
 <ul class="dropdown-menu">
-<li><a href="../../../../community/index.html" tabindex="-1">Community</a></li>
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet" tabindex="-1">Github</a></li>
 <li><a href="../../../../community/contribute.html" tabindex="-1">Contribute</a></li>
 <li><a href="../../../../community/powered_by.html" tabindex="-1">Powered By</a></li>
 </ul>
 </li>
 <li class="dropdown-submenu">
-<a href="#" tabindex="-1">API</a>
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">API</a>
 <ul class="dropdown-menu">
 <li><a href="../../../../api/python/index.html" tabindex="-1">Python</a>
 </li>
@@ -133,7 +134,7 @@
 </ul>
 </li>
 <li class="dropdown-submenu">
-<a href="#" tabindex="-1">Docs</a>
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
 <ul class="dropdown-menu">
 <li><a href="../../../../tutorials/index.html" tabindex="-1">Tutorials</a></li>
 <li><a href="../../../../faq/index.html" tabindex="-1">FAQ</a></li>
@@ -265,6 +266,8 @@
 
     <span class="k">def</span> <span class="nf">reduce_ndarray</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
         <span class="sd">"""Reduce ndarray to shared memory handle"""</span>
+        <span class="c1"># keep a local ref before duplicating fd</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="s1">'cpu_shared'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
         <span class="n">pid</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_to_shared_mem</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">fd</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">reduce_handle</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>

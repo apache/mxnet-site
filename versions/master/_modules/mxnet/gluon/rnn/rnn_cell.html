@@ -107,16 +107,17 @@
 <ul class="dropdown-menu" id="burgerMenu">
 <li><a href="../../../../install/index.html">Install</a></li>
 <li><a class="main-nav-link" href="../../../../tutorials/index.html">Tutorials</a></li>
-<li class="dropdown-submenu">
-<a href="#" tabindex="-1">Community</a>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
 <ul class="dropdown-menu">
-<li><a href="../../../../community/index.html" tabindex="-1">Community</a></li>
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet" tabindex="-1">Github</a></li>
 <li><a href="../../../../community/contribute.html" tabindex="-1">Contribute</a></li>
 <li><a href="../../../../community/powered_by.html" tabindex="-1">Powered By</a></li>
 </ul>
 </li>
 <li class="dropdown-submenu">
-<a href="#" tabindex="-1">API</a>
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">API</a>
 <ul class="dropdown-menu">
 <li><a href="../../../../api/python/index.html" tabindex="-1">Python</a>
 </li>
@@ -133,7 +134,7 @@
 </ul>
 </li>
 <li class="dropdown-submenu">
-<a href="#" tabindex="-1">Docs</a>
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
 <ul class="dropdown-menu">
 <li><a href="../../../../tutorials/index.html" tabindex="-1">Tutorials</a></li>
 <li><a href="../../../../faq/index.html" tabindex="-1">FAQ</a></li>
@@ -432,6 +433,7 @@
 <span class="sd">            The new state of this RNN after this unrolling.</span>
 <span class="sd">            The type of this symbol is same as the output of `begin_state()`.</span>
 <span class="sd">        """</span>
+        <span class="c1"># pylint: disable=too-many-locals</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="n">inputs</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="n">_format_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
@@ -459,12 +461,19 @@
     <span class="c1">#pylint: disable=no-self-use</span>
     <span class="k">def</span> <span class="nf">_get_activation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">"""Get activation function. Convert if is string"""</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">activation</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">activation</span> <span class="o">==</span> <span class="s1">'tanh'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s1">'sigmoid'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s1">'relu'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s1">'softsign'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">softsign</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">activation</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">activation</span><span class="p">,</span> <span class="n">LeakyReLU</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">'leaky'</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="n">activation</span><span class="o">.</span><span class="n">_alpha</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">activation</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">activation</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RecurrentCell.forward"><a class="viewcode-back" href="../../../../api/python/gluon/rnn.html#mxnet.gluon.rnn.RecurrentCell.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
         <span class="sd">"""Unrolls the recurrent cell for one time step.</span>
@@ -649,7 +658,12 @@
 <span class="sd">    params : Parameter or None</span>
 <span class="sd">        Container for weight sharing between cells.</span>
 <span class="sd">        Created if `None`.</span>
-
+<span class="sd">    activation : str</span>
+<span class="sd">        Activation type to use. See nd/symbol Activation</span>
+<span class="sd">        for supported types.</span>
+<span class="sd">    recurrent_activation : str</span>
+<span class="sd">        Activation type to use for the recurrent step. See nd/symbol Activation</span>
+<span class="sd">        for supported types.</span>
 
 <span class="sd">    Inputs:</span>
 <span class="sd">        - **data**: input tensor with shape `(batch_size, input_size)`.</span>
@@ -661,10 +675,12 @@
 <span class="sd">        - **next_states**: a list of two output recurrent state tensors. Each has</span>
 <span class="sd">          the same shape as `states`.</span>
 <span class="sd">    """</span>
+    <span class="c1"># pylint: disable=too-many-instance-attributes</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span>
                  <span class="n">i2h_weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">h2h_weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">i2h_bias_initializer</span><span class="o">=</span><span class="s1">'zeros'</span><span class="p">,</span> <span class="n">h2h_bias_initializer</span><span class="o">=</span><span class="s1">'zeros'</span><span class="p">,</span>
-                 <span class="n">input_size</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">input_size</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'tanh'</span><span class="p">,</span>
+                 <span class="n">recurrent_activation</span><span class="o">=</span><span class="s1">'sigmoid'</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">LSTMCell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
@@ -681,6 +697,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">h2h_bias</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'h2h_bias'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">hidden_size</span><span class="p">,),</span>
                                         <span class="n">init</span><span class="o">=</span><span class="n">h2h_bias_initializer</span><span class="p">,</span>
                                         <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_activation</span> <span class="o">=</span> <span class="n">activation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recurrent_activation</span> <span class="o">=</span> <span class="n">recurrent_activation</span>
+
 
     <span class="k">def</span> <span class="nf">state_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[{</span><span class="s1">'shape'</span><span class="p">:</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hidden_size</span><span class="p">),</span> <span class="s1">'__layout__'</span><span class="p">:</span> <span class="s1">'NC'</span><span class="p">},</span>
@@ -699,6 +718,7 @@
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">i2h_weight</span><span class="p">,</span>
                        <span class="n">h2h_weight</span><span class="p">,</span> <span class="n">i2h_bias</span><span class="p">,</span> <span class="n">h2h_bias</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=too-many-locals</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="s1">'t</span><span class="si">%d</span><span class="s1">_'</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_counter</span>
         <span class="n">i2h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">i2h_weight</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">i2h_bias</span><span class="p">,</span>
                                <span class="n">num_hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hidden_size</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'i2h'</span><span class="p">)</span>
@@ -706,13 +726,17 @@
                                <span class="n">num_hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hidden_size</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'h2h'</span><span class="p">)</span>
         <span class="n">gates</span> <span class="o">=</span> <span class="n">i2h</span> <span class="o">+</span> <span class="n">h2h</span>
         <span class="n">slice_gates</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">SliceChannel</span><span class="p">(</span><span class="n">gates</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'slice'</span><span class="p">)</span>
-        <span class="n">in_gate</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">slice_gates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">"sigmoid"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'i'</span><span class="p">)</span>
-        <span class="n">forget_gate</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">slice_gates</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">"sigmoid"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'f'</span><span class="p">)</span>
-        <span class="n">in_transform</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">slice_gates</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">"tanh"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'c'</span><span class="p">)</span>
-        <span class="n">out_gate</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">slice_gates</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">"sigmoid"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'o'</span><span class="p">)</span>
+        <span class="n">in_gate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_activation</span><span class="p">(</span>
+            <span class="n">F</span><span class="p">,</span> <span class="n">slice_gates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recurrent_activation</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'i'</span><span class="p">)</span>
+        <span class="n">forget_gate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_activation</span><span class="p">(</span>
+            <span class="n">F</span><span class="p">,</span> <span class="n">slice_gates</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recurrent_activation</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'f'</span><span class="p">)</span>
+        <span class="n">in_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_activation</span><span class="p">(</span>
+            <span class="n">F</span><span class="p">,</span> <span class="n">slice_gates</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_activation</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'c'</span><span class="p">)</span>
+        <span class="n">out_gate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_activation</span><span class="p">(</span>
+            <span class="n">F</span><span class="p">,</span> <span class="n">slice_gates</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recurrent_activation</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'o'</span><span class="p">)</span>
         <span class="n">next_c</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">_internal</span><span class="o">.</span><span class="n">_plus</span><span class="p">(</span><span class="n">forget_gate</span> <span class="o">*</span> <span class="n">states</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">in_gate</span> <span class="o">*</span> <span class="n">in_transform</span><span class="p">,</span>
                                    <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'state'</span><span class="p">)</span>
-        <span class="n">next_h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">_internal</span><span class="o">.</span><span class="n">_mul</span><span class="p">(</span><span class="n">out_gate</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">next_c</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">"tanh"</span><span class="p">),</span>
+        <span class="n">next_h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">_internal</span><span class="o">.</span><span class="n">_mul</span><span class="p">(</span><span class="n">out_gate</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">next_c</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_activation</span><span class="p">),</span>
                                   <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">'out'</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">next_h</span><span class="p">,</span> <span class="p">[</span><span class="n">next_h</span><span class="p">,</span> <span class="n">next_c</span><span class="p">]</span></div>
@@ -883,6 +907,7 @@
 
     <span class="k">def</span> <span class="nf">unroll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">begin_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s1">'NTC'</span><span class="p">,</span> <span class="n">merge_outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">valid_length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=too-many-locals</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="n">inputs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="n">_format_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -910,6 +935,7 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=missing-docstring</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -963,10 +989,9 @@
         <span class="n">inputs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_format_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">merge_outputs</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">tensor_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">begin_state</span> <span class="k">if</span> <span class="n">begin_state</span> <span class="k">else</span> <span class="p">[])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">DropoutCell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">unroll</span><span class="p">(</span>
-                <span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">begin_state</span><span class="o">=</span><span class="n">begin_state</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span>
-                <span class="n">merge_outputs</span><span class="o">=</span><span class="n">merge_outputs</span><span class="p">,</span> <span class="n">valid_length</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">DropoutCell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">unroll</span><span class="p">(</span>
+            <span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">begin_state</span><span class="o">=</span><span class="n">begin_state</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">,</span>
+            <span class="n">merge_outputs</span><span class="o">=</span><span class="n">merge_outputs</span><span class="p">,</span> <span class="n">valid_length</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ModifierCell"><a class="viewcode-back" href="../../../../api/python/gluon/rnn.html#mxnet.gluon.rnn.ModifierCell">[docs]</a><span class="k">class</span> <span class="nc">ModifierCell</span><span class="p">(</span><span class="n">HybridRecurrentCell</span><span class="p">):</span>
@@ -1064,6 +1089,7 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_cell</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=useless-super-delegation</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ResidualCell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">base_cell</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
@@ -1132,6 +1158,7 @@
 
     <span class="k">def</span> <span class="nf">unroll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">begin_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s1">'NTC'</span><span class="p">,</span> <span class="n">merge_outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                <span class="n">valid_length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=too-many-locals</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
         <span class="n">inputs</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="n">_format_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
