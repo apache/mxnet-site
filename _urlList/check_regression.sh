@@ -20,7 +20,8 @@ mv new_url_list.txt url_list.txt
 rm -rf unique_current_urls.txt
 rm -rf blc_output.txt
 if [ $regression ]; then
-	echo "FAIL"
+	echo "FAIL: Found Regression in broken link checker"
+	exit 1
 else 
-	echo "SUCCESS"
+	echo "SUCCESS: No Regression found"
 fi
