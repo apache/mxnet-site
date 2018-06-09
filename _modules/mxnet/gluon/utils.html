@@ -380,7 +380,7 @@
     <span class="k">return</span> <span class="n">sha1</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span> <span class="o">==</span> <span class="n">sha1_hash</span></div>
 
 
-<div class="viewcode-block" id="download"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.utils.download">[docs]</a><span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sha1_hash</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="download"><a class="viewcode-back" href="../../../api/python/gluon/gluon.html#mxnet.gluon.utils.download">[docs]</a><span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sha1_hash</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
     <span class="sd">"""Download an given URL</span>
 
 <span class="sd">    Parameters</span>
@@ -395,6 +395,8 @@
 <span class="sd">    sha1_hash : str, optional</span>
 <span class="sd">        Expected sha1 hash in hexadecimal digits. Will ignore existing file when hash is specified</span>
 <span class="sd">        but doesn't match.</span>
+<span class="sd">    retries : integer, default 5</span>
+<span class="sd">        The number of times to attempt the download in case of failure or non 200 return codes</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -409,26 +411,37 @@
             <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fname</span> <span class="o">=</span> <span class="n">path</span>
+    <span class="k">assert</span> <span class="n">retries</span> <span class="o">>=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"Number of retries should be at least 0"</span>
 
     <span class="k">if</span> <span class="n">overwrite</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sha1_hash</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_sha1</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">sha1_hash</span><span class="p">)):</span>
         <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">fname</span><span class="p">)))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s1">'Downloading </span><span class="si">%s</span><span class="s1"> from </span><span class="si">%s</span><span class="s1">...'</span><span class="o">%</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Failed downloading url </span><span class="si">%s</span><span class="s2">"</span><span class="o">%</span><span class="n">url</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span> <span class="c1"># filter out keep-alive new chunks</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">sha1_hash</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_sha1</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">sha1_hash</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s1">'File </span><span class="si">{}</span><span class="s1"> is downloaded but the content hash does not match. '</span> \
-                              <span class="s1">'The repo may be outdated or download may be incomplete. '</span> \
-                              <span class="s1">'If the "repo_url" is overridden, consider switching to '</span> \
-                              <span class="s1">'the default repo.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span>
+        <span class="k">while</span> <span class="n">retries</span><span class="o">+</span><span class="mi">1</span> <span class="o">></span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Disable pyling too broad Exception</span>
+            <span class="c1"># pylint: disable=W0703</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">'Downloading </span><span class="si">%s</span><span class="s1"> from </span><span class="si">%s</span><span class="s1">...'</span><span class="o">%</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">url</span><span class="p">))</span>
+                <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Failed downloading url </span><span class="si">%s</span><span class="s2">"</span><span class="o">%</span><span class="n">url</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span> <span class="c1"># filter out keep-alive new chunks</span>
+                            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">sha1_hash</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_sha1</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">sha1_hash</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">UserWarning</span><span class="p">(</span><span class="s1">'File </span><span class="si">{}</span><span class="s1"> is downloaded but the content hash does not match.'</span>\
+                                      <span class="s1">' The repo may be outdated or download may be incomplete. '</span>\
+                                      <span class="s1">'If the "repo_url" is overridden, consider switching to '</span>\
+                                      <span class="s1">'the default repo.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span>
+                <span class="k">break</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">retries</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">retries</span> <span class="o"><=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">e</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">"download failed, retrying, </span><span class="si">{}</span><span class="s2"> attempt</span><span class="si">{}</span><span class="s2"> left"</span>
+                          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">retries</span><span class="p">,</span> <span class="s1">'s'</span> <span class="k">if</span> <span class="n">retries</span> <span class="o">></span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">''</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">fname</span></div>
 
