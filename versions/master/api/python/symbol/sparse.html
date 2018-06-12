@@ -324,6 +324,20 @@ Please refer to the API reference section for further details on specific operat
 </tbody>
 </table>
 </div>
+<div class="section" id="joining-arrays">
+<span id="joining-arrays"></span><h3>Joining arrays<a class="headerlink" href="#joining-arrays" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%"/>
+<col width="90%"/>
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#mxnet.symbol.sparse.concat" title="mxnet.symbol.sparse.concat"><code class="xref py py-obj docutils literal"><span class="pre">concat</span></code></a></td>
+<td>Joins input arrays along a given axis.</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="indexing-routines">
 <span id="indexing-routines"></span><h3>Indexing routines<a class="headerlink" href="#indexing-routines" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
@@ -1251,7 +1265,7 @@ broadcast_add(dense(1D), csr) = dense</div></blockquote>
 </div>
 <p>Supported sparse operations:</p>
 <blockquote>
-<div>broadcast_div(csr, dense(1D)) = csr (CPU only)</div></blockquote>
+<div>broadcast_div(csr, dense(1D)) = csr</div></blockquote>
 <p>Defined in src/operator/tensor/elemwise_binary_broadcast_op_basic.cc:L187</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
@@ -1334,7 +1348,7 @@ broadcast_sub/minus(dense(1D), csr) = dense</div></blockquote>
 </div>
 <p>Supported sparse operations:</p>
 <blockquote>
-<div>broadcast_mul(csr, dense(1D)) = csr (CPU only)</div></blockquote>
+<div>broadcast_mul(csr, dense(1D)) = csr</div></blockquote>
 <p>Defined in src/operator/tensor/elemwise_binary_broadcast_op_basic.cc:L146</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name"/>
@@ -1589,6 +1603,67 @@ Clipping <code class="docutils literal"><span class="pre">x</span></code> betwee
 </table>
 </dd></dl>
 <dl class="function">
+<dt id="mxnet.symbol.sparse.concat">
+<code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">concat</code><span class="sig-paren">(</span><em>*data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.concat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Joins input arrays along a given axis.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><cite>Concat</cite> is deprecated. Use <cite>concat</cite> instead.</p>
+</div>
+<p>The dimensions of the input arrays should be the same except the axis along
+which they will be concatenated.
+The dimension of the output array along the concatenated axis will be equal
+to the sum of the corresponding dimensions of the input arrays.</p>
+<p>The storage type of <code class="docutils literal"><span class="pre">concat</span></code> output depends on storage types of inputs</p>
+<ul class="simple">
+<li>concat(csr, csr, ..., csr, dim=0) = csr</li>
+<li>otherwise, <code class="docutils literal"><span class="pre">concat</span></code> generates output with default storage</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]]</span>
+<span class="n">z</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">],[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">]]</span>
+
+<span class="n">concat</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span> <span class="mf">1.</span><span class="p">,</span>  <span class="mf">1.</span><span class="p">],</span>
+                       <span class="p">[</span> <span class="mf">2.</span><span class="p">,</span>  <span class="mf">2.</span><span class="p">],</span>
+                       <span class="p">[</span> <span class="mf">3.</span><span class="p">,</span>  <span class="mf">3.</span><span class="p">],</span>
+                       <span class="p">[</span> <span class="mf">4.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">],</span>
+                       <span class="p">[</span> <span class="mf">5.</span><span class="p">,</span>  <span class="mf">5.</span><span class="p">],</span>
+                       <span class="p">[</span> <span class="mf">6.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">],</span>
+                       <span class="p">[</span> <span class="mf">7.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">],</span>
+                       <span class="p">[</span> <span class="mf">8.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">]]</span>
+
+<span class="n">Note</span> <span class="n">that</span> <span class="n">you</span> <span class="n">cannot</span> <span class="n">concat</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span> <span class="n">along</span> <span class="n">dimension</span> <span class="mi">1</span> <span class="n">since</span> <span class="n">dimension</span>
+<span class="mi">0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">the</span> <span class="n">same</span> <span class="k">for</span> <span class="nb">all</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">arrays</span><span class="o">.</span>
+
+<span class="n">concat</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span> <span class="mf">3.</span><span class="p">,</span>  <span class="mf">3.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">,</span>  <span class="mf">6.</span><span class="p">],</span>
+                      <span class="p">[</span> <span class="mf">4.</span><span class="p">,</span>  <span class="mf">4.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">,</span>  <span class="mf">7.</span><span class="p">],</span>
+                      <span class="p">[</span> <span class="mf">5.</span><span class="p">,</span>  <span class="mf">5.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">,</span>  <span class="mf">8.</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/nn/concat.cc:L260
+This function support variable length of positional input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em>[</em><em>]</em>) – List of arrays to concatenate</li>
+<li><strong>dim</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='1'</em>) – the dimension to be concated.</li>
+<li><strong>name</strong> (<em>string</em><em>, </em><em>optional.</em>) – Name of the resulting symbol.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The result symbol.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol">Symbol</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+<dl class="function">
 <dt id="mxnet.symbol.sparse.cos">
 <code class="descclassname">mxnet.symbol.sparse.</code><code class="descname">cos</code><span class="sig-paren">(</span><em>data=None</em>, <em>name=None</em>, <em>attr=None</em>, <em>out=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.symbol.sparse.cos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the element-wise cosine of the input array.</p>
@@ -1711,8 +1786,8 @@ forward_stype option for output storage type. Implemented sparse operations incl
 <li>dot(csr, default) = default</li>
 <li>dot(csr, row_sparse) = default</li>
 <li>dot(default, csr) = csr (CPU only)</li>
-<li>dot(default, csr, forward_stype=’default’) = default (GPU only)</li>
-<li>dot(default, csr, transpose_b=True, forward_stype=’default’) = default (GPU only)</li>
+<li>dot(default, csr, forward_stype=’default’) = default</li>
+<li>dot(default, csr, transpose_b=True, forward_stype=’default’) = default</li>
 </ul>
 <p>If the combination of input storage types and forward_stype does not match any of the
 above patterns, <code class="docutils literal"><span class="pre">dot</span></code> will fallback and generate output with default storage.</p>
@@ -3278,6 +3353,7 @@ as the input array.</p>
 <li><a class="reference internal" href="#symbol-creation-routines">Symbol creation routines</a></li>
 <li><a class="reference internal" href="#symbol-manipulation-routines">Symbol manipulation routines</a><ul>
 <li><a class="reference internal" href="#changing-symbol-storage-type">Changing symbol storage type</a></li>
+<li><a class="reference internal" href="#joining-arrays">Joining arrays</a></li>
 <li><a class="reference internal" href="#indexing-routines">Indexing routines</a></li>
 </ul>
 </li>
