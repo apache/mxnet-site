@@ -227,10 +227,10 @@
 <span class="c1"># coding: utf-8</span>
 <span class="c1"># pylint: disable= arguments-differ</span>
 <span class="sd">"""Custom neural network layers in model_zoo."""</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Concurrent'</span><span class="p">,</span> <span class="s1">'HybridConcurrent'</span><span class="p">,</span> <span class="s1">'Identity'</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Concurrent'</span><span class="p">,</span> <span class="s1">'HybridConcurrent'</span><span class="p">,</span> <span class="s1">'Identity'</span><span class="p">,</span> <span class="s1">'SparseEmbedding'</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">....</span> <span class="k">import</span> <span class="n">nd</span>
-<span class="kn">from</span> <span class="nn">...block</span> <span class="k">import</span> <span class="n">HybridBlock</span>
+<span class="kn">from</span> <span class="nn">...block</span> <span class="k">import</span> <span class="n">HybridBlock</span><span class="p">,</span> <span class="n">Block</span>
 <span class="kn">from</span> <span class="nn">...nn</span> <span class="k">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">HybridSequential</span>
 
 <div class="viewcode-block" id="Concurrent"><a class="viewcode-back" href="../../../../../api/python/gluon/contrib.html#mxnet.gluon.contrib.nn.Concurrent">[docs]</a><span class="k">class</span> <span class="nc">Concurrent</span><span class="p">(</span><span class="n">Sequential</span><span class="p">):</span>
@@ -319,6 +319,47 @@
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="SparseEmbedding"><a class="viewcode-back" href="../../../../../api/python/gluon/contrib.html#mxnet.gluon.contrib.nn.SparseEmbedding">[docs]</a><span class="k">class</span> <span class="nc">SparseEmbedding</span><span class="p">(</span><span class="n">Block</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">"""Turns non-negative integers (indexes/tokens) into dense vectors</span>
+<span class="sd">    of fixed size. eg. [4, 20] -> [[0.25, 0.1], [0.6, -0.2]]</span>
+
+<span class="sd">    This SparseBlock is designed for distributed training with extremely large</span>
+<span class="sd">    input dimension. Both weight and gradient w.r.t. weight are `RowSparseNDArray`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_dim : int</span>
+<span class="sd">        Size of the vocabulary, i.e. maximum integer index + 1.</span>
+<span class="sd">    output_dim : int</span>
+<span class="sd">        Dimension of the dense embedding.</span>
+<span class="sd">    dtype : str or np.dtype, default 'float32'</span>
+<span class="sd">        Data type of output embeddings.</span>
+<span class="sd">    weight_initializer : Initializer</span>
+<span class="sd">        Initializer for the `embeddings` matrix.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">        - **data**: (N-1)-D tensor with shape: `(x1, x2, ..., xN-1)`.</span>
+<span class="sd">    Output:</span>
+<span class="sd">        - **out**: N-D tensor with shape: `(x1, x2, ..., xN-1, output_dim)`.</span>
+<span class="sd">    """</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">'float32'</span><span class="p">,</span>
+                 <span class="n">weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SparseEmbedding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'input_dim'</span><span class="p">:</span> <span class="n">input_dim</span><span class="p">,</span> <span class="s1">'output_dim'</span><span class="p">:</span> <span class="n">output_dim</span><span class="p">,</span>
+                        <span class="s1">'dtype'</span><span class="p">:</span> <span class="n">dtype</span><span class="p">,</span> <span class="s1">'sparse_grad'</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'weight'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">),</span>
+                                      <span class="n">init</span><span class="o">=</span><span class="n">weight_initializer</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+                                      <span class="n">grad_stype</span><span class="o">=</span><span class="s1">'row_sparse'</span><span class="p">,</span> <span class="n">stype</span><span class="o">=</span><span class="s1">'row_sparse'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">row_sparse_data</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'fwd'</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{block_name}</span><span class="s1">(</span><span class="si">{input_dim}</span><span class="s1"> -> </span><span class="si">{output_dim}</span><span class="s1">, </span><span class="si">{dtype}</span><span class="s1">)'</span>
+        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs</span><span class="p">)</span></div>
 </pre></div>
 </div>
 </div>

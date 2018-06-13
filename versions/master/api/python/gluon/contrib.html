@@ -291,6 +291,9 @@ so that feature contributors can receive feedback.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.contrib.nn.Identity" title="mxnet.gluon.contrib.nn.Identity"><code class="xref py py-obj docutils literal"><span class="pre">Identity</span></code></a></td>
 <td>Block that passes through the input directly.</td>
 </tr>
+<tr class="row-even"><td><a class="reference internal" href="#mxnet.gluon.contrib.nn.SparseEmbedding" title="mxnet.gluon.contrib.nn.SparseEmbedding"><code class="xref py py-obj docutils literal"><span class="pre">SparseEmbedding</span></code></a></td>
+<td>Turns non-negative integers (indexes/tokens) into dense vectors of fixed size.</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -331,6 +334,9 @@ so that feature contributors can receive feedback.</p>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#mxnet.gluon.contrib.rnn.Conv3DGRUCell" title="mxnet.gluon.contrib.rnn.Conv3DGRUCell"><code class="xref py py-obj docutils literal"><span class="pre">Conv3DGRUCell</span></code></a></td>
 <td>3D Convolutional Gated Rectified Unit (GRU) network cell.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#mxnet.gluon.contrib.rnn.LSTMPCell" title="mxnet.gluon.contrib.rnn.LSTMPCell"><code class="xref py py-obj docutils literal"><span class="pre">LSTMPCell</span></code></a></td>
+<td>Long-Short Term Memory Projected (LSTMP) network cell.</td>
 </tr>
 </tbody>
 </table>
@@ -436,6 +442,36 @@ block for residual connection.</p>
     <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Identity</span><span class="p">())</span>
 </pre></div>
 </div>
+</dd></dl>
+<dl class="class">
+<dt id="mxnet.gluon.contrib.nn.SparseEmbedding">
+<em class="property">class </em><code class="descclassname">mxnet.gluon.contrib.nn.</code><code class="descname">SparseEmbedding</code><span class="sig-paren">(</span><em>input_dim</em>, <em>output_dim</em>, <em>dtype='float32'</em>, <em>weight_initializer=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/contrib/nn/basic_layers.html#SparseEmbedding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.contrib.nn.SparseEmbedding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns non-negative integers (indexes/tokens) into dense vectors
+of fixed size. eg. [4, 20] -> [[0.25, 0.1], [0.6, -0.2]]</p>
+<p>This SparseBlock is designed for distributed training with extremely large
+input dimension. Both weight and gradient w.r.t. weight are <cite>RowSparseNDArray</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name"/>
+<col class="field-body"/>
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_dim</strong> (<em>int</em>) – Size of the vocabulary, i.e. maximum integer index + 1.</li>
+<li><strong>output_dim</strong> (<em>int</em>) – Dimension of the dense embedding.</li>
+<li><strong>dtype</strong> (<em>str</em><em> or </em><em>np.dtype</em><em>, </em><em>default 'float32'</em>) – Data type of output embeddings.</li>
+<li><strong>weight_initializer</strong> (<a class="reference internal" href="../optimization/optimization.html#mxnet.initializer.Initializer" title="mxnet.initializer.Initializer"><em>Initializer</em></a>) – Initializer for the <cite>embeddings</cite> matrix.</li>
+<li><strong>Inputs</strong> – <ul>
+<li><strong>data</strong>: (N-1)-D tensor with shape: <cite>(x1, x2, ..., xN-1)</cite>.</li>
+</ul>
+</li>
+<li><strong>Output</strong> – <ul>
+<li><strong>out</strong>: N-D tensor with shape: <cite>(x1, x2, ..., xN-1, output_dim)</cite>.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 <span class="target" id="module-mxnet.gluon.contrib.rnn"></span><p>Contrib recurrent neural network module.</p>
 <dl class="class">

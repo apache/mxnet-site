@@ -355,7 +355,8 @@
 <span class="sd">        - `get_outputs()`: get outputs of the previous forward operation.</span>
 <span class="sd">        - `get_input_grads()`: get the gradients with respect to the inputs computed</span>
 <span class="sd">          in the previous backward operation.</span>
-<span class="sd">        - `update_metric(metric, labels)`: update performance metric for the previous forward</span>
+<span class="sd">        - `update_metric(metric, labels, pre_sliced=False)`: update performance metric</span>
+<span class="sd">          for the previous forward</span>
 <span class="sd">          computed results.</span>
 
 <span class="sd">    - other properties (mostly for backward compatibility)</span>
@@ -458,7 +459,10 @@
                 <span class="k">break</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">eval_batch</span><span class="p">,</span> <span class="n">sparse_row_id_fn</span><span class="o">=</span><span class="n">sparse_row_id_fn</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">eval_batch</span><span class="p">,</span> <span class="n">is_train</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">update_metric</span><span class="p">(</span><span class="n">eval_metric</span><span class="p">,</span> <span class="n">eval_batch</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eval_batch</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_metric</span><span class="p">(</span><span class="n">eval_metric</span><span class="p">,</span> <span class="p">[</span><span class="n">eb</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">eb</span> <span class="ow">in</span> <span class="n">eval_batch</span><span class="p">],</span> <span class="n">pre_sliced</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_metric</span><span class="p">(</span><span class="n">eval_metric</span><span class="p">,</span> <span class="n">eval_batch</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">batch_end_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">batch_end_params</span> <span class="o">=</span> <span class="n">BatchEndParam</span><span class="p">(</span><span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span>
@@ -726,7 +730,12 @@
                 <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
                     <span class="n">end_of_batch</span> <span class="o">=</span> <span class="kc">True</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_metric</span><span class="p">(</span><span class="n">eval_metric</span><span class="p">,</span> <span class="n">data_batch</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_batch</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_metric</span><span class="p">(</span><span class="n">eval_metric</span><span class="p">,</span>
+                                       <span class="p">[</span><span class="n">db</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">db</span> <span class="ow">in</span> <span class="n">data_batch</span><span class="p">],</span>
+                                       <span class="n">pre_sliced</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_metric</span><span class="p">(</span><span class="n">eval_metric</span><span class="p">,</span> <span class="n">data_batch</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">monitor</span><span class="o">.</span><span class="n">toc_print</span><span class="p">()</span>
@@ -1152,7 +1161,7 @@
 <span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="BaseModule.update_metric"><a class="viewcode-back" href="../../../api/python/module/module.html#mxnet.module.BaseModule.update_metric">[docs]</a>    <span class="k">def</span> <span class="nf">update_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eval_metric</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseModule.update_metric"><a class="viewcode-back" href="../../../api/python/module/module.html#mxnet.module.BaseModule.update_metric">[docs]</a>    <span class="k">def</span> <span class="nf">update_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eval_metric</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">pre_sliced</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">"""Evaluates and accumulates evaluation metric on outputs of the last forward</span>
 <span class="sd">        computation.</span>
 
@@ -1160,8 +1169,10 @@
 <span class="sd">        ----------</span>
 <span class="sd">        eval_metric : EvalMetric</span>
 <span class="sd">            Evaluation metric to use.</span>
-<span class="sd">        labels : list of NDArray</span>
-<span class="sd">            Typically `data_batch.label`.</span>
+<span class="sd">        labels : list of NDArray if `pre_sliced` parameter is set to `False`,</span>
+<span class="sd">            list of lists of NDArray otherwise. Typically `data_batch.label`.</span>
+<span class="sd">        pre_sliced: bool</span>
+<span class="sd">            Whether the labels are already sliced per device (default: False).</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>

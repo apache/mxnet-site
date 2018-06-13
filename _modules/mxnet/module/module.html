@@ -799,7 +799,19 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_initialized</span>
 
         <span class="n">curr_data_shapes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_shapes</span><span class="p">)</span>
-        <span class="n">new_data_shapes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_batch</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_batch</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">data_batch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Encountered empty data batch"</span>
+            <span class="n">new_data_shapes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">)):</span>
+                <span class="n">shape</span> <span class="o">=</span> <span class="n">data_batch</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+                <span class="k">for</span> <span class="n">db</span> <span class="ow">in</span> <span class="n">data_batch</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">shape</span> <span class="o">==</span> <span class="n">db</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> \
+                        <span class="s2">"All data batches in a list need to have the same shape"</span>
+                <span class="n">new_batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_batch</span><span class="p">)</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">new_data_shapes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">new_batch_size</span><span class="p">,)</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">new_data_shapes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new_data_shapes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_data_shapes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_batch</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">curr_data_shapes</span> <span class="o">!=</span> <span class="n">new_data_shapes</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data_batch</span><span class="p">,</span> <span class="s2">"provide_data"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data_batch</span><span class="o">.</span><span class="n">provide_data</span><span class="p">:</span>
@@ -950,7 +962,7 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_initialized</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exec_group</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Module.update_metric"><a class="viewcode-back" href="../../../api/python/module/module.html#mxnet.module.Module.update_metric">[docs]</a>    <span class="k">def</span> <span class="nf">update_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eval_metric</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<div class="viewcode-block" id="Module.update_metric"><a class="viewcode-back" href="../../../api/python/module/module.html#mxnet.module.Module.update_metric">[docs]</a>    <span class="k">def</span> <span class="nf">update_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eval_metric</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">pre_sliced</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">"""Evaluates and accumulates evaluation metric on outputs of the last forward computation.</span>
 
 <span class="sd">        See Also</span>
@@ -960,10 +972,13 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        eval_metric : EvalMetric</span>
-<span class="sd">        labels : list of NDArray</span>
-<span class="sd">            Typically ``data_batch.label``.</span>
+<span class="sd">            Evaluation metric to use.</span>
+<span class="sd">        labels : list of NDArray if `pre_sliced` parameter is set to `False`,</span>
+<span class="sd">            list of lists of NDArray otherwise. Typically `data_batch.label`.</span>
+<span class="sd">        pre_sliced: bool</span>
+<span class="sd">            Whether the labels are already sliced per device (default: False).</span>
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_exec_group</span><span class="o">.</span><span class="n">update_metric</span><span class="p">(</span><span class="n">eval_metric</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_exec_group</span><span class="o">.</span><span class="n">update_metric</span><span class="p">(</span><span class="n">eval_metric</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">pre_sliced</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_sync_params_from_devices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Synchronizes parameters from devices to CPU. This function should be called after</span>
