@@ -100,7 +100,7 @@
 </ul>
 </span>
 <a class="main-nav-link" href="http://discuss.mxnet.io">Discuss</a>
-<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.12.1)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=http://34.201.8.176/>docs_fork_lite_v2</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/1.2.1/index.html>1.2.1</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/1.1.0/index.html>1.1.0</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/1.0.0/index.html>1.0.0</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/0.12.1/index.html>0.12.1</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/0.11.0/index.html>0.11.0</a></li></ul></span></nav>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Versions(0.12.1)<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a class="main-nav-link" href=http://34.201.8.176/>jenkins_timeout</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/1.2.1/index.html>1.2.1</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/1.1.0/index.html>1.1.0</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/1.0.0/index.html>1.0.0</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/0.12.1/index.html>0.12.1</a></li><li><a class="main-nav-link" href=http://34.201.8.176/versions/0.11.0/index.html>0.11.0</a></li></ul></span></nav>
 <script> function getRootPath(){ return "../../../" } </script>
 <div class="burgerIcon dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
@@ -144,7 +144,7 @@
 </li>
 <li><a href="../../../architecture/index.html">Architecture</a></li>
 <li><a class="main-nav-link" href="https://github.com/dmlc/mxnet">Github</a></li>
-<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.12.1)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=http://34.201.8.176/>docs_fork_lite_v2</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/1.2.1/index.html>1.2.1</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/1.1.0/index.html>1.1.0</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/1.0.0/index.html>1.0.0</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/0.12.1/index.html>0.12.1</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/0.11.0/index.html>0.11.0</a></li></ul></li></ul>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">Versions(0.12.1)</a><ul class="dropdown-menu"><li><a tabindex="-1" href=http://34.201.8.176/>jenkins_timeout</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/1.2.1/index.html>1.2.1</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/1.1.0/index.html>1.1.0</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/1.0.0/index.html>1.0.0</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/0.12.1/index.html>0.12.1</a></li><li><a tabindex="-1" href=http://34.201.8.176/versions/0.11.0/index.html>0.11.0</a></li></ul></li></ul>
 </div>
 <div class="plusIcon dropdown">
 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
@@ -935,6 +935,18 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'values must be array like object'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">source_array</span>
 
+<span class="k">def</span> <span class="nf">_prepare_default_dtype</span><span class="p">(</span><span class="n">src_array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">):</span>
+    <span class="sd">"""Prepare the value of dtype if `dtype` is None. If `src_array` is an NDArray, numpy.ndarray</span>
+<span class="sd">    or scipy.sparse.csr.csr_matrix, return src_array.dtype. float32 is returned otherwise."""</span>
+    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_array</span><span class="p">,</span> <span class="p">(</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">src_array</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="k">elif</span> <span class="n">spsp</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">src_array</span><span class="p">,</span> <span class="n">spsp</span><span class="o">.</span><span class="n">csr</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">):</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">src_array</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">mx_real_t</span>
+    <span class="k">return</span> <span class="n">dtype</span>
+
 <span class="k">def</span> <span class="nf">_check_shape</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
     <span class="sd">"""check s1 == s2 if both are not None"""</span>
     <span class="k">if</span> <span class="n">s1</span> <span class="ow">and</span> <span class="n">s2</span> <span class="ow">and</span> <span class="n">s1</span> <span class="o">!=</span> <span class="n">s2</span><span class="p">:</span>
@@ -957,12 +969,11 @@
 
 <span class="sd">    - csr_matrix(S)</span>
 <span class="sd">        to construct a CSRNDArray with a sparse 2D array ``S``</span>
-<span class="sd">            -  **S** (*CSRNDArray or scipy.sparse.csr_matrix*) - A sparse matrix.</span>
+<span class="sd">            -  **S** (*CSRNDArray or scipy.sparse.csr.csr_matrix*) - A sparse matrix.</span>
 <span class="sd">            - **ctx** (*Context, optional*) - Device context \</span>
 <span class="sd">            (default is the current default context).</span>
 <span class="sd">            - **dtype** (*str or numpy.dtype, optional*) - The data type of the output array. \</span>
-<span class="sd">            The default dtype is ``D.dtype`` if ``D`` is an NDArray or numpy.ndarray, \</span>
-<span class="sd">            float32 otherwise.</span>
+<span class="sd">            The default dtype is ``S.dtype``.</span>
 
 <span class="sd">    - csr_matrix((M, N))</span>
 <span class="sd">        to construct an empty CSRNDArray with shape ``(M, N)``</span>
@@ -992,19 +1003,20 @@
 <span class="sd">            - **ctx** (*Context, optional*) - Device context \</span>
 <span class="sd">            (default is the current default context).</span>
 <span class="sd">            - **dtype** (*str or numpy.dtype, optional*) - The data type of the output array. \</span>
-<span class="sd">            The default dtype is float32.</span>
+<span class="sd">            The default dtype is ``data.dtype`` if ``data`` is an NDArray or numpy.ndarray, \</span>
+<span class="sd">            float32 otherwise.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    arg1: tuple of int, tuple of array_like, array_like, CSRNDArray or scipy.sparse.csr_matrix</span>
+<span class="sd">    arg1: NDArray, CSRNDArray, numpy.ndarray, scipy.sparse.csr.csr_matrix, tuple of int or tuple \</span>
+<span class="sd">    of array_like</span>
 <span class="sd">        The argument to help instantiate the csr matrix. See above for further details.</span>
-<span class="sd">    shape : tuple of int</span>
+<span class="sd">    shape : tuple of int, optional</span>
 <span class="sd">        The shape of the csr matrix.</span>
 <span class="sd">    ctx: Context, optional</span>
 <span class="sd">        Device context (default is the current default context).</span>
 <span class="sd">    dtype: str or numpy.dtype, optional</span>
-<span class="sd">        The data type of the output array. The default dtype is ``values.dtype``</span>
-<span class="sd">        if `values` is an `NDArray`, `float32` otherwise.</span>
+<span class="sd">        The data type of the output array.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1047,7 +1059,14 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unexpected input type: RowSparseNDArray"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># construct a csr matrix from a dense one</span>
-            <span class="n">dns</span> <span class="o">=</span> <span class="n">_array</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="c1"># prepare default ctx and dtype since mx.nd.array doesn't use default values</span>
+            <span class="c1"># based on source_array</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">_prepare_default_dtype</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+            <span class="c1"># create dns array with provided dtype. ctx is not passed since copy across</span>
+            <span class="c1"># ctx requires dtype to be the same</span>
+            <span class="n">dns</span> <span class="o">=</span> <span class="n">_array</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dns</span><span class="o">.</span><span class="n">context</span> <span class="o">!=</span> <span class="n">ctx</span><span class="p">:</span>
+                <span class="n">dns</span> <span class="o">=</span> <span class="n">dns</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
             <span class="n">_check_shape</span><span class="p">(</span><span class="n">dns</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">dns</span><span class="o">.</span><span class="n">tostype</span><span class="p">(</span><span class="s1">'csr'</span><span class="p">)</span></div>
 
@@ -1056,10 +1075,9 @@
     <span class="sd">"""Create a `CSRNDArray` based on data, indices and indptr"""</span>
     <span class="n">storage_type</span> <span class="o">=</span> <span class="s1">'csr'</span>
     <span class="c1"># context</span>
-    <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
     <span class="c1"># types</span>
-    <span class="n">dtype</span> <span class="o">=</span> <span class="n">mx_real_t</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dtype</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">_prepare_default_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
     <span class="n">indptr_type</span> <span class="o">=</span> <span class="n">_STORAGE_AUX_TYPES</span><span class="p">[</span><span class="n">storage_type</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">indptr_type</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">indptr_type</span>
     <span class="n">indices_type</span> <span class="o">=</span> <span class="n">_STORAGE_AUX_TYPES</span><span class="p">[</span><span class="n">storage_type</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">indices_type</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">indices_type</span>
     <span class="c1"># prepare src array and types</span>
@@ -1114,8 +1132,7 @@
 <span class="sd">            - **ctx** (*Context, optional*) - Device context \</span>
 <span class="sd">            (default is the current default context).</span>
 <span class="sd">            - **dtype** (*str or numpy.dtype, optional*) - The data type of the output array. \</span>
-<span class="sd">            The default dtype is ``D.dtype`` if ``D`` is an NDArray or numpy.ndarray, \</span>
-<span class="sd">            float32 otherwise.</span>
+<span class="sd">            The default dtype is ``S.dtype``.</span>
 
 <span class="sd">    - row_sparse_array((D0, D1 .. Dn))</span>
 <span class="sd">        to construct an empty RowSparseNDArray with shape ``(D0, D1, ... Dn)``</span>
@@ -1139,20 +1156,21 @@
 <span class="sd">            stores the row index for each row slice with non-zero elements.</span>
 <span class="sd">            - **shape** (*tuple of int, optional*) - The shape of the array. The default \</span>
 <span class="sd">            shape is inferred from the indices and indptr arrays.</span>
+<span class="sd">            - **ctx** (*Context, optional*) - Device context \</span>
+<span class="sd">            (default is the current default context).</span>
 <span class="sd">            - **dtype** (*str or numpy.dtype, optional*) - The data type of the output array. \</span>
 <span class="sd">            The default dtype is float32.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    arg1: tuple of int, tuple of array_like, array_like or RowSparseNDArray</span>
+<span class="sd">    arg1: NDArray, numpy.ndarray, RowSparseNDArray, tuple of int or tuple of array_like</span>
 <span class="sd">        The argument to help instantiate the row sparse ndarray. See above for further details.</span>
-<span class="sd">    shape : tuple of int</span>
+<span class="sd">    shape : tuple of int, optional</span>
 <span class="sd">        The shape of the row sparse ndarray.</span>
 <span class="sd">    ctx : Context, optional</span>
 <span class="sd">        Device context (default is the current default context).</span>
 <span class="sd">    dtype : str or numpy.dtype, optional</span>
-<span class="sd">        The data type of the output array. The default dtype is ``data.dtype``</span>
-<span class="sd">        if `data` is an `NDArray`, `float32` otherwise.</span>
+<span class="sd">        The data type of the output array.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1203,7 +1221,14 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Unexpected input type: CSRNDArray"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># construct a csr matrix from a dense one</span>
-            <span class="n">dns</span> <span class="o">=</span> <span class="n">_array</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="c1"># prepare default dtype since mx.nd.array doesn't use default values</span>
+            <span class="c1"># based on source_array</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">_prepare_default_dtype</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+            <span class="c1"># create dns array with provided dtype. ctx is not passed since copy across</span>
+            <span class="c1"># ctx requires dtype to be the same</span>
+            <span class="n">dns</span> <span class="o">=</span> <span class="n">_array</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dns</span><span class="o">.</span><span class="n">context</span> <span class="o">!=</span> <span class="n">ctx</span><span class="p">:</span>
+                <span class="n">dns</span> <span class="o">=</span> <span class="n">dns</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
             <span class="n">_check_shape</span><span class="p">(</span><span class="n">dns</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">dns</span><span class="o">.</span><span class="n">tostype</span><span class="p">(</span><span class="s1">'row_sparse'</span><span class="p">)</span></div>
 
@@ -1212,10 +1237,9 @@
     <span class="sd">"""Create a `RowSparseNDArray` based on data and indices"""</span>
     <span class="n">storage_type</span> <span class="o">=</span> <span class="s1">'row_sparse'</span>
     <span class="c1"># context</span>
-    <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
     <span class="c1"># types</span>
-    <span class="n">dtype</span> <span class="o">=</span> <span class="n">mx_real_t</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dtype</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">_prepare_default_dtype</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
     <span class="n">indices_type</span> <span class="o">=</span> <span class="n">_STORAGE_AUX_TYPES</span><span class="p">[</span><span class="n">storage_type</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">indices_type</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">indices_type</span>
     <span class="c1"># prepare src array and types</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">_prepare_src_array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
@@ -1230,7 +1254,9 @@
         <span class="n">indices</span> <span class="o">=</span> <span class="n">_array</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">indices_type</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">num_indices</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">dim0</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">num_indices</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">indices</span><span class="p">[</span><span class="n">num_indices</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asscalar</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">num_indices</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'invalid shape'</span><span class="p">)</span>
+        <span class="n">dim0</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">num_indices</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">asscalar</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">dim0</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
     <span class="c1"># verify shapes</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="ow">or</span> <span class="n">indices</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1335,10 +1361,12 @@
 <span class="sd">    source_array : RowSparseNDArray, CSRNDArray or scipy.sparse.csr.csr_matrix</span>
 <span class="sd">        The source sparse array</span>
 <span class="sd">    ctx : Context, optional</span>
-<span class="sd">        Device context (default is the current default context).</span>
+<span class="sd">        The default context is ``source_array.context`` if ``source_array`` is an NDArray. \</span>
+<span class="sd">        The current default context otherwise.</span>
 <span class="sd">    dtype : str or numpy.dtype, optional</span>
 <span class="sd">        The data type of the output array. The default dtype is ``source_array.dtype``</span>
-<span class="sd">        if `source_array` is an `NDArray`, `float32` otherwise.</span>
+<span class="sd">        if `source_array` is an `NDArray`, `numpy.ndarray` or `scipy.sparse.csr.csr_matrix`, \</span>
+<span class="sd">        `float32` otherwise.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1356,19 +1384,29 @@
 <span class="sd">    >>> mx.nd.sparse.array(mx.nd.sparse.zeros('row_sparse', (3, 2)))</span>
 <span class="sd">    <RowSparseNDArray 3x2 @cpu(0)></span>
 <span class="sd">    """</span>
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">.</span><span class="n">default_ctx</span> <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">ctx</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source_array</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">):</span>
         <span class="k">assert</span><span class="p">(</span><span class="n">source_array</span><span class="o">.</span><span class="n">stype</span> <span class="o">!=</span> <span class="s1">'default'</span><span class="p">),</span> \
                <span class="s2">"Please use `tostype` to create RowSparseNDArray or CSRNDArray from an NDArray"</span>
-        <span class="n">dtype</span> <span class="o">=</span> <span class="n">source_array</span><span class="o">.</span><span class="n">dtype</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dtype</span>
-        <span class="n">arr</span> <span class="o">=</span> <span class="n">empty</span><span class="p">(</span><span class="n">source_array</span><span class="o">.</span><span class="n">stype</span><span class="p">,</span> <span class="n">source_array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="n">arr</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">source_array</span>
+        <span class="c1"># prepare dtype and ctx based on source_array, if not provided</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">_prepare_default_dtype</span><span class="p">(</span><span class="n">source_array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+        <span class="c1"># if both dtype and ctx are different from source_array, we cannot copy directly</span>
+        <span class="k">if</span> <span class="n">source_array</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">dtype</span> <span class="ow">and</span> <span class="n">source_array</span><span class="o">.</span><span class="n">context</span> <span class="o">!=</span> <span class="n">ctx</span><span class="p">:</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">empty</span><span class="p">(</span><span class="n">source_array</span><span class="o">.</span><span class="n">stype</span><span class="p">,</span> <span class="n">source_array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="n">arr</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">source_array</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="n">empty</span><span class="p">(</span><span class="n">source_array</span><span class="o">.</span><span class="n">stype</span><span class="p">,</span> <span class="n">source_array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
+            <span class="n">arr</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">source_array</span>
         <span class="k">return</span> <span class="n">arr</span>
     <span class="k">elif</span> <span class="n">spsp</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source_array</span><span class="p">,</span> <span class="n">spsp</span><span class="o">.</span><span class="n">csr</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">):</span>
         <span class="c1"># TODO(haibin) implement `_sync_copy_from` with scipy csr object to reduce a copy</span>
         <span class="c1"># preprocess scipy csr to canonical form</span>
         <span class="n">csr</span> <span class="o">=</span> <span class="n">source_array</span><span class="o">.</span><span class="n">sorted_indices</span><span class="p">()</span>
         <span class="n">csr</span><span class="o">.</span><span class="n">sum_duplicates</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">csr_matrix</span><span class="p">((</span><span class="n">csr</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">csr</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">csr</span><span class="o">.</span><span class="n">indptr</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="n">csr</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">_prepare_default_dtype</span><span class="p">(</span><span class="n">source_array</span><span class="p">,</span> <span class="n">dtype</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">csr_matrix</span><span class="p">((</span><span class="n">csr</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">csr</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">csr</span><span class="o">.</span><span class="n">indptr</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="n">csr</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> \
+                          <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source_array</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Please use mx.nd.array to create an NDArray with source_array of type "</span><span class="p">,</span>
                          <span class="nb">type</span><span class="p">(</span><span class="n">source_array</span><span class="p">))</span>

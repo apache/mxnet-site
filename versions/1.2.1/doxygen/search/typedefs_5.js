@@ -9,6 +9,7 @@ var searchData=
   ['fneedrequantize',['FNeedRequantize',['../namespacemxnet.html#a7f7c271f6d03ee358eb9e66486e41045',1,'mxnet']]],
   ['fquantizedop',['FQuantizedOp',['../namespacemxnet.html#ac4a55ce92442f122a1a0e6ae8d134f10',1,'mxnet']]],
   ['fresourcerequest',['FResourceRequest',['../namespacemxnet.html#afaa687cbca9e992614be285711c1d72d',1,'mxnet']]],
+  ['fresourcerequestex',['FResourceRequestEx',['../namespacemxnet.html#a45b0a850c44c45609adc320b04c7ac7f',1,'mxnet']]],
   ['fstatefulcompute',['FStatefulCompute',['../namespacemxnet.html#a9097a269dd76d833c014149ff3eaab9b',1,'mxnet']]],
   ['fstatefulcomputeex',['FStatefulComputeEx',['../namespacemxnet.html#ab12f1853179b1456152a563edff844a9',1,'mxnet']]],
   ['ftype',['FType',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4_1_1Impl.html#a7290f773b036650e23afef7dfc59e69a',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Impl']]],

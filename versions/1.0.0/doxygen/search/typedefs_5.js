@@ -9,5 +9,6 @@ var searchData=
   ['fresourcerequest',['FResourceRequest',['../namespacemxnet.html#afaa687cbca9e992614be285711c1d72d',1,'mxnet']]],
   ['fstatefulcompute',['FStatefulCompute',['../namespacemxnet.html#a9097a269dd76d833c014149ff3eaab9b',1,'mxnet']]],
   ['fstatefulcomputeex',['FStatefulComputeEx',['../namespacemxnet.html#ab12f1853179b1456152a563edff844a9',1,'mxnet']]],
+  ['ftype',['FType',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4_1_1Impl.html#a7290f773b036650e23afef7dfc59e69a',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Impl']]],
   ['functionhandle',['FunctionHandle',['../c__api_8h.html#a197f06e1d873d34572b679532c268d35',1,'c_api.h']]]
 ];

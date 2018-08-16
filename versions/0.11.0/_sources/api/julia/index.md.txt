@@ -1,5 +1,7 @@
-MXNet - Julia API
-=================
+# MXNet - Julia API
+
+See the [MXNet Julia Reference Manual](https://media.readthedocs.org/pdf/mxnet-test/latest/mxnet-test.pdf).
+
 MXNet supports the Julia programming language. The MXNet Julia package brings flexible and efficient GPU
 computing and the state-of-art deep learning to Julia.
 
@@ -10,4 +12,5 @@ computing and the state-of-art deep learning to Julia.
 
 &nbsp;
 
+## Julia API Reference
 Julia documents are available at [http://dmlc.ml/MXNet.jl/latest/](http://dmlc.ml/MXNet.jl/latest/).

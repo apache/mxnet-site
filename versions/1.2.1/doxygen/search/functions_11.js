@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['uniform',['uniform',['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01cpu_00_01DType_01_4_1_1Impl.html#ac408747c825e9fa68523bd53c22f4720',1,'mxnet::common::random::RandGenerator&lt; cpu, DType &gt;::Impl::uniform()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01DType_01_4_1_1Impl.html#a139a4902915fcdc052d71d9c33dda23b',1,'mxnet::common::random::RandGenerator&lt; gpu, DType &gt;::Impl::uniform()'],['../classmxnet_1_1common_1_1random_1_1RandGenerator_3_01gpu_00_01double_01_4_1_1Impl.html#a85a67d18b9e78cdb1c03346583bc9487',1,'mxnet::common::random::RandGenerator&lt; gpu, double &gt;::Impl::uniform()']]]
+  ['tblob',['TBlob',['../classmxnet_1_1TBlob.html#adcdc6de67f81454f0a142bfc9fd38c9e',1,'mxnet::TBlob::TBlob(void)'],['../classmxnet_1_1TBlob.html#af89975f6a6de34624a1ee7fbc43df8fa',1,'mxnet::TBlob::TBlob(DType *dptr, const TShape &amp;shape, int dev_mask, int dev_id=-1)'],['../classmxnet_1_1TBlob.html#a660f447fbe40782e1db6a993ab1e37b4',1,'mxnet::TBlob::TBlob(void *dptr, const TShape &amp;shape, int dev_mask, int type_flag, int dev_id=-1)'],['../classmxnet_1_1TBlob.html#aae92a89345aad79c8c3b451b9e3b84a5',1,'mxnet::TBlob::TBlob(const mshadow::Tensor&lt; Device, dim, DType &gt; &amp;src)']]],
+  ['type',['type',['../classmxnet_1_1KVStore.html#a722b2150dbf50d528fce62307809f949',1,'mxnet::KVStore']]],
+  ['typestring',['TypeString',['../classmxnet_1_1OperatorProperty.html#ac6b7df90c0285a1823b463c21e926698',1,'mxnet::OperatorProperty']]]
 ];

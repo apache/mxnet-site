@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['agnodeentry',['AGNodeEntry',['../classmxnet_1_1autograd_1_1AGNodeEntry.html',1,'mxnet::autograd']]]
+  ['aginfo',['AGInfo',['../classmxnet_1_1Imperative_1_1AGInfo.html',1,'mxnet::Imperative']]]
 ];
