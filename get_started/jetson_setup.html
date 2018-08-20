@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Jetson Setup | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Jetson Setup" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.incubator.apache.org/get_started/jetson_setup" />
+<meta property="og:url" content="https://mxnet.incubator.apache.org/get_started/jetson_setup" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"description":"A flexible and efficient library for deep learning.","@type":"WebPage","headline":"Jetson Setup","url":"https://mxnet.incubator.apache.org/get_started/jetson_setup","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<script src="https://medium-widget.pixelpoint.io/widget.js"></script>
+  <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.incubator.apache.org/feed.xml" title="Apache MXNet" /><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <script src="/assets/js/clipboard.js"></script>
+  <script src="/assets/js/copycode.js"></script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/"><img
+            src="/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/get_started">Get Started</a>
+        <a class="page-link" href="/blog">Blog</a>
+        <a class="page-link" href="/features">Features</a>
+        <a class="page-link" href="/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Jetson Setup</h1>
+        <h3></h3><a style="float:left; margin-top:20px" href="/get_started" class="btn btn-action">Get Started
+            <span class="span-accented">›</span></a></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="install-mxnet-on-a-jetson">Install MXNet on a Jetson</h1>
+
+<p>MXNet supports the Ubuntu Arch64 based operating system so you can run MXNet on NVIDIA Jetson Devices, such as the <a href="http://www.nvidia.com/object/embedded-systems-dev-kits-modules.html">TX2</a> or <a href="https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit">Nano</a>.</p>
+
+<p>These instructions will walk through how to build MXNet and install MXNet&#39;s Python language binding.</p>
+
+<p>For the purposes of this install guide we will assume that CUDA is already installed on your Jetson device. The disk image provided by NVIDIA&#39;s getting started guides will have the Jetson toolkit preinstalled, and this also includes CUDA. You should double check what versions are installed and which version you plan to use.</p>
+
+<p>After installing the prerequisites, you have several options for installing MXNet:
+1. Use a Jetson MXNet pip wheel for Python development and use a precompiled Jetson MXNet binary.
+3. Build MXNet from source
+   * On a faster Linux computer using cross-compilation
+   * On the Jetson itself (very slow and not recommended)</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>To build from source or to use the Python wheel, you must install the following dependencies on your Jetson.
+Cross-compiling will require dependencies installed on that machine as well.</p>
+
+<h3 id="python-dependencies">Python Dependencies</h3>
+
+<p>To use the Python API you need the following dependencies:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nt">-y</span> <span class="nb">install</span> <span class="se">\</span>
+                        build-essential <span class="se">\</span>
+                        git <span class="se">\</span>
+                        graphviz <span class="se">\</span>
+                        libatlas-base-dev <span class="se">\</span>
+                        libopencv-dev <span class="se">\</span>
+                        python-pip
+
+<span class="nb">sudo </span>pip <span class="nb">install</span> <span class="nt">--upgrade</span> <span class="se">\</span>
+                        pip <span class="se">\</span>
+                        setuptools
+
+<span class="nb">sudo </span>pip <span class="nb">install</span> <span class="se">\</span>
+                        <span class="nv">graphviz</span><span class="o">==</span>0.8.4 <span class="se">\</span>
+                        jupyter <span class="se">\</span>
+                        <span class="nv">numpy</span><span class="o">==</span>1.15.2
+</code></pre></div>
+<p>If you plan to cross-compile you will need to install these dependencies on that computer as well.
+If you get an error about something being busy, you can restart the Nano and this error will go away. You can then continue installation of the prerequisites.</p>
+
+<h3 id="download-the-source-setup-some-environment-variables">Download the source &amp; setup some environment variables:</h3>
+
+<p>These steps are optional, but some of the following instructions expect MXNet source files and the <code>MXNET_HOME</code> environment variable. Also, CUDA commands will not work out of the box without updating your path.</p>
+
+<p>Clone the MXNet source code repository using the following <code>git</code> command in your home directory:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">git clone <span class="nt">--recursive</span> https://github.com/apache/incubator-mxnet.git mxnet
+</code></pre></div>
+<p>Setup your environment variables for MXNet and CUDA in your <code>.profile</code> file in your home directory.
+Add the following to the file.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/cuda/bin:<span class="nv">$PATH</span>
+<span class="nb">export </span><span class="nv">MXNET_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/mxnet/
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$MXNET_HOME</span>/python:<span class="nv">$PYTHONPATH</span>
+</code></pre></div>
+<p>You can then apply this change immediately with the following:
+<code>bash
+source .profile
+</code></p>
+
+<p><strong>Note:</strong> Change the <code>~/.profile</code> steps according to how you prefer to use your shell. Otherwise, your environment variables will be gone after you logout.</p>
+
+<h3 id="configure-cuda">Configure CUDA</h3>
+
+<p>You can check to see what version of CUDA is running with <code>nvcc</code>.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">nvcc <span class="nt">--version</span>
+</code></pre></div>
+<p>To switch CUDA versions on a device or computer that has more than one version installed, use the following and replace the symbolic link to the version you want. This one uses CUDA 10.0, which is preinstalled on the Nano.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo rm</span> /usr/local/cuda
+<span class="nb">sudo ln</span> <span class="nt">-s</span> /usr/local/cuda-10.0 /usr/local/cuda
+</code></pre></div>
+<p><strong>Note:</strong> When cross-compiling, change the CUDA version on the host computer you&#39;re using to match the version you&#39;re running on your Jetson device.
+<strong>Note:</strong> CUDA 10.1 is recommended but doesn&#39;t ship with the Nano&#39;s SD card image. You may want to go through CUDA upgrade steps first.</p>
+
+<h2 id="option-1-install-mxnet-for-python">Option 1. Install MXNet for Python</h2>
+
+<p>To use a prepared Python wheel, download it to your Jetson, and run it.
+* <a href="https://s3.us-east-2.amazonaws.com/mxnet-public/install/jetson/1.4.0/mxnet-1.4.0-cp36-cp36m-linux_aarch64.whl">MXNet 1.4.0 - Python 3</a>
+* <a href="https://s3.us-east-2.amazonaws.com/mxnet-public/install/jetson/1.4.0/mxnet-1.4.0-cp27-cp27mu-linux_aarch64.whl">MXNet 1.4.0 - Python 2</a></p>
+
+<p>It should download the required dependencies, but if you have issues,
+install the dependencies in the prerequisites section, then run the pip wheel.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>pip <span class="nb">install </span>mxnet-1.4.0-cp27-cp27mu-linux_aarch64.whl
+</code></pre></div>
+<p>Now use a pre-compiled binary you can download it from S3 which is a patch v1.4.1:
+* <a href="https://s3.us-east-2.amazonaws.com/mxnet-public/install/jetson/1.4.1/libmxnet.so">https://s3.us-east-2.amazonaws.com/mxnet-public/install/jetson/1.4.1/libmxnet.so</a></p>
+
+<p>Place this file in <code>$MXNET_HOME/lib</code>.</p>
+
+<p>To use this with the MXNet Python binding, you must match the source directory&#39;s checked out version with the binary&#39;s source version, then install it with pip.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> <span class="nv">$MXNET_HOME</span>
+git checkout v1.4.x
+git submodule update <span class="nt">--init</span> <span class="nt">--recursive</span>
+<span class="nb">cd </span>python
+<span class="nb">sudo </span>pip <span class="nb">install</span> <span class="nt">-e</span> <span class="nb">.</span>
+</code></pre></div>
+<p>Refer to the following Conclusion and Next Steps section to test your installation.</p>
+
+<h2 id="option-2-build-mxnet-from-source">Option 2. Build MXNet from Source</h2>
+
+<p>Installing MXNet from source is a two-step process:</p>
+
+<ol>
+<li>Build the shared library from the MXNet C++ source code.</li>
+<li>Install the supported language-specific packages for MXNet.</li>
+</ol>
+
+<p>You can use a Docker method or you can build from source manually.</p>
+
+<h3 id="docker">Docker</h3>
+
+<p>You must have installed Docker and be able to run <code>docker</code> without <code>sudo</code>.
+Follow these <a href="https://docs.docker.com/install/linux/#manage-docker-as-a-non-root-user">setup instructions to get to this point</a>.
+Then run the following to execute cross-compilation via Docker.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$MXNET_HOME</span>/ci/build.py <span class="nt">-p</span> jetson
+</code></pre></div>
+<h3 id="manual">Manual</h3>
+
+<p><strong>Step 1</strong> Build the Shared Library</p>
+
+<p>(Skip this sub-step for compiling on the Jetson device directly.)
+Edit the Makefile to install the MXNet with CUDA bindings to leverage the GPU on the Jetson:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cp</span> <span class="nv">$MXNET_HOME</span>/make/crosscompile.jetson.mk config.mk
+</code></pre></div>
+<p>Now edit <code>config.mk</code> to make some additional changes for the Nano. Update the following settings:</p>
+
+<ol>
+<li>Update the CUDA path. <code>USE_CUDA_PATH = /usr/local/cuda</code></li>
+<li>Add <code>-gencode arch=compute-63, code=sm_62</code> to the <code>CUDA_ARCH</code> setting.</li>
+<li>Update the NVCC settings. <code>NVCCFLAGS := -m64</code></li>
+<li>(optional, but recommended) Turn on OpenCV. <code>USE_OPENCV = 1</code></li>
+</ol>
+
+<p>Now edit the Mshadow Makefile to ensure MXNet builds with Pascal&#39;s hardware level low precision acceleration by editing <code>3rdparty/mshadow/make/mshadow.mk</code>.
+The last line has <code>MSHADOW_USE_PASCAL</code> set to <code>0</code>. Change this to <code>1</code> to enable it.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">MSHADOW_CFLAGS +<span class="o">=</span> <span class="nt">-DMSHADOW_USE_PASCAL</span><span class="o">=</span>1
+</code></pre></div>
+<p>Now you can build the complete MXNet library with the following command:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> <span class="nv">$MXNET_HOME</span>
+make <span class="nt">-j</span> <span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span>
+</code></pre></div>
+<p>Executing this command creates a file called <code>libmxnet.so</code> in the <code>mxnet/lib</code> directory.</p>
+
+<p><strong>Step 2</strong> Install MXNet Python Bindings (optional)</p>
+
+<p>To install Python bindings run the following commands in the MXNet directory:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> <span class="nv">$MXNET_HOME</span>/python
+<span class="nb">sudo </span>pip <span class="nb">install</span> <span class="nt">-e</span> <span class="nb">.</span>
+</code></pre></div>
+<p>Note that the <code>-e</code> flag is optional. It is equivalent to <code>--editable</code> and means that if you edit the source files, these changes will be reflected in the package installed.</p>
+
+<p><strong>Step 3</strong> Install the MXNet Java &amp; Scala Bindings (optional)</p>
+
+<p>Change directories to <code>scala-package</code> and run <code>mvn install</code>.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> <span class="nv">$MXNET_HOME</span>/scala-package
+mvn <span class="nb">install</span>
+</code></pre></div>
+<p>This creates the required <code>.jar</code> file to use in your Java or Scala projects.</p>
+
+<h2 id="conclusion-and-next-steps">Conclusion and Next Steps</h2>
+
+<p>You are now ready to run MXNet on your NVIDIA Jetson TX2 or Nano device.
+You can verify your MXNet Python installation with the following:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">mxnet</span>
+<span class="n">mxnet</span><span class="o">.</span><span class="n">__version__</span>
+</code></pre></div>
+<p>You can also verify MXNet can use your GPU with the following test:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">mxnet</span> <span class="k">as</span> <span class="n">mx</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">())</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">b</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+</code></pre></div>
+<p>If everything is working, it will report the version number.
+For assistance, head over to the <a href="https://discuss.mxnet.io/">MXNet Forum</a>.</p>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a class="u-email" href="mailto:dev@mxnet.apache.org">Dev list</a></li>
+                    <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

@@ -1,6 +1,28 @@
+Options -Indexes
+DirectorySlash off
 RewriteEngine on
-RewriteRule ^get_started/why_mxnet.html$ /faq/why_mxnet.html [R=301,L]
-RewriteRule ^get_started.*$ /install/ [R=301,L]
-RewriteRule ^how_to.*$ /faq/ [R=301,L]
-RewriteRule ^api/python/symbol.html$ /api/python/symbol/symbol.html [R=301,L]
-RewriteRule ^community/index.html$ /community/contribute.html [R=301,L]
+RewriteOptions AllowNoSlash
+
+# Show file instead of folder for example /api/docs/tutorials.html
+# instead of /api/docs/tutorials/
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*) $1.html [NC,L]
+
+# Prettify some files like tutorials/io to tutorials/io.html
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*) $1.html [NC,L]
+
+#API docs needs specific root
+RewriteCond %{REQUEST_URI} \/docs\/api$|\/docs\/tutorials$
+RewriteRule ^(.*) %{REQUEST_URI}/ [R,NC,L]
+
+# Prettify folders like /get_started
+RewriteCond %{REQUEST_URI} !\/$
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.*) $1/index.html [NC,L]
+
+
+# 404
+ErrorDocument 404 /404.html
