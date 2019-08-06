@@ -22,7 +22,7 @@
 
 function addBtn() {
     copyBtn = '<button type="button" class="copy-btn" data-placement="bottom" title="Copy to clipboard">copy</button>'
-    codeBlock = $('figure');
+    codeBlock = $('figure,highlight, div.highlight');
     codeBlock.css('position', 'relative')
     codeBlock.prepend(copyBtn);
     codeBlock.hover(

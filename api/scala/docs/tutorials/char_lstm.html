@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Char-LSTM | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Char-LSTM" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.incubator.apache.org/api/scala/docs/tutorials/char_lstm" />
+<meta property="og:url" content="https://mxnet.incubator.apache.org/api/scala/docs/tutorials/char_lstm" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"url":"https://mxnet.incubator.apache.org/api/scala/docs/tutorials/char_lstm","headline":"Char-LSTM","description":"A flexible and efficient library for deep learning.","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<script src="https://medium-widget.pixelpoint.io/widget.js"></script>
+  <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.incubator.apache.org/feed.xml" title="Apache MXNet" /><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <script src="/assets/js/clipboard.js"></script>
+  <script src="/assets/js/copycode.js"></script>
+</head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/"><img
+            src="/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/get_started">Get Started</a>
+        <a class="page-link" href="/blog">Blog</a>
+        <a class="page-link" href="/features">Features</a>
+        <a class="page-link" href="/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Char-LSTM</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+        
+        
+        
+        
+        
+        <div class="docs-card docs-side">
+            <ul>
+                <div class="docs-action-btn">
+                    <a href="/api/scala.html"> <img src="/assets/img/compass.svg"
+                                                                      class="docs-logo-docs">Scala Guide <span
+                            class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/api/scala/docs/tutorials"> <img
+                            src="/assets/img/video-tutorial.svg" class="docs-logo-docs">Scala
+                        Tutorials <span class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/api/scala/docs/api"> <img src="/assets/img/api.svg"
+                                                                    class="docs-logo-docs">Scala API Reference
+                        <span class="span-accented">›</span></a>
+                </div>
+
+                <!-- Let's show the list of tutorials -->
+                <br>
+                
+                <h3>Tutorials</h3>
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/char_lstm">Char-LSTM</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/infer">Infer API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/io">Data Loading API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/kvstore">KVStore API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/mnist">MNIST Example</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/model">Model API *Deprecated*</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/module">Module API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/mxnet_scala_on_intellij">Scala on IntelliJ</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/ndarray">NDArray</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/symbol">Symbol API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/api/scala/docs/tutorials/symbol_in_pictures">Symbol in Pictures</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                  <!-- page -->
+                
+            </ul>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+          <!-- page -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <h1 id="developing-a-character-level-language-model">Developing a Character-level Language model</h1>
+
+<p>This tutorial shows how to train a character-level language model with a multilayer recurrent neural network (RNN) using Scala. This model takes one text file as input and trains an RNN that learns to predict the next character in the sequence. In this tutorial, you train a multilayer LSTM (Long Short-Term Memory) network that generates relevant text using Barack Obama&#39;s speech patterns.</p>
+
+<p>There are many documents that explain LSTM concepts. If you aren&#39;t familiar with LSTM, refer to the following before you proceed:
+- Christopher Olah&#39;s <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM blog post</a>
+- <a href="http://dmlc.ml/mxnet/2015/11/15/char-lstm-in-julia.html">Training a LSTM char-rnn in Julia to Generate Random Sentences</a>
+- <a href="https://github.com/dmlc/mxnet-notebooks/blob/master/python/tutorials/char_lstm.ipynb">Bucketing in MXNet in Python</a>
+- <a href="http://mxnet.io/faq/bucketing.html">Bucketing in MXNet</a></p>
+
+<h2 id="how-to-use-this-tutorial">How to Use This Tutorial</h2>
+
+<p>There are three ways to use this tutorial:</p>
+
+<p>1) Run it by copying the provided code snippets and pasting them into the Scala command line, making the appropriate changes to the input file path.</p>
+
+<p>2) Reuse the code by making changes to relevant parameters and running it from command line.</p>
+
+<p>3) <a href="https://github.com/apache/incubator-mxnet/tree/master/scala-package/examples/src/main/scala/org/apache/mxnetexamples/rnn">Run the source code directly</a> by running the <a href="https://github.com/apache/incubator-mxnet/tree/master/scala-package/examples/scripts/rnn">provided scripts</a>.</p>
+
+<p>To run the scripts:
+- Build and train the model with the <a href="https://github.com/apache/incubator-mxnet/tree/master/scala-package/examples/scripts/rnn/run_train_charrnn.sh">run_train_charrnn.sh script</a>. Edit the script as follows:</p>
+
+<p>Edit the CLASS_PATH variable in the script to include your operating system-specific folder (e.g., linux-x86_64-cpu/linux-x86_64-gpu/osx-x86_64-cpu) in the path. Run the script with the following command:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">
+    bash run_train_charrnn.sh &lt;which GPU card to use<span class="p">;</span> <span class="nt">-1</span> means CPU&gt; &lt;input data path&gt; &lt;location to save the model&gt;
+
+    e.g.,
+    bash run_train_charrnn.sh <span class="nt">-1</span> ./datas/obama.txt ./models/obama
+
+</code></pre></div>
+<ul>
+<li>Run inference with the <a href="https://github.com/dmlc/mxnet/blob/master/scala-package/examples/scripts/rnn/run_test_charrnn.sh">run_test_charrnn.sh script</a>. Edit the script as follows:</li>
+</ul>
+
+<p>Edit the CLASS_PATH variable in the script to include your operating system-specific folder (e.g., linux-x86_64-cpu/linux-x86_64-gpu/osx-x86_64-cpu) in the path. Run the script with the following command:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">
+    bash run_test_charrnn.sh &lt;input data path&gt; &lt;trained model from previous script&gt;
+
+    e.g.,
+    bash run_test_charrnn.sh ./datas/obama.txt ./models/obama
+</code></pre></div>
+<p>In this tutorial, you will accomplish the following:</p>
+
+<ul>
+<li>  Build an LSTM network that learns speech patterns from Barack Obama&#39;s speeches at the character level. At each time interval, the input is a character.</li>
+<li>  Clean up the dataset.</li>
+<li>  Train a model.</li>
+<li>  Fit the model.</li>
+<li>  Build the inference model.</li>
+</ul>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>To complete this tutorial, setup and run the scala interpreter by following the <a href="https://mxnet.incubator.apache.org/install/scala_setup.html#interpreter">instructions</a>.</p>
+
+<h2 id="download-the-data">Download the Data</h2>
+
+<p>First, download the data, which contains Barack Obama&#39;s speeches. The data is stored in a file called obama.txt and is available on <a href="http://data.mxnet.io/data/char_lstm.zip">mxnet.io</a></p>
+
+<p>To download the data which contains Barack Obama&#39;s speeches:</p>
+
+<p>1) Download the dataset with the following command:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```bash
+    wget http://data.mxnet.io/data/char_lstm.zip
+```
+</code></pre></div>
+<p>2) Unzip the dataset with the following command:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```bash
+    unzip char_lstm.zip -d char_lstm/
+```
+</code></pre></div>
+<p>3) The downloaded data contains President Obama&#39;s speeches. You can have sneak peek at the dataset with the following command:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```bash
+    head -10 obama.txt
+```
+</code></pre></div>
+<p>Output:
+<code>
+        Call to Renewal Keynote Address Call to Renewal Pt 1Call to Renewal Part 2 TOPIC: Our Past, Our Future &amp; Vision for America June
+        28, 2006 Call to Renewal&#39; Keynote Address Complete Text Good morning. I appreciate the opportunity to speak here at the Call to R
+        enewal&#39;s Building a Covenant for a New America conference. I&#39;ve had the opportunity to take a look at your Covenant for a New Ame
+        rica. It is filled with outstanding policies and prescriptions for much of what ails this country. So I&#39;d like to congratulate yo
+        u all on the thoughtful presentations you&#39;ve given so far about poverty and justice in America, and for putting fire under the fe
+        et of the political leadership here in Washington.But today I&#39;d like to talk about the connection between religion and politics a
+        nd perhaps offer some thoughts about how we can sort through some of the often bitter arguments that we&#39;ve been seeing over the l
+        ast several years.I do so because, as you all know, we can affirm the importance of poverty in the Bible; and we can raise up and
+         pass out this Covenant for a New America. We can talk to the press, and we can discuss the religious call to address poverty and
+         environmental stewardship all we want, but it won&#39;t have an impact unless we tackle head-on the mutual suspicion that sometimes
+</code></p>
+
+<h2 id="prepare-the-data">Prepare the Data</h2>
+
+<p>To preprocess the dataset, define the following utility functions:</p>
+
+<ul>
+<li><code>readContent</code> - Reads data from the data file.</li>
+<li><code>buildVocab</code> - Maps each character to a unique Integer ID, i.e., a build a vocabulary</li>
+<li><code>text2Id</code> - Encodes each sentence with an Integer ID.</li>
+</ul>
+
+<p>Then, use these utility functions to generate vocabulary from the input text file (obama.txt).</p>
+
+<p>To prepare the data:</p>
+
+<p>1) Read the dataset with the following function:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; import scala.io.Source
+
+    import scala.io.Source
+
+    scala&gt; // Read file
+    scala&gt; def readContent(path: String): String = Source.fromFile(path).mkString
+
+    readContent: (path: String)String
+
+```
+</code></pre></div>
+<p>2) Build a vocabulary with the following function:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; // Build  a vocabulary of what char we have in the content
+    scala&gt; def buildVocab(path: String): Map[String, Int] = {
+            val content = readContent(path).split("\n")
+            var idx = 1 // 0 is left for zero padding
+            var theVocab = Map[String, Int]()
+            for (line &lt;- content) {
+             for (char &lt;- line) {
+               val key = s"$char"
+               if (!theVocab.contains(key)) {
+                 theVocab = theVocab + (key -&gt; idx)
+                 idx += 1
+               }
+             }
+            }
+            theVocab
+           }
+
+           buildVocab: (path: String)Map[String,Int]
+```
+</code></pre></div>
+<p>3) To assign each character a unique numerical ID, use the following function:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; def text2Id(sentence: String, theVocab: Map[String, Int]): Array[Int] = {
+            val words = for (char &lt;- sentence) yield theVocab(s"$char")
+            words.toArray
+          }
+
+          text2Id: (sentence: String, theVocab: Map[String,Int])Array[Int]
+```
+</code></pre></div>
+<p>4) Now, build a character vocabulary from the dataset (obama.txt). Change the input filepath (dataPath) to reflect your settings.   </p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; // Give your system path to the "obama.txt" we have downloaded using previous steps.
+    scala&gt; val dataPath = "obama.txt"
+    dataPath: String = obama.txt
+
+    scala&gt; val vocab = buildVocab(dataPath)
+
+    scala&gt; vocab.size
+    res23: Int = 82
+```
+</code></pre></div>
+<h2 id="build-a-multi-layer-lstm-model">Build a Multi-layer LSTM model</h2>
+
+<p>Now, create a multi-layer LSTM model.</p>
+
+<p>To create the model:</p>
+
+<p>1) Load the helper files (<code>Lstm.scala</code>, <code>BucketIo.scala</code> and <code>RnnModel.scala</code>).
+<code>Lstm.scala</code> contains the definition of the LSTM cell. <code>BucketIo.scala</code> creates a sentence iterator. <code>RnnModel.scala</code> is used for model inference. The helper files are available on the <a href="https://github.com/apache/incubator-mxnet/tree/master/scala-package/examples/src/main/scala/org/apache/mxnetexamples/rnn">MXNet site</a>.
+To load them, at the Scala command prompt type:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; :load ../../../scala-package/examples/src/main/scala/org/apache/mxnet/examples/rnn/Lstm.scala
+    scala&gt; :load ../../../scala-package/examples/src/main/scala/org/apache/mxnet/examples/rnn/BucketIo.scala
+    scala&gt; :load ../../../scala-package/examples/src/main/scala/org/apache/mxnet/examples/rnn/RnnModel.scala
+```
+</code></pre></div>
+<p>2) Set the LSTM hyperparameters as follows:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; // We can support various input lengths.
+    scala&gt; // For this problem, we cut each input sentence to a length of 129 characters.
+    scala&gt; // So we only need a fixed length bucket length.
+    scala&gt; val buckets = Array(129)
+    buckets: Array[Int] = Array(129)
+
+    scala&gt; // hidden unit in LSTM cell
+    scala&gt; val numHidden = 512
+    numHidden: Int = 512
+
+    scala&gt; // The embedding dimension, which maps a char to a 256 dim vector
+    scala&gt; val numEmbed = 256
+    numEmbed: Int = 256
+
+    scala&gt; // The number of lstm layers
+    scala&gt; val numLstmLayer = 3
+    numLstmLayer: Int = 3
+
+    scala&gt; // The batch size for training
+    scala&gt; val batchSize = 32
+    batchSize: Int = 32
+```
+</code></pre></div>
+<p>3) Now, construct the LSTM network as a symbolic computation graph. Type the following to create a graph in which the model is unrolled for a fixed length explicitly in time.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; // generate symbol for a length
+    scala&gt; def symGen(seqLen: Int): Symbol = {
+        Lstm.lstmUnroll(numLstmLayer, seqLen, vocab.size + 1,
+                    numHidden = numHidden, numEmbed = numEmbed,
+                    numLabel = vocab.size + 1, dropout = 0.2f)
+      }
+    symGen: (seqLen: Int)org.apache.mxnet.Symbol
+
+    scala&gt; // create the network symbol
+    scala&gt; val symbol = symGen(buckets(0))
+    symbol: org.apache.mxnet.Symbol = org.apache.mxnet.Symbol@3a589eed
+
+```      
+</code></pre></div>
+<p>4) To train the model, initialize states for the LSTM and create a data iterator, which groups the data into buckets.
+Note: The BucketSentenceIter data iterator supports various length examples; however, we use only the fixed length version in this tutorial.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+
+    scala&gt; // initialize states for LSTM
+    scala&gt; val initC = for (l &lt;- 0 until numLstmLayer) yield (s"l${l}_init_c", (batchSize, numHidden))
+
+    initC: scala.collection.immutable.IndexedSeq[(String, (Int, Int))] = Vector((l0_init_c,(32,512)),
+    (l1_init_c,(32,512)), (l2_init_c,(32,512)))
+
+    scala&gt; val initH = for (l &lt;- 0 until numLstmLayer) yield (s"l${l}_init_h", (batchSize, numHidden))
+
+    initH: scala.collection.immutable.IndexedSeq[(String, (Int, Int))] = Vector((l0_init_h,(32,512)),
+    (l1_init_h,(32,512)), (l2_init_h,(32,512)))
+
+    scala&gt; val initStates = initC ++ initH
+
+    initStates: scala.collection.immutable.IndexedSeq[(String, (Int, Int))] =
+    Vector((l0_init_c,(32,512)), (l1_init_c,(32,512)), (l2_init_c,(32,512)), (l0_init_h,(32,512)),
+    (l1_init_h,(32,512)), (l2_init_h,(32,512)))
+
+    scala&gt; val dataTrain = new BucketIo.BucketSentenceIter(dataPath, vocab, buckets,
+                                          batchSize, initStates, seperateChar = "\n",
+                                          text2Id = text2Id, readContent = readContent)
+
+    dataTrain: BucketIo.BucketSentenceIter = non-empty iterator
+
+```
+</code></pre></div>
+<p>5) You can set more than 100 epochs, but for this tutorial, specify 75 epochs. Each epoch can take as long as 4 minutes on a GPU. In this tutorial, you will use the <a href="http://mxnet.io/api/scala/docs/index.html#org.apache.mxnet.optimizer.Adam">ADAM optimizer</a>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; import org.apache.mxnet._
+    import org.apache.mxnet._
+
+    scala&gt; import org.apache.mxnet.Callback.Speedometer
+    import org.apache.mxnet.Callback.Speedometer
+
+    scala&gt; import org.apache.mxnet.optimizer.Adam
+    import org.apache.mxnet.optimizer.Adam
+
+    scala&gt; // and we will see result by training 75 epochs
+    scala&gt; val numEpoch = 75
+    numEpoch: Int = 75
+
+    scala&gt; // learning rate
+    scala&gt; val learningRate = 0.001f
+    learningRate: Float = 0.001
+
+```
+</code></pre></div>
+<p>6) Define the perplexity utility function for the evaluation metric which is used to calculate the negative log-likelihood during training.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; def perplexity(label: NDArray, pred: NDArray): Float = {
+            val shape = label.shape
+            val size = shape(0) * shape(1)
+            val labelT = {
+              val tmp = label.toArray.grouped(shape(1)).toArray
+              val result = Array.fill[Float](size)(0f)
+              var idx = 0
+              for (i &lt;- 0 until shape(1)) {
+                for (j &lt;- 0 until shape(0)) {
+                  result(idx) = tmp(j)(i)
+                  idx += 1
+                }
+              }
+              result
+            }
+            var loss = 0f
+            val predArray = pred.toArray.grouped(pred.shape(1)).toArray
+            for (i &lt;- 0 until pred.shape(0)) {
+              loss += -Math.log(Math.max(1e-10, predArray(i)(labelT(i).toInt)).toFloat).toFloat
+            }
+            loss / size
+            }
+
+    perplexity: (label: org.apache.mxnet.NDArray, pred: org.apache.mxnet.NDArray)Float
+
+    scala&gt; def doCheckpoint(prefix: String): EpochEndCallback = new EpochEndCallback {
+                override def invoke(epoch: Int, symbol: Symbol,
+                                    argParams: Map[String, NDArray],
+                                    auxStates: Map[String, NDArray]): Unit = {
+                  Model.saveCheckpoint(prefix, epoch + 1, symbol, argParams, auxStates)
+                }
+            }
+
+    doCheckpoint: (prefix: String)org.apache.mxnet.EpochEndCallback
+
+```
+</code></pre></div>
+<p>7) Define the initializer that is required for creating a model, as follows:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; val initializer = new Xavier(factorType = "in", magnitude = 2.34f)
+
+    initializer: org.apache.mxnet.Xavier = org.apache.mxnet.Xavier@54e8f10a
+
+```
+</code></pre></div>
+<p>8) Now, you have implemented all the supporting infrastructures for the char-lstm model. To train the model, use the standard <a href="http://mxnet.io/api/scala/docs/index.html#org.apache.mxnet.FeedForward">MXNet high-level API</a>. You can train the model on a single GPU or CPU from multiple GPUs or CPUs by changing <code>scala .setContext(Array(Context.gpu(0),Context.gpu(1),Context.gpu(2),Context.gpu(3)))</code> to <code>scala .setContext(Array(Context.gpu(0)))</code>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; val model = FeedForward.newBuilder(symbol)
+            .setContext(Array(Context.gpu(0),Context.gpu(1),Context.gpu(2),Context.gpu(3)))
+            .setNumEpoch(numEpoch)
+            .setOptimizer(new Adam(learningRate = learningRate, wd = 0.00001f))
+            .setInitializer(initializer)
+            .setTrainData(dataTrain)
+            .setEvalMetric(new CustomMetric(perplexity, name = "perplexity"))
+            .setBatchEndCallback(new Speedometer(batchSize, 20))
+            .setEpochEndCallback(doCheckpoint("obama"))
+            .build()
+
+    model: org.apache.mxnet.FeedForward = org.apache.mxnet.FeedForward@4926f6c7
+```
+</code></pre></div>
+<p>Now, you have an LSTM model and you&#39;ve trained it. Use this model to create the inference.</p>
+
+<h2 id="build-the-inference-model">Build the Inference Model</h2>
+
+<p>You can now sample sentences from the trained model. The sampler works as follows:
+- Takes some fixed character set (e.g., &quot;The United States&quot;) and feeds it into the LSTM as the starting input.
+- The LSTM produces an output distribution over the vocabulary and a state in the first time step then, samples a character from the output distribution and fixes it as the second character.
+- In the next time step, feeds the previously sampled character as input.
+- Continues running until it has sampled enough characters. Note we are running mini-batches, so several sentences could be sampled simultaneously.</p>
+
+<p>To build the inference model, define the following utility functions that help MXNet make inferences:</p>
+
+<ul>
+<li><code>makeRevertVocab</code> - Reverts the key value in the dictionary for easy access to characters while predicting</li>
+<li><code>makeInput</code> -  Uses a given character as input</li>
+<li><code>cdf</code>, <code>choice</code> - <code>cdf</code> is a helper function for the <code>choice</code> function, which is used to create random samples</li>
+<li><p><code>makeOutput</code> - Directs the model to use either random output or fixed output by choosing the option with the greatest probability.</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala">    <span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">scala.util.Random</span>
+
+    <span class="n">scala</span><span class="o">&gt;</span> <span class="c1">// helper structure for prediction
+</span>    <span class="n">scala</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">makeRevertVocab</span><span class="o">(</span><span class="n">vocab</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Int</span><span class="o">])</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+              <span class="k">var</span> <span class="n">dic</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">String</span><span class="o">]()</span>
+              <span class="nv">vocab</span><span class="o">.</span><span class="py">foreach</span> <span class="o">{</span> <span class="nf">case</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="k">=&gt;</span>
+                <span class="n">dic</span> <span class="k">=</span> <span class="n">dic</span> <span class="o">+</span> <span class="o">(</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="n">k</span><span class="o">)</span>
+              <span class="o">}</span>
+              <span class="n">dic</span>
+            <span class="o">}</span>
+
+  <span class="n">makeRevertVocab</span><span class="k">:</span> <span class="o">(</span><span class="kt">vocab:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>,<span class="kt">Int</span><span class="o">])</span><span class="nc">Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">String</span><span class="o">]</span>
+
+  <span class="n">scala</span><span class="o">&gt;</span> <span class="c1">// make input from char
+</span>  <span class="n">scala</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">makeInput</span><span class="o">(</span><span class="n">char</span><span class="k">:</span> <span class="kt">Char</span><span class="o">,</span> <span class="n">vocab</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Int</span><span class="o">],</span> <span class="n">arr</span><span class="k">:</span> <span class="kt">NDArray</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+          <span class="k">val</span> <span class="nv">idx</span> <span class="k">=</span> <span class="nf">vocab</span><span class="o">(</span><span class="n">s</span><span class="s">"$char"</span><span class="o">)</span>
+          <span class="k">val</span> <span class="nv">tmp</span> <span class="k">=</span> <span class="nv">NDArray</span><span class="o">.</span><span class="py">zeros</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span>
+          <span class="nv">tmp</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="n">idx</span><span class="o">)</span>
+          <span class="nv">arr</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="n">tmp</span><span class="o">)</span>
+        <span class="o">}</span>
+
+  <span class="n">makeInput</span><span class="k">:</span> <span class="o">(</span><span class="kt">char:</span> <span class="kt">Char</span><span class="o">,</span> <span class="kt">vocab:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>,<span class="kt">Int</span><span class="o">],</span> <span class="n">arr</span><span class="k">:</span> <span class="kt">org.apache.mxnet.NDArray</span><span class="o">)</span><span class="nc">Unit</span>
+
+  <span class="n">scala</span><span class="o">&gt;</span> <span class="c1">// helper function for random sample
+</span>  <span class="n">scala</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">cdf</span><span class="o">(</span><span class="n">weights</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">])</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+            <span class="k">val</span> <span class="nv">total</span> <span class="k">=</span> <span class="nv">weights</span><span class="o">.</span><span class="py">sum</span>
+            <span class="k">var</span> <span class="n">result</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">]()</span>
+            <span class="k">var</span> <span class="n">cumsum</span> <span class="k">=</span> <span class="mf">0f</span>
+            <span class="nf">for</span> <span class="o">(</span><span class="n">w</span> <span class="k">&lt;-</span> <span class="n">weights</span><span class="o">)</span> <span class="o">{</span>
+              <span class="n">cumsum</span> <span class="o">+=</span> <span class="n">w</span>
+              <span class="n">result</span> <span class="k">=</span> <span class="n">result</span> <span class="o">:+</span> <span class="o">(</span><span class="n">cumsum</span> <span class="o">/</span> <span class="n">total</span><span class="o">)</span>
+            <span class="o">}</span>
+            <span class="n">result</span>
+          <span class="o">}</span>
+
+  <span class="n">cdf</span><span class="k">:</span> <span class="o">(</span><span class="kt">weights:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">])</span><span class="nc">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">]</span>
+
+  <span class="n">scala</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">choice</span><span class="o">(</span><span class="n">population</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> <span class="n">weights</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">])</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="o">{</span>
+          <span class="nf">assert</span><span class="o">(</span><span class="nv">population</span><span class="o">.</span><span class="py">length</span> <span class="o">==</span> <span class="nv">weights</span><span class="o">.</span><span class="py">length</span><span class="o">)</span>
+          <span class="k">val</span> <span class="nv">cdfVals</span> <span class="k">=</span> <span class="nf">cdf</span><span class="o">(</span><span class="n">weights</span><span class="o">)</span>
+          <span class="k">val</span> <span class="nv">x</span> <span class="k">=</span> <span class="nv">Random</span><span class="o">.</span><span class="py">nextFloat</span><span class="o">()</span>
+          <span class="k">var</span> <span class="n">idx</span> <span class="k">=</span> <span class="mi">0</span>
+          <span class="k">var</span> <span class="n">found</span> <span class="k">=</span> <span class="kc">false</span>
+          <span class="nf">for</span> <span class="o">(</span><span class="n">i</span> <span class="k">&lt;-</span> <span class="mi">0</span> <span class="n">until</span> <span class="nv">cdfVals</span><span class="o">.</span><span class="py">length</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nf">if</span> <span class="o">(</span><span class="nf">cdfVals</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">&gt;=</span> <span class="n">x</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">found</span><span class="o">)</span> <span class="o">{</span>
+              <span class="n">idx</span> <span class="k">=</span> <span class="n">i</span>
+              <span class="n">found</span> <span class="k">=</span> <span class="kc">true</span>
+            <span class="o">}</span>
+          <span class="o">}</span>
+          <span class="nf">population</span><span class="o">(</span><span class="n">idx</span><span class="o">)</span>
+        <span class="o">}</span>
+
+  <span class="n">choice</span><span class="k">:</span> <span class="o">(</span><span class="kt">population:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> <span class="n">weights</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">])</span><span class="nc">String</span>
+
+  <span class="n">scala</span><span class="o">&gt;</span> <span class="c1">// we can use random output or fixed output by choosing largest probability
+</span>  <span class="n">scala</span><span class="o">&gt;</span> <span class="k">def</span> <span class="nf">makeOutput</span><span class="o">(</span><span class="n">prob</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">],</span> <span class="n">vocab</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">String</span><span class="o">],</span>
+                          <span class="n">sample</span><span class="k">:</span> <span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span> <span class="n">temperature</span><span class="k">:</span> <span class="kt">Float</span> <span class="o">=</span> <span class="mf">1f</span><span class="o">)</span><span class="k">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="o">{</span>
+             <span class="k">var</span> <span class="n">idx</span> <span class="k">=</span> <span class="o">-</span><span class="mi">1</span>
+             <span class="k">val</span> <span class="nv">char</span> <span class="k">=</span> <span class="nf">if</span> <span class="o">(</span><span class="n">sample</span> <span class="o">==</span> <span class="kc">false</span><span class="o">)</span> <span class="o">{</span>
+               <span class="n">idx</span> <span class="k">=</span> <span class="o">((-</span><span class="mf">1f</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">/:</span> <span class="nv">prob</span><span class="o">.</span><span class="py">zipWithIndex</span><span class="o">)</span> <span class="o">{</span> <span class="o">(</span><span class="n">max</span><span class="o">,</span> <span class="n">elem</span><span class="o">)</span> <span class="k">=&gt;</span>
+                 <span class="nf">if</span> <span class="o">(</span><span class="nv">max</span><span class="o">.</span><span class="py">_1</span> <span class="o">&lt;</span> <span class="nv">elem</span><span class="o">.</span><span class="py">_1</span><span class="o">)</span> <span class="n">elem</span> <span class="k">else</span> <span class="n">max</span>
+               <span class="o">}.</span><span class="py">_2</span>
+               <span class="nf">if</span> <span class="o">(</span><span class="nv">vocab</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span><span class="n">idx</span><span class="o">))</span> <span class="nf">vocab</span><span class="o">(</span><span class="n">idx</span><span class="o">)</span>
+               <span class="k">else</span> <span class="s">""</span>
+             <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+               <span class="k">val</span> <span class="nv">fixDict</span> <span class="k">=</span> <span class="nc">Array</span><span class="o">(</span><span class="s">""</span><span class="o">)</span> <span class="o">++</span> <span class="o">(</span><span class="mi">1</span> <span class="n">until</span> <span class="nv">vocab</span><span class="o">.</span><span class="py">size</span> <span class="o">+</span> <span class="mi">1</span><span class="o">).</span><span class="py">map</span><span class="o">(</span><span class="n">i</span> <span class="k">=&gt;</span> <span class="nf">vocab</span><span class="o">(</span><span class="n">i</span><span class="o">))</span>
+               <span class="k">var</span> <span class="n">scaleProb</span> <span class="k">=</span> <span class="nv">prob</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="nf">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="o">)</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span> <span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="o">)</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span> <span class="k">else</span> <span class="n">x</span><span class="o">)</span>
+               <span class="k">var</span> <span class="n">rescale</span> <span class="k">=</span> <span class="nv">scaleProb</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="nv">Math</span><span class="o">.</span><span class="py">exp</span><span class="o">(</span><span class="nv">Math</span><span class="o">.</span><span class="py">log</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="o">/</span> <span class="n">temperature</span><span class="o">).</span><span class="py">toFloat</span><span class="o">)</span>
+               <span class="k">val</span> <span class="nv">sum</span> <span class="k">=</span> <span class="nv">rescale</span><span class="o">.</span><span class="py">sum</span><span class="o">.</span><span class="py">toFloat</span>
+               <span class="n">rescale</span> <span class="k">=</span> <span class="nv">rescale</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="k">_</span> <span class="o">/</span> <span class="n">sum</span><span class="o">)</span>
+               <span class="nf">choice</span><span class="o">(</span><span class="n">fixDict</span><span class="o">,</span> <span class="n">rescale</span><span class="o">)</span>
+             <span class="o">}</span>
+             <span class="n">char</span>
+           <span class="o">}</span>
+
+  <span class="n">makeOutput</span><span class="k">:</span> <span class="o">(</span><span class="kt">prob:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">Float</span><span class="o">],</span> <span class="n">vocab</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">String</span><span class="o">],</span> <span class="n">sample</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">,</span> <span class="n">temperature</span><span class="k">:</span> <span class="kt">Float</span><span class="o">)</span><span class="nc">String</span>
+
+</code></pre></div></li>
+</ul>
+
+<p>1) Build the inference model:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+    scala&gt; // load from check-point
+    scala&gt; val (_, argParams, _) = Model.loadCheckpoint("obama", 75)
+
+    scala&gt; // build an inference model
+    scala&gt; val model = new RnnModel.LSTMInferenceModel(numLstmLayer, vocab.size + 1, \
+                               numHidden = numHidden, numEmbed = numEmbed, \
+                               numLabel = vocab.size + 1, argParams = argParams, \
+                               ctx = Context.cpu(), dropout = 0.2f)
+
+    model: RnnModel.LSTMInferenceModel = RnnModel$LSTMInferenceModel@2f0c0319
+```
+</code></pre></div>
+<p>2) Now you can generate a sequence of 1200 characters (you can select any number of characters you want) starting with &quot;The United States&quot; as follows:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">```scala
+
+    scala&gt; val seqLength = 1200
+    seqLength: Int = 1200
+
+    scala&gt; val inputNdarray = NDArray.zeros(1)
+    inputNdarray: org.apache.mxnet.NDArray = org.apache.mxnet.NDArray@9c231a24
+
+    scala&gt; val revertVocab = makeRevertVocab(vocab)
+
+    scala&gt; // Feel free to change the starter sentence
+
+    scala&gt; var output = "The United States"
+    output: String = The United States
+
+    scala&gt; val randomSample = true
+    randomSample: Boolean = true
+
+    scala&gt; var newSentence = true
+    newSentence: Boolean = true
+
+    scala&gt; val ignoreLength = output.length()
+    ignoreLength: Int = 17
+
+    scala&gt; for (i &lt;- 0 until seqLength) {
+            if (i &lt;= ignoreLength - 1) makeInput(output(i), vocab, inputNdarray)
+            else makeInput(output.takeRight(1)(0), vocab, inputNdarray)
+            val prob = model.forward(inputNdarray, newSentence)
+            newSentence = false
+            val nextChar = makeOutput(prob, revertVocab, randomSample)
+            if (nextChar == "") newSentence = true
+            if (i &gt;= ignoreLength) output = output ++ nextChar
+          }
+
+    scala&gt; output
+
+    res7: String = The United States who have been blessed no companies would be proud that the challenges we face, it's not as directly untelle are in my daughters - you can afford -- life-saving march care and poor information and receiving battle against other speeces and lead its people. After champions of 2006, and because Africa in America, separate has been conferenced by children ation of discrimination, we remember all of this, succeeded in any other feelings of a palently better political process - at lliims being disability payment. All across all different mights of a more just a few global personal morality and industrialized ready to succeed.One can afford when the earliest days of a pension you can add to the system be confructive despair. They have starting in the demand for...
+
+```
+</code></pre></div>
+<p>You can see the output generated from Obama&#39;s speeches. All of the line breaks, punctuation, and uppercase and lowercase letters were produced by the sampler (no post-processing was performed).</p>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+<li><a href="http://mxnet.io/api/scala/">Scala API</a></li>
+<li><a href="https://github.com/dmlc/mxnet/tree/master/scala-package/examples/">More Scala Examples</a></li>
+<li><a href="http://mxnet.io/tutorials/index.html">MXNet tutorials index</a></li>
+</ul>
+
+    </div>
+</div>
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a class="u-email" href="mailto:dev@mxnet.apache.org">Dev list</a></li>
+                    <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

@@ -59,11 +59,11 @@ $(document).ready(function () {
 
         $('li.versions').removeClass('active');
         $('li.versions').each(function(){is_a_match($(this), versionSelect)});
-        $('button').removeClass('active');
-        $('button').each(function(){is_a_match($(this), platformSelect)});
-        $('button').each(function(){is_a_match($(this), languageSelect)});
-        $('button').each(function(){is_a_match($(this), processorSelect)});
-        $('button').each(function(){is_a_match($(this), environSelect)});
+        $('button.opt').removeClass('active');
+        $('button.opt').each(function(){is_a_match($(this), platformSelect)});
+        $('button.opt').each(function(){is_a_match($(this), languageSelect)});
+        $('button.opt').each(function(){is_a_match($(this), processorSelect)});
+        $('button.opt').each(function(){is_a_match($(this), environSelect)});
 
         showContent();
         if (window.location.href.indexOf("/get_started/") >= 0) {
@@ -74,11 +74,9 @@ $(document).ready(function () {
     function showContent() {
         $('.opt-group .opt').each(function () {
             $('.' + label($(this).text())).hide();
-            $('.highlight-' + label($(this).text())).hide();
         });
         $('.opt-group .active').each(function () {
             $('.' + label($(this).text())).show();
-            $('.highlight-' + label($(this).text())).show();
         });
     }
 
@@ -115,8 +113,8 @@ $(document).ready(function () {
         showContent();
     }
 
+    $('.opt-group').on('click', '.opt', setContent);
     $('.install-widget').css("visibility", "visible");
     $('.install-content').css("visibility", "visible");
 
-    $('.opt-group').on('click', '.opt', setContent);
 });

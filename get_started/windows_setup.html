@@ -368,16 +368,14 @@ Install 3.5.x of R from <a href="https://cran.r-project.org/bin/windows/base/old
 <h4 id="building-mxnet-r-from-source-code-cpu">Building MXNet-R from Source Code(CPU)</h4>
 
 <ol>
-<li>Clone the MXNet github repo.</li>
-</ol>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">git clone <span class="nt">--recursive</span> https://github.com/apache/incubator-mxnet
-</code></pre></div>
-<p>The <code>--recursive</code> is to clone all the submodules used by MXNet. You will be editing the <code>&quot;/mxnet/R-package&quot;</code> folder.</p>
-
-<ol>
-<li><p>Download prebuilt GPU-enabled MXNet libraries for Windows from <a href="https://github.com/yajiedesign/mxnet/releases">Windows release</a>. You will need <code>mxnet_x64_vc14_cpu.7z</code> and <code>prebuildbase_win10_x64_vc14.7z</code> where X stands for your CUDA toolkit version</p></li>
-<li><p>Create a folder called <code>R-package/inst/libs/x64</code>. MXNet supports only 64-bit operating systems, so you need the x64 folder.</p></li>
-<li><p>Copy the following shared libraries (.dll files) into the <code>R-package/inst/libs/x64</code> folder:
+<li>Clone the MXNet github repo.
+<code>sh
+git clone --recursive https://github.com/apache/incubator-mxnet
+</code>
+The <code>--recursive</code> is to clone all the submodules used by MXNet. You will be editing the <code>&quot;/mxnet/R-package&quot;</code> folder.</li>
+<li>Download prebuilt GPU-enabled MXNet libraries for Windows from <a href="https://github.com/yajiedesign/mxnet/releases">Windows release</a>. You will need <code>mxnet_x64_vc14_cpu.7z</code> and <code>prebuildbase_win10_x64_vc14.7z</code> where X stands for your CUDA toolkit version</li>
+<li>Create a folder called <code>R-package/inst/libs/x64</code>. MXNet supports only 64-bit operating systems, so you need the x64 folder.</li>
+<li>Copy the following shared libraries (.dll files) into the <code>R-package/inst/libs/x64</code> folder.
 <code>
 libgcc_s_seh-1.dll
 libgfortran-3.dll
@@ -391,53 +389,51 @@ unzip32.dll
 vcomp140.dll
 wget.exe
 </code>
-These dlls can be found in <code>prebuildbase_win10_x64_vc14/3rdparty</code>, <code>mxnet_x64_vc14_cpu/build</code>, <code>mxnet_x64_vc14_cpu/lib</code>.</p></li>
-<li><p>Copy the header files from <code>dmlc</code>, <code>mxnet</code>, <code>mxshadow</code> and <code>nnvm</code> from mxnet_x64_vc14_cpu/include and mxnet_x64_vc14_cpu/nvnm/include into <code>./R-package/inst/include</code>. It should look like:</p></li>
-</ol>
-<div class="highlight"><pre><code class="language-" data-lang="">./R-package/inst
+These dlls can be found in <code>prebuildbase_win10_x64_vc14/3rdparty</code>, <code>mxnet_x64_vc14_cpu/build</code>, <code>mxnet_x64_vc14_cpu/lib</code>.</li>
+<li><p>Copy the header files from <code>dmlc</code>, <code>mxnet</code>, <code>mxshadow</code> and <code>nnvm</code> from <code>mxnet_x64_vc14_cpu/include and mxnet_x64_vc14_cpu/nvnm/include</code> into <code>./R-package/inst/include</code>. It should look like
+<code>
+./R-package/inst
 └── include
-    ├── dmlc
-    ├── mxnet
-    ├── mshadow
-    └── nnvm
+├── dmlc
+├── mxnet
+├── mshadow
+└── nnvm
+</code></p></li>
+<li><p>Make sure that R executable is added to your <code>PATH</code> in the environment variables. Running the <code>where R</code> command at the command prompt should return the location.</p></li>
+<li><p>Also make sure that Rtools is installed and the executable is added to your <code>PATH</code> in the environment variables.</p></li>
+<li><p>Temporary patch - im2rec currently results in crashes during the build. Remove the im2rec.h and im2rec.cc files in R-package/src/ from cloned repository and comment out the two im2rec lines in <a href="https://github.com/apache/incubator-mxnet/blob/master/R-package/src/mxnet.cc">R-package/src/mxnet.cc</a> as shown below.
+```</p>
 
-</code></pre></div>
-<ol>
-<li>Make sure that R executable is added to your <code>PATH</code> in the environment variables. Running the <code>where R</code> command at the command prompt should return the location.</li>
-<li>Also make sure that Rtools is installed and the executable is added to your <code>PATH</code> in the environment variables.</li>
-<li>Temporary patch - im2rec currently results in crashes during the build. Remove the im2rec.h and im2rec.cc files in R-package/src/ from cloned repository and comment out the two im2rec lines in <a href="https://github.com/apache/incubator-mxnet/blob/master/R-package/src/mxnet.cc">R-package/src/mxnet.cc</a> as shown below.
-```bat
-#include &quot;./kvstore.h&quot;
-#include &quot;./export.h&quot;
-//#include &quot;./im2rec.h&quot;
+<h1 id="include-kvstore-h">include &quot;./kvstore.h&quot;</h1>
+
+<h1 id="include-export-h">include &quot;./export.h&quot;</h1>
+
+<p>//#include &quot;./im2rec.h&quot;
 ......
 ......
 DataIterCreateFunction::InitRcppModule();
 KVStore::InitRcppModule();
 Exporter::InitRcppModule();
-//  IM2REC::InitRcppModule();
-}</li>
+//IM2REC::InitRcppModule();
+}
+```</p></li>
+<li><p>Now open the Windows CMD with admin rights and change the directory to the <code>mxnet</code> folder(cloned repository). Then use the following commands to build R package:</p></li>
 </ol>
-<div class="highlight"><pre><code class="language-" data-lang="">
-9. Now open the Windows CMD with admin rights and change the directory to the `mxnet` folder(cloned repository). Then use the following commands
-to build R package:
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo </span>import<span class="o">(</span>Rcpp<span class="o">)</span> <span class="o">&gt;</span> R-package<span class="se">\N</span>AMESPACE
+<span class="nb">echo </span>import<span class="o">(</span>methods<span class="o">)</span> <span class="o">&gt;&gt;</span> R-package<span class="se">\N</span>AMESPACE
+Rscript <span class="nt">-e</span> <span class="s2">"install.packages('devtools', repos = 'https://cloud.r-project.org')"</span>
+<span class="nb">cd </span>R-package
+Rscript <span class="nt">-e</span> <span class="s2">"library(devtools); library(methods); options(repos=c(CRAN='https://cloud.r-project.org')); install_deps(dependencies = TRUE)"</span>
+<span class="nb">cd</span> ..
 
-```bat
-echo import(Rcpp) &gt; R-package\NAMESPACE
-echo import(methods) &gt;&gt; R-package\NAMESPACE
-Rscript -e "install.packages('devtools', repos = 'https://cloud.r-project.org')"
-cd R-package
-Rscript -e "library(devtools); library(methods); options(repos=c(CRAN='https://cloud.r-project.org')); install_deps(dependencies = TRUE)"
-cd ..
+R CMD INSTALL <span class="nt">--no-multiarch</span> R-package
 
-R CMD INSTALL --no-multiarch R-package
+Rscript <span class="nt">-e</span> <span class="s2">"require(mxnet); mxnet:::mxnet.export('R-package')"</span>
+<span class="nb">rm </span>R-package/NAMESPACE
+Rscript <span class="nt">-e</span> <span class="s2">"require(devtools); install_version('roxygen2', version = '5.0.1', repos = 'https://cloud.r-project.org/', quiet = TRUE)"</span>
+Rscript <span class="nt">-e</span> <span class="s2">"require(roxygen2); roxygen2::roxygenise('R-package')"</span>
 
-Rscript -e "require(mxnet); mxnet:::mxnet.export('R-package')"
-rm R-package/NAMESPACE
-Rscript -e "require(devtools); install_version('roxygen2', version = '5.0.1', repos = 'https://cloud.r-project.org/', quiet = TRUE)"
-Rscript -e "require(roxygen2); roxygen2::roxygenise('R-package')"
-
-R CMD INSTALL --build --no-multiarch R-package
+R CMD INSTALL <span class="nt">--build</span> <span class="nt">--no-multiarch</span> R-package
 </code></pre></div>
 <h3 id="installing-mxnet-r-on-a-computer-with-a-gpu-processor">Installing MXNet-R on a Computer with a GPU Processor</h3>
 
@@ -478,15 +474,14 @@ Install 3.5.x of R from <a href="https://cran.r-project.org/bin/windows/base/old
 <h4 id="building-mxnet-r-from-source-code-gpu">Building MXNet-R from Source Code(GPU)</h4>
 
 <p>After you have installed above software, continue with the following steps to build MXNet-R:
-1. Clone the MXNet github repo.</p>
-<div class="highlight"><pre><code class="language-sh" data-lang="sh">git clone <span class="nt">--recursive</span> https://github.com/apache/incubator-mxnet
-</code></pre></div>
-<p>The <code>--recursive</code> is to clone all the submodules used by MXNet. You will be editing the <code>&quot;/mxnet/R-package&quot;</code> folder.</p>
-
-<ol>
-<li><p>Download prebuilt GPU-enabled MXNet libraries for Windows from <a href="https://github.com/yajiedesign/mxnet/releases">https://github.com/yajiedesign/mxnet/releases</a>. You will need <code>mxnet_x64_vc14_gpu_cuX.7z</code> and <code>prebuildbase_win10_x64_vc14.7z</code> where X stands for your CUDA toolkit version</p></li>
-<li><p>Create a folder called <code>R-package/inst/libs/x64</code>. MXNet supports only 64-bit operating systems, so you need the x64 folder.</p></li>
-<li><p>Copy the following shared libraries (.dll files) into the <code>R-package/inst/libs/x64</code> folder:
+1. Clone the MXNet github repo.
+<code>sh
+git clone --recursive https://github.com/apache/incubator-mxnet
+</code>
+The <code>--recursive</code> is to clone all the submodules used by MXNet. You will be editing the <code>&quot;/mxnet/R-package&quot;</code> folder.
+2. Download prebuilt GPU-enabled MXNet libraries for Windows from <a href="https://github.com/yajiedesign/mxnet/releases">https://github.com/yajiedesign/mxnet/releases</a>. You will need <code>mxnet_x64_vc14_gpu_cuX.7z</code> and <code>prebuildbase_win10_x64_vc14.7z</code> where X stands for your CUDA toolkit version
+3. Create a folder called <code>R-package/inst/libs/x64</code>. MXNet supports only 64-bit operating systems, so you need the x64 folder.
+4. Copy the following shared libraries (.dll files) into the <code>R-package/inst/libs/x64</code> folder:
 <code>
 libgcc_s_seh-1.dll
 libgfortran-3.dll
@@ -500,38 +495,37 @@ unzip32.dll
 vcomp140.dll
 wget.exe
 </code>
-These dlls can be found in <code>prebuildbase_win10_x64_vc14/3rdparty</code>, <code>mxnet_x64_vc14_gpu_cuX/build</code>, <code>mxnet_x64_vc14_gpu_cuX/lib</code>.</p></li>
-<li><p>Copy the header files from <code>dmlc</code>, <code>mxnet</code>, <code>mxshadow</code> and <code>nnvm</code> from mxnet_x64_vc14_gpuX/include and mxnet_x64_vc14_gpuX/nvnm/include into <code>./R-package/inst/include</code>. It should look like:</p></li>
-</ol>
-<div class="highlight"><pre><code class="language-" data-lang="">./R-package/inst
+These dlls can be found in <code>prebuildbase_win10_x64_vc14/3rdparty</code>, <code>mxnet_x64_vc14_gpu_cuX/build</code>, <code>mxnet_x64_vc14_gpu_cuX/lib</code>.
+5. Copy the header files from <code>dmlc</code>, <code>mxnet</code>, <code>mxshadow</code> and <code>nnvm</code> from <code>mxnet_x64_vc14_gpuX/include</code> and <code>mxnet_x64_vc14_gpuX/nvnm/include</code> into <code>./R-package/inst/include</code>. It should look like:
+<code>
+./R-package/inst
 └── include
     ├── dmlc
     ├── mxnet
     ├── mshadow
     └── nnvm
+</code>
+6. Make sure that R executable is added to your <code>PATH</code> in the environment variables. Running the <code>where R</code> command at the command prompt should return the location.
+7. Also make sure that Rtools is installed and the executable is added to your <code>PATH</code> in the environment variables.
+8. Temporary patch - im2rec currently results in crashes during the build. Remove the im2rec.h and im2rec.cc files in R-package/src/ from cloned repository and comment out the two im2rec lines in <a href="https://github.com/apache/incubator-mxnet/blob/master/R-package/src/mxnet.cc">R-package/src/mxnet.cc</a> as shown below.
+```bash</p>
 
-</code></pre></div>
-<ol>
-<li>Make sure that R executable is added to your <code>PATH</code> in the environment variables. Running the <code>where R</code> command at the command prompt should return the location.</li>
-<li>Also make sure that Rtools is installed and the executable is added to your <code>PATH</code> in the environment variables.</li>
-<li>Temporary patch - im2rec currently results in crashes during the build. Remove the im2rec.h and im2rec.cc files in R-package/src/ from cloned repository and comment out the two im2rec lines in <a href="https://github.com/apache/incubator-mxnet/blob/master/R-package/src/mxnet.cc">R-package/src/mxnet.cc</a> as shown below.
-```bat
-#include &quot;./kvstore.h&quot;
-#include &quot;./export.h&quot;
-//#include &quot;./im2rec.h&quot;
+<h1 id="include-kvstore-h">include &quot;./kvstore.h&quot;</h1>
+
+<h1 id="include-export-h">include &quot;./export.h&quot;</h1>
+
+<p>//#include &quot;./im2rec.h&quot;
 ......
 ......
-DataIterCreateFunction::InitRcppModule();
-KVStore::InitRcppModule();
-Exporter::InitRcppModule();
-//  IM2REC::InitRcppModule();
-}</li>
-</ol>
-<div class="highlight"><pre><code class="language-" data-lang="">9. Now open the Windows CMD with admin rights and change the directory to the `mxnet` folder(cloned repository). Then use the following commands
-to build R package:
-
-```bat
-echo import(Rcpp) &gt; R-package\NAMESPACE
+  DataIterCreateFunction::InitRcppModule();
+  KVStore::InitRcppModule();
+  Exporter::InitRcppModule();
+//IM2REC::InitRcppModule();
+}
+``<code>
+9. Now open the Windows CMD with admin rights and change the directory to the</code>mxnet` folder(cloned repository). Then use the following commands
+to build R package:</p>
+<div class="highlight"><pre><code class="language-bat" data-lang="bat">echo import(Rcpp) &gt; R-package\NAMESPACE
 echo import(methods) &gt;&gt; R-package\NAMESPACE
 Rscript -e "install.packages('devtools', repos = 'https://cloud.r-project.org')"
 cd R-package
@@ -555,10 +549,10 @@ R CMD INSTALL --build --no-multiarch R-package
 <div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">MXNET_HOME</span><span class="o">=</span>/&lt;path to&gt;/libmxnet
 </code></pre></div>
 <p>The path to the existing libmxnet installation should be the root directory of libmxnet. In other words, you should be able to find the <code>libmxnet.so</code> file at <code>$MXNET_HOME/lib</code>. For example, if the root directory of libmxnet is <code>~</code>, you would run the following command:</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">    <span class="nb">export </span><span class="nv">MXNET_HOME</span><span class="o">=</span>/~/libmxnet
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">MXNET_HOME</span><span class="o">=</span>/~/libmxnet
 </code></pre></div>
 <p>You might want to add this command to your <code>~/.bashrc</code> file. If you do, you can install the Julia package in the Julia console using the following command:</p>
-<div class="highlight"><pre><code class="language-julia" data-lang="julia">    <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="x">(</span><span class="s">"MXNet"</span><span class="x">)</span>
+<div class="highlight"><pre><code class="language-julia" data-lang="julia"><span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="x">(</span><span class="s">"MXNet"</span><span class="x">)</span>
 </code></pre></div>
 <p>For more details about installing and using MXNet with Julia, see the <a href="/api/julia/site/">MXNet Julia documentation</a>.</p>
 
@@ -572,14 +566,10 @@ R CMD INSTALL --build --no-multiarch R-package
 </article>
 
 </main><footer class="site-footer h-card">
-    <data class="u-url" href="/%0A%20%20%20%20/"></data>
-
     <div class="wrapper">
-
-
         <div class="row">
             <div class="col-4">
-                <h4>Resources</h4>
+                <h4 class="footer-category-title">Resources</h4>
                 <ul class="contact-list">
                     <li><a class="u-email" href="mailto:dev@mxnet.apache.org">Dev list</a></li>
                     <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
@@ -587,6 +577,7 @@ R CMD INSTALL --build --no-multiarch R-package
                     <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
                     <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
                     <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/community/contribute">Contribute To MXNet</a></li>
 
                 </ul>
             </div>
