@@ -16,10 +16,3 @@ mxnet.module
 
 
 
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.module

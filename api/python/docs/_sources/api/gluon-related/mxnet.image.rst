@@ -80,6 +80,3 @@ Augmentations
    DetHorizontalFlipAug
    DetRandomCropAug
    DetRandomPadAug
-
-.. disqus::
-   :disqus_identifier: mxnet.image

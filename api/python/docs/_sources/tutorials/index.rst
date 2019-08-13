@@ -1,4 +1,4 @@
-Tutorials
+Python Tutorials
 =====
 
 Getting started
@@ -223,5 +223,3 @@ Next steps
    performance/index
    deploy/index
    extend/index
-
-.. disqus::

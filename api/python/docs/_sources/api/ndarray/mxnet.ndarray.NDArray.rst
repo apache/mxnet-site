@@ -291,7 +291,3 @@ Neural network
    NDArray.sigmoid
    NDArray.softmax
 
-
-
-.. disqus::
-   :disqus_identifier: mxnet.ndarray.NDArray

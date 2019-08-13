@@ -1,5 +1,5 @@
 data
-=====
+====
 
 .. automodule:: mxnet.gluon.data
 
@@ -31,6 +31,3 @@ Loading examples
    :toctree: _autogen
 
    DataLoader
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.data

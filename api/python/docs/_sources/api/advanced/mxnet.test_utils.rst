@@ -72,11 +72,3 @@ mxnet.test\_utils
 
       DummyIter
 
-
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.test_utils

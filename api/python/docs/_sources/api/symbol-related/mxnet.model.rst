@@ -26,10 +26,3 @@ mxnet.model
       FeedForward
 
 
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.model

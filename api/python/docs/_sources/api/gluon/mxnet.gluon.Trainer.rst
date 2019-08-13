@@ -32,7 +32,3 @@ Learning rate
 
    Trainer.learning_rate
    Trainer.set_learning_rate
-
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.Trainer

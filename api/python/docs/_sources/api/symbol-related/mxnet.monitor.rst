@@ -16,11 +16,3 @@ mxnet.monitor
 
       Monitor
 
-
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.monitor

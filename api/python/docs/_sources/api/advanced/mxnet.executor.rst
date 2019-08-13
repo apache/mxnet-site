@@ -15,12 +15,3 @@ mxnet.executor
       :toctree: _autogen
 
       Executor
-
-
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.executor

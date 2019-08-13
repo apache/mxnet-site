@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    
+    <title>Quantize custom models with MKL-DNN backend &#8212; Apache MXNet  documentation</title>
+
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mxnet.css" />
+    <link rel="stylesheet" href="../../../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/fonts.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/google_analytics.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="shortcut icon" href="../../../_static/mxnet-icon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper">
+      <a class="site-title" rel="author" href="/"><img
+            src="../../../_static/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/get_started">Get Started</a>
+        <a class="page-link" href="/blog">Blog</a>
+        <a class="page-link" href="/features">Features</a>
+        <a class="page-link" href="/ecosystem">Ecosystem</a>
+        <a class="page-link page-current" href="/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+      </div>
+    </nav>
+  </div>
+</header>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link is-active">Quantize custom models with MKL-DNN backend</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../../../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../../../_sources/tutorials/performance/backend/mkldnn_quantization.ipynb" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">      
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Python Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/crash-course/index.html">Crash Course</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/to-mxnet/index.html">Moving to MXNet from Other Frameworks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../packages/index.html">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/gluon/index.html">Gluon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/ndarray/index.html">NDArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/symbol/index.html">Symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/autograd/autograd.html">Automatic Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/onnx/index.html">ONNX</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression/index.html">Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html">Accelerated Backend Tools</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../deploy/index.html">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/export/index.html">Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/inference/index.html">Inference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/run-on-aws/index.html">Run on AWS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/index.html">Customization</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ndarray/index.html">mxnet.ndarray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/mxnet.ndarray.NDArray.html">NDArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/routines.html">Routines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/mxnet.ndarray.sparse.CSRNDArray.html">CSRNDArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/mxnet.ndarray.sparse.RowSparseNDArray.html">RowSparseNDArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/sparse_routines.html">Sparse routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/gluon/index.html">mxnet.gluon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/nn.html">nn and contrib.nn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/rnn.html">rnn and contrib.rnn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.loss.html"><code class="docutils literal notranslate"><span class="pre">loss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.parameter.html">Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.Trainer.html">Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.data.vision.html">data.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.model_zoo.html">model_zoo.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.utils.html">utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/gluon-related/index.html">Gluon related modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.autograd.html">mxnet.autograd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.image.html">mxnet.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.io.html">mxnet.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.recordio.html">mxnet.recordio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.kvstore.html">mxnet.kvstore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.optimizer.html">mxnet.optimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.random.html">mxnet.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.profiler.html">mxnet.profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.context.html">mxnet.context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.initializer.html">mxnet.initializer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.lr_scheduler.html">mxnet.lr_scheduler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.metric.html">mxnet.metric</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/symbol/index.html">mxnet.symbol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/mxnet.symbol.Symbol.html">Symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/mxnet.symbol.linalg.html">mxnet.linalg</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/symbol-related/index.html">Symbol related modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol-related/mxnet.callback.html">mxnet.callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol-related/mxnet.module.html">mxnet.module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol-related/mxnet.monitor.html">mxnet.monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol-related/mxnet.visualization.html">mxnet.visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/advanced/index.html">Advanced modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.executor.html">mxnet.executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.kvstore_server.html">mxnet.kvstore_server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.engine.html">mxnet.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.executor_manager.html">mxnet.executor_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.rtc.html">mxnet.rtc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.test_utils.html">mxnet.test_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.util.html">mxnet.util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+	<script type="text/javascript" src="../../../_static/sphinx_materialdesign_theme.js "></script>
+    <header class="mdl-layout__drawer">      
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Python Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/crash-course/index.html">Crash Course</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/to-mxnet/index.html">Moving to MXNet from Other Frameworks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../packages/index.html">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/gluon/index.html">Gluon</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/ndarray/index.html">NDArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/symbol/index.html">Symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/autograd/autograd.html">Automatic Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/onnx/index.html">ONNX</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html">Performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../compression/index.html">Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html">Accelerated Backend Tools</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../deploy/index.html">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/export/index.html">Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/inference/index.html">Inference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/run-on-aws/index.html">Run on AWS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/index.html">Customization</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ndarray/index.html">mxnet.ndarray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/mxnet.ndarray.NDArray.html">NDArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/routines.html">Routines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/mxnet.ndarray.sparse.CSRNDArray.html">CSRNDArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/mxnet.ndarray.sparse.RowSparseNDArray.html">RowSparseNDArray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/sparse_routines.html">Sparse routines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/gluon/index.html">mxnet.gluon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/nn.html">nn and contrib.nn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/rnn.html">rnn and contrib.rnn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.loss.html"><code class="docutils literal notranslate"><span class="pre">loss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.parameter.html">Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.Trainer.html">Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.data.vision.html">data.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.model_zoo.html">model_zoo.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/mxnet.gluon.utils.html">utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/gluon-related/index.html">Gluon related modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.autograd.html">mxnet.autograd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.image.html">mxnet.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.io.html">mxnet.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.recordio.html">mxnet.recordio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.kvstore.html">mxnet.kvstore</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.optimizer.html">mxnet.optimizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.random.html">mxnet.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.profiler.html">mxnet.profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.context.html">mxnet.context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.initializer.html">mxnet.initializer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.lr_scheduler.html">mxnet.lr_scheduler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon-related/mxnet.metric.html">mxnet.metric</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/symbol/index.html">mxnet.symbol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/mxnet.symbol.Symbol.html">Symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/mxnet.symbol.linalg.html">mxnet.linalg</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/symbol-related/index.html">Symbol related modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol-related/mxnet.callback.html">mxnet.callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol-related/mxnet.module.html">mxnet.module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol-related/mxnet.monitor.html">mxnet.monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol-related/mxnet.visualization.html">mxnet.visualization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/advanced/index.html">Advanced modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.executor.html">mxnet.executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.kvstore_server.html">mxnet.kvstore_server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.engine.html">mxnet.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.executor_manager.html">mxnet.executor_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.rtc.html">mxnet.rtc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.test_utils.html">mxnet.test_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/advanced/mxnet.util.html">mxnet.util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content">
+        
+  <!--- Licensed to the Apache Software Foundation (ASF) under one --><!--- or more contributor license agreements.  See the NOTICE file --><!--- distributed with this work for additional information --><!--- regarding copyright ownership.  The ASF licenses this file --><!--- to you under the Apache License, Version 2.0 (the --><!--- "License"); you may not use this file except in compliance --><!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, --><!--- software distributed under the License is distributed on an --><!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY --><!--- KIND, either express or implied.  See the License for the --><!--- specific language governing permissions and limitations --><!--- under the License. --><div class="section" id="Quantize-custom-models-with-MKL-DNN-backend">
+<h1>Quantize custom models with MKL-DNN backend<a class="headerlink" href="#Quantize-custom-models-with-MKL-DNN-backend" title="Permalink to this headline">¶</a></h1>
+<p>This document is to introduce how to quantize the customer models from FP32 to INT8 with Apache/MXNet toolkit and APIs under Intel CPU.</p>
+<p>If you are not familiar with Apache/MXNet quantization flow, please reference <a class="reference external" href="https://medium.com/apache-mxnet/model-quantization-for-production-level-neural-network-inference-f54462ebba05">quantization blog</a> first, and the performance data is shown in <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/cpp-package/example/inference">Apache/MXNet C++ interface</a> and <a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/int8_inference.html">GluonCV</a>.</p>
+<div class="section" id="Installation-and-Prerequisites">
+<h2>Installation and Prerequisites<a class="headerlink" href="#Installation-and-Prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>Installing MXNet with MKLDNN backend is an easy and essential process. You can follow <a class="reference external" href="https://mxnet.incubator.apache.org/tutorials/mkldnn/MKLDNN_README.html">How to build and install MXNet with MKL-DNN backend</a> to build and install MXNet from source. Also, you can install the release or nightly version via PyPi and pip directly by running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># release version</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">mxnet</span><span class="o">-</span><span class="n">mkl</span>
+<span class="c1"># nightly version</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">mxnet</span><span class="o">-</span><span class="n">mkl</span> <span class="o">--</span><span class="n">pre</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Image-Classification-Demo">
+<h2>Image Classification Demo<a class="headerlink" href="#Image-Classification-Demo" title="Permalink to this headline">¶</a></h2>
+<p>A quantization script <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/example/quantization/imagenet_gen_qsym_mkldnn.py">imagenet_gen_qsym_mkldnn.py</a> has been designed to launch quantization for image-classification models. This script is integrated with <a class="reference external" href="https://gluon-cv.mxnet.io/model_zoo/classification.html">Gluon-CV modelzoo</a>, so that all pre-trained models can be downloaded from Gluon-CV and then converted for quantization. For details, you can refer <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/example/quantization/README.md">Model Quantization with
+Calibration Examples</a>.</p>
+</div>
+<div class="section" id="Integrate-Quantization-Flow-to-Your-Project">
+<h2>Integrate Quantization Flow to Your Project<a class="headerlink" href="#Integrate-Quantization-Flow-to-Your-Project" title="Permalink to this headline">¶</a></h2>
+<p>Quantization flow works for both symbolic and Gluon models. If you’re using Gluon, you can first refer <a class="reference external" href="https://mxnet.incubator.apache.org/versions/master/tutorials/gluon/save_load_params.html">Saving and Loading Gluon Models</a> to hybridize your computation graph and export it as a symbol before running quantization.</p>
+<p>In general, the quantization flow includes 4 steps. The user can get the acceptable accuracy from step 1 to 3 with minimum effort. Most of thing in this stage is out-of-box and the data scientists and researchers only need to focus on how to represent data and layers in their model. After a quantized model is generated, you may want to deploy it online and the performance will be the next key point. Thus, step 4, calibration, can improve the performance a lot by reducing lots of runtime
+calculation.</p>
+<p><img alt="quantization flow" src="https://github.com/dmlc/web-data/raw/master/mxnet/tutorials/mkldnn/quantization/quantization.png" /></p>
+<p>Now, we are going to take Gluon ResNet18 as an example to show how each step work.</p>
+<div class="section" id="Initialize-Model">
+<h3>Initialize Model<a class="headerlink" href="#Initialize-Model" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">mxnet</span> <span class="kn">as</span> <span class="nn">mx</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon.model_zoo</span> <span class="kn">import</span> <span class="n">vision</span>
+<span class="kn">from</span> <span class="nn">mxnet.contrib.quantization</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">()</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;logger&#39;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="n">batch_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
+<span class="n">resnet18</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">resnet18_v1</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">resnet18</span><span class="o">.</span><span class="n">hybridize</span><span class="p">()</span>
+<span class="n">resnet18</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">batch_shape</span><span class="p">))</span>
+<span class="n">resnet18</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">&#39;resnet18_v1&#39;</span><span class="p">)</span>
+<span class="n">sym</span><span class="p">,</span> <span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_checkpoint</span><span class="p">(</span><span class="s1">&#39;resnet18_v1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1"># (optional) visualize float32 model</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_network</span><span class="p">(</span><span class="n">sym</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>First, we download resnet18-v1 model from gluon modelzoo and export it as a symbol. You can visualize float32 model. Below is a raw residual block.</p>
+<p><img alt="float32 model" src="https://github.com/dmlc/web-data/raw/master/mxnet/tutorials/mkldnn/quantization/fp32_raw.png" /></p>
+<div class="section" id="Model-Fusion">
+<h4>Model Fusion<a class="headerlink" href="#Model-Fusion" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sym</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">get_backend_symbol</span><span class="p">(</span><span class="s1">&#39;MKLDNN_QUANTIZE&#39;</span><span class="p">)</span>
+<span class="c1"># (optional) visualize fused float32 model</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_network</span><span class="p">(</span><span class="n">sym</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It’s important to add this line to enable graph fusion before quantization to get better performance. Below is a fused residual block. Batchnorm, Activation and elemwise_add are fused into Convolution.</p>
+<p><img alt="float32 fused model" src="https://github.com/dmlc/web-data/raw/master/mxnet/tutorials/mkldnn/quantization/fp32_fusion.png" /></p>
+</div>
+</div>
+<div class="section" id="Quantize-Model">
+<h3>Quantize Model<a class="headerlink" href="#Quantize-Model" title="Permalink to this headline">¶</a></h3>
+<p>A python interface <code class="docutils literal notranslate"><span class="pre">quantize_graph</span></code> is provided for the user. Thus, it is very flexible for the data scientist to construct the expected models based on different requirements in a real deployment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># quantize configs</span>
+<span class="c1"># set exclude layers</span>
+<span class="n">excluded_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># set calib mode.</span>
+<span class="n">calib_mode</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+<span class="c1"># set calib_layer</span>
+<span class="n">calib_layer</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="c1"># set quantized_dtype</span>
+<span class="n">quantized_dtype</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Quantizing FP32 model Resnet18-V1&#39;</span><span class="p">)</span>
+<span class="n">qsym</span><span class="p">,</span> <span class="n">qarg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="p">,</span> <span class="n">collector</span> <span class="o">=</span> <span class="n">quantize_graph</span><span class="p">(</span><span class="n">sym</span><span class="o">=</span><span class="n">sym</span><span class="p">,</span> <span class="n">arg_params</span><span class="o">=</span><span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="o">=</span><span class="n">aux_params</span><span class="p">,</span>
+                                                          <span class="n">excluded_sym_names</span><span class="o">=</span><span class="n">excluded_names</span><span class="p">,</span>
+                                                          <span class="n">calib_mode</span><span class="o">=</span><span class="n">calib_mode</span><span class="p">,</span> <span class="n">calib_layer</span><span class="o">=</span><span class="n">calib_layer</span><span class="p">,</span>
+                                                          <span class="n">quantized_dtype</span><span class="o">=</span><span class="n">quantized_dtype</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+<span class="c1"># (optional) visualize quantized model</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_network</span><span class="p">(</span><span class="n">qsym</span><span class="p">)</span>
+<span class="c1"># save quantized model</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s1">&#39;quantized-resnet18_v1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">qsym</span><span class="p">,</span> <span class="n">qarg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By applying <code class="docutils literal notranslate"><span class="pre">quantize_graph</span></code> to the symbolic model, a new quantized model can be generated, named <code class="docutils literal notranslate"><span class="pre">qsym</span></code> along with its parameters. We can see <code class="docutils literal notranslate"><span class="pre">_contrib_requantize</span></code> operators are inserted after <code class="docutils literal notranslate"><span class="pre">Convolution</span></code> to convert the INT32 output to FP32.</p>
+<p><img alt="none calibrated model" src="https://github.com/dmlc/web-data/raw/master/mxnet/tutorials/mkldnn/quantization/none_calib.png" /></p>
+<p>Below table gives some descriptions.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 96%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>param</p></th>
+<th class="head"><p>type</p></th>
+<th class="head"><p>description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>excluded_s
+ym_names</p></td>
+<td><p>list of
+strings</p></td>
+<td><p>A list of strings representing the names of the symbols that users want to excluding from being quantized.</p></td>
+</tr>
+<tr class="row-odd"><td><p>calib_mode</p></td>
+<td><p>str</p></td>
+<td><p>If calib_mode=‘none’, no calibration will be used and the thresholds for requantization after the corresponding layers will be calculated at runtime by calling min and max operators. The quantized models generated in this mode are normally 10-20% slower than those with calibrations during inference.If calib_mode=‘naive’, the min and max values of the layer outputs from a calibration dataset will be directly taken as the thresholds for quantization.If
+calib_mode=‘entropy’, the thresholds for quantization will be derived such that the KL divergence between the distributions of FP32 layer outputs and quantized layer outputs is minimized based upon the calibration dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p>calib_laye
+r</p></td>
+<td><p>function</p></td>
+<td><p>Given a layer’s output name in string, return True or False for deciding whether to calibrate this layer.If yes, the statistics of the layer’s output will be collected; otherwise, no information of the layer’s output will be collected.If not provided, all the layers’ outputs that need requantization will be collected.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a href="#id1"><span class="problematic" id="id2">quantized_</span></a>
+dtype</p></td>
+<td><p>str</p></td>
+<td><p>The quantized destination type for input data. Currently support ‘int8’, ‘uint8’ and ‘auto’.‘auto’ means automatically select output type according to calibration result.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="Evaluate-&amp;-Tune">
+<h3>Evaluate &amp; Tune<a class="headerlink" href="#Evaluate-&-Tune" title="Permalink to this headline">¶</a></h3>
+<p>Now, you get a pair of quantized symbol and params file for inference. For Gluon inference, only difference is to load model and params by a SymbolBlock as below example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">quantized_net</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">SymbolBlock</span><span class="o">.</span><span class="n">imports</span><span class="p">(</span><span class="s1">&#39;quantized-resnet18_v1-symbol.json&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;quantized-resnet18_v1-0000.params&#39;</span><span class="p">)</span>
+<span class="n">quantized_net</span><span class="o">.</span><span class="n">hybridize</span><span class="p">(</span><span class="n">static_shape</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">static_alloc</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">224</span><span class="p">,</span><span class="mi">224</span><span class="p">))</span>
+<span class="n">quantized_net</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, you can get the accuracy from a quantized network. Furthermore, you can try to select different layers or OPs to be quantized by <code class="docutils literal notranslate"><span class="pre">excluded_sym_names</span></code> parameter and figure out an acceptable accuracy.</p>
+</div>
+<div class="section" id="Calibrate-Model-(optional-for-performance)">
+<h3>Calibrate Model (optional for performance)<a class="headerlink" href="#Calibrate-Model-(optional-for-performance)" title="Permalink to this headline">¶</a></h3>
+<p>The quantized model generated in previous steps can be very slow during inference since it will calculate min and max at runtime. We recommend using offline calibration for better performance by setting <code class="docutils literal notranslate"><span class="pre">calib_mode</span></code> to <code class="docutils literal notranslate"><span class="pre">naive</span></code> or <code class="docutils literal notranslate"><span class="pre">entropy</span></code>. And then calling <code class="docutils literal notranslate"><span class="pre">set_monitor_callback</span></code> api to collect layer information with a subset of the validation datasets before int8 inference.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># quantization configs</span>
+<span class="c1"># set exclude layers</span>
+<span class="n">excluded_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># set calib mode.</span>
+<span class="n">calib_mode</span> <span class="o">=</span> <span class="s1">&#39;naive&#39;</span>
+<span class="c1"># set calib_layer</span>
+<span class="n">calib_layer</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="c1"># set quantized_dtype</span>
+<span class="n">quantized_dtype</span> <span class="o">=</span> <span class="s1">&#39;auto&#39;</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Quantizing FP32 model resnet18-V1&#39;</span><span class="p">)</span>
+<span class="n">cqsym</span><span class="p">,</span> <span class="n">cqarg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="p">,</span> <span class="n">collector</span> <span class="o">=</span> <span class="n">quantize_graph</span><span class="p">(</span><span class="n">sym</span><span class="o">=</span><span class="n">sym</span><span class="p">,</span> <span class="n">arg_params</span><span class="o">=</span><span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="o">=</span><span class="n">aux_params</span><span class="p">,</span>
+                                                          <span class="n">excluded_sym_names</span><span class="o">=</span><span class="n">excluded_names</span><span class="p">,</span>
+                                                          <span class="n">calib_mode</span><span class="o">=</span><span class="n">calib_mode</span><span class="p">,</span> <span class="n">calib_layer</span><span class="o">=</span><span class="n">calib_layer</span><span class="p">,</span>
+                                                          <span class="n">quantized_dtype</span><span class="o">=</span><span class="n">quantized_dtype</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+<span class="c1"># download imagenet validation dataset</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">test_utils</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">&#39;http://data.mxnet.io/data/val_256_q90.rec&#39;</span><span class="p">,</span> <span class="s1">&#39;dataset.rec&#39;</span><span class="p">)</span>
+<span class="c1"># set rgb info for data</span>
+<span class="n">mean_std</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mean_r&#39;</span><span class="p">:</span> <span class="mf">123.68</span><span class="p">,</span> <span class="s1">&#39;mean_g&#39;</span><span class="p">:</span> <span class="mf">116.779</span><span class="p">,</span> <span class="s1">&#39;mean_b&#39;</span><span class="p">:</span> <span class="mf">103.939</span><span class="p">,</span> <span class="s1">&#39;std_r&#39;</span><span class="p">:</span> <span class="mf">58.393</span><span class="p">,</span> <span class="s1">&#39;std_g&#39;</span><span class="p">:</span> <span class="mf">57.12</span><span class="p">,</span> <span class="s1">&#39;std_b&#39;</span><span class="p">:</span> <span class="mf">57.375</span><span class="p">}</span>
+<span class="c1"># set batch size</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="c1"># create DataIter</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ImageRecordIter</span><span class="p">(</span><span class="n">path_imgrec</span><span class="o">=</span><span class="s1">&#39;dataset.rec&#39;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">data_shape</span><span class="o">=</span><span class="n">batch_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">rand_crop</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">rand_mirror</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">mean_std</span><span class="p">)</span>
+<span class="c1"># create module</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="n">sym</span><span class="p">,</span> <span class="n">label_names</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">for_training</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">data_shapes</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">provide_data</span><span class="p">,</span> <span class="n">label_shapes</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="p">)</span>
+
+<span class="c1"># calibration configs</span>
+<span class="c1"># set num_calib_batches</span>
+<span class="n">num_calib_batches</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">max_num_examples</span> <span class="o">=</span> <span class="n">num_calib_batches</span> <span class="o">*</span> <span class="n">batch_size</span>
+<span class="c1"># monitor FP32 Inference</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">_exec_group</span><span class="o">.</span><span class="n">execs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_monitor_callback</span><span class="p">(</span><span class="n">collector</span><span class="o">.</span><span class="n">collect</span><span class="p">,</span> <span class="n">monitor_all</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">num_batches</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">num_examples</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+    <span class="n">mod</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">data_batch</span><span class="o">=</span><span class="n">batch</span><span class="p">,</span> <span class="n">is_train</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">num_batches</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">num_examples</span> <span class="o">+=</span> <span class="n">batch_size</span>
+    <span class="k">if</span> <span class="n">num_examples</span> <span class="o">&gt;=</span> <span class="n">max_num_examples</span><span class="p">:</span>
+        <span class="k">break</span>
+<span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Collected statistics from </span><span class="si">%d</span><span class="s2"> batches with batch_size=</span><span class="si">%d</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span><span class="n">num_batches</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>After that, layer information will be filled into the <code class="docutils literal notranslate"><span class="pre">collector</span></code> returned by <code class="docutils literal notranslate"><span class="pre">quantize_graph</span></code> api. Then, you need to write the layer information into int8 model by calling <code class="docutils literal notranslate"><span class="pre">calib_graph</span></code> api.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># write scaling factor into quantized symbol</span>
+<span class="n">cqsym</span><span class="p">,</span> <span class="n">cqarg_params</span><span class="p">,</span> <span class="n">aux_params</span> <span class="o">=</span> <span class="n">calib_graph</span><span class="p">(</span><span class="n">qsym</span><span class="o">=</span><span class="n">cqsym</span><span class="p">,</span> <span class="n">arg_params</span><span class="o">=</span><span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="o">=</span><span class="n">aux_params</span><span class="p">,</span>
+                                            <span class="n">collector</span><span class="o">=</span><span class="n">collector</span><span class="p">,</span> <span class="n">calib_mode</span><span class="o">=</span><span class="n">calib_mode</span><span class="p">,</span>
+                                            <span class="n">quantized_dtype</span><span class="o">=</span><span class="n">quantized_dtype</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+<span class="c1"># (optional) visualize quantized model</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_network</span><span class="p">(</span><span class="n">cqsym</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Below is a quantized residual block with naive calibration. We can see <code class="docutils literal notranslate"><span class="pre">min_calib_range</span></code> and <code class="docutils literal notranslate"><span class="pre">max_calib_range</span></code> are written into <code class="docutils literal notranslate"><span class="pre">_contrib_requantize</span></code> operators.</p>
+<p><img alt="naive calibrated model" src="https://github.com/dmlc/web-data/raw/master/mxnet/tutorials/mkldnn/quantization/naive_calib.png" /></p>
+<p>When you get a quantized model with calibration, keeping sure to call fusion api again since this can fuse some <code class="docutils literal notranslate"><span class="pre">requantize</span></code> or <code class="docutils literal notranslate"><span class="pre">dequantize</span></code> operators for further performance improvement.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># perform post-quantization fusion</span>
+<span class="n">cqsym</span> <span class="o">=</span> <span class="n">cqsym</span><span class="o">.</span><span class="n">get_backend_symbol</span><span class="p">(</span><span class="s1">&#39;MKLDNN_QUANTIZE&#39;</span><span class="p">)</span>
+<span class="c1"># (optional) visualize post-quantized model</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">plot_network</span><span class="p">(</span><span class="n">cqsym</span><span class="p">)</span>
+<span class="c1"># save quantized model</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s1">&#39;quantized-resnet18_v1&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cqsym</span><span class="p">,</span> <span class="n">cqarg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Below is a post-quantized residual block. We can see <code class="docutils literal notranslate"><span class="pre">_contrib_requantize</span></code> operators are fused into <code class="docutils literal notranslate"><span class="pre">Convolution</span></code> operators.</p>
+<p><img alt="post-quantized model" src="https://github.com/dmlc/web-data/raw/master/mxnet/tutorials/mkldnn/quantization/post_quantize.png" /></p>
+<p>BTW, You can also modify the <code class="docutils literal notranslate"><span class="pre">min_calib_range</span></code> and <code class="docutils literal notranslate"><span class="pre">max_calib_range</span></code> in the JSON file directly.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="p">{</span>
+      <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;_sg_mkldnn_conv&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;quantized_sg_mkldnn_conv_bn_act_6&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;attrs&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;max_calib_range&quot;</span><span class="p">:</span> <span class="s2">&quot;3.562147&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;min_calib_range&quot;</span><span class="p">:</span> <span class="s2">&quot;0.000000&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;quantized&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;with_act&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;with_bn&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span>
+      <span class="p">},</span>
+<span class="o">......</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Tips-for-Model-Calibration">
+<h3>Tips for Model Calibration<a class="headerlink" href="#Tips-for-Model-Calibration" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="Accuracy-Tuning">
+<h4>Accuracy Tuning<a class="headerlink" href="#Accuracy-Tuning" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>Try to use <code class="docutils literal notranslate"><span class="pre">entropy</span></code> calib mode;</p></li>
+<li><p>Try to exclude some layers which may cause obvious accuracy drop;</p></li>
+<li><p>Change calibration dataset by setting different <code class="docutils literal notranslate"><span class="pre">num_calib_batches</span></code> or shuffle your validation dataset;</p></li>
+</ul>
+</div>
+<div class="section" id="Performance-Tuning">
+<h4>Performance Tuning<a class="headerlink" href="#Performance-Tuning" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li><p>Keep sure to perform graph fusion before quantization;</p></li>
+<li><p>If lots of <code class="docutils literal notranslate"><span class="pre">requantize</span></code> layers exist, keep sure to perform post-quantization fusion after calibration;</p></li>
+<li><p>Compare the MXNet profile or <code class="docutils literal notranslate"><span class="pre">MKLDNN_VERBOSE</span></code> of float32 and int8 inference;</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="Deploy-with-Python/C++">
+<h2>Deploy with Python/C++<a class="headerlink" href="#Deploy-with-Python/C++" title="Permalink to this headline">¶</a></h2>
+<p>MXNet also supports deploy quantized models with C++. Refer <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/cpp-package/README.md">MXNet C++ Package</a> for more details.</p>
+<!-- INSERT SOURCE DOWNLOAD BUTTONS --></div>
+</div>
+
+
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">Quantize custom models with MKL-DNN backend</a><ul>
+<li><a class="reference internal" href="#Installation-and-Prerequisites">Installation and Prerequisites</a></li>
+<li><a class="reference internal" href="#Image-Classification-Demo">Image Classification Demo</a></li>
+<li><a class="reference internal" href="#Integrate-Quantization-Flow-to-Your-Project">Integrate Quantization Flow to Your Project</a><ul>
+<li><a class="reference internal" href="#Initialize-Model">Initialize Model</a><ul>
+<li><a class="reference internal" href="#Model-Fusion">Model Fusion</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Quantize-Model">Quantize Model</a></li>
+<li><a class="reference internal" href="#Evaluate-&amp;-Tune">Evaluate &amp; Tune</a></li>
+<li><a class="reference internal" href="#Calibrate-Model-(optional-for-performance)">Calibrate Model (optional for performance)</a></li>
+<li><a class="reference internal" href="#Tips-for-Model-Calibration">Tips for Model Calibration</a><ul>
+<li><a class="reference internal" href="#Accuracy-Tuning">Accuracy Tuning</a></li>
+<li><a class="reference internal" href="#Performance-Tuning">Performance Tuning</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Deploy-with-Python/C++">Deploy with Python/C++</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>                    
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+  </div>
+            <footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a class="u-email" href="mailto:dev@mxnet.apache.org">Dev list</a></li>
+                    <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/mxnet.io-v2/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="../../../_static/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+  </body>
+</html>

@@ -39,10 +39,3 @@ Helper functions
    :toctree: _autogen/
 
    register
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.initializer

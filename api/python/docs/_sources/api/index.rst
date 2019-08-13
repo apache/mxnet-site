@@ -1,5 +1,5 @@
-API
-===
+Python API
+==========
 
 Overview
 --------
@@ -58,5 +58,3 @@ following categories:
    symbol/index
    symbol-related/index
    advanced/index
-
-.. disqus::

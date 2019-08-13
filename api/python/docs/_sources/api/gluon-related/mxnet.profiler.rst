@@ -35,7 +35,3 @@ Profiling Objects
    Frame
    Marker
    Task
-
-
-.. disqus::
-   :disqus_identifier: mxnet.profiler

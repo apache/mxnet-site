@@ -24,5 +24,3 @@ Read and write RecordIO files
    unpack
    unpack_img
 
-.. disqus::
-   :disqus_identifier: mxnet.recordio

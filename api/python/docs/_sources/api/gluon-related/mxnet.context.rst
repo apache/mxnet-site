@@ -14,7 +14,3 @@ mxnet.context
    gpu
    num_gpus
    Context
-
-
-.. disqus::
-   :disqus_identifier: mxnet.context

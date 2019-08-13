@@ -6,7 +6,6 @@ mxnet.autograd
 .. autosummary::
    :toctree: _autogen
 
-
    backward
    get_symbol
    grad
@@ -20,5 +19,3 @@ mxnet.autograd
    set_training
    train_mode
    Function
-
-.. disqus::

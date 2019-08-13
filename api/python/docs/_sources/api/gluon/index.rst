@@ -124,8 +124,6 @@ Utilities
 
       A variety of utilities for training.
 
-.. disqus::
-
 .. toctree::
    :hidden:
    :maxdepth: 2

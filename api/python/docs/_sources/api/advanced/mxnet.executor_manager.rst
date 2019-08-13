@@ -19,9 +19,3 @@ mxnet.executor\_manager
 
 
 
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.executor_manager

@@ -12,15 +12,3 @@ mxnet.util
 
       makedirs
 
-
-
-
-
-
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.util

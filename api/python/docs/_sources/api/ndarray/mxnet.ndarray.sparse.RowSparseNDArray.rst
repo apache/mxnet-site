@@ -164,7 +164,3 @@ Miscellaneous
     RowSparseNDArray.abs
     RowSparseNDArray.clip
     RowSparseNDArray.sign
-
-
-.. disqus::
-   :disqus_identifier: mxnet.ndarray.sparse.RowSparseNDArray

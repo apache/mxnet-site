@@ -34,5 +34,3 @@ Symbol related modules
    mxnet.module
    mxnet.monitor
    mxnet.visualization
-
-.. disqus::

@@ -60,6 +60,3 @@ Attributes
 .. autosummary::
 
    ParameterDict.prefix
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.ParameterDict

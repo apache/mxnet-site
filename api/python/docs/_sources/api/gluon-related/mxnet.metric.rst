@@ -38,6 +38,3 @@ Helper functions
    check_label_shapes
    create
    np
-
-.. disqus::
-   :disqus_identifier: mxnet.metric

@@ -7,16 +7,3 @@ mxnet.random
    :toctree: _autogen
 
    seed
-
-
-
-
-
-
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.random

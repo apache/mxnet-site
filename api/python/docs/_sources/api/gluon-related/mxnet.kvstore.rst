@@ -8,6 +8,3 @@ mxnet.kvstore
 
       create
       KVStore
-
-.. disqus::
-   :disqus_identifier: mxnet.kvstore

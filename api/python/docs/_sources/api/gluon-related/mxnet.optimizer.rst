@@ -36,7 +36,3 @@ Helper functions
    create
    get_updater
    register
-
-
-.. disqus::
-   :disqus_identifier: mxnet.optimizer

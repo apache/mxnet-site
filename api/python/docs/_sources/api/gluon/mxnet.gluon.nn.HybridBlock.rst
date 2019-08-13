@@ -47,7 +47,3 @@ HybridBlock
       ~HybridBlock.params
       ~HybridBlock.prefix
 
-
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.nn.HybridBlock

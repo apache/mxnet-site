@@ -33,7 +33,3 @@ Helper classes and functions
    MXDataIter
    PrefetchingIter
    ResizeIter
-
-
-.. disqus::
-   :disqus_identifier: mxnet.io

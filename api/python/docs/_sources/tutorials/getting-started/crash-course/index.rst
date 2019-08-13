@@ -18,8 +18,6 @@ machine learning or other deep learning frameworks.
    6-use_gpus
 
 
-.. disqus::
-
 ..
    # add back the videos until apis are updated.
    You can also watch the video tutorials for this crash course. Note that two APIs

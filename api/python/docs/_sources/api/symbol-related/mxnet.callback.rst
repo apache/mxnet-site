@@ -26,12 +26,3 @@ mxnet.callback
       LogValidationMetricsCallback
       ProgressBar
       Speedometer
-
-
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.callback

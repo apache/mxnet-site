@@ -39,6 +39,3 @@ Data transformations
    transforms.RandomHue
    transforms.RandomColorJitter
    transforms.RandomLighting
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.data.vision

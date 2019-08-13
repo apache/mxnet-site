@@ -92,5 +92,3 @@ Gluon related modules
    mxnet.initializer
    mxnet.lr_scheduler
    mxnet.metric
-
-.. disqus::

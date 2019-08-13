@@ -55,5 +55,3 @@ Advanced modules
    mxnet.rtc
    mxnet.test_utils
    mxnet.util
-
-.. disqus::

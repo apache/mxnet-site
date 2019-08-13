@@ -137,6 +137,3 @@ Advanced Activation Layers
     nn.ELU
     nn.SELU
     nn.Swish
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.nn

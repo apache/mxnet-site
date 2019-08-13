@@ -17,10 +17,3 @@ mxnet.kvstore\_server
       KVStoreServer
 
 
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.kvstore_server

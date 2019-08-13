@@ -184,8 +184,3 @@ Miscellaneous
     CSRNDArray.abs
     CSRNDArray.clip
     CSRNDArray.sign
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.ndarray.sparse.CSRNDArray

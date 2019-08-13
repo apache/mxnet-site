@@ -48,7 +48,3 @@ SymbolBlock
       ~SymbolBlock.params
       ~SymbolBlock.prefix
 
-
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.nn.SymbolBlock

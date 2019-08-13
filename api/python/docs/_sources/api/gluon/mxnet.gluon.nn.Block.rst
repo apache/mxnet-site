@@ -67,6 +67,3 @@ Block
 
           Block.save_params
           Block.load_params
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.nn.Gluon

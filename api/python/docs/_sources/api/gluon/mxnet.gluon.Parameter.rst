@@ -49,6 +49,3 @@ Convert to symbol
    :toctree: _autogen
 
    Parameter.var
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.Parameter

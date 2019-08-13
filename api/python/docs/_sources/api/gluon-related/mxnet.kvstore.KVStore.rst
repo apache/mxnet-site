@@ -42,7 +42,3 @@ Attributes
    KVStore.rank
    KVStore.type
 
-
-
-.. disqus::
-   :disqus_identifier: mxnet.kvstore.KVStore

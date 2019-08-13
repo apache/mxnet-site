@@ -21,7 +21,3 @@ HybridBlock
       HybridBlock.infer_shape
       HybridBlock.infer_type
 
-
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.nn.HybridBlock

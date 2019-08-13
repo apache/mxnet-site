@@ -21,6 +21,3 @@ module.
    LogisticLoss
    TripletLoss
    CTCLoss
-
-.. disqus::
-   :disqus_identifier: mxnet.gluon.loss

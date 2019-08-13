@@ -12,5 +12,3 @@ mxnet.lr\_scheduler
    PolyScheduler
    CosineScheduler
 
-.. disqus::
-   :disqus_identifier: mxnet.lr_scheduler

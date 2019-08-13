@@ -12,5 +12,3 @@ utils
    download
    check_sha1
 
-.. disqus::
-   :disqus_identifier: mxnet.gluon.utils

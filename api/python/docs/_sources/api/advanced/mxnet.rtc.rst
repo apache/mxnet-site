@@ -17,11 +17,3 @@ mxnet.rtc
       CudaKernel
       CudaModule
 
-
-
-
-
-
-
-.. disqus::
-   :disqus_identifier: mxnet.rtc
