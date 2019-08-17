@@ -36,7 +36,6 @@ var searchData=
   ['libinfo',['LibInfo',['../structmxnet_1_1features_1_1LibInfo.html#ae9f0cc75baeb5a37ed1c83b7d7706d61',1,'mxnet::features::LibInfo']]],
   ['libinfo',['LibInfo',['../structmxnet_1_1features_1_1LibInfo.html',1,'mxnet::features']]],
   ['libinfo_2eh',['libinfo.h',['../libinfo_8h.html',1,'']]],
-  ['library_2eh',['library.h',['../library_8h.html',1,'']]],
   ['line_5finfo',['line_info',['../classdmlc_1_1JSONReader.html#af10972598d7d2cf198c28f56cd4b74d5',1,'dmlc::JSONReader']]],
   ['list',['List',['../classdmlc_1_1Registry.html#a7332aad0c884773f70eb9fdd30344e6a',1,'dmlc::Registry']]],
   ['list_5farguments',['list_arguments',['../structNativeOpInfo.html#af25c58d65a2350cab76403f1ce21922e',1,'NativeOpInfo::list_arguments()'],['../structNDArrayOpInfo.html#abc701d8c032a1c5b9358de8ab060d9c2',1,'NDArrayOpInfo::list_arguments()']]],
@@ -56,7 +55,6 @@ var searchData=
   ['listoutputnames',['ListOutputNames',['../classnnvm_1_1Symbol.html#a541094ef1f249843d9060da8bd14a239',1,'nnvm::Symbol']]],
   ['listoutputs',['ListOutputs',['../classmxnet_1_1OperatorProperty.html#a1b37fb362748fa5027d4b5c925131892',1,'mxnet::OperatorProperty::ListOutputs()'],['../classmxnet_1_1cpp_1_1Symbol.html#a49adf56f6c9ffc183ccca9bf57b11810',1,'mxnet::cpp::Symbol::ListOutputs()']]],
   ['load',['Load',['../classdmlc_1_1Serializable.html#a053466933c5f130d811af938d4e209d0',1,'dmlc::Serializable::Load()'],['../structmshadow_1_1packet_1_1Packet_3_01DType_00_01kPlain_01_4.html#ae57296181c81910426903397bbfd046f',1,'mshadow::packet::Packet&lt; DType, kPlain &gt;::Load()'],['../structmshadow_1_1packet_1_1Packet_3_01float_00_01kSSE2_01_4.html#af4a67255ff7ad8b113e0dcdc5659f7f9',1,'mshadow::packet::Packet&lt; float, kSSE2 &gt;::Load()'],['../structmshadow_1_1packet_1_1Packet_3_01double_00_01kSSE2_01_4.html#a8a9077d9e90450824c937886faf2acde',1,'mshadow::packet::Packet&lt; double, kSSE2 &gt;::Load()'],['../structmxnet_1_1Context.html#a882305327a53b9b9a82f5802b4b013e3',1,'mxnet::Context::Load()'],['../classmxnet_1_1NDArray.html#a5203aa033a53942deaecb7bb3bf46480',1,'mxnet::NDArray::Load(dmlc::Stream *strm)'],['../classmxnet_1_1NDArray.html#ae45c38de80d6d4dc79ad3d24baa9e981',1,'mxnet::NDArray::Load(dmlc::Stream *fi, std::vector&lt; NDArray &gt; *data, std::vector&lt; std::string &gt; *keys)'],['../classmxnet_1_1Tuple.html#a73c8f3c2933f17a1fe164a71605d1b8e',1,'mxnet::Tuple::Load(dmlc::JSONReader *reader)'],['../classmxnet_1_1Tuple.html#a9562fef3891815253867c79bb24316af',1,'mxnet::Tuple::Load(TStream *strm)'],['../classnnvm_1_1Layout.html#abb7e3caf0383e8f81ffc091b025672d3',1,'nnvm::Layout::Load()'],['../classnnvm_1_1Tuple.html#a56d6bfdf4366d323fee62f204b4af045',1,'nnvm::Tuple::Load(dmlc::JSONReader *reader)'],['../classnnvm_1_1Tuple.html#a15bb2b0936368fc5cdef067fbd242b0e',1,'nnvm::Tuple::Load(TStream *strm)'],['../classmxnet_1_1cpp_1_1FeedForward.html#ab65f69489bd31ed194dd5ffc771c4cec',1,'mxnet::cpp::FeedForward::Load()'],['../classmxnet_1_1cpp_1_1NDArray.html#ace60c7328a52f191a7593e678e28a927',1,'mxnet::cpp::NDArray::Load()'],['../classmxnet_1_1cpp_1_1Symbol.html#afaeb45c3ca7fecb68defc14addb32cd2',1,'mxnet::cpp::Symbol::Load()']]],
-  ['load_5flib',['load_lib',['../library_8h.html#a11a2c0f8a30abe245d851bd517ce4fa4',1,'library.h']]],
   ['loadbinary',['LoadBinary',['../classmshadow_1_1TensorContainer.html#a15923b9ebaff8cefadc7e299abb25099',1,'mshadow::TensorContainer::LoadBinary()'],['../namespacemshadow.html#ad43315e17aadc0c14467dffb52401984',1,'mshadow::LoadBinary(TStream &amp;fi, Tensor&lt; cpu, dim, DType &gt; *dst, bool pre_alloc)'],['../namespacemshadow.html#ac005b1b19d8d8964918006dc8e95182d',1,'mshadow::LoadBinary(TStream &amp;fi, Tensor&lt; gpu, dim, DType &gt; *dst, bool pre_alloc)']]],
   ['loadfrombuffer',['LoadFromBuffer',['../classmxnet_1_1cpp_1_1NDArray.html#ab003d36ea130b074a362c1ae45ce120b',1,'mxnet::cpp::NDArray']]],
   ['loadfrombuffertolist',['LoadFromBufferToList',['../classmxnet_1_1cpp_1_1NDArray.html#a751c75a2f1248658b4eb8d2f7eeb71e4',1,'mxnet::cpp::NDArray']]],
@@ -80,12 +78,12 @@ var searchData=
   ['lrn_5fbeta',['lrn_beta',['../structmkldnn__lrn__desc__t.html#ad29c3af8cae0dc599c62d3e04ebb94df',1,'mkldnn_lrn_desc_t']]],
   ['lrn_5fk',['lrn_k',['../structmkldnn__lrn__desc__t.html#a87736331128ad8a787012b6f3eced386',1,'mkldnn_lrn_desc_t']]],
   ['lrnparam',['LRNParam',['../structnnvm_1_1top_1_1LRNParam.html',1,'nnvm::top']]],
-  ['lrscheduler',['LRScheduler',['../classmxnet_1_1cpp_1_1LRScheduler.html#a18c635d1650fbeb99d85bc271b71e5a7',1,'mxnet::cpp::LRScheduler']]],
   ['lrscheduler',['LRScheduler',['../classmxnet_1_1cpp_1_1LRScheduler.html',1,'mxnet::cpp']]],
+  ['lrscheduler',['LRScheduler',['../classmxnet_1_1cpp_1_1LRScheduler.html#a18c635d1650fbeb99d85bc271b71e5a7',1,'mxnet::cpp::LRScheduler']]],
   ['lrscheduler_5f',['lrScheduler_',['../classmxnet_1_1cpp_1_1Optimizer.html#ad03f167498541f5bbbbffcdecb875445',1,'mxnet::cpp::Optimizer']]],
   ['lua_2eh',['lua.h',['../lua_8h.html',1,'']]],
   ['luaref',['LuaRef',['../classdmlc_1_1LuaState.html#ad76f409b883ed4be17beb2f183154ec4',1,'dmlc::LuaState::LuaRef()'],['../classdmlc_1_1LuaRef.html#ad23fff4bb8e821afb892c144c7f1ce5d',1,'dmlc::LuaRef::LuaRef()=default'],['../classdmlc_1_1LuaRef.html#a55c013902c3cf966acf3be8c726ad4e8',1,'dmlc::LuaRef::LuaRef(LuaRef &amp;&amp;other)'],['../classdmlc_1_1LuaRef.html#a781844328d26ca6674276c8eab45c689',1,'dmlc::LuaRef::LuaRef(const LuaRef &amp;other)']]],
   ['luaref',['LuaRef',['../classdmlc_1_1LuaRef.html',1,'dmlc']]],
-  ['luastate',['LuaState',['../classdmlc_1_1LuaRef.html#a9aa251d710bba4f257a519ebc5d01d51',1,'dmlc::LuaRef::LuaState()'],['../classdmlc_1_1LuaState.html#ae76399cb24c8a82c491947f304ede429',1,'dmlc::LuaState::LuaState()']]],
-  ['luastate',['LuaState',['../classdmlc_1_1LuaState.html',1,'dmlc']]]
+  ['luastate',['LuaState',['../classdmlc_1_1LuaState.html',1,'dmlc']]],
+  ['luastate',['LuaState',['../classdmlc_1_1LuaRef.html#a9aa251d710bba4f257a519ebc5d01d51',1,'dmlc::LuaRef::LuaState()'],['../classdmlc_1_1LuaState.html#ae76399cb24c8a82c491947f304ede429',1,'dmlc::LuaState::LuaState()']]]
 ];

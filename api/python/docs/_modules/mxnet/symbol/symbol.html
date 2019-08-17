@@ -337,17 +337,17 @@
 <span class="kn">import</span> <span class="nn">ctypes</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">numbers</span> <span class="k">import</span> <span class="n">Number</span>
-
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">_numpy</span>  <span class="c1"># pylint: disable=relative-import</span>
 
 <span class="kn">from</span> <span class="nn">..attribute</span> <span class="k">import</span> <span class="n">AttrScope</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">_LIB</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">,</span> <span class="n">c_array</span><span class="p">,</span> <span class="n">c_array_buf</span><span class="p">,</span> <span class="n">c_str</span><span class="p">,</span> <span class="n">c_str_array</span><span class="p">,</span> <span class="n">c_handle_array</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">mx_uint</span><span class="p">,</span> <span class="n">py_str</span><span class="p">,</span> <span class="n">string_types</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">,</span> <span class="n">mx_int</span>
+<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">mx_uint</span><span class="p">,</span> <span class="n">py_str</span><span class="p">,</span> <span class="n">string_types</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">,</span> <span class="n">mx_int</span><span class="p">,</span> <span class="n">mx_int64</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">NDArrayHandle</span><span class="p">,</span> <span class="n">ExecutorHandle</span><span class="p">,</span> <span class="n">SymbolHandle</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">check_call</span><span class="p">,</span> <span class="n">MXNetError</span><span class="p">,</span> <span class="n">NotImplementedForSymbol</span>
 <span class="kn">from</span> <span class="nn">..context</span> <span class="k">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">current_context</span>
 <span class="kn">from</span> <span class="nn">..ndarray</span> <span class="k">import</span> <span class="n">NDArray</span><span class="p">,</span> <span class="n">_DTYPE_NP_TO_MX</span><span class="p">,</span> <span class="n">_DTYPE_MX_TO_NP</span><span class="p">,</span> <span class="n">_GRAD_REQ_MAP</span>
-<span class="kn">from</span> <span class="nn">..ndarray.ndarray</span> <span class="k">import</span> <span class="n">_STORAGE_TYPE_STR_TO_ID</span>
+<span class="kn">from</span> <span class="nn">..ndarray.ndarray</span> <span class="k">import</span> <span class="n">_STORAGE_TYPE_STR_TO_ID</span><span class="p">,</span> <span class="n">_int64_enabled</span>
 <span class="kn">from</span> <span class="nn">..ndarray</span> <span class="k">import</span> <span class="n">_ndarray_cls</span>
 <span class="kn">from</span> <span class="nn">..executor</span> <span class="k">import</span> <span class="n">Executor</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_internal</span>
@@ -360,7 +360,7 @@
            <span class="s2">&quot;ones&quot;</span><span class="p">,</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span> <span class="s2">&quot;arange&quot;</span><span class="p">,</span> <span class="s2">&quot;linspace&quot;</span><span class="p">,</span> <span class="s2">&quot;histogram&quot;</span><span class="p">,</span> <span class="s2">&quot;split_v2&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="Symbol"><a class="viewcode-back" href="../../../api/symbol/mxnet.symbol.Symbol.html#mxnet.symbol.Symbol">[docs]</a><span class="k">class</span> <span class="nc">Symbol</span><span class="p">(</span><span class="n">SymbolBase</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Symbol</span><span class="p">(</span><span class="n">SymbolBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Symbol is symbolic graph of the mxnet.&quot;&quot;&quot;</span>
     <span class="c1"># disable dictionary storage, also do not have parent type.</span>
     <span class="c1"># pylint: disable=no-member</span>
@@ -416,7 +416,7 @@
         <span class="sd">&quot;&quot;&quot;x.__abs__() &lt;=&gt; abs(x) &lt;=&gt; x.abs() &lt;=&gt; mx.symbol.abs(x, y)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="Symbol.__add__"><a class="viewcode-back" href="../../../api/symbol/_autogen/mxnet.symbol.Symbol.__add__.html#mxnet.symbol.Symbol.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__add__(y) &lt;=&gt; x+y</span>
 
 <span class="sd">        Scalar input is supported.</span>
@@ -426,7 +426,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Number</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_PlusScalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalar</span><span class="o">=</span><span class="n">other</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span></div>
 
     <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">NotImplementedForSymbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__bool__</span><span class="p">,</span> <span class="s1">&#39;bool&#39;</span><span class="p">)</span>
@@ -1515,34 +1515,59 @@
             <span class="n">keys</span> <span class="o">=</span> <span class="n">c_str_array</span><span class="p">(</span><span class="n">str_keys</span><span class="p">)</span>
         <span class="n">arg_shape_size</span> <span class="o">=</span> <span class="n">mx_uint</span><span class="p">()</span>
         <span class="n">arg_shape_ndim</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">)()</span>
-        <span class="n">arg_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">))()</span>
         <span class="n">out_shape_size</span> <span class="o">=</span> <span class="n">mx_uint</span><span class="p">()</span>
         <span class="n">out_shape_ndim</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">)()</span>
-        <span class="n">out_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">))()</span>
         <span class="n">aux_shape_size</span> <span class="o">=</span> <span class="n">mx_uint</span><span class="p">()</span>
         <span class="n">aux_shape_ndim</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">)()</span>
-        <span class="n">aux_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">))()</span>
         <span class="n">complete</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">partial</span><span class="p">:</span>
-            <span class="n">infer_func</span> <span class="o">=</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">MXSymbolInferShapePartialEx</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">_int64_enabled</span><span class="p">():</span>
+            <span class="n">arg_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int64</span><span class="p">))()</span>
+            <span class="n">out_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int64</span><span class="p">))()</span>
+            <span class="n">aux_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int64</span><span class="p">))()</span>
+            <span class="k">if</span> <span class="n">partial</span><span class="p">:</span>
+                <span class="n">infer_func</span> <span class="o">=</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">MXSymbolInferShapePartialEx64</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">infer_func</span> <span class="o">=</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">MXSymbolInferShapeEx64</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">infer_func</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
+                <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indptr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">keys</span><span class="p">,</span>
+                <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_int64</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">indptr</span><span class="p">)),</span>
+                <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_int64</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">sdata</span><span class="p">)),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_size</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_ndim</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_data</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_size</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_ndim</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_data</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_size</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_ndim</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_data</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">complete</span><span class="p">)))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">infer_func</span> <span class="o">=</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">MXSymbolInferShapeEx</span>
-        <span class="n">check_call</span><span class="p">(</span><span class="n">infer_func</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
-            <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indptr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="n">keys</span><span class="p">,</span>
-            <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_uint</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">indptr</span><span class="p">)),</span>
-            <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_int</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">sdata</span><span class="p">)),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_size</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_ndim</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_data</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_size</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_ndim</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_data</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_size</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_ndim</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_data</span><span class="p">),</span>
-            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">complete</span><span class="p">)))</span>
+            <span class="n">arg_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">))()</span>
+            <span class="n">out_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">))()</span>
+            <span class="n">aux_shape_data</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">))()</span>
+            <span class="k">if</span> <span class="n">partial</span><span class="p">:</span>
+                <span class="n">infer_func</span> <span class="o">=</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">MXSymbolInferShapePartialEx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">infer_func</span> <span class="o">=</span> <span class="n">_LIB</span><span class="o">.</span><span class="n">MXSymbolInferShapeEx</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">infer_func</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
+                <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">indptr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">keys</span><span class="p">,</span>
+                <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_uint</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">indptr</span><span class="p">)),</span>
+                <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_int</span><span class="p">,</span> <span class="n">array</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">sdata</span><span class="p">)),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_size</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_ndim</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">arg_shape_data</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_size</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_ndim</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out_shape_data</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_size</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_ndim</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">aux_shape_data</span><span class="p">),</span>
+                <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">complete</span><span class="p">)))</span>
         <span class="k">if</span> <span class="n">complete</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">arg_shapes</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">arg_shape_data</span><span class="p">[</span><span class="n">i</span><span class="p">][:</span><span class="n">arg_shape_ndim</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
                           <span class="k">if</span> <span class="n">arg_shape_ndim</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
@@ -2918,7 +2943,7 @@
         <span class="k">raise</span> <span class="n">NotImplementedForSymbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detach</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">NotImplementedForSymbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backward</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="n">NotImplementedForSymbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">backward</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lr_mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">wd_mult</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">init</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

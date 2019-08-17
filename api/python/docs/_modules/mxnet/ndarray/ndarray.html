@@ -341,11 +341,13 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">operator</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span> <span class="c1"># pylint: disable=redefined-builtin</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">_LIB</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">,</span> <span class="n">integer_types</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">c_str</span><span class="p">,</span> <span class="n">c_array</span><span class="p">,</span> <span class="n">c_array_buf</span><span class="p">,</span> <span class="n">c_handle_array</span><span class="p">,</span> <span class="n">mx_real_t</span>
-<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">mx_uint</span><span class="p">,</span> <span class="n">NDArrayHandle</span><span class="p">,</span> <span class="n">check_call</span><span class="p">,</span> <span class="n">DLPackHandle</span><span class="p">,</span> <span class="n">mx_int</span>
+<span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">mx_uint</span><span class="p">,</span> <span class="n">NDArrayHandle</span><span class="p">,</span> <span class="n">check_call</span><span class="p">,</span> <span class="n">DLPackHandle</span><span class="p">,</span> <span class="n">mx_int</span><span class="p">,</span> <span class="n">mx_int64</span>
 <span class="kn">from</span> <span class="nn">..base</span> <span class="k">import</span> <span class="n">ctypes2buffer</span>
+<span class="kn">from</span> <span class="nn">..runtime</span> <span class="k">import</span> <span class="n">Features</span>
 <span class="kn">from</span> <span class="nn">..context</span> <span class="k">import</span> <span class="n">Context</span><span class="p">,</span> <span class="n">current_context</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_internal</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">op</span>
@@ -413,6 +415,14 @@
 <span class="n">_NDARRAY_BASIC_INDEXING</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">_NDARRAY_ADVANCED_INDEXING</span> <span class="o">=</span> <span class="mi">1</span>
 
+<span class="c1"># Caching whether MXNet was built with INT64 support or not</span>
+<span class="n">_INT64_TENSOR_SIZE_ENABLED</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">def</span> <span class="nf">_int64_enabled</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">_INT64_TENSOR_SIZE_ENABLED</span>
+    <span class="k">if</span> <span class="n">_INT64_TENSOR_SIZE_ENABLED</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_INT64_TENSOR_SIZE_ENABLED</span> <span class="o">=</span> <span class="n">Features</span><span class="p">()</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">(</span><span class="s1">&#39;INT64_TENSOR_SIZE&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_INT64_TENSOR_SIZE_ENABLED</span>
 
 <span class="k">def</span> <span class="nf">_new_empty_handle</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Returns a new empty handle.</span>
@@ -440,14 +450,24 @@
 <span class="sd">        A new empty `NDArray` handle.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">hdl</span> <span class="o">=</span> <span class="n">NDArrayHandle</span><span class="p">()</span>
-    <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayCreateEx</span><span class="p">(</span>
-        <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_uint</span><span class="p">,</span> <span class="n">native_array</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="p">)),</span>
-        <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)),</span>
-        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">device_typeid</span><span class="p">),</span>
-        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">device_id</span><span class="p">),</span>
-        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">delay_alloc</span><span class="p">)),</span>
-        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">_DTYPE_NP_TO_MX</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">])),</span>
-        <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">hdl</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">_int64_enabled</span><span class="p">():</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayCreateEx64</span><span class="p">(</span>
+            <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_int64</span><span class="p">,</span> <span class="n">native_array</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="p">)),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">device_typeid</span><span class="p">),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">device_id</span><span class="p">),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">delay_alloc</span><span class="p">)),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">_DTYPE_NP_TO_MX</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">])),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">hdl</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayCreateEx</span><span class="p">(</span>
+            <span class="n">c_array_buf</span><span class="p">(</span><span class="n">mx_uint</span><span class="p">,</span> <span class="n">native_array</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="p">)),</span>
+            <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">device_typeid</span><span class="p">),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">device_id</span><span class="p">),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">delay_alloc</span><span class="p">)),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">_DTYPE_NP_TO_MX</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">type</span><span class="p">])),</span>
+            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">hdl</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">hdl</span>
 
 
@@ -481,7 +501,7 @@
     <span class="k">return</span> <span class="n">storage_type</span><span class="o">.</span><span class="n">value</span>
 
 
-<div class="viewcode-block" id="NDArray"><a class="viewcode-back" href="../../../api/ndarray/mxnet.ndarray.NDArray.html#mxnet.ndarray.NDArray">[docs]</a><span class="k">class</span> <span class="nc">NDArray</span><span class="p">(</span><span class="n">NDArrayBase</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NDArray</span><span class="p">(</span><span class="n">NDArrayBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;An array object representing a multidimensional, homogeneous array of</span>
 <span class="sd">fixed-size items.</span>
 
@@ -554,9 +574,9 @@
     <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__sub__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__sub__.html#mxnet.ndarray.NDArray.__sub__">[docs]</a>    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__sub__(y) &lt;=&gt; x-y &lt;=&gt; mx.nd.subtract(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">subtract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">subtract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__isub__(y) &lt;=&gt; x-=y &quot;&quot;&quot;</span>
@@ -569,17 +589,17 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
-<div class="viewcode-block" id="NDArray.__rsub__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__rsub__.html#mxnet.ndarray.NDArray.__rsub__">[docs]</a>    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rsub__(y) &lt;=&gt; y-x &lt;=&gt; mx.nd.subtract(y, x) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">subtract</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">subtract</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__mul__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__mul__.html#mxnet.ndarray.NDArray.__mul__">[docs]</a>    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__mul__(y) &lt;=&gt; x*y &lt;=&gt; mx.nd.multiply(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__neg__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__neg__.html#mxnet.ndarray.NDArray.__neg__">[docs]</a>    <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__neg__(y) &lt;=&gt; -x &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_mul_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_mul_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__imul__(y) &lt;=&gt; x*=y &quot;&quot;&quot;</span>
@@ -599,9 +619,9 @@
         <span class="sd">&quot;&quot;&quot;x.__div__(y) &lt;=&gt; x/y &lt;=&gt; mx.nd.divide(x, y) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__rdiv__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__rdiv__.html#mxnet.ndarray.NDArray.__rdiv__">[docs]</a>    <span class="k">def</span> <span class="nf">__rdiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__rdiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rdiv__(y) &lt;=&gt; y/x &lt;=&gt; mx.nd.divide(y, x) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">divide</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">divide</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__idiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rdiv__(y) &lt;=&gt; x/=y &quot;&quot;&quot;</span>
@@ -627,9 +647,9 @@
         <span class="sd">&quot;&quot;&quot;x.__mod__(y) &lt;=&gt; x%y &lt;=&gt; mx.nd.modulo(x, y) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">modulo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__rmod__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__rmod__.html#mxnet.ndarray.NDArray.__rmod__">[docs]</a>    <span class="k">def</span> <span class="nf">__rmod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__rmod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rmod__(y) &lt;=&gt; y%x &lt;=&gt; mx.nd.modulo(y, x) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">modulo</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">modulo</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__imod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rmod__(y) &lt;=&gt; x%=y &quot;&quot;&quot;</span>
@@ -642,9 +662,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
-<div class="viewcode-block" id="NDArray.__pow__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__pow__.html#mxnet.ndarray.NDArray.__pow__">[docs]</a>    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__pow__(y) &lt;=&gt; x**y &lt;=&gt; mx.nd.power(x,y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__pow__(y) &lt;=&gt; y**x &lt;=&gt; mx.nd.power(y,x) &quot;&quot;&quot;</span>
@@ -658,9 +678,9 @@
         <span class="sd">&quot;&quot;&quot;Default hash function.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">//</span><span class="mi">16</span>
 
-<div class="viewcode-block" id="NDArray.__ne__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__ne__.html#mxnet.ndarray.NDArray.__ne__">[docs]</a>    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__ne__(y) &lt;=&gt; x!=y &lt;=&gt; mx.nd.not_equal(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">not_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">not_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__gt__(y) &lt;=&gt; x&gt;y &lt;=&gt; mx.nd.greater(x, y) &quot;&quot;&quot;</span>
@@ -719,7 +739,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="NDArray.__setitem__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__setitem__.html#mxnet.ndarray.NDArray.__setitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__setitem__(i, y) &lt;=&gt; x[i]=y</span>
 
 <span class="sd">        Sets ``self[key]`` to ``value``.</span>
@@ -796,7 +816,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;Indexing NDArray with index </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="s1"> is not supported&#39;</span>
                 <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__getitem__(i) &lt;=&gt; x[i]</span>
@@ -1698,21 +1718,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.swapaxes"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.swapaxes.html#mxnet.ndarray.NDArray.swapaxes">[docs]</a>    <span class="k">def</span> <span class="nf">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`swapaxes`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`swapaxes`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.split"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.split.html#mxnet.ndarray.NDArray.split">[docs]</a>    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`split`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`split`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">split_v2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`split_v2`.</span>
@@ -1722,37 +1742,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">split_v2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.slice"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.slice.html#mxnet.ndarray.NDArray.slice">[docs]</a>    <span class="k">def</span> <span class="nf">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`slice`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`slice`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">slice_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.slice_axis"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.slice_axis.html#mxnet.ndarray.NDArray.slice_axis">[docs]</a>    <span class="k">def</span> <span class="nf">slice_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`slice_axis`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`slice_axis`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">slice_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">slice_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">slice_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.slice_like"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.slice_like.html#mxnet.ndarray.NDArray.slice_like">[docs]</a>    <span class="k">def</span> <span class="nf">slice_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`slice_like`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`slice_like`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">slice_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">slice_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.take"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.take.html#mxnet.ndarray.NDArray.take">[docs]</a>    <span class="k">def</span> <span class="nf">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`take`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`take`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">one_hot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`one_hot`.</span>
@@ -1770,13 +1790,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.sort"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.sort.html#mxnet.ndarray.NDArray.sort">[docs]</a>    <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sort`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`sort`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">topk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`topk`.</span>
@@ -1786,37 +1806,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.argsort"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.argsort.html#mxnet.ndarray.NDArray.argsort">[docs]</a>    <span class="k">def</span> <span class="nf">argsort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">argsort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`argsort`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`argsort`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.argmax"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.argmax.html#mxnet.ndarray.NDArray.argmax">[docs]</a>    <span class="k">def</span> <span class="nf">argmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">argmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`argmax`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`argmax`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.argmax_channel"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.argmax_channel.html#mxnet.ndarray.NDArray.argmax_channel">[docs]</a>    <span class="k">def</span> <span class="nf">argmax_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">argmax_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`argmax_channel`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`argmax_channel`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">argmax_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">argmax_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.argmin"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.argmin.html#mxnet.ndarray.NDArray.argmin">[docs]</a>    <span class="k">def</span> <span class="nf">argmin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">argmin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`argmin`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`argmin`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">clip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`clip`.</span>
@@ -1834,13 +1854,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.sign"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.sign.html#mxnet.ndarray.NDArray.sign">[docs]</a>    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sign`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`sign`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Flatten this array without altering any data.</span>
@@ -1883,13 +1903,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">shape_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">size_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.size_array"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.size_array.html#mxnet.ndarray.NDArray.size_array">[docs]</a>    <span class="k">def</span> <span class="nf">size_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`size_array`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`size_array`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">size_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">size_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Adds an additional dimension to the current array without altering any data.</span>
@@ -1970,13 +1990,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">depth_to_space</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">space_to_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.space_to_depth"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.space_to_depth.html#mxnet.ndarray.NDArray.space_to_depth">[docs]</a>    <span class="k">def</span> <span class="nf">space_to_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`space_to_depth`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`space_to_depth`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">space_to_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">space_to_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">diag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`diag`.</span>
@@ -1986,13 +2006,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.sum"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.sum.html#mxnet.ndarray.NDArray.sum">[docs]</a>    <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sum`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`sum`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">nansum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`nansum`.</span>
@@ -2098,13 +2118,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">trunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.sin"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.sin.html#mxnet.ndarray.NDArray.sin">[docs]</a>    <span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sin`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`sin`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">cos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`cos`.</span>
@@ -2114,37 +2134,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">tan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.tan"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.tan.html#mxnet.ndarray.NDArray.tan">[docs]</a>    <span class="k">def</span> <span class="nf">tan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`tan`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`tan`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="NDArray.arcsin"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.arcsin.html#mxnet.ndarray.NDArray.arcsin">[docs]</a>    <span class="k">def</span> <span class="nf">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`arcsin`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`arcsin`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.arccos"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.arccos.html#mxnet.ndarray.NDArray.arccos">[docs]</a>    <span class="k">def</span> <span class="nf">arccos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">arccos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`arccos`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`arccos`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.arctan"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.arctan.html#mxnet.ndarray.NDArray.arctan">[docs]</a>    <span class="k">def</span> <span class="nf">arctan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">arctan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`arctan`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`arctan`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">degrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`degrees`.</span>
@@ -2162,13 +2182,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">sinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.sinh"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.sinh.html#mxnet.ndarray.NDArray.sinh">[docs]</a>    <span class="k">def</span> <span class="nf">sinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sinh`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`sinh`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">cosh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`cosh`.</span>
@@ -2186,29 +2206,29 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.arcsinh"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.arcsinh.html#mxnet.ndarray.NDArray.arcsinh">[docs]</a>    <span class="k">def</span> <span class="nf">arcsinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">arcsinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`arcsinh`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`arcsinh`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arcsinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arcsinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.arccosh"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.arccosh.html#mxnet.ndarray.NDArray.arccosh">[docs]</a>    <span class="k">def</span> <span class="nf">arccosh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">arccosh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`arccosh`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`arccosh`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arccosh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arccosh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.arctanh"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.arctanh.html#mxnet.ndarray.NDArray.arctanh">[docs]</a>    <span class="k">def</span> <span class="nf">arctanh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">arctanh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`arctanh`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`arctanh`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arctanh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">arctanh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`exp`.</span>
@@ -2258,13 +2278,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.sqrt"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.sqrt.html#mxnet.ndarray.NDArray.sqrt">[docs]</a>    <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sqrt`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`sqrt`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">rsqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`rsqrt`.</span>
@@ -2290,13 +2310,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">rcbrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.square"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.square.html#mxnet.ndarray.NDArray.square">[docs]</a>    <span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`square`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`square`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">reciprocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`reciprocal`.</span>
@@ -2322,13 +2342,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">softmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.softmax"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.softmax.html#mxnet.ndarray.NDArray.softmax">[docs]</a>    <span class="k">def</span> <span class="nf">softmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`softmax`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`softmax`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">log_softmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`log_softmax`.</span>
@@ -2526,9 +2546,14 @@
 <span class="sd">        (2L, 3L, 4L)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ndim</span> <span class="o">=</span> <span class="n">mx_int</span><span class="p">()</span>
-        <span class="n">pdata</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">)()</span>
-        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayGetShapeEx</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ndim</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">pdata</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">_int64_enabled</span><span class="p">():</span>
+            <span class="n">pdata</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int64</span><span class="p">)()</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayGetShapeEx64</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ndim</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">pdata</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pdata</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">POINTER</span><span class="p">(</span><span class="n">mx_int</span><span class="p">)()</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayGetShapeEx</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">ndim</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">pdata</span><span class="p">)))</span>
         <span class="k">if</span> <span class="n">ndim</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
@@ -2959,7 +2984,7 @@
 <span class="sd">         [2. 2. 2.]]</span>
 <span class="sd">        &lt;NDArray 2x3 @cpu(0)&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">to_dlpack_for_write</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">to_dlpack_for_write</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_indexing_key_expand_implicit_axes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>

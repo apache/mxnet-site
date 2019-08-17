@@ -23,7 +23,6 @@ var searchData=
   ['chpool',['chpool',['../namespacemshadow_1_1expr.html#a3a4ffb5770f797035c1a0df524217061',1,'mshadow::expr::chpool(const Exp&lt; SrcExp, DType, etype &gt; &amp;src, index_t nsize)'],['../namespacemshadow_1_1expr.html#a078edec0deda007dad2a5d9fc5ac445b',1,'mshadow::expr::chpool(const Exp&lt; SrcExp, DType, etype &gt; &amp;src, index_t nsize, index_t stride, index_t pad)']]],
   ['clear',['Clear',['../classdmlc_1_1Config.html#a207c8acc2017acc2d3d655863d6edb5f',1,'dmlc::Config::Clear()'],['../classmxnet_1_1Imperative_1_1AGInfo.html#ac1285664cc551c266fdc506fa8f8e8ad',1,'mxnet::Imperative::AGInfo::Clear()'],['../classmxnet_1_1common_1_1LazyAllocArray.html#a3af1ab75feb0ba07db5af7e6ef5717b1',1,'mxnet::common::LazyAllocArray::Clear()']]],
   ['clearexception',['ClearException',['../classdmlc_1_1ThreadedIter.html#ac98cf5310bf3c64feb79140d85eb34d7',1,'dmlc::ThreadedIter']]],
-  ['close_5flib',['close_lib',['../library_8h.html#a12c780292ca46ac7725ff82c568028a9',1,'library.h']]],
   ['complex_5fabs_5fsquare',['complex_abs_square',['../namespacemshadow_1_1expr.html#af1b114370ff1040f8a651a95724bb38a',1,'mshadow::expr']]],
   ['complex_5fdiv_5fcc',['complex_div_cc',['../namespacemshadow_1_1expr.html#ad5a82db334b81efd9da13934f73d9c94',1,'mshadow::expr']]],
   ['complex_5fdiv_5fcr',['complex_div_cr',['../namespacemshadow_1_1expr.html#a7e5d52651a37f08726fc171fa0176fef',1,'mshadow::expr']]],
@@ -88,5 +87,6 @@ var searchData=
   ['cudamax',['CudaMax',['../namespacemxnet_1_1common_1_1cuda.html#a6f3ee04eb382c57e10916108db3efd80',1,'mxnet::common::cuda']]],
   ['cudamin',['CudaMin',['../namespacemxnet_1_1common_1_1cuda.html#a03888f252f813f6d052ae84bf8801498',1,'mxnet::common::cuda']]],
   ['curandgeterrorstring',['CurandGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#a97c06b2f4d26445a7386b0f54fae1feb',1,'mxnet::common::cuda']]],
+  ['current_5fprocess_5fid',['current_process_id',['../namespacemxnet_1_1common.html#a17af88f97948c889f2f4ce88190122c1',1,'mxnet::common']]],
   ['cusolvergeterrorstring',['CusolverGetErrorString',['../namespacemxnet_1_1common_1_1cuda.html#abf9bcb4cb696e9ae61b818510dac39c8',1,'mxnet::common::cuda']]]
 ];

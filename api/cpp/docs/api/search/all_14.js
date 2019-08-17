@@ -198,7 +198,7 @@ var searchData=
   ['spatial_5fupsampling_5fnearest_2eh',['spatial_upsampling_nearest.h',['../spatial__upsampling__nearest_8h.html',1,'']]],
   ['spinlock',['Spinlock',['../classdmlc_1_1Spinlock.html',1,'dmlc']]],
   ['spinlock',['Spinlock',['../classdmlc_1_1Spinlock.html#a0a84833ade90ba85e17219a6c892cfec',1,'dmlc::Spinlock']]],
-  ['split',['split',['../classnnvm_1_1Layout.html#aa8cf01aa1f9256abcdb2e7b32947d7f6',1,'nnvm::Layout::split()'],['../namespacedmlc.html#a3a28a7405b2f734090912c073434091c',1,'dmlc::Split()'],['../namespacemxnet_1_1cpp_1_1details.html#aea21acc3704644c4cde9ad2625fe3cea',1,'mxnet::cpp::details::split()']]],
+  ['split',['split',['../classnnvm_1_1Layout.html#aa8cf01aa1f9256abcdb2e7b32947d7f6',1,'nnvm::Layout::split()'],['../namespacemxnet_1_1cpp_1_1details.html#aea21acc3704644c4cde9ad2625fe3cea',1,'mxnet::cpp::details::split()'],['../namespacedmlc.html#a3a28a7405b2f734090912c073434091c',1,'dmlc::Split()']]],
   ['splitparam',['SplitParam',['../structnnvm_1_1top_1_1SplitParam.html',1,'nnvm::top']]],
   ['squeezeparam',['SqueezeParam',['../structnnvm_1_1top_1_1SqueezeParam.html',1,'nnvm::top']]],
   ['src1_5f',['src1_',['../structmshadow_1_1expr_1_1ConcatExp.html#ae2c477109e9f2804f989749690222314',1,'mshadow::expr::ConcatExp']]],
