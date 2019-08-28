@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://mxnet.incubator.apache.org/api/faq/distributed_training" />
 <meta property="og:site_name" content="Apache MXNet" />
 <script type="application/ld+json">
-{"description":"A flexible and efficient library for deep learning.","@type":"WebPage","url":"https://mxnet.incubator.apache.org/api/faq/distributed_training","headline":"Distributed Training in MXNet","@context":"https://schema.org"}</script>
+{"description":"A flexible and efficient library for deep learning.","@type":"WebPage","headline":"Distributed Training in MXNet","url":"https://mxnet.incubator.apache.org/api/faq/distributed_training","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <script src="https://medium-widget.pixelpoint.io/widget.js"></script>
   <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.incubator.apache.org/feed.xml" title="Apache MXNet" /><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -147,7 +147,7 @@
               <!-- page-category -->
             
             
-            <li><a href="/api/faq/floa16">Float16</a></li>
+            <li><a href="/api/faq/float16">Float16</a></li>
               <!-- page-category -->
             
               <!-- page-category -->
@@ -327,7 +327,7 @@ In this document, we describe how to train a model with devices distributed acro
 
 <p>When models are so large that they don&#39;t fit into device memory, then a second way called <em>model parallelism</em> is useful.
 Here, different devices are assigned the task of learning different parts of the model.
-Currently, MXNet supports Model parallelism in a single machine only. Refer <a href="https://mxnet.incubator.apache.org/versions/master/faq/model_parallel_lstm.html">Training with multiple GPUs using model parallelism</a> for more on this.</p>
+Currently, MXNet supports Model parallelism in a single machine only. Refer <a href="model_parallel_lstm">Training with multiple GPUs using model parallelism</a> for more on this.</p>
 
 <h2 id="how-does-distributed-training-work">How Does Distributed Training Work?</h2>
 
@@ -366,7 +366,7 @@ with a string argument which contains the word <code>dist</code> as follows:</p>
 <p>kv = mxnet.kvstore.create(&#39;dist_sync&#39;)</p>
 </blockquote>
 
-<p>Refer <a href="https://mxnet.incubator.apache.org/versions/master/api/python/kvstore/kvstore.html">KVStore API</a> for more information about KVStore.</p>
+<p>Refer <a href="/api/python/docs/api/gluon-related/mxnet.kvstore.KVStore.html#mxnet.kvstore.KVStore">KVStore API</a> for more information about KVStore.</p>
 
 <h3 id="distribution-of-keys">Distribution of Keys</h3>
 
@@ -390,7 +390,7 @@ we can use <code>mxnet.gluon.utils.split_and_load</code> to split a batch of sam
 
 <p>Typically, this split of data for each worker happens through the data iterator,
 on passing the number of parts and the index of parts to iterate over.
-Some iterators in MXNet that support this feature are <a href="https://mxnet.incubator.apache.org/versions/master/api/python/io/io.html#mxnet.io.MNISTIter">mxnet.io.MNISTIterator</a> and <a href="https://mxnet.incubator.apache.org/versions/master/api/python/io/io.html#mxnet.io.ImageRecordIter">mxnet.io.ImageRecordIter</a>.
+Some iterators in MXNet that support this feature are <a href="/api/python/docs/api/gluon-related/_autogen/mxnet.io.MNISTIter.html#mxnet.io.MNISTIter">mxnet.io.MNISTIterator</a> and <a href="/api/python/docs/api/gluon-related/_autogen/mxnet.io.ImageRecordIter.html#mxnet.io.ImageRecordIter">mxnet.io.ImageRecordIter</a>.
 If you are using a different iterator, you can look at how the above iterators implement this.
 We can use the kvstore object to get the number of workers (<code>kv.num_workers</code>) and rank of the current worker (<code>kv.rank</code>).
 These can be passed as arguments to the iterator.
@@ -401,7 +401,7 @@ to see an example usage.</p>
 
 <p>KVStore server supports two modes, one which aggregates the gradients and updates the weights using those gradients, and second where the server only aggregates gradients. In the latter case, when a worker process pulls from kvstore, it gets the aggregated gradients. The worker then uses these gradients and applies the weights locally. </p>
 
-<p>When using Gluon there is an option to choose between these modes by passing <code>update_on_kvstore</code> variable when you create the <a href="https://mxnet.incubator.apache.org/versions/master/api/python/gluon/gluon.html#mxnet.gluon.Trainer">Trainer</a> object like this:</p>
+<p>When using Gluon there is an option to choose between these modes by passing <code>update_on_kvstore</code> variable when you create the <a href="/api/python/docs/api/gluon/mxnet.gluon.Trainer.html">Trainer</a> object like this:</p>
 <div class="highlight"><pre><code class="language-" data-lang="">trainer = gluon.Trainer(net.collect_params(), optimizer='sgd',
                         optimizer_params={'learning_rate': opt.lr,
                                           'wd': opt.wd,
@@ -439,7 +439,7 @@ This is faster than <code>dist_sync</code> because it reduces expensive communic
 
 <p>When communication is expensive, and the ratio of computation time to communication time is low, communication can become a bottleneck.
 In such cases, gradient compression can be used to reduce the cost of communication, thereby speeding up training.
-Refer <a href="https://mxnet.incubator.apache.org/versions/master/faq/gradient_compression.html">Gradient compression</a> for more details.</p>
+Refer <a href="/api/faq/gradient_compression">Gradient compression</a> for more details.</p>
 
 <p>Note: For small models when the cost of computation is much lower than cost of communication,
 distributed training might actually be slower than training on a single machine because of the overhead of communication and synchronization.</p>
@@ -470,7 +470,7 @@ ssh -A user@MASTER_IP_ADDRESS
 The options in the following command are the recommended options when mounting an AWS Elastic File System.</p>
 <div class="highlight"><pre><code class="language-" data-lang="">sudo mkdir efs &amp;&amp; sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 NETWORK_FILE_SYSTEM_IP:/ efs
 </code></pre></div>
-<p>Tip: You might find it helpful to store large datasets on S3 for easy access from all machines in the cluster. Refer <a href="https://mxnet.incubator.apache.org/versions/master/faq/s3_integration.html">Using data from S3 for training</a> for more information.</p>
+<p>Tip: You might find it helpful to store large datasets on S3 for easy access from all machines in the cluster. Refer <a href="/api/faq/s3_integration">Using data from S3 for training</a> for more information.</p>
 
 <h3 id="using-launch-py">Using Launch.py</h3>
 
