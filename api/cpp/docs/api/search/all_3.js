@@ -77,7 +77,7 @@ var searchData=
   ['broadcastwithaxisexp',['BroadcastWithAxisExp',['../structmshadow_1_1expr_1_1BroadcastWithAxisExp.html',1,'mshadow::expr']]],
   ['broadcastwithmultiaxesexp',['BroadcastWithMultiAxesExp',['../structmshadow_1_1expr_1_1BroadcastWithMultiAxesExp.html',1,'mshadow::expr']]],
   ['broadcastwithmultiaxesexp',['BroadcastWithMultiAxesExp',['../structmshadow_1_1expr_1_1BroadcastWithMultiAxesExp.html#a59169a48be47025ef0c48abcde6432a4',1,'mshadow::expr::BroadcastWithMultiAxesExp']]],
-  ['build_5fconfig_2eh',['build_config.h',['../build__config_8h.html',1,'']]],
+  ['build_5fconfig_5fdefault_2eh',['build_config_default.h',['../build__config__default_8h.html',1,'']]],
   ['bulk_5fsize',['bulk_size',['../classmxnet_1_1Engine.html#a78baf44fa0dfed3285d6b9b65845825c',1,'mxnet::Engine']]],
   ['bulkexecmaxnodetrainbwd',['BulkExecMaxNodeTrainBwd',['../classmxnet_1_1Imperative.html#a482d9ab2ab7d969c55f7c13797a662a0',1,'mxnet::Imperative']]],
   ['bulkexecmaxnodetrainfwd',['BulkExecMaxNodeTrainFwd',['../classmxnet_1_1Imperative.html#af19dbcd37d7adf9d205b9c2efdb84b6b',1,'mxnet::Imperative']]],

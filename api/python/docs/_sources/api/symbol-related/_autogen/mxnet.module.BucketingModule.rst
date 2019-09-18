@@ -27,9 +27,12 @@ mxnet.module.BucketingModule
       ~BucketingModule.init_params
       ~BucketingModule.install_monitor
       ~BucketingModule.iter_predict
+      ~BucketingModule.load
+      ~BucketingModule.load_dict
       ~BucketingModule.load_params
       ~BucketingModule.predict
       ~BucketingModule.prepare
+      ~BucketingModule.save_checkpoint
       ~BucketingModule.save_params
       ~BucketingModule.score
       ~BucketingModule.set_params

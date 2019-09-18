@@ -14,6 +14,9 @@ mxnet.gluon.data.vision.datasets.ImageRecordDataset
    .. autosummary::
    
       ~ImageRecordDataset.__init__
+      ~ImageRecordDataset.filter
+      ~ImageRecordDataset.sample
+      ~ImageRecordDataset.take
       ~ImageRecordDataset.transform
       ~ImageRecordDataset.transform_first
    

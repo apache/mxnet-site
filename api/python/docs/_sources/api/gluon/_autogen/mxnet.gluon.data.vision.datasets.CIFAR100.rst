@@ -14,6 +14,9 @@ mxnet.gluon.data.vision.datasets.CIFAR100
    .. autosummary::
    
       ~CIFAR100.__init__
+      ~CIFAR100.filter
+      ~CIFAR100.sample
+      ~CIFAR100.take
       ~CIFAR100.transform
       ~CIFAR100.transform_first
    

@@ -2666,13 +2666,17 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">context</span> <span class="k">as</span> <span class="n">ctx</span>
 
 <span class="kn">from</span> <span class="nn">..initializer</span> <span class="k">import</span> <span class="n">Uniform</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">ndarray</span> <span class="k">as</span> <span class="n">nd</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">symbol</span> <span class="k">as</span> <span class="n">sym</span>
 
 <span class="kn">from</span> <span class="nn">.base_module</span> <span class="k">import</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">_check_input_names</span>
 <span class="kn">from</span> <span class="nn">.module</span> <span class="k">import</span> <span class="n">Module</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="k">import</span> <span class="n">load_params</span>
 <span class="kn">from</span> <span class="nn">..name</span> <span class="k">import</span> <span class="n">NameManager</span>
 
 <div class="viewcode-block" id="BucketingModule"><a class="viewcode-back" href="../../../api/symbol-related/_autogen/mxnet.module.BucketingModule.html#mxnet.module.BucketingModule">[docs]</a><span class="k">class</span> <span class="nc">BucketingModule</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
@@ -2812,7 +2816,7 @@
 <span class="sd">        `(arg_params, aux_params)`</span>
 <span class="sd">            A pair of dictionaries each mapping parameter names to NDArray values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">binded</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_initialized</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_initialized</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">_params_dirty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_params_dirty</span>
         <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_params_dirty</span> <span class="o">=</span> <span class="kc">False</span>
@@ -2977,12 +2981,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_grad_req</span> <span class="o">=</span> <span class="n">grad_req</span>
 
         <span class="n">symbol</span><span class="p">,</span> <span class="n">data_names</span><span class="p">,</span> <span class="n">label_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_sym_gen</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_bucket_key</span><span class="p">)</span>
-        <span class="n">module</span> <span class="o">=</span> <span class="n">Module</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">data_names</span><span class="p">,</span> <span class="n">label_names</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
-                        <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">,</span> <span class="n">work_load_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_work_load_list</span><span class="p">,</span>
-                        <span class="n">fixed_param_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fixed_param_names</span><span class="p">,</span>
-                        <span class="n">state_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span><span class="p">,</span>
-                        <span class="n">group2ctxs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_group2ctxs</span><span class="p">,</span>
-                        <span class="n">compression_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_bucket_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">Module</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">data_names</span><span class="p">,</span> <span class="n">label_names</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+                            <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_context</span><span class="p">,</span> <span class="n">work_load_list</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_work_load_list</span><span class="p">,</span>
+                            <span class="n">fixed_param_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fixed_param_names</span><span class="p">,</span>
+                            <span class="n">state_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_names</span><span class="p">,</span>
+                            <span class="n">group2ctxs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_group2ctxs</span><span class="p">,</span>
+                            <span class="n">compression_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compression_params</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_bucket_key</span><span class="p">]</span>
         <span class="n">module</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">data_shapes</span><span class="p">,</span> <span class="n">label_shapes</span><span class="p">,</span> <span class="n">for_training</span><span class="p">,</span> <span class="n">inputs_need_grad</span><span class="p">,</span>
                     <span class="n">force_rebind</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shared_module</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grad_req</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_grad_req</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_curr_module</span> <span class="o">=</span> <span class="n">module</span>
@@ -3022,6 +3030,13 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">module</span><span class="o">.</span><span class="n">install_monitor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="n">bucket_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">module</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="n">bucket_key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">module</span><span class="o">.</span><span class="n">binded</span><span class="p">:</span>
+                <span class="n">module</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">data_shapes</span><span class="p">,</span> <span class="n">label_shapes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">for_training</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">inputs_need_grad</span><span class="p">,</span>
+                            <span class="n">force_rebind</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shared_module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_default_bucket_key</span><span class="p">],</span>
+                            <span class="n">grad_req</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_grad_req</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_curr_module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="n">bucket_key</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_curr_bucket_key</span> <span class="o">=</span> <span class="n">bucket_key</span>
@@ -3185,7 +3200,148 @@
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">binded</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_monitor</span> <span class="o">=</span> <span class="n">mon</span>
         <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">mod</span><span class="o">.</span><span class="n">install_monitor</span><span class="p">(</span><span class="n">mon</span><span class="p">)</span></div>
+            <span class="n">mod</span><span class="o">.</span><span class="n">install_monitor</span><span class="p">(</span><span class="n">mon</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">save_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">remove_amp_cast</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Saves current progress to checkpoint for all buckets in BucketingModule</span>
+<span class="sd">        Use `mx.callback.module_checkpoint` as `epoch_end_callback` to save during training.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        prefix : str</span>
+<span class="sd">            The file prefix to checkpoint to.</span>
+<span class="sd">        epoch : int</span>
+<span class="sd">            The current epoch number.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Empty BucketingModule cannot be saved&quot;</span>
+        <span class="n">param_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-</span><span class="si">%04d</span><span class="s2">.params&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_params</span><span class="p">(</span><span class="n">param_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bucket_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="p">:</span>
+            <span class="n">symbol</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sym_gen</span><span class="p">(</span><span class="n">bucket_key</span><span class="p">)</span>
+            <span class="n">symbol</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-</span><span class="si">%s</span><span class="s2">-symbol.json&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">bucket_key</span><span class="p">),</span> <span class="n">remove_amp_cast</span><span class="o">=</span><span class="n">remove_amp_cast</span><span class="p">)</span>
+        <span class="n">nd</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.buckets&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">),</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_buckets</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">sym_gen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_bucket_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a model from previously saved checkpoint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        prefix : str</span>
+<span class="sd">            path prefix of saved model files. You should have</span>
+<span class="sd">            &quot;prefix-symbol.json&quot;, &quot;prefix-xxxx.params&quot;, and</span>
+<span class="sd">            optionally &quot;prefix-xxxx.states&quot;, where xxxx is the</span>
+<span class="sd">            epoch number.</span>
+<span class="sd">        epoch : int</span>
+<span class="sd">            epoch to load.</span>
+<span class="sd">        sym_gen : function</span>
+<span class="sd">            A function when called with a bucket key, returns a triple</span>
+<span class="sd">            ``(symbol, data_names, label_names)``.</span>
+<span class="sd">            provide sym_gen which was used when saving bucketing module.</span>
+<span class="sd">        logger : Logger</span>
+<span class="sd">            Default is `logging`.</span>
+<span class="sd">        context : Context or list of Context</span>
+<span class="sd">            Default is ``cpu()``.</span>
+<span class="sd">        work_load_list : list of number</span>
+<span class="sd">            Default ``None``, indicating uniform workload.</span>
+<span class="sd">        fixed_param_names: list of str</span>
+<span class="sd">            Default ``None``, indicating no network parameters are fixed.</span>
+<span class="sd">        state_names : list of str</span>
+<span class="sd">            States are similar to data and label, but not provided by data iterator.</span>
+<span class="sd">            Instead they are initialized to 0 and can be set by set_states()</span>
+<span class="sd">        group2ctxs : dict of str to context or list of context,</span>
+<span class="sd">                     or list of dict of str to context</span>
+<span class="sd">            Default is `None`. Mapping the `ctx_group` attribute to the context assignment.</span>
+<span class="sd">        compression_params : dict</span>
+<span class="sd">            Specifies type of gradient compression and additional arguments depending</span>
+<span class="sd">            on the type of compression being used. For example, 2bit compression requires a threshold.</span>
+<span class="sd">            Arguments would then be {&#39;type&#39;:&#39;2bit&#39;, &#39;threshold&#39;:0.5}</span>
+<span class="sd">            See mxnet.KVStore.set_gradient_compression method for more details on gradient compression.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">sym_gen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="s2">&quot;sym_gen is required for loading BucketingModule&quot;</span>
+        <span class="k">assert</span> <span class="n">default_bucket_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="s2">&quot;default_bucket_key is required for loading BucketingModule&quot;</span>
+        <span class="n">buckets</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.buckets&quot;</span> <span class="o">%</span> <span class="n">prefix</span><span class="p">)</span>
+        <span class="n">buckets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">buckets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int32&#39;</span><span class="p">))</span>
+        <span class="n">bucketing_mod</span> <span class="o">=</span> <span class="n">BucketingModule</span><span class="p">(</span><span class="n">sym_gen</span><span class="p">,</span> <span class="n">default_bucket_key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bucket_key</span> <span class="ow">in</span> <span class="n">buckets</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">data_names</span><span class="p">,</span> <span class="n">label_names</span> <span class="o">=</span> <span class="n">sym_gen</span><span class="p">(</span><span class="n">bucket_key</span><span class="p">)</span>
+            <span class="n">symbol</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-</span><span class="si">%s</span><span class="s2">-symbol.json&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">bucket_key</span><span class="p">))</span>
+            <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="n">bucket_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">Module</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">data_names</span><span class="p">,</span> <span class="n">label_names</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">bucket_key</span> <span class="o">==</span> <span class="n">default_bucket_key</span><span class="p">:</span>
+                <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_curr_module</span> <span class="o">=</span> <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="n">bucket_key</span><span class="p">]</span>
+        <span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span> <span class="o">=</span> <span class="n">load_params</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+        <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">_arg_params</span> <span class="o">=</span> <span class="n">arg_params</span>
+        <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">_aux_params</span> <span class="o">=</span> <span class="n">aux_params</span>
+        <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">params_initialized</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">params_initialized</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">bucketing_mod</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_dict</span><span class="p">(</span><span class="n">sym_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sym_gen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">default_bucket_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">arg_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">aux_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a model from a dict mapping bucket_key to symbols and shared arg_params</span>
+<span class="sd">        and aux_params.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sym_dict : dict mapping bucket_key to symbol</span>
+<span class="sd">            Dict mapping bucket key to symbol</span>
+<span class="sd">        sym_gen : function</span>
+<span class="sd">            A function when called with a bucket key, returns a triple</span>
+<span class="sd">            ``(symbol, data_names, label_names)``.</span>
+<span class="sd">            provide sym_gen which was used when saving bucketing module.</span>
+<span class="sd">        default_bucket_key : str (or any python object)</span>
+<span class="sd">            The key for the default bucket.</span>
+<span class="sd">        arg_params : dict</span>
+<span class="sd">            Required for loading the BucketingModule.</span>
+<span class="sd">            Dict of name to parameter ndarrays.</span>
+<span class="sd">        aux_params : dict</span>
+<span class="sd">            Required for loading the BucketingModule.</span>
+<span class="sd">            Dict of name to auxiliary state ndarrays.</span>
+<span class="sd">        logger : Logger</span>
+<span class="sd">            Default is `logging`.</span>
+<span class="sd">        context : Context or list of Context</span>
+<span class="sd">            Default is ``cpu()``.</span>
+<span class="sd">        work_load_list : list of number</span>
+<span class="sd">            Default ``None``, indicating uniform workload.</span>
+<span class="sd">        fixed_param_names: list of str</span>
+<span class="sd">            Default ``None``, indicating no network parameters are fixed.</span>
+<span class="sd">        state_names : list of str</span>
+<span class="sd">            States are similar to data and label, but not provided by data iterator.</span>
+<span class="sd">            Instead they are initialized to 0 and can be set by set_states()</span>
+<span class="sd">        group2ctxs : dict of str to context or list of context,</span>
+<span class="sd">                     or list of dict of str to context</span>
+<span class="sd">            Default is `None`. Mapping the `ctx_group` attribute to the context assignment.</span>
+<span class="sd">        compression_params : dict</span>
+<span class="sd">            Specifies type of gradient compression and additional arguments depending</span>
+<span class="sd">            on the type of compression being used. For example, 2bit compression requires a threshold.</span>
+<span class="sd">            Arguments would then be {&#39;type&#39;:&#39;2bit&#39;, &#39;threshold&#39;:0.5}</span>
+<span class="sd">            See mxnet.KVStore.set_gradient_compression method for more details on gradient compression.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">sym_dict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="s2">&quot;sym_dict needs to be provided for BucketingModule.load_dict&quot;</span>
+        <span class="k">assert</span> <span class="n">arg_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="s2">&quot;arg_params need to be provided for BucketingModule.load_dict&quot;</span>
+        <span class="k">assert</span> <span class="n">aux_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="s2">&quot;aux_params need to be provided for BucketingModule.load_dict&quot;</span>
+        <span class="k">assert</span> <span class="n">default_bucket_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="s2">&quot;default_bucket_key needs to be provided for BucketingModule.load_dict&quot;</span>
+
+        <span class="n">bucketing_mod</span> <span class="o">=</span> <span class="n">BucketingModule</span><span class="p">(</span><span class="n">sym_gen</span><span class="p">,</span> <span class="n">default_bucket_key</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bucket_key</span><span class="p">,</span> <span class="n">loaded_sym</span> <span class="ow">in</span> <span class="n">sym_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">data_names</span><span class="p">,</span> <span class="n">label_names</span> <span class="o">=</span> <span class="n">sym_gen</span><span class="p">(</span><span class="n">default_bucket_key</span><span class="p">)</span>
+            <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="n">bucket_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">Module</span><span class="p">(</span><span class="n">loaded_sym</span><span class="p">,</span> <span class="n">data_names</span><span class="p">,</span> <span class="n">label_names</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">bucket_key</span> <span class="o">==</span> <span class="n">default_bucket_key</span><span class="p">:</span>
+                <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_curr_module</span> <span class="o">=</span> <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_buckets</span><span class="p">[</span><span class="n">bucket_key</span><span class="p">]</span>
+        <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">_arg_params</span> <span class="o">=</span> <span class="n">arg_params</span>
+        <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">_aux_params</span> <span class="o">=</span> <span class="n">aux_params</span>
+        <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">_curr_module</span><span class="o">.</span><span class="n">params_initialized</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">bucketing_mod</span><span class="o">.</span><span class="n">params_initialized</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">bucketing_mod</span></div>
 </pre></div>
 
         </div>

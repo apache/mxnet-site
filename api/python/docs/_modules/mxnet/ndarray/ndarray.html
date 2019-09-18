@@ -2693,7 +2693,8 @@
            <span class="s2">&quot;logical_xor&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum&quot;</span><span class="p">,</span> <span class="s2">&quot;minimum&quot;</span><span class="p">,</span> <span class="s2">&quot;moveaxis&quot;</span><span class="p">,</span> <span class="s2">&quot;modulo&quot;</span><span class="p">,</span> <span class="s2">&quot;multiply&quot;</span><span class="p">,</span> <span class="s2">&quot;not_equal&quot;</span><span class="p">,</span>
            <span class="s2">&quot;onehot_encode&quot;</span><span class="p">,</span> <span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="s2">&quot;subtract&quot;</span><span class="p">,</span> <span class="s2">&quot;true_divide&quot;</span><span class="p">,</span> <span class="s2">&quot;waitall&quot;</span><span class="p">,</span> <span class="s2">&quot;_new_empty_handle&quot;</span><span class="p">,</span>
            <span class="s2">&quot;histogram&quot;</span><span class="p">,</span> <span class="s2">&quot;split_v2&quot;</span><span class="p">,</span> <span class="s2">&quot;to_dlpack_for_read&quot;</span><span class="p">,</span> <span class="s2">&quot;to_dlpack_for_write&quot;</span><span class="p">,</span> <span class="s2">&quot;from_dlpack&quot;</span><span class="p">,</span>
-           <span class="s2">&quot;from_numpy&quot;</span><span class="p">]</span>
+           <span class="s2">&quot;from_numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;zeros&quot;</span><span class="p">,</span> <span class="s2">&quot;indexing_key_expand_implicit_axes&quot;</span><span class="p">,</span> <span class="s2">&quot;get_indexing_dispatch_code&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;get_oshape_of_gather_nd_op&quot;</span><span class="p">]</span>
 
 <span class="n">_STORAGE_TYPE_UNDEFINED</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="n">_STORAGE_TYPE_DEFAULT</span> <span class="o">=</span> <span class="mi">0</span>
@@ -2890,11 +2891,11 @@
         <span class="sd">&quot;&quot;&quot;x.__abs__() &lt;=&gt; abs(x) &lt;=&gt; x.abs() &lt;=&gt; mx.nd.abs(x, y)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
 
-<div class="viewcode-block" id="NDArray.__add__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__add__.html#mxnet.ndarray.NDArray.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__add__(y) &lt;=&gt; x+y &lt;=&gt; mx.nd.add(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__iadd__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__iadd__.html#mxnet.ndarray.NDArray.__iadd__">[docs]</a>    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__iadd__(y) &lt;=&gt; x+=y &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;trying to add to a readonly NDArray&#39;</span><span class="p">)</span>
@@ -2903,7 +2904,7 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_plus_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="nf">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__add__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -2912,7 +2913,7 @@
         <span class="sd">&quot;&quot;&quot;x.__sub__(y) &lt;=&gt; x-y &lt;=&gt; mx.nd.subtract(x, y) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">subtract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__isub__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__isub__.html#mxnet.ndarray.NDArray.__isub__">[docs]</a>    <span class="k">def</span> <span class="nf">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__isub__(y) &lt;=&gt; x-=y &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;trying to subtract from a readonly NDArray&#39;</span><span class="p">)</span>
@@ -2921,21 +2922,21 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_minus_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rsub__(y) &lt;=&gt; y-x &lt;=&gt; mx.nd.subtract(y, x) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">subtract</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__mul__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__mul__.html#mxnet.ndarray.NDArray.__mul__">[docs]</a>    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__mul__(y) &lt;=&gt; x*y &lt;=&gt; mx.nd.multiply(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__neg__(y) &lt;=&gt; -x &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_mul_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__imul__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__imul__.html#mxnet.ndarray.NDArray.__imul__">[docs]</a>    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__imul__(y) &lt;=&gt; x*=y &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;trying to multiply to a readonly NDArray&#39;</span><span class="p">)</span>
@@ -2944,20 +2945,20 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_mul_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__div__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__div__.html#mxnet.ndarray.NDArray.__div__">[docs]</a>    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__div__(y) &lt;=&gt; x/y &lt;=&gt; mx.nd.divide(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__rdiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rdiv__(y) &lt;=&gt; y/x &lt;=&gt; mx.nd.divide(y, x) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">divide</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__idiv__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__idiv__.html#mxnet.ndarray.NDArray.__idiv__">[docs]</a>    <span class="k">def</span> <span class="nf">__idiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__idiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rdiv__(y) &lt;=&gt; x/=y &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;trying to divide from a readonly NDArray&#39;</span><span class="p">)</span>
@@ -2966,7 +2967,7 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_div_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">divide</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
@@ -2977,15 +2978,15 @@
     <span class="k">def</span> <span class="nf">__itruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__idiv__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__mod__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__mod__.html#mxnet.ndarray.NDArray.__mod__">[docs]</a>    <span class="k">def</span> <span class="nf">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__mod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__mod__(y) &lt;=&gt; x%y &lt;=&gt; mx.nd.modulo(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">modulo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">modulo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__rmod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rmod__(y) &lt;=&gt; y%x &lt;=&gt; mx.nd.modulo(y, x) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">modulo</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__imod__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__imod__.html#mxnet.ndarray.NDArray.__imod__">[docs]</a>    <span class="k">def</span> <span class="nf">__imod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__imod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__rmod__(y) &lt;=&gt; x%=y &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;trying to take modulo from a readonly NDArray&#39;</span><span class="p">)</span>
@@ -2994,7 +2995,7 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_mod_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;type </span><span class="si">%s</span><span class="s1"> not supported&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__pow__(y) &lt;=&gt; x**y &lt;=&gt; mx.nd.power(x,y) &quot;&quot;&quot;</span>
@@ -3004,9 +3005,9 @@
         <span class="sd">&quot;&quot;&quot;x.__pow__(y) &lt;=&gt; y**x &lt;=&gt; mx.nd.power(y,x) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">power</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__eq__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__eq__.html#mxnet.ndarray.NDArray.__eq__">[docs]</a>    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__eq__(y) &lt;=&gt; x==y &lt;=&gt; mx.nd.equal(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Default hash function.&quot;&quot;&quot;</span>
@@ -3016,21 +3017,21 @@
         <span class="sd">&quot;&quot;&quot;x.__ne__(y) &lt;=&gt; x!=y &lt;=&gt; mx.nd.not_equal(x, y) &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">not_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__gt__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__gt__.html#mxnet.ndarray.NDArray.__gt__">[docs]</a>    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__gt__(y) &lt;=&gt; x&gt;y &lt;=&gt; mx.nd.greater(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">greater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">greater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__ge__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__ge__.html#mxnet.ndarray.NDArray.__ge__">[docs]</a>    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__ge__(y) &lt;=&gt; x&gt;=y &lt;=&gt; mx.nd.greater_equal(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">greater_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">greater_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__lt__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__lt__.html#mxnet.ndarray.NDArray.__lt__">[docs]</a>    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__lt__(y) &lt;=&gt; x&lt;y &lt;=&gt; mx.nd.lesser(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lesser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lesser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__le__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__le__.html#mxnet.ndarray.NDArray.__le__">[docs]</a>    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;x.__le__(y) &lt;=&gt; x&lt;=y &lt;=&gt; mx.nd.less_equal(x, y) &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">lesser_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">lesser_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">num_elements</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">operator</span><span class="o">.</span><span class="n">mul</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -3122,40 +3123,61 @@
 <span class="sd">        array([[ 6.,  5.,  5.],</span>
 <span class="sd">               [ 6.,  0.,  4.]], dtype=float32)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">key</span> <span class="o">==</span> <span class="p">():</span>
-            <span class="n">_internal</span><span class="o">.</span><span class="n">_full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ctx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
-                            <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">py_slice</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;scalar tensor can only accept `()` and `:` as index&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;scalar tensor can only accept `()` and `:` as index&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_full</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">))</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sync_copyfrom</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;setting an array element with a sequence.&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="n">_indexing_key_expand_implicit_axes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-        <span class="n">slc_key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span> <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">slc_key</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="s1">&#39;too few indices after normalization: expected `ndim` (</span><span class="si">{}</span><span class="s1">) &#39;</span>
-                <span class="s1">&#39;but got </span><span class="si">{}</span><span class="s1">. This is a bug, please report it!&#39;</span>
-                <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">slc_key</span><span class="p">))</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">slc_key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
-                <span class="s1">&#39;too many indices (</span><span class="si">{}</span><span class="s1">) for array with </span><span class="si">{}</span><span class="s1"> dimensions&#39;</span>
-                <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">slc_key</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
-            <span class="p">)</span>
-
-        <span class="n">indexing_dispatch_code</span> <span class="o">=</span> <span class="n">_get_indexing_dispatch_code</span><span class="p">(</span><span class="n">slc_key</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">indexing_dispatch_code</span> <span class="o">==</span> <span class="n">_NDARRAY_BASIC_INDEXING</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_set_nd_basic_indexing</span><span class="p">(</span><span class="n">slc_key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">indexing_dispatch_code</span> <span class="o">==</span> <span class="n">_NDARRAY_ADVANCED_INDEXING</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_set_nd_advanced_indexing</span><span class="p">(</span><span class="n">slc_key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s1">&#39;Indexing NDArray with index </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="s1"> is not supported&#39;</span>
-                <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-            <span class="p">)</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">indexing_key_expand_implicit_axes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">slc_key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span> <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
 
-<div class="viewcode-block" id="NDArray.__getitem__"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.__getitem__.html#mxnet.ndarray.NDArray.__getitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">slc_key</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="s1">&#39;too few indices after normalization: expected `ndim` (</span><span class="si">{}</span><span class="s1">) &#39;</span>
+                    <span class="s1">&#39;but got </span><span class="si">{}</span><span class="s1">. This is a bug, please report it!&#39;</span>
+                    <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">slc_key</span><span class="p">))</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">slc_key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                    <span class="s1">&#39;too many indices (</span><span class="si">{}</span><span class="s1">) for array with </span><span class="si">{}</span><span class="s1"> dimensions&#39;</span>
+                    <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">slc_key</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="n">indexing_dispatch_code</span> <span class="o">=</span> <span class="n">get_indexing_dispatch_code</span><span class="p">(</span><span class="n">slc_key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">indexing_dispatch_code</span> <span class="o">==</span> <span class="n">_NDARRAY_BASIC_INDEXING</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_set_nd_basic_indexing</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">indexing_dispatch_code</span> <span class="o">==</span> <span class="n">_NDARRAY_ADVANCED_INDEXING</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_set_nd_advanced_indexing</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Indexing NDArray with index </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="s1"> is not supported&#39;</span>
+                    <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-return-statements</span>
         <span class="sd">&quot;&quot;&quot;x.__getitem__(i) &lt;=&gt; x[i]</span>
 
-<span class="sd">        Returns the subarray ``self[key]``.</span>
+<span class="sd">        Returns a sliced view of this array if the elements fetched are contiguous in memory;</span>
+<span class="sd">        otherwise, returns a newly created NDArray.</span>
+<span class="sd">        This functions supports advanced indexing defined in the following reference with</span>
+<span class="sd">        some restrictions.</span>
 
 <span class="sd">        For basic indexing, i.e., if ``key`` consists only of integers,</span>
 <span class="sd">        ``slice``, ``Ellipsis`` (``...``) and ``None``, a mutable view is</span>
@@ -3286,32 +3308,59 @@
 <span class="sd">        array([[[4., 5.],</span>
 <span class="sd">                [6., 7.]]], dtype=float32)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">key</span> <span class="o">==</span> <span class="p">():</span>
+        <span class="n">ndim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">key</span> <span class="o">==</span> <span class="p">()</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">==</span> <span class="nb">slice</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)):</span>
             <span class="k">return</span> <span class="bp">self</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="n">_indexing_key_expand_implicit_axes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># Handle simple cases for higher speed</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="n">ndim</span>\
+                <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span><span class="p">):</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">out</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">&gt;</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                    <span class="s1">&#39;index </span><span class="si">{}</span><span class="s1"> is out of bounds for axis 0 with size </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">key</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_at</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">py_slice</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span>  <span class="n">key</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">stop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slice</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">self</span>
+            <span class="k">elif</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;slice step cannot be zero&quot;</span><span class="p">)</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="n">indexing_key_expand_implicit_axes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;indexing key cannot be an empty tuple&#39;</span><span class="p">)</span>
 
-        <span class="n">indexing_dispatch_code</span> <span class="o">=</span> <span class="n">_get_indexing_dispatch_code</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">indexing_dispatch_code</span> <span class="o">=</span> <span class="n">get_indexing_dispatch_code</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">indexing_dispatch_code</span> <span class="o">==</span> <span class="n">_NDARRAY_BASIC_INDEXING</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_nd_basic_indexing</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">indexing_dispatch_code</span> <span class="o">==</span> <span class="n">_NDARRAY_ADVANCED_INDEXING</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_nd_advanced_indexing</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span></div>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span>
 
-    <span class="k">def</span> <span class="nf">_prepare_value_nd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">new_axes</span><span class="p">,</span> <span class="n">bcast_shape</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_prepare_value_nd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">bcast_shape</span><span class="p">,</span> <span class="n">squeeze_axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Return a broadcast `NDArray` with same context and dtype as ``self``.</span>
-
-<span class="sd">        Before broadcasting, ``new_axes`` of length 1 will be added to</span>
-<span class="sd">        ``value``. This is done in contrast to blindly reshaping based on</span>
-<span class="sd">        ``bcast_shape``, since the latter would silently ignore wrongly shaped</span>
-<span class="sd">        ``value`` arrays, e.g. ``nd.zeros((2, 3))[:, :1] = nd.ones(2)``.</span>
+<span class="sd">        For setting item, The returned `ndarray` is squeezed according to squeeze_axes since the</span>
+<span class="sd">        value_nd is assigned to not yet expanded space in original array.</span>
+<span class="sd">        `value`: numeric types or array like.</span>
+<span class="sd">        `bcast_shape`: a shape tuple.</span>
+<span class="sd">        `squeeze_axes`: a sequence of axes to squeeze in the value array.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
             <span class="n">value_nd</span> <span class="o">=</span> <span class="n">full</span><span class="p">(</span><span class="n">bcast_shape</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-            <span class="n">new_axes</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># ignore for scalar</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>  <span class="c1"># pylint: disable=unidiomatic-typecheck</span>
             <span class="n">value_nd</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
                 <span class="n">value_nd</span> <span class="o">=</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
@@ -3319,18 +3368,20 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">value_nd</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;NDArray does not support assignment with non-array-like &#39;</span>
-                                <span class="s1">&#39;object </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> does not support assignment with non-array-like &#39;</span>
+                                <span class="s1">&#39;object </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
 
-        <span class="c1"># First reshape `value_nd` to a new shape that incorporates existing</span>
-        <span class="c1"># axes, new axes and broadcasting axes in the right way.</span>
-        <span class="n">tmp_shape</span> <span class="o">=</span> <span class="n">_shape_for_bcast</span><span class="p">(</span>
-            <span class="n">value_nd</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">target_ndim</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">bcast_shape</span><span class="p">),</span> <span class="n">new_axes</span><span class="o">=</span><span class="n">new_axes</span>
-        <span class="p">)</span>
-        <span class="n">value_nd</span> <span class="o">=</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tmp_shape</span><span class="p">)</span>
+        <span class="c1"># For setitem, if there is None in indices, we need to squeeze the assigned value_nd</span>
+        <span class="c1"># since None is also ignored in slicing the  original array.</span>
+        <span class="k">if</span> <span class="n">squeeze_axes</span> <span class="ow">and</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">bcast_shape</span><span class="p">):</span>
+            <span class="n">squeeze_axes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">squeeze_axes</span> <span class="k">if</span> <span class="n">ax</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">value_nd</span><span class="o">.</span><span class="n">shape</span><span class="p">)])</span>
+            <span class="n">value_nd</span> <span class="o">=</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">squeeze_axes</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">bcast_shape</span><span class="p">:</span>
-            <span class="n">value_nd</span> <span class="o">=</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">bcast_shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">value_nd</span> <span class="o">=</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">bcast_shape</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">value_nd</span> <span class="o">=</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">bcast_shape</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value_nd</span>
 
     <span class="c1"># pylint: disable=invalid-name</span>
@@ -3365,24 +3416,46 @@
     <span class="c1"># pylint: enable=invalid-name</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_new_axes_after_basic_indexing</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">key_nd</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return indices of ``axes`` after slicing with ``key_nd``.</span>
+    <span class="k">def</span> <span class="nf">_new_axes_after_basic_indexing</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return indices of ``axes`` after slicing with ``key``.</span>
 
 <span class="sd">        This function is used to calculate the positions where new axes should</span>
 <span class="sd">        end up after indexing, taking into account the removal of axes by</span>
 <span class="sd">        integer indexing.</span>
 
-<span class="sd">        The ``key_nd`` sequence should contain slices and integers only, no</span>
-<span class="sd">        ``None`` entries.</span>
+<span class="sd">        The ``key`` sequence should be the exapanded key including slices, integer types</span>
+<span class="sd">        and ``None``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
-                       <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key_nd</span><span class="p">]</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
         <span class="n">cum_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
-        <span class="n">axes_in_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">if</span> <span class="n">ax</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">cum_steps</span><span class="p">)]</span>
-        <span class="n">axes_out_of_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">if</span> <span class="n">ax</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cum_steps</span><span class="p">)]</span>
-        <span class="n">axes_after</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cum_steps</span><span class="p">[</span><span class="n">axes_in_bounds</span><span class="p">])</span>
-        <span class="n">oob_offsets</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_nd</span><span class="p">)</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes_out_of_bounds</span><span class="p">]</span>
-        <span class="n">axes_after</span> <span class="o">+=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cum_steps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset</span> <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="n">oob_offsets</span><span class="p">)</span>
+        <span class="n">axes_after</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cum_steps</span><span class="p">[</span><span class="n">axes</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">axes_after</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_new_axes_after_advanced_indexing</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">adv_axs</span><span class="p">,</span> <span class="n">bcast_adv_ndim</span><span class="p">,</span> <span class="n">adv_are_adjacent</span><span class="p">):</span>  <span class="c1"># pylint: disable=invalid-name</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return indices of ``axes`` after slicing with ``key_nd``.</span>
+
+<span class="sd">        This function is used to calculate the positions where new axes should</span>
+<span class="sd">        end up after indexing, taking into account the removal of axes by</span>
+<span class="sd">        integer indexing.</span>
+
+<span class="sd">        The ``key`` sequence should be the exapanded key including slices, array like objects,</span>
+<span class="sd">        integer types and ``None``.</span>
+<span class="sd">        ``adv_axes`` is the sequence of indices of advanced axes.</span>
+<span class="sd">        ``bcast_adv_ndim`` is the number of dimensions of advanced indexing subspace.</span>
+<span class="sd">        ``adv_are_adjacent`` is a boolean value. Value being True means all advanced indicies are adjacent.</span>
+
+<span class="sd">        Note: integer indices are also considered advanced indices here.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">adv_axs_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">adv_axs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">adv_are_adjacent</span><span class="p">:</span>
+            <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">bcast_adv_ndim</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">adv_axs_set</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">adv_axs_set</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))]</span>
+        <span class="n">cum_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+        <span class="n">axes_after</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cum_steps</span><span class="p">[</span><span class="n">new_axes</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">axes_after</span>
 
     <span class="c1"># pylint: disable=invalid-name</span>
@@ -3449,15 +3522,24 @@
     <span class="k">def</span> <span class="nf">_set_nd_basic_indexing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;This function indexes ``self`` with a tuple of ``slice`` objects only.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">py_slice</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">py_slice</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">)):</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                     <span class="s1">&#39;`key` may only contain `slice` or integer objects in the &#39;</span>
                     <span class="s1">&#39;basic implementation, got object of type </span><span class="si">{}</span><span class="s1">. &#39;</span>
                     <span class="s1">&#39;This is a bug, please report it!&#39;</span>
                     <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)))</span>
+        <span class="n">key_nd</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span> <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">int_axes</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="n">ax</span><span class="p">],</span> <span class="n">integer_types</span><span class="p">)</span>
+            <span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key_nd</span><span class="p">))</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key_nd</span><span class="p">[</span><span class="n">ax</span><span class="p">],</span> <span class="n">integer_types</span><span class="p">)</span>
         <span class="p">]</span>
+
+        <span class="c1"># Check bounds for integer axes</span>
+        <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">int_axes</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">key_nd</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                    <span class="s1">&#39;index </span><span class="si">{}</span><span class="s1"> is out of bounds for axis </span><span class="si">{}</span><span class="s1"> with size </span><span class="si">{}</span><span class="s1">&#39;</span>
+                    <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_nd</span><span class="p">[</span><span class="n">ax</span><span class="p">],</span> <span class="n">ax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]))</span>
+
         <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_indexing_key_to_begin_end_step</span><span class="p">(</span>
             <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">keep_none</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
@@ -3470,10 +3552,12 @@
         <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_indexing_key_to_begin_end_step</span><span class="p">(</span>
             <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">keep_none</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
+        <span class="n">none_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">new_axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_axes_after_basic_indexing</span><span class="p">(</span><span class="n">none_axes</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">can_assign_directly</span><span class="p">:</span>
             <span class="c1"># Easy case, overwrite whole array.</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">NDArray</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>  <span class="c1"># pylint: disable=unidiomatic-typecheck</span>
                 <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">handle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">:</span>
                     <span class="c1"># Need to do this before `broadcast_to`.</span>
                     <span class="n">tmp_shape</span> <span class="o">=</span> <span class="n">_shape_for_bcast</span><span class="p">(</span>
@@ -3486,17 +3570,13 @@
                     <span class="n">value</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
-                <span class="n">_internal</span><span class="o">.</span><span class="n">_full</span><span class="p">(</span>
-                    <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ctx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
-                    <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span>
-                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_full</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">)):</span>
                 <span class="n">tmp_shape</span> <span class="o">=</span> <span class="n">_shape_for_bcast</span><span class="p">(</span>
                     <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">target_ndim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">new_axes</span><span class="o">=</span><span class="n">int_axes</span>
                 <span class="p">)</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tmp_shape</span><span class="p">)</span>
-
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
                     <span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_sync_copyfrom</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -3504,20 +3584,27 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Other array-like</span>
                 <span class="n">value_nd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_value_nd</span><span class="p">(</span>
-                    <span class="n">value</span><span class="p">,</span> <span class="n">new_axes</span><span class="o">=</span><span class="n">int_axes</span><span class="p">,</span> <span class="n">bcast_shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
+                    <span class="n">value</span><span class="p">,</span> <span class="n">bcast_shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
                 <span class="p">)</span>
                 <span class="n">value_nd</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
-            <span class="n">_internal</span><span class="o">.</span><span class="n">_slice_assign_scalar</span><span class="p">(</span>
-                <span class="bp">self</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span>
-            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">slice_assign_scalar</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># drop the axis of indexed_shape corresponding to int axes</span>
+            <span class="n">bcast_shape</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">indexed_shape</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">int_axes</span><span class="p">:</span>
+                    <span class="n">bcast_shape</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">bcast_shape</span> <span class="o">==</span> <span class="p">[]:</span>
+                <span class="n">bcast_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">bcast_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">bcast_shape</span><span class="p">)</span>
             <span class="n">value_nd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_value_nd</span><span class="p">(</span>
-                <span class="n">value</span><span class="p">,</span> <span class="n">new_axes</span><span class="o">=</span><span class="n">int_axes</span><span class="p">,</span> <span class="n">bcast_shape</span><span class="o">=</span><span class="n">indexed_shape</span>
+                <span class="n">value</span><span class="p">,</span> <span class="n">bcast_shape</span><span class="o">=</span><span class="n">bcast_shape</span><span class="p">,</span> <span class="n">squeeze_axes</span><span class="o">=</span><span class="n">new_axes</span>
             <span class="p">)</span>
-            <span class="n">_internal</span><span class="o">.</span><span class="n">_slice_assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_nd</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="n">value_nd</span> <span class="o">=</span> <span class="n">value_nd</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">indexed_shape</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">slice_assign</span><span class="p">(</span><span class="n">value_nd</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_nd_basic_indexing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;This function indexes ``self`` with a tuple of `slice` objects only.&quot;&quot;&quot;</span>
@@ -3533,10 +3620,12 @@
                 <span class="s1">&#39;too many indices (</span><span class="si">{}</span><span class="s1">) for array with </span><span class="si">{}</span><span class="s1"> dimensions&#39;</span>
                 <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key_nd</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">)</span>
             <span class="p">)</span>
-
-        <span class="n">none_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># pylint: disable=invalid-name</span>
         <span class="n">slc_key</span><span class="p">,</span> <span class="n">int_axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_indexing_key_int_to_slice</span><span class="p">(</span><span class="n">key_nd</span><span class="p">)</span>
-        <span class="n">new_axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_axes_after_basic_indexing</span><span class="p">(</span><span class="n">none_axes</span><span class="p">,</span> <span class="n">key_nd</span><span class="p">)</span>
+        <span class="n">none_axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">none_axes</span><span class="p">:</span>
+            <span class="n">new_axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_axes_after_basic_indexing</span><span class="p">(</span><span class="n">none_axes</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_axes</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Check bounds for integer axes</span>
         <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">int_axes</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
@@ -3545,27 +3634,11 @@
                     <span class="s1">&#39;index </span><span class="si">{}</span><span class="s1"> is out of bounds for axis </span><span class="si">{}</span><span class="s1"> with size </span><span class="si">{}</span><span class="s1">&#39;</span>
                     <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_nd</span><span class="p">[</span><span class="n">ax</span><span class="p">],</span> <span class="n">ax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]))</span>
 
-        <span class="c1"># Make sure we don&#39;t accidentally have advanced indexing or</span>
-        <span class="c1"># unsupported entries.</span>
-        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">slc_key</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">py_slice</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                    <span class="s1">&#39;found object of type </span><span class="si">{}</span><span class="s1"> instead of `slice`. &#39;</span>
-                    <span class="s1">&#39;This is a bug, please report it!&#39;</span>
-                    <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)))</span>
-
         <span class="c1"># Convert to begin, end and step, and return immediately if the slice</span>
         <span class="c1"># is empty</span>
         <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_indexing_key_to_begin_end_step</span><span class="p">(</span>
             <span class="n">slc_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">keep_none</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
-        <span class="c1"># Pylint is wrong about this</span>
-        <span class="c1"># pylint: disable=bad-continuation</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
-            <span class="n">b</span> <span class="o">&gt;=</span> <span class="n">e</span> <span class="ow">and</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="n">e</span> <span class="ow">and</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-        <span class="p">):</span>
-            <span class="k">return</span> <span class="n">array</span><span class="p">([],</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="c1"># pylint: enable=bad-continuation</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_indexing_slice_is_contiguous</span><span class="p">(</span><span class="n">slc_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">):</span>
             <span class="c1"># Create a shared-memory view by using low-level flat slicing</span>
@@ -3574,14 +3647,24 @@
             <span class="p">)</span>
             <span class="n">handle</span> <span class="o">=</span> <span class="n">NDArrayHandle</span><span class="p">()</span>
             <span class="n">flat_self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">check_call</span><span class="p">(</span>
-                <span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArraySlice</span><span class="p">(</span>
-                    <span class="n">flat_self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
-                    <span class="n">mx_uint</span><span class="p">(</span><span class="n">flat_begin</span><span class="p">),</span>
-                    <span class="n">mx_uint</span><span class="p">(</span><span class="n">flat_end</span><span class="p">),</span>
-                    <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">),</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">_int64_enabled</span><span class="p">():</span>
+                <span class="n">check_call</span><span class="p">(</span>
+                    <span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArraySlice64</span><span class="p">(</span>
+                        <span class="n">flat_self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
+                        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int64</span><span class="p">(</span><span class="n">flat_begin</span><span class="p">),</span>
+                        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int64</span><span class="p">(</span><span class="n">flat_end</span><span class="p">),</span>
+                        <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">),</span>
+                    <span class="p">)</span>
                 <span class="p">)</span>
-            <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">check_call</span><span class="p">(</span>
+                    <span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArraySlice</span><span class="p">(</span>
+                        <span class="n">flat_self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
+                        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_uint32</span><span class="p">(</span><span class="n">flat_begin</span><span class="p">),</span>
+                        <span class="n">ctypes</span><span class="o">.</span><span class="n">c_uint32</span><span class="p">(</span><span class="n">flat_end</span><span class="p">),</span>
+                        <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
             <span class="n">sliced_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_basic_indexing_sliced_shape</span><span class="p">(</span><span class="n">slc_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="n">sliced</span> <span class="o">=</span> <span class="n">NDArray</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">writable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sliced_shape</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -3599,7 +3682,6 @@
         <span class="k">if</span> <span class="n">final_shape</span> <span class="o">==</span> <span class="p">[]:</span>
             <span class="c1"># Override for single element indexing</span>
             <span class="n">final_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
         <span class="k">return</span> <span class="n">sliced</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">final_shape</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
@@ -3613,17 +3695,15 @@
             <span class="k">if</span> <span class="n">idx</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">idx_dtype</span><span class="p">:</span>
                 <span class="n">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">idx_dtype</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">idx</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
-
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">array</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">idx_dtype</span><span class="p">)</span>
-
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">array</span><span class="p">([</span><span class="n">idx</span><span class="p">],</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">idx_dtype</span><span class="p">)</span>
-
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">py_slice</span><span class="p">):</span>
             <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">ax_len</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">arange</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">idx_dtype</span><span class="p">)</span>
-
+        <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">range</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">arange</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">idx</span><span class="o">.</span><span class="n">stop</span><span class="p">,</span> <span class="n">idx</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">idx_dtype</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;illegal index type </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)))</span>
 
@@ -3688,7 +3768,10 @@
         <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_index_nd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Return an index array for use in `scatter_nd` and `gather_nd`.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return an index array for use in `scatter_nd` and `gather_nd`,</span>
+<span class="sd">        and a list of positions of new_axes in ouptut shape.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">key_nd</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span> <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key_nd</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndim</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
@@ -3757,6 +3840,14 @@
         <span class="n">bcast_idcs_permut_short</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_broadcast_advanced_indices</span><span class="p">(</span>
             <span class="n">converted_idcs_short</span><span class="p">,</span> <span class="n">block_axes</span><span class="o">=</span><span class="n">block_axs_nd</span>
         <span class="p">)</span>
+
+        <span class="c1"># Get the ndim of advanced indexing subspace</span>
+        <span class="n">converted_advanced_idcs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_advanced_index_to_array</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">ax_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ax_len</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">adv_idcs_nd</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">adv_axs_nd</span><span class="p">])</span>
+        <span class="p">]</span>
+        <span class="n">bcast_advanced_shape</span> <span class="o">=</span> <span class="n">_broadcast_shapes</span><span class="p">(</span><span class="n">converted_advanced_idcs</span><span class="p">)</span>
+
         <span class="c1"># Undo the permutation to restore the original order</span>
         <span class="n">bcast_idcs_short</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">bcast_idcs_permut_short</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span>
@@ -3764,21 +3855,38 @@
             <span class="k">if</span> <span class="n">axs_nd_permut</span><span class="p">[</span><span class="n">ax</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dropped_axs</span>
         <span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="o">*</span><span class="n">bcast_idcs_short</span><span class="p">)</span>
+        <span class="c1"># Calculate where the newaxes are inserted after advanced indexing</span>
+        <span class="n">new_axes_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_axes_after_advanced_indexing</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">adv_axs</span><span class="p">,</span>\
+                                <span class="nb">len</span><span class="p">(</span><span class="n">bcast_advanced_shape</span><span class="p">),</span> <span class="n">adv_idcs_are_adjacent</span><span class="p">)</span>
+
+                                <span class="c1"># if any array is numpy.ndarray, stack in numpy ndarray class.</span>
+        <span class="k">for</span> <span class="n">idcs</span> <span class="ow">in</span> <span class="n">bcast_idcs_short</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">idcs</span><span class="p">)</span> <span class="o">!=</span> <span class="n">NDArray</span><span class="p">:</span>  <span class="c1"># pylint: disable=unidiomatic-typecheck</span>
+                <span class="k">return</span> <span class="n">bcast_idcs_short</span><span class="p">,</span> <span class="n">new_axes_positions</span>
+
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="o">*</span><span class="n">bcast_idcs_short</span><span class="p">),</span> <span class="n">new_axes_positions</span>
 
     <span class="k">def</span> <span class="nf">_set_nd_advanced_indexing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;This function is called by __setitem__ when key is an advanced index.&quot;&quot;&quot;</span>
-        <span class="n">indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_nd</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="n">vshape</span> <span class="o">=</span> <span class="n">_get_oshape_of_gather_nd_op</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-        <span class="n">value_nd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_value_nd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">new_axes</span><span class="o">=</span><span class="p">[],</span> <span class="n">bcast_shape</span><span class="o">=</span><span class="n">vshape</span><span class="p">)</span>
-        <span class="n">_internal</span><span class="o">.</span><span class="n">_scatter_set_nd</span><span class="p">(</span>
-            <span class="n">lhs</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="n">value_nd</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="n">indices</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span>
-        <span class="p">)</span>
+        <span class="n">indices</span><span class="p">,</span> <span class="n">new_axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_nd</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">vshape</span> <span class="o">=</span> <span class="n">get_oshape_of_gather_nd_op</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">value_nd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_value_nd</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">bcast_shape</span><span class="o">=</span><span class="n">vshape</span><span class="p">,</span> <span class="n">squeeze_axes</span><span class="o">=</span><span class="n">new_axes</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_scatter_set_nd</span><span class="p">(</span><span class="n">value_nd</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_nd_advanced_indexing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get item when key is a tuple of any objects of the following types:</span>
 <span class="sd">        NDArray, np.ndarray, list, tuple, slice, and integer.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">gather_nd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_nd</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">slc_key</span><span class="p">,</span> <span class="n">new_axes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_index_nd</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">sliced</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">gather_nd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slc_key</span><span class="p">)</span>
+
+        <span class="c1"># Reshape due to `None` entries in `key`.</span>
+        <span class="k">if</span> <span class="n">new_axes</span><span class="p">:</span>
+            <span class="n">final_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">sliced</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sliced</span><span class="o">.</span><span class="n">ndim</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">new_axes</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+                <span class="n">final_shape</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">sliced</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">final_shape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sliced</span>
 
     <span class="k">def</span> <span class="nf">_sync_copyfrom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_array</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Performs a synchronized copy from the `source_array` to the current array.</span>
@@ -3877,11 +3985,15 @@
             <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;index </span><span class="si">%d</span><span class="s1"> is out of bounds for axis 0 with size </span><span class="si">%d</span><span class="s1">&#39;</span>
                                  <span class="o">%</span> <span class="p">(</span><span class="n">idx</span><span class="o">-</span><span class="n">length</span><span class="p">,</span> <span class="n">length</span><span class="p">))</span>
-        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayAt</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">mx_uint</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">_int64_enabled</span><span class="p">():</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayAt64</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int64</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXNDArrayAt</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_uint32</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">)))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">writable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.reshape"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.reshape.html#mxnet.ndarray.NDArray.reshape">[docs]</a>    <span class="k">def</span> <span class="nf">reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a **view** of this array with a new shape without altering any data.</span>
 
 <span class="sd">        Parameters</span>
@@ -4002,15 +4114,15 @@
                                            <span class="n">c_array</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">c_int64</span><span class="p">,</span> <span class="n">shape</span><span class="p">),</span>
                                            <span class="n">reverse</span><span class="p">,</span>
                                            <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">handle</span><span class="p">)))</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">writable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">handle</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">writable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">writable</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">reshape_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.reshape_like"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.reshape_like.html#mxnet.ndarray.NDArray.reshape_like">[docs]</a>    <span class="k">def</span> <span class="nf">reshape_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`reshape_like`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`reshape_like`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">reshape_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">reshape_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NDArray.zeros_like"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.zeros_like.html#mxnet.ndarray.NDArray.zeros_like">[docs]</a>    <span class="k">def</span> <span class="nf">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`zeros_like`.</span>
@@ -4020,13 +4132,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.ones_like"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.ones_like.html#mxnet.ndarray.NDArray.ones_like">[docs]</a>    <span class="k">def</span> <span class="nf">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`ones_like`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`ones_like`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">broadcast_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`broadcast_axes`.</span>
@@ -4036,21 +4148,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">broadcast_axes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.repeat"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.repeat.html#mxnet.ndarray.NDArray.repeat">[docs]</a>    <span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`repeat`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`repeat`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.pad"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.pad.html#mxnet.ndarray.NDArray.pad">[docs]</a>    <span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`pad`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`pad`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">swapaxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`swapaxes`.</span>
@@ -4108,21 +4220,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">one_hot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.one_hot"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.one_hot.html#mxnet.ndarray.NDArray.one_hot">[docs]</a>    <span class="k">def</span> <span class="nf">one_hot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`one_hot`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`one_hot`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.pick"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.pick.html#mxnet.ndarray.NDArray.pick">[docs]</a>    <span class="k">def</span> <span class="nf">pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`pick`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`pick`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">pick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sort`.</span>
@@ -4229,13 +4341,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">inplace</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">shape_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.shape_array"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.shape_array.html#mxnet.ndarray.NDArray.shape_array">[docs]</a>    <span class="k">def</span> <span class="nf">shape_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`shape_array`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`shape_array`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">shape_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">shape_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">size_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`size_array`.</span>
@@ -4356,13 +4468,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">prod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.prod"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.prod.html#mxnet.ndarray.NDArray.prod">[docs]</a>    <span class="k">def</span> <span class="nf">prod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`prod`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`prod`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">nanprod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`nanprod`.</span>
@@ -4396,29 +4508,29 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.norm"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.norm.html#mxnet.ndarray.NDArray.norm">[docs]</a>    <span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`norm`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`norm`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.round"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.round.html#mxnet.ndarray.NDArray.round">[docs]</a>    <span class="k">def</span> <span class="nf">round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`round`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`round`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">rint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.rint"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.rint.html#mxnet.ndarray.NDArray.rint">[docs]</a>    <span class="k">def</span> <span class="nf">rint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`rint`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`rint`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">fix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`fix`.</span>
@@ -4508,13 +4620,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">radians</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.radians"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.radians.html#mxnet.ndarray.NDArray.radians">[docs]</a>    <span class="k">def</span> <span class="nf">radians</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`radians`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`radians`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">sinh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sinh`.</span>
@@ -4620,13 +4732,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">rsqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.rsqrt"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.rsqrt.html#mxnet.ndarray.NDArray.rsqrt">[docs]</a>    <span class="k">def</span> <span class="nf">rsqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`rsqrt`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`rsqrt`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">rsqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">rsqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">cbrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`cbrt`.</span>
@@ -4636,13 +4748,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">cbrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">rcbrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.rcbrt"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.rcbrt.html#mxnet.ndarray.NDArray.rcbrt">[docs]</a>    <span class="k">def</span> <span class="nf">rcbrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`rcbrt`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`rcbrt`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">rcbrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">rcbrt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`square`.</span>
@@ -4652,29 +4764,29 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">reciprocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.reciprocal"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.reciprocal.html#mxnet.ndarray.NDArray.reciprocal">[docs]</a>    <span class="k">def</span> <span class="nf">reciprocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`reciprocal`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`reciprocal`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.relu"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.relu.html#mxnet.ndarray.NDArray.relu">[docs]</a>    <span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`relu`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`relu`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NDArray.sigmoid"><a class="viewcode-back" href="../../../api/ndarray/_autogen/mxnet.ndarray.NDArray.sigmoid.html#mxnet.ndarray.NDArray.sigmoid">[docs]</a>    <span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`sigmoid`.</span>
 
 <span class="sd">        The arguments are the same as for :py:func:`sigmoid`, with</span>
 <span class="sd">        this array as data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">softmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convenience fluent method for :py:func:`softmax`.</span>
@@ -5150,6 +5262,88 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">slice_assign_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign the scalar to a cropped subset of this NDArray. Value will broadcast to the shape of the cropped shape</span>
+<span class="sd">        and will be cast to the same dtype of the NDArray.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value: numeric value</span>
+<span class="sd">            Value and this NDArray should be of the same data type.</span>
+<span class="sd">            The shape of rhs should be the same as the cropped shape of this NDArray.</span>
+<span class="sd">        begin: tuple of begin indices</span>
+<span class="sd">        end: tuple of end indices</span>
+<span class="sd">        step: tuple of step lenghths</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        This NDArray.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from mxnet import nd</span>
+<span class="sd">        &gt;&gt;&gt; x = nd.ones((2, 2, 2))</span>
+<span class="sd">        &gt;&gt;&gt; y = x.slice_assign_scalar(0, (0, 0, None), (1, 1, None), (None, None, None))</span>
+<span class="sd">        &gt;&gt;&gt; y</span>
+<span class="sd">        [[[0. 0.]</span>
+<span class="sd">        [1. 1.]]</span>
+
+<span class="sd">        [[1. 1.]</span>
+<span class="sd">        [1. 1.]]]</span>
+<span class="sd">        &lt;NDArray 2x2x2 @cpu(0)&gt;</span>
+<span class="sd">        &gt;&gt;&gt; x</span>
+<span class="sd">        [[[0. 0.]</span>
+<span class="sd">        [1. 1.]]</span>
+
+<span class="sd">        [[1. 1.]</span>
+<span class="sd">        [1. 1.]]]</span>
+<span class="sd">        &lt;NDArray 2x2x2 @cpu(0)&gt;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_slice_assign_scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">slice_assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Assign the rhs to a cropped subset of this NDarray in place.</span>
+<span class="sd">        Returns the view of this NDArray.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rhs: NDArray.</span>
+<span class="sd">            rhs and this NDArray should be of the same data type, and on the same device.</span>
+<span class="sd">            The shape of rhs should be the same as the cropped shape of this NDArray.</span>
+<span class="sd">        begin: tuple of begin indices</span>
+<span class="sd">        end: tuple of end indices</span>
+<span class="sd">        step: tuple of step lenghths</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        This NDArray.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; x = nd.ones((2, 2, 2))</span>
+<span class="sd">        &gt;&gt;&gt; assigned = nd.zeros((1, 1, 2))</span>
+<span class="sd">        &gt;&gt;&gt; y = x.slice_assign(assigned, (0, 0, None), (1, 1, None), (None, None, None))</span>
+<span class="sd">        &gt;&gt;&gt; y</span>
+<span class="sd">        [[[0. 0.]</span>
+<span class="sd">        [1. 1.]]</span>
+
+<span class="sd">        [[1. 1.]</span>
+<span class="sd">        [1. 1.]]]</span>
+<span class="sd">        &lt;NDArray 2x2x2 @cpu(0)&gt;</span>
+<span class="sd">        &gt;&gt;&gt; x</span>
+<span class="sd">        [[[0. 0.]</span>
+<span class="sd">        [1. 1.]]</span>
+
+<span class="sd">        [[1. 1.]</span>
+<span class="sd">        [1. 1.]]]</span>
+<span class="sd">        &lt;NDArray 2x2x2 @cpu(0)&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_slice_assign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+
     <span class="k">def</span> <span class="nf">as_in_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns an array on the target device with the same value as this array.</span>
 
@@ -5320,20 +5514,33 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">to_dlpack_for_write</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is added as an NDArray class method in order to support polymorphism in NDArray and numpy.ndarray indexing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_full</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_indexing_key_expand_implicit_axes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_scatter_set_nd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_nd</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is added as an NDArray class method in order to support polymorphism in NDArray and numpy.ndarray indexing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_internal</span><span class="o">.</span><span class="n">_scatter_set_nd</span><span class="p">(</span>
+            <span class="n">lhs</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="n">value_nd</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="n">indices</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="bp">self</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">indexing_key_expand_implicit_axes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Make implicit axes explicit by adding ``slice(None)``.</span>
-
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; shape = (3, 4, 5)</span>
-<span class="sd">    &gt;&gt;&gt; _indexing_key_expand_implicit_axes(np.s_[2, 1, 1], shape)</span>
+<span class="sd">    &gt;&gt;&gt; indexing_key_expand_implicit_axes(np.s_[2, 1, 1], shape)</span>
 <span class="sd">    (2, 1, 1)</span>
-<span class="sd">    &gt;&gt;&gt; _indexing_key_expand_implicit_axes(np.s_[0], shape)</span>
+<span class="sd">    &gt;&gt;&gt; indexing_key_expand_implicit_axes(np.s_[0], shape)</span>
 <span class="sd">    (0, slice(None, None, None), slice(None, None, None))</span>
-<span class="sd">    &gt;&gt;&gt; _indexing_key_expand_implicit_axes(np.s_[0, ...], shape)  # equivalent</span>
+<span class="sd">    &gt;&gt;&gt; indexing_key_expand_implicit_axes(np.s_[0, ...], shape)  # equivalent</span>
 <span class="sd">    (0, slice(None, None, None), slice(None, None, None))</span>
-<span class="sd">    &gt;&gt;&gt; _indexing_key_expand_implicit_axes(np.s_[:2, None, 0, ...], shape)</span>
+<span class="sd">    &gt;&gt;&gt; indexing_key_expand_implicit_axes(np.s_[:2, None, 0, ...], shape)</span>
 <span class="sd">    (slice(None, 2, None), None, 0, slice(None, None, None))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
@@ -5418,18 +5625,21 @@
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">py_slice</span><span class="p">)</span> <span class="ow">or</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">range</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;illegal index type </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">idx</span><span class="p">)))</span>
 
 
-<span class="k">def</span> <span class="nf">_get_indexing_dispatch_code</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_indexing_dispatch_code</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Returns a dispatch code for calling basic or advanced indexing functions.&quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">NDArray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">_NDARRAY_ADVANCED_INDEXING</span>
-
+        <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="nb">range</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_NDARRAY_ADVANCED_INDEXING</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">py_slice</span><span class="p">,</span> <span class="n">integer_types</span><span class="p">))</span> <span class="ow">or</span> <span class="n">idx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s1">&#39;NDArray does not support slicing with key </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="s1">.&#39;</span>
@@ -5482,7 +5692,7 @@
     <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span>
 
 
-<span class="k">def</span> <span class="nf">_get_oshape_of_gather_nd_op</span><span class="p">(</span><span class="n">dshape</span><span class="p">,</span> <span class="n">ishape</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_oshape_of_gather_nd_op</span><span class="p">(</span><span class="n">dshape</span><span class="p">,</span> <span class="n">ishape</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Given data and index shapes, get the output `NDArray` shape.</span>
 <span class="sd">    This basically implements the infer shape logic of op gather_nd.&quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">dshape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">ishape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -5493,8 +5703,9 @@
 
 
 <span class="k">def</span> <span class="nf">_get_dim_size</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Given start, stop, and stop, calculate the number of elements</span>
-<span class="sd">    of this slice.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Given start, stop, and step, calculate the number of elements</span>
+<span class="sd">    of this slice.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">step</span> <span class="o">!=</span> <span class="mi">0</span>
     <span class="k">if</span> <span class="n">stop</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span>

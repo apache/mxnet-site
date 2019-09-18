@@ -2676,6 +2676,7 @@
 <span class="kn">from</span> <span class="nn">...block</span> <span class="k">import</span> <span class="n">HybridBlock</span>
 <span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">nn</span>
 <span class="kn">from</span> <span class="nn">....</span> <span class="k">import</span> <span class="n">base</span>
+<span class="kn">from</span> <span class="nn">....</span> <span class="n">util</span> <span class="kn">import</span> <span class="nn">is_np_array</span>
 
 <span class="c1"># Helpers</span>
 <span class="k">def</span> <span class="nf">_conv3x3</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">):</span>
@@ -2684,7 +2685,7 @@
 
 
 <span class="c1"># Blocks</span>
-<span class="k">class</span> <span class="nc">BasicBlockV1</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<div class="viewcode-block" id="BasicBlockV1"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.BasicBlockV1.html#mxnet.gluon.model_zoo.vision.BasicBlockV1">[docs]</a><span class="k">class</span> <span class="nc">BasicBlockV1</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;BasicBlock V1 from `&quot;Deep Residual Learning for Image Recognition&quot;</span>
 <span class="sd">    &lt;http://arxiv.org/abs/1512.03385&gt;`_ paper.</span>
 <span class="sd">    This is used for ResNet V1 for 18, 34 layers.</span>
@@ -2700,7 +2701,7 @@
 <span class="sd">    in_channels : int, default 0</span>
 <span class="sd">        Number of input channels. Default is 0, to infer from the graph.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BasicBlockV1.__init__"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.BasicBlockV1.html#mxnet.gluon.model_zoo.vision.BasicBlockV1.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BasicBlockV1</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">_conv3x3</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">))</span>
@@ -2714,7 +2715,7 @@
                                           <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
@@ -2724,12 +2725,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">:</span>
             <span class="n">residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span>
 
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">residual</span><span class="o">+</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">activation</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">act</span><span class="p">(</span><span class="n">residual</span><span class="o">+</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">x</span>
+        <span class="k">return</span> <span class="n">x</span></div>
 
 
-<span class="k">class</span> <span class="nc">BottleneckV1</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<div class="viewcode-block" id="BottleneckV1"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.BottleneckV1.html#mxnet.gluon.model_zoo.vision.BottleneckV1">[docs]</a><span class="k">class</span> <span class="nc">BottleneckV1</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Bottleneck V1 from `&quot;Deep Residual Learning for Image Recognition&quot;</span>
 <span class="sd">    &lt;http://arxiv.org/abs/1512.03385&gt;`_ paper.</span>
 <span class="sd">    This is used for ResNet V1 for 50, 101, 152 layers.</span>
@@ -2745,7 +2747,7 @@
 <span class="sd">    in_channels : int, default 0</span>
 <span class="sd">        Number of input channels. Default is 0, to infer from the graph.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BottleneckV1.__init__"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.BottleneckV1.html#mxnet.gluon.model_zoo.vision.BottleneckV1.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BottleneckV1</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="o">//</span><span class="mi">4</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="n">stride</span><span class="p">))</span>
@@ -2762,7 +2764,7 @@
                                           <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">())</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
@@ -2772,11 +2774,12 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">:</span>
             <span class="n">residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span>
 
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">residual</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">x</span>
+        <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">activation</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">act</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">residual</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
 
 
-<span class="k">class</span> <span class="nc">BasicBlockV2</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<div class="viewcode-block" id="BasicBlockV2"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.BasicBlockV2.html#mxnet.gluon.model_zoo.vision.BasicBlockV2">[docs]</a><span class="k">class</span> <span class="nc">BasicBlockV2</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;BasicBlock V2 from</span>
 <span class="sd">    `&quot;Identity Mappings in Deep Residual Networks&quot;</span>
 <span class="sd">    &lt;https://arxiv.org/abs/1603.05027&gt;`_ paper.</span>
@@ -2793,7 +2796,7 @@
 <span class="sd">    in_channels : int, default 0</span>
 <span class="sd">        Number of input channels. Default is 0, to infer from the graph.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BasicBlockV2.__init__"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.BasicBlockV2.html#mxnet.gluon.model_zoo.vision.BasicBlockV2.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BasicBlockV2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">_conv3x3</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">in_channels</span><span class="p">)</span>
@@ -2803,24 +2806,25 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                         <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">activation</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">:</span>
             <span class="n">residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">residual</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">residual</span></div>
 
 
-<span class="k">class</span> <span class="nc">BottleneckV2</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<div class="viewcode-block" id="BottleneckV2"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.BottleneckV2.html#mxnet.gluon.model_zoo.vision.BottleneckV2">[docs]</a><span class="k">class</span> <span class="nc">BottleneckV2</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Bottleneck V2 from</span>
 <span class="sd">    `&quot;Identity Mappings in Deep Residual Networks&quot;</span>
 <span class="sd">    &lt;https://arxiv.org/abs/1603.05027&gt;`_ paper.</span>
@@ -2837,7 +2841,7 @@
 <span class="sd">    in_channels : int, default 0</span>
 <span class="sd">        Number of input channels. Default is 0, to infer from the graph.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BottleneckV2.__init__"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.BottleneckV2.html#mxnet.gluon.model_zoo.vision.BottleneckV2.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">downsample</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BottleneckV2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="o">//</span><span class="mi">4</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -2849,29 +2853,30 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                         <span class="n">in_channels</span><span class="o">=</span><span class="n">in_channels</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span> <span class="o">=</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">residual</span> <span class="o">=</span> <span class="n">x</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">activation</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">:</span>
             <span class="n">residual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsample</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv3</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">residual</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">residual</span></div>
 
 
 <span class="c1"># Nets</span>
-<div class="viewcode-block" id="ResNetV1"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.ResNetV1.html#mxnet.gluon.model_zoo.vision.ResNetV1">[docs]</a><span class="k">class</span> <span class="nc">ResNetV1</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ResNetV1</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ResNet V1 model from</span>
 <span class="sd">    `&quot;Deep Residual Learning for Image Recognition&quot;</span>
 <span class="sd">    &lt;http://arxiv.org/abs/1512.03385&gt;`_ paper.</span>
@@ -2889,7 +2894,7 @@
 <span class="sd">    thumbnail : bool, default False</span>
 <span class="sd">        Enable thumbnail.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ResNetV1.__init__"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.ResNetV1.html#mxnet.gluon.model_zoo.vision.ResNetV1.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">thumbnail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">thumbnail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ResNetV1</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
@@ -2908,7 +2913,7 @@
                                                    <span class="n">stride</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="n">channels</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GlobalAvgPool2D</span><span class="p">())</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">in_units</span><span class="o">=</span><span class="n">channels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">in_units</span><span class="o">=</span><span class="n">channels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_make_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">stage_index</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;stage</span><span class="si">%d</span><span class="s1">_&#39;</span><span class="o">%</span><span class="n">stage_index</span><span class="p">)</span>
@@ -2923,10 +2928,10 @@
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">x</span></div>
+        <span class="k">return</span> <span class="n">x</span>
 
 
-<div class="viewcode-block" id="ResNetV2"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.ResNetV2.html#mxnet.gluon.model_zoo.vision.ResNetV2">[docs]</a><span class="k">class</span> <span class="nc">ResNetV2</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ResNetV2</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ResNet V2 model from</span>
 <span class="sd">    `&quot;Identity Mappings in Deep Residual Networks&quot;</span>
 <span class="sd">    &lt;https://arxiv.org/abs/1603.05027&gt;`_ paper.</span>
@@ -2944,7 +2949,7 @@
 <span class="sd">    thumbnail : bool, default False</span>
 <span class="sd">        Enable thumbnail.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ResNetV2.__init__"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.ResNetV2.html#mxnet.gluon.model_zoo.vision.ResNetV2.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">thumbnail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">thumbnail</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ResNetV2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
@@ -2969,7 +2974,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">GlobalAvgPool2D</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">())</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">in_units</span><span class="o">=</span><span class="n">in_channels</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">classes</span><span class="p">,</span> <span class="n">in_units</span><span class="o">=</span><span class="n">in_channels</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_make_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">layers</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">stage_index</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;stage</span><span class="si">%d</span><span class="s1">_&#39;</span><span class="o">%</span><span class="n">stage_index</span><span class="p">)</span>
@@ -2983,7 +2988,7 @@
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">x</span></div>
+        <span class="k">return</span> <span class="n">x</span>
 
 
 <span class="c1"># Specification</span>
@@ -2999,7 +3004,7 @@
 
 
 <span class="c1"># Constructor</span>
-<div class="viewcode-block" id="get_resnet"><a class="viewcode-back" href="../../../../../api/gluon/_autogen/mxnet.gluon.model_zoo.vision.get_resnet.html#mxnet.gluon.model_zoo.vision.get_resnet">[docs]</a><span class="k">def</span> <span class="nf">get_resnet</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">num_layers</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">cpu</span><span class="p">(),</span>
+<span class="k">def</span> <span class="nf">get_resnet</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">num_layers</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">cpu</span><span class="p">(),</span>
                <span class="n">root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">data_dir</span><span class="p">(),</span> <span class="s1">&#39;models&#39;</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ResNet V1 model from `&quot;Deep Residual Learning for Image Recognition&quot;</span>
 <span class="sd">    &lt;http://arxiv.org/abs/1512.03385&gt;`_ paper.</span>
@@ -3032,7 +3037,7 @@
         <span class="kn">from</span> <span class="nn">..model_store</span> <span class="k">import</span> <span class="n">get_model_file</span>
         <span class="n">net</span><span class="o">.</span><span class="n">load_parameters</span><span class="p">(</span><span class="n">get_model_file</span><span class="p">(</span><span class="s1">&#39;resnet</span><span class="si">%d</span><span class="s1">_v</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">num_layers</span><span class="p">,</span> <span class="n">version</span><span class="p">),</span>
                                            <span class="n">root</span><span class="o">=</span><span class="n">root</span><span class="p">),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">net</span></div>
+    <span class="k">return</span> <span class="n">net</span>
 
 <span class="k">def</span> <span class="nf">resnet18_v1</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;ResNet-18 V1 model from `&quot;Deep Residual Learning for Image Recognition&quot;</span>

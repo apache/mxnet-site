@@ -14,6 +14,9 @@ mxnet.gluon.data.vision.datasets.FashionMNIST
    .. autosummary::
    
       ~FashionMNIST.__init__
+      ~FashionMNIST.filter
+      ~FashionMNIST.sample
+      ~FashionMNIST.take
       ~FashionMNIST.transform
       ~FashionMNIST.transform_first
    

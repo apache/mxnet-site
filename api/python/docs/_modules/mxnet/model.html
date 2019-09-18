@@ -3065,6 +3065,22 @@
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Saved checkpoint to </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">param_name</span><span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">load_params</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load params from a file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">save_dict</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-</span><span class="si">%04d</span><span class="s2">.params&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">))</span>
+    <span class="n">arg_params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">aux_params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">save_dict</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Params file &#39;</span><span class="si">%s</span><span class="s2">&#39; is empty&quot;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%04d</span><span class="s1">.params&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">save_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">tp</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tp</span> <span class="o">==</span> <span class="s2">&quot;arg&quot;</span><span class="p">:</span>
+            <span class="n">arg_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="n">tp</span> <span class="o">==</span> <span class="s2">&quot;aux&quot;</span><span class="p">:</span>
+            <span class="n">aux_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="p">)</span>
+
 <span class="k">def</span> <span class="nf">load_checkpoint</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load model checkpoint from file.</span>
 
@@ -3090,15 +3106,7 @@
 <span class="sd">    - Parameters will be loaded from ``prefix-epoch.params``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">symbol</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-symbol.json&#39;</span> <span class="o">%</span> <span class="n">prefix</span><span class="p">)</span>
-    <span class="n">save_dict</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-</span><span class="si">%04d</span><span class="s1">.params&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">))</span>
-    <span class="n">arg_params</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">aux_params</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">save_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">tp</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">tp</span> <span class="o">==</span> <span class="s1">&#39;arg&#39;</span><span class="p">:</span>
-            <span class="n">arg_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-        <span class="k">if</span> <span class="n">tp</span> <span class="o">==</span> <span class="s1">&#39;aux&#39;</span><span class="p">:</span>
-            <span class="n">aux_params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span> <span class="o">=</span> <span class="n">load_params</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.callback</span> <span class="k">import</span> <span class="n">LogValidationMetricsCallback</span> <span class="c1"># pylint: disable=wrong-import-position</span>

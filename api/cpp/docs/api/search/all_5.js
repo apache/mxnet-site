@@ -142,7 +142,7 @@ var searchData=
   ['dmlc_5flog_5fcustomize',['DMLC_LOG_CUSTOMIZE',['../3rdparty_2dmlc-core_2include_2dmlc_2base_8h.html#ad15b62d40bf4245b025326a3a17be5eb',1,'base.h']]],
   ['dmlc_5flog_5fdebug',['DMLC_LOG_DEBUG',['../3rdparty_2dmlc-core_2include_2dmlc_2base_8h.html#a236ad834b0604958643629fbb6145636',1,'base.h']]],
   ['dmlc_5flog_5ffatal_5fthrow',['DMLC_LOG_FATAL_THROW',['../3rdparty_2dmlc-core_2include_2dmlc_2base_8h.html#a92627417e8db2250225558ccad80df18',1,'base.h']]],
-  ['dmlc_5fnanosleep_5fpresent',['DMLC_NANOSLEEP_PRESENT',['../build__config_8h.html#a454e6f446f14fcc1997ce0adad2ab5db',1,'build_config.h']]],
+  ['dmlc_5fnanosleep_5fpresent',['DMLC_NANOSLEEP_PRESENT',['../build__config__default_8h.html#a454e6f446f14fcc1997ce0adad2ab5db',1,'build_config_default.h']]],
   ['dmlc_5fno_5fexception',['DMLC_NO_EXCEPTION',['../3rdparty_2dmlc-core_2include_2dmlc_2base_8h.html#aef922e69a4efaccd25161afa4cfb2811',1,'base.h']]],
   ['dmlc_5fregister_5fdata_5fparser',['DMLC_REGISTER_DATA_PARSER',['../data_8h.html#a817ab5e00a100e40e3bf9dba7d23ddd2',1,'data.h']]],
   ['dmlc_5fregistry_5fenable',['DMLC_REGISTRY_ENABLE',['../registry_8h.html#a30edfc9f7bcb9862348b512dd73354ff',1,'registry.h']]],

@@ -2790,7 +2790,7 @@
     <span class="n">dump</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="dumps"><a class="viewcode-back" href="../../api/gluon-related/_autogen/mxnet.profiler.dumps.html#mxnet.profiler.dumps">[docs]</a><span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;table&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="dumps"><a class="viewcode-back" href="../../api/gluon-related/_autogen/mxnet.profiler.dumps.html#mxnet.profiler.dumps">[docs]</a><span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;table&#39;</span><span class="p">,</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Return a printable string of aggregate profile stats.</span>
 
 <span class="sd">    Parameters</span>
@@ -2802,9 +2802,9 @@
 <span class="sd">        can take &#39;table&#39; or &#39;json&#39;</span>
 <span class="sd">        defaults to &#39;table&#39;</span>
 <span class="sd">    sort_by: string</span>
-<span class="sd">        can take &#39;avg&#39;, &#39;min&#39;, &#39;max&#39;, or &#39;count&#39;</span>
+<span class="sd">        can take &#39;total&#39;, &#39;avg&#39;, &#39;min&#39;, &#39;max&#39;, or &#39;count&#39;</span>
 <span class="sd">        by which stat to sort the entries in each category</span>
-<span class="sd">        defaults to &#39;avg&#39;</span>
+<span class="sd">        defaults to &#39;total&#39;</span>
 <span class="sd">    ascending: boolean</span>
 <span class="sd">        whether to sort ascendingly</span>
 <span class="sd">        defaults to False</span>
@@ -2812,12 +2812,13 @@
     <span class="n">debug_str</span> <span class="o">=</span> <span class="n">ctypes</span><span class="o">.</span><span class="n">c_char_p</span><span class="p">()</span>
     <span class="n">reset_to_int</span> <span class="o">=</span> <span class="p">{</span><span class="kc">False</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
     <span class="n">format_to_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;table&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="n">sort_by_to_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;avg&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="n">sort_by_to_int</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;avg&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
     <span class="n">asc_to_int</span> <span class="o">=</span> <span class="p">{</span><span class="kc">False</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
     <span class="k">assert</span> <span class="nb">format</span> <span class="ow">in</span> <span class="n">format_to_int</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>\
             <span class="s2">&quot;Invalid value provided for format: </span><span class="si">{0}</span><span class="s2">. Support: &#39;table&#39;, &#39;json&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">format</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">sort_by</span> <span class="ow">in</span> <span class="n">sort_by_to_int</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>\
-            <span class="s2">&quot;Invalid value provided for sort_by: </span><span class="si">{0}</span><span class="s2">. Support: &#39;avg&#39;, &#39;min&#39;, &#39;max&#39;, &#39;count&#39;&quot;</span>\
+            <span class="s2">&quot;Invalid value provided for sort_by: </span><span class="si">{0}</span><span class="s2">.</span><span class="se">\</span>
+<span class="s2">             Support: &#39;total&#39;, &#39;avg&#39;, &#39;min&#39;, &#39;max&#39;, &#39;count&#39;&quot;</span>\
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sort_by</span><span class="p">)</span>
     <span class="k">assert</span>  <span class="n">ascending</span> <span class="ow">in</span> <span class="n">asc_to_int</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>\
             <span class="s2">&quot;Invalid value provided for ascending: </span><span class="si">{0}</span><span class="s2">. Support: False, True&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ascending</span><span class="p">)</span>

@@ -2660,6 +2660,7 @@
 <span class="c1"># coding: utf-8</span>
 <span class="c1"># pylint: disable=ungrouped-imports</span>
 <span class="sd">&quot;&quot;&quot;Dataset generator.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DataLoader&#39;</span><span class="p">]</span>
 
 <span class="kn">import</span> <span class="nn">pickle</span>
@@ -2679,6 +2680,8 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">sampler</span> <span class="k">as</span> <span class="n">_sampler</span>
 <span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">nd</span><span class="p">,</span> <span class="n">context</span>
+<span class="kn">from</span> <span class="nn">...util</span> <span class="k">import</span> <span class="n">is_np_shape</span><span class="p">,</span> <span class="n">is_np_array</span><span class="p">,</span> <span class="n">set_np</span>
+<span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">_mx_np</span>  <span class="c1"># pylint: disable=reimported</span>
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span> <span class="ow">or</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">rebuild_ndarray</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
@@ -2770,27 +2773,33 @@
 <span class="k">def</span> <span class="nf">default_batchify_fn</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Collate data into batch.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nd</span><span class="o">.</span><span class="n">NDArray</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_mx_np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">nd</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">default_batchify_fn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">array_fn</span> <span class="o">=</span> <span class="n">_mx_np</span><span class="o">.</span><span class="n">array</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span>
+        <span class="k">return</span> <span class="n">array_fn</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">default_mp_batchify_fn</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Collate data into batch. Use shared memory for stacking.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nd</span><span class="o">.</span><span class="n">NDArray</span><span class="p">):</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),)</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="n">empty_fn</span> <span class="o">=</span> <span class="n">_mx_np</span><span class="o">.</span><span class="n">empty</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">nd</span><span class="o">.</span><span class="n">empty</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">empty_fn</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),)</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
                        <span class="n">ctx</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="s1">&#39;cpu_shared&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_np_array</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">_mx_np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">default_mp_batchify_fn</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="n">array_fn</span> <span class="o">=</span> <span class="n">_mx_np</span><span class="o">.</span><span class="n">array</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span>
+        <span class="k">return</span> <span class="n">array_fn</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
                         <span class="n">ctx</span><span class="o">=</span><span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="s1">&#39;cpu_shared&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
 
@@ -3026,14 +3035,20 @@
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_batch_sampler</span><span class="p">)</span>
 
 
+<span class="k">def</span> <span class="nf">_thread_worker_initializer</span><span class="p">(</span><span class="n">active_shape</span><span class="p">,</span> <span class="n">active_array</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initializer for ThreadPool.&quot;&quot;&quot;</span>
+    <span class="n">set_np</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">active_shape</span><span class="p">,</span> <span class="n">array</span><span class="o">=</span><span class="n">active_array</span><span class="p">)</span>
+
+
 <span class="n">_worker_dataset</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="k">def</span> <span class="nf">_worker_initializer</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_worker_initializer</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">active_shape</span><span class="p">,</span> <span class="n">active_array</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Initialier for processing pool.&quot;&quot;&quot;</span>
     <span class="c1"># global dataset is per-process based and only available in worker processes</span>
     <span class="c1"># this is only necessary to handle MXIndexedRecordIO because otherwise dataset</span>
     <span class="c1"># can be passed as argument</span>
     <span class="k">global</span> <span class="n">_worker_dataset</span>
     <span class="n">_worker_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+    <span class="n">set_np</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">active_shape</span><span class="p">,</span> <span class="n">array</span><span class="o">=</span><span class="n">active_array</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_worker_fn</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">batchify_fn</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Function for processing data in worker process.&quot;&quot;&quot;</span>
@@ -3200,10 +3215,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_prefetch</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">prefetch</span><span class="p">)</span> <span class="k">if</span> <span class="n">prefetch</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_workers</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_pool</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_worker_pool</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_workers</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_worker_pool</span> <span class="o">=</span> <span class="n">ThreadPool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_workers</span><span class="p">,</span>
+                                               <span class="n">initializer</span><span class="o">=</span><span class="n">_thread_worker_initializer</span><span class="p">,</span>
+                                               <span class="n">initargs</span><span class="o">=</span><span class="p">(</span><span class="n">is_np_shape</span><span class="p">(),</span> <span class="n">is_np_array</span><span class="p">()))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_worker_pool</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_num_workers</span><span class="p">,</span> <span class="n">initializer</span><span class="o">=</span><span class="n">_worker_initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_num_workers</span><span class="p">,</span> <span class="n">initializer</span><span class="o">=</span><span class="n">_worker_initializer</span><span class="p">,</span>
+                    <span class="n">initargs</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset</span><span class="p">,</span> <span class="n">is_np_shape</span><span class="p">(),</span> <span class="n">is_np_array</span><span class="p">()])</span>
         <span class="k">if</span> <span class="n">batchify_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_batchify_fn</span> <span class="o">=</span> <span class="n">default_mp_batchify_fn</span>

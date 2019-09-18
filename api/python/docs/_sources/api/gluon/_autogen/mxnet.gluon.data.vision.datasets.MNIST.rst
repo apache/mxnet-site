@@ -14,6 +14,9 @@ mxnet.gluon.data.vision.datasets.MNIST
    .. autosummary::
    
       ~MNIST.__init__
+      ~MNIST.filter
+      ~MNIST.sample
+      ~MNIST.take
       ~MNIST.transform
       ~MNIST.transform_first
    

@@ -4079,6 +4079,64 @@
         <span class="k">return</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">handle</span><span class="p">)</span>
 
 
+    <span class="k">def</span> <span class="nf">optimize_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Partitions current symbol and optimizes it for a given backend,</span>
+<span class="sd">        returns new partitioned symbol.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        backend : str</span>
+<span class="sd">            The name of backend, as registered in `SubgraphBackendRegistry`</span>
+
+<span class="sd">        args : list of NDArray or dict of str to NDArray, optional</span>
+<span class="sd">            Input arguments to the symbol, required to infer shapes/types before partitioning</span>
+
+<span class="sd">            - If type is a list of `NDArray`, the order is the same as that of `list_arguments()`.</span>
+<span class="sd">            - If type is a dict of str to `NDArray`, then it maps the name of arguments</span>
+<span class="sd">              to the corresponding `NDArray`.</span>
+
+<span class="sd">        ctx : Context, optional</span>
+<span class="sd">            Device context, used to infer stypes</span>
+
+<span class="sd">        kwargs : optional arguments</span>
+<span class="sd">            Passed on to `PrePartition` and `PostPartition` functions of `SubgraphProperty`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out : SymbolHandle</span>
+<span class="sd">            The created symbol for target backend.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">SymbolHandle</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">args_handle</span> <span class="o">=</span> <span class="n">c_array</span><span class="p">(</span><span class="n">NDArrayHandle</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">listed_arguments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_arguments</span><span class="p">()</span>
+            <span class="n">args_handle</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ndarray_inputs</span><span class="p">(</span><span class="s1">&#39;args&#39;</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">listed_arguments</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ctx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ctx</span> <span class="o">=</span> <span class="n">current_context</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">Context</span><span class="p">)</span>
+
+        <span class="n">key_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">val_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">key_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="n">val_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+        <span class="n">check_call</span><span class="p">(</span><span class="n">_LIB</span><span class="o">.</span><span class="n">MXOptimizeForBackend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle</span><span class="p">,</span>
+                                             <span class="n">c_str</span><span class="p">(</span><span class="n">backend</span><span class="p">),</span>
+                                             <span class="n">ctypes</span><span class="o">.</span><span class="n">c_int</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">device_typeid</span><span class="p">),</span>
+                                             <span class="n">ctypes</span><span class="o">.</span><span class="n">byref</span><span class="p">(</span><span class="n">out</span><span class="p">),</span>
+                                             <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)),</span>
+                                             <span class="n">args_handle</span><span class="p">,</span>
+                                             <span class="n">mx_uint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">key_list</span><span class="p">)),</span>
+                                             <span class="n">c_str_array</span><span class="p">(</span><span class="n">key_list</span><span class="p">),</span>
+                                             <span class="n">c_str_array</span><span class="p">(</span><span class="n">val_list</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+
     <span class="c1"># pylint: disable=too-many-locals</span>
     <span class="k">def</span> <span class="nf">simple_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">grad_req</span><span class="o">=</span><span class="s1">&#39;write&#39;</span><span class="p">,</span> <span class="n">type_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stype_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">group2ctx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shared_arg_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shared_exec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

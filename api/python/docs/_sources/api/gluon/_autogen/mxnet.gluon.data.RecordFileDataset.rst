@@ -14,6 +14,9 @@ mxnet.gluon.data.RecordFileDataset
    .. autosummary::
    
       ~RecordFileDataset.__init__
+      ~RecordFileDataset.filter
+      ~RecordFileDataset.sample
+      ~RecordFileDataset.take
       ~RecordFileDataset.transform
       ~RecordFileDataset.transform_first
    

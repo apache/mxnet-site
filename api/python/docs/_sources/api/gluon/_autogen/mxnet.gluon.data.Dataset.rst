@@ -14,6 +14,9 @@ mxnet.gluon.data.Dataset
    .. autosummary::
    
       ~Dataset.__init__
+      ~Dataset.filter
+      ~Dataset.sample
+      ~Dataset.take
       ~Dataset.transform
       ~Dataset.transform_first
    

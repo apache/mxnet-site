@@ -216,7 +216,7 @@ then set ``gamma`` to <span class="num">1</span> and its gradient to <span class
 
 
 
-Defined in src/operator/nn/batch_norm.cc:L573</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data to batch normalization</p></dd><dt class="param">gamma</dt><dd class="cmt"><p>gamma array</p></dd><dt class="param">beta</dt><dd class="cmt"><p>beta array</p></dd><dt class="param">moving_mean</dt><dd class="cmt"><p>running mean of input</p></dd><dt class="param">moving_var</dt><dd class="cmt"><p>running variance of input</p></dd><dt class="param">eps</dt><dd class="cmt"><p>Epsilon to prevent div 0. Must be no less than CUDNN_BN_MIN_EPSILON defined in cudnn.h when using cudnn (usually 1e-5)</p></dd><dt class="param">momentum</dt><dd class="cmt"><p>Momentum for moving average</p></dd><dt class="param">fix_gamma</dt><dd class="cmt"><p>Fix gamma while training</p></dd><dt class="param">use_global_stats</dt><dd class="cmt"><p>Whether use global moving statistics instead of local batch-norm. This will force change batch-norm into a scale shift operator.</p></dd><dt class="param">output_mean_var</dt><dd class="cmt"><p>Output the mean and inverse std</p></dd><dt class="param">axis</dt><dd class="cmt"><p>Specify which shape axis the channel is specified</p></dd><dt class="param">cudnn_off</dt><dd class="cmt"><p>Do not select CUDNN operator, if available</p></dd><dt class="param">min_calib_range</dt><dd class="cmt"><p>The minimum scalar value in the form of float32 obtained through calibration. If present, it will be used to by quantized batch norm op to calculate primitive scale.Note: this calib_range is to calib bn output.</p></dd><dt class="param">max_calib_range</dt><dd class="cmt"><p>The maximum scalar value in the form of float32 obtained through calibration. If present, it will be used to by quantized batch norm op to calculate primitive scale.Note: this calib_range is to calib bn output.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/nn/batch_norm.cc:L571</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data to batch normalization</p></dd><dt class="param">gamma</dt><dd class="cmt"><p>gamma array</p></dd><dt class="param">beta</dt><dd class="cmt"><p>beta array</p></dd><dt class="param">moving_mean</dt><dd class="cmt"><p>running mean of input</p></dd><dt class="param">moving_var</dt><dd class="cmt"><p>running variance of input</p></dd><dt class="param">eps</dt><dd class="cmt"><p>Epsilon to prevent div 0. Must be no less than CUDNN_BN_MIN_EPSILON defined in cudnn.h when using cudnn (usually 1e-5)</p></dd><dt class="param">momentum</dt><dd class="cmt"><p>Momentum for moving average</p></dd><dt class="param">fix_gamma</dt><dd class="cmt"><p>Fix gamma while training</p></dd><dt class="param">use_global_stats</dt><dd class="cmt"><p>Whether use global moving statistics instead of local batch-norm. This will force change batch-norm into a scale shift operator.</p></dd><dt class="param">output_mean_var</dt><dd class="cmt"><p>Output the mean and inverse std</p></dd><dt class="param">axis</dt><dd class="cmt"><p>Specify which shape axis the channel is specified</p></dd><dt class="param">cudnn_off</dt><dd class="cmt"><p>Do not select CUDNN operator, if available</p></dd><dt class="param">min_calib_range</dt><dd class="cmt"><p>The minimum scalar value in the form of float32 obtained through calibration. If present, it will be used to by quantized batch norm op to calculate primitive scale.Note: this calib_range is to calib bn output.</p></dd><dt class="param">max_calib_range</dt><dd class="cmt"><p>The maximum scalar value in the form of float32 obtained through calibration. If present, it will be used to by quantized batch norm op to calculate primitive scale.Note: this calib_range is to calib bn output.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -586,7 +586,7 @@ Example::
 
 
 
-Defined in src/operator/nn/concat.cc:L371</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>List of arrays to concatenate</p></dd><dt class="param">num_args</dt><dd class="cmt"><p>Number of inputs to be concated.</p></dd><dt class="param">dim</dt><dd class="cmt"><p>the dimension to be concated.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/nn/concat.cc:L383</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>List of arrays to concatenate</p></dd><dt class="param">num_args</dt><dd class="cmt"><p>Number of inputs to be concated.</p></dd><dt class="param">dim</dt><dd class="cmt"><p>the dimension to be concated.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -939,8 +939,9 @@ All the input values should be integers in the range [<span class="num">0</span>
 If the input_dim is ip0 and output_dim is op0, then shape of the embedding weight matrix must be
 (ip0, op0).
 
-By default, <span class="kw">if</span> any index mentioned is too large, it is replaced by the index that addresses
-the last vector in an embedding matrix.
+When <span class="lit">"sparse_grad"</span> is False, <span class="kw">if</span> any index mentioned is too large, it is replaced by the index that
+addresses the last vector in an embedding matrix.
+When <span class="lit">"sparse_grad"</span> is True, an error will be raised <span class="kw">if</span> invalid indices are found.
 
 Examples::
 
@@ -977,7 +978,7 @@ The storage <span class="kw">type</span> of weight can be either row_sparse or d
 
 
 
-Defined in src/operator/tensor/indexing_op.cc:L520</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array to the embedding operator.</p></dd><dt class="param">weight</dt><dd class="cmt"><p>The embedding weight matrix.</p></dd><dt class="param">input_dim</dt><dd class="cmt"><p>Vocabulary size of the input indices.</p></dd><dt class="param">output_dim</dt><dd class="cmt"><p>Dimension of the embedding vectors.</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>Data type of weight.</p></dd><dt class="param">sparse_grad</dt><dd class="cmt"><p>Compute row sparse gradient in the backward calculation. If set to True, the grad's storage type is row_sparse.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/indexing_op.cc:L530</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array to the embedding operator.</p></dd><dt class="param">weight</dt><dd class="cmt"><p>The embedding weight matrix.</p></dd><dt class="param">input_dim</dt><dd class="cmt"><p>Vocabulary size of the input indices.</p></dd><dt class="param">output_dim</dt><dd class="cmt"><p>Dimension of the embedding vectors.</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>Data type of weight.</p></dd><dt class="param">sparse_grad</dt><dd class="cmt"><p>Compute row sparse gradient in the backward calculation. If set to True, the grad's storage type is row_sparse.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -1906,7 +1907,7 @@ The definition of GRU here is slightly different from paper but compatible <span
             \end{array}
 
 
-Defined in src/operator/rnn.cc:L691</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data to RNN</p></dd><dt class="param">parameters</dt><dd class="cmt"><p>Vector of all RNN trainable parameters concatenated</p></dd><dt class="param">state</dt><dd class="cmt"><p>initial hidden state of the RNN</p></dd><dt class="param">state_cell</dt><dd class="cmt"><p>initial cell state for LSTM networks (only for LSTM)</p></dd><dt class="param">sequence_length</dt><dd class="cmt"><p>Vector of valid sequence lengths for each element in batch. (Only used if use_sequence_length kwarg is True)</p></dd><dt class="param">state_size</dt><dd class="cmt"><p>size of the state for each layer</p></dd><dt class="param">num_layers</dt><dd class="cmt"><p>number of stacked layers</p></dd><dt class="param">bidirectional</dt><dd class="cmt"><p>whether to use bidirectional recurrent layers</p></dd><dt class="param">mode</dt><dd class="cmt"><p>the type of RNN to compute</p></dd><dt class="param">p</dt><dd class="cmt"><p>drop rate of the dropout on the outputs of each RNN layer, except the last layer.</p></dd><dt class="param">state_outputs</dt><dd class="cmt"><p>Whether to have the states as symbol outputs.</p></dd><dt class="param">projection_size</dt><dd class="cmt"><p>size of project size</p></dd><dt class="param">lstm_state_clip_min</dt><dd class="cmt"><p>Minimum clip value of LSTM states. This option must be used together with lstm_state_clip_max.</p></dd><dt class="param">lstm_state_clip_max</dt><dd class="cmt"><p>Maximum clip value of LSTM states. This option must be used together with lstm_state_clip_min.</p></dd><dt class="param">lstm_state_clip_nan</dt><dd class="cmt"><p>Whether to stop NaN from propagating in state by clipping it to min/max. If clipping range is not specified, this option is ignored.</p></dd><dt class="param">use_sequence_length</dt><dd class="cmt"><p>If set to true, this layer takes in an extra input parameter <code>sequence_length</code> to specify variable length sequence</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/rnn.cc:L693</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data to RNN</p></dd><dt class="param">parameters</dt><dd class="cmt"><p>Vector of all RNN trainable parameters concatenated</p></dd><dt class="param">state</dt><dd class="cmt"><p>initial hidden state of the RNN</p></dd><dt class="param">state_cell</dt><dd class="cmt"><p>initial cell state for LSTM networks (only for LSTM)</p></dd><dt class="param">sequence_length</dt><dd class="cmt"><p>Vector of valid sequence lengths for each element in batch. (Only used if use_sequence_length kwarg is True)</p></dd><dt class="param">state_size</dt><dd class="cmt"><p>size of the state for each layer</p></dd><dt class="param">num_layers</dt><dd class="cmt"><p>number of stacked layers</p></dd><dt class="param">bidirectional</dt><dd class="cmt"><p>whether to use bidirectional recurrent layers</p></dd><dt class="param">mode</dt><dd class="cmt"><p>the type of RNN to compute</p></dd><dt class="param">p</dt><dd class="cmt"><p>drop rate of the dropout on the outputs of each RNN layer, except the last layer.</p></dd><dt class="param">state_outputs</dt><dd class="cmt"><p>Whether to have the states as symbol outputs.</p></dd><dt class="param">projection_size</dt><dd class="cmt"><p>size of project size</p></dd><dt class="param">lstm_state_clip_min</dt><dd class="cmt"><p>Minimum clip value of LSTM states. This option must be used together with lstm_state_clip_max.</p></dd><dt class="param">lstm_state_clip_max</dt><dd class="cmt"><p>Maximum clip value of LSTM states. This option must be used together with lstm_state_clip_min.</p></dd><dt class="param">lstm_state_clip_nan</dt><dd class="cmt"><p>Whether to stop NaN from propagating in state by clipping it to min/max. If clipping range is not specified, this option is ignored.</p></dd><dt class="param">use_sequence_length</dt><dd class="cmt"><p>If set to true, this layer takes in an extra input parameter <code>sequence_length</code> to specify variable length sequence</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -2147,7 +2148,7 @@ Example::
 
 
 
-Defined in src/operator/sequence_last.cc:L100</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>n-dimensional input array of the form [max_sequence_length, batch_size, other_feature_dims] where n&gt;2</p></dd><dt class="param">sequence_length</dt><dd class="cmt"><p>vector of sequence lengths of the form [batch_size]</p></dd><dt class="param">use_sequence_length</dt><dd class="cmt"><p>If set to true, this layer takes in an extra input parameter <code>sequence_length</code> to specify variable length sequence</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The sequence axis. Only values of 0 and 1 are currently supported.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/sequence_last.cc:L106</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>n-dimensional input array of the form [max_sequence_length, batch_size, other_feature_dims] where n&gt;2</p></dd><dt class="param">sequence_length</dt><dd class="cmt"><p>vector of sequence lengths of the form [batch_size]</p></dd><dt class="param">use_sequence_length</dt><dd class="cmt"><p>If set to true, this layer takes in an extra input parameter <code>sequence_length</code> to specify variable length sequence</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The sequence axis. Only values of 0 and 1 are currently supported.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -2816,7 +2817,7 @@ The storage <span class="kw">type</span> of ``abs`` output depends upon the inpu
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L769</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L720</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3014,7 +3015,7 @@ The storage <span class="kw">type</span> of ``arccos`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L205</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L206</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3042,7 +3043,7 @@ The storage <span class="kw">type</span> of ``arccosh`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L373</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L450</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3079,7 +3080,7 @@ The storage <span class="kw">type</span> of ``arcsin`` output depends upon the i
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L186</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L187</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3111,7 +3112,7 @@ The storage <span class="kw">type</span> of ``arcsinh`` output depends upon the 
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L359</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L436</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3147,7 +3148,7 @@ The storage <span class="kw">type</span> of ``arctan`` output depends upon the i
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L226</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L227</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3179,7 +3180,7 @@ The storage <span class="kw">type</span> of ``arctanh`` output depends upon the 
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L390</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L467</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3421,7 +3422,7 @@ Examples::
 
 
 
-Defined in src/operator/tensor/indexing_op.cc:L754</pre></div><dl class="paramcmts block"><dt class="param">a</dt><dd class="cmt"><p>The input array</p></dd><dt class="param">indices</dt><dd class="cmt"><p>The index array</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/indexing_op.cc:L765</pre></div><dl class="paramcmts block"><dt class="param">a</dt><dd class="cmt"><p>The input array</p></dd><dt class="param">indices</dt><dd class="cmt"><p>The index array</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3511,7 +3512,7 @@ Example::
                                                  [ <span class="num">2.</span>,  <span class="num">2.</span>,  <span class="num">2.</span>] ] ]
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L240</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axes to perform the broadcasting.</p></dd><dt class="param">size</dt><dd class="cmt"><p>Target sizes of the broadcasting axes.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L58</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axes to perform the broadcasting.</p></dd><dt class="param">size</dt><dd class="cmt"><p>Target sizes of the broadcasting axes.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3555,7 +3556,7 @@ Example::
                                                  [ <span class="num">2.</span>,  <span class="num">2.</span>,  <span class="num">2.</span>] ] ]
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L240</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axes to perform the broadcasting.</p></dd><dt class="param">size</dt><dd class="cmt"><p>Target sizes of the broadcasting axes.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L58</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axes to perform the broadcasting.</p></dd><dt class="param">size</dt><dd class="cmt"><p>Target sizes of the broadcasting axes.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3747,7 +3748,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/elemwise_binary_broadcast_op_extended.cc:L156</pre></div><dl class="paramcmts block"><dt class="param">lhs</dt><dd class="cmt"><p>First input to the function</p></dd><dt class="param">rhs</dt><dd class="cmt"><p>Second input to the function</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_binary_broadcast_op_extended.cc:L158</pre></div><dl class="paramcmts block"><dt class="param">lhs</dt><dd class="cmt"><p>First input to the function</p></dd><dt class="param">rhs</dt><dd class="cmt"><p>Second input to the function</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -3858,7 +3859,7 @@ For example::
 
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L317</pre></div><dl class="paramcmts block"><dt class="param">lhs</dt><dd class="cmt"><p>First input.</p></dd><dt class="param">rhs</dt><dd class="cmt"><p>Second input.</p></dd><dt class="param">lhs_axes</dt><dd class="cmt"><p>Axes to perform broadcast on in the first input array</p></dd><dt class="param">rhs_axes</dt><dd class="cmt"><p>Axes to copy from the second input array</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L135</pre></div><dl class="paramcmts block"><dt class="param">lhs</dt><dd class="cmt"><p>First input.</p></dd><dt class="param">rhs</dt><dd class="cmt"><p>Second input.</p></dd><dt class="param">lhs_axes</dt><dd class="cmt"><p>Axes to perform broadcast on in the first input array</p></dd><dt class="param">rhs_axes</dt><dd class="cmt"><p>Axes to copy from the second input array</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4004,7 +4005,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/elemwise_binary_broadcast_op_extended.cc:L80</pre></div><dl class="paramcmts block"><dt class="param">lhs</dt><dd class="cmt"><p>First input to the function</p></dd><dt class="param">rhs</dt><dd class="cmt"><p>Second input to the function</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_binary_broadcast_op_extended.cc:L81</pre></div><dl class="paramcmts block"><dt class="param">lhs</dt><dd class="cmt"><p>First input to the function</p></dd><dt class="param">rhs</dt><dd class="cmt"><p>Second input to the function</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4042,7 +4043,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/elemwise_binary_broadcast_op_extended.cc:L115</pre></div><dl class="paramcmts block"><dt class="param">lhs</dt><dd class="cmt"><p>First input to the function</p></dd><dt class="param">rhs</dt><dd class="cmt"><p>Second input to the function</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_binary_broadcast_op_extended.cc:L117</pre></div><dl class="paramcmts block"><dt class="param">lhs</dt><dd class="cmt"><p>First input to the function</p></dd><dt class="param">rhs</dt><dd class="cmt"><p>Second input to the function</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4368,7 +4369,7 @@ So <span class="kw">with</span> `shape=(<span class="num">2</span>,<span class="
 
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L264</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">shape</dt><dd class="cmt"><p>The shape of the desired array. We can set the dim to zero if it's same as the original. E.g <code>A = broadcast_to(B, shape=(10, 0, 0))</code> has the same meaning as <code>A = broadcast_axis(B, axis=0, size=10)</code>.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L82</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">shape</dt><dd class="cmt"><p>The shape of the desired array. We can set the dim to zero if it's same as the original. E.g <code>A = broadcast_to(B, shape=(10, 0, 0))</code> has the same meaning as <code>A = broadcast_axis(B, axis=0, size=10)</code>.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4498,7 +4499,7 @@ The storage <span class="kw">type</span> of ``cbrt`` output depends upon the inp
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1030</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_pow.cc:L216</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4535,7 +4536,7 @@ The storage <span class="kw">type</span> of ``ceil`` output depends upon the inp
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L866</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L817</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4648,7 +4649,7 @@ parameter values:
 
 
 
-Defined in src/operator/tensor/matrix_op.cc:L729</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input array.</p></dd><dt class="param">a_min</dt><dd class="cmt"><p>Minimum value</p></dd><dt class="param">a_max</dt><dd class="cmt"><p>Maximum value</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L735</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input array.</p></dd><dt class="param">a_min</dt><dd class="cmt"><p>Minimum value</p></dd><dt class="param">a_max</dt><dd class="cmt"><p>Maximum value</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4707,7 +4708,7 @@ Example::
 
 
 
-Defined in src/operator/nn/concat.cc:L371</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>List of arrays to concatenate</p></dd><dt class="param">num_args</dt><dd class="cmt"><p>Number of inputs to be concated.</p></dd><dt class="param">dim</dt><dd class="cmt"><p>the dimension to be concated.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/nn/concat.cc:L383</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>List of arrays to concatenate</p></dd><dt class="param">num_args</dt><dd class="cmt"><p>Number of inputs to be concated.</p></dd><dt class="param">dim</dt><dd class="cmt"><p>the dimension to be concated.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4739,7 +4740,7 @@ The storage <span class="kw">type</span> of ``cos`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L89</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L90</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4769,7 +4770,7 @@ The storage <span class="kw">type</span> of ``cosh`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L298</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L351</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4836,7 +4837,7 @@ Example::
                                                             [<span class="num">1.</span>,  <span class="num">3.</span>] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L508</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">begin</dt><dd class="cmt"><p>starting indices for the slice operation, supports negative indices.</p></dd><dt class="param">end</dt><dd class="cmt"><p>ending indices for the slice operation, supports negative indices.</p></dd><dt class="param">step</dt><dd class="cmt"><p>step for the slice operation, supports negative values.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L511</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">begin</dt><dd class="cmt"><p>starting indices for the slice operation, supports negative indices.</p></dd><dt class="param">end</dt><dd class="cmt"><p>ending indices for the slice operation, supports negative indices.</p></dd><dt class="param">step</dt><dd class="cmt"><p>step for the slice operation, supports negative values.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4909,6 +4910,29 @@ Defined in src/operator/nn/ctc_loss.cc:L100</pre></div><dl class="paramcmts bloc
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li name="org.apache.mxnet.SymbolAPIBase#cumsum" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="cumsum(a:Option[org.apache.mxnet.Symbol],axis:Option[Int],dtype:Option[String],name:String,attr:Map[String,String]):org.apache.mxnet.Symbol"></a>
+      <a id="cumsum(Option[Symbol],Option[Int],Option[String],String,Map[String,String]):Symbol"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">cumsum</span><span class="params">(<span name="a">a: <span class="extype" name="scala.Option">Option</span>[<a href="Symbol.html" class="extype" name="org.apache.mxnet.Symbol">Symbol</a>] = <span class="symbol">None</span></span>, <span name="axis">axis: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="dtype">dtype: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="attr">attr: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">null</span></span>)</span><span class="result">: <a href="Symbol.html" class="extype" name="org.apache.mxnet.Symbol">Symbol</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.apache.mxnet.SymbolAPIBase@cumsum(a:Option[org.apache.mxnet.Symbol],axis:Option[Int],dtype:Option[String],name:String,attr:Map[String,String]):org.apache.mxnet.Symbol" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"><p></p><pre>Return the cumulative sum of the elements along a given axis.
+
+Defined in src/operator/numpy/np_cumsum.cc:L67</pre></div><dl class="paramcmts block"><dt class="param">a</dt><dd class="cmt"><p>Input ndarray</p></dd><dt class="param">axis</dt><dd class="cmt"><p>Axis along which the cumulative sum is computed. The default (None) is to compute the cumsum over the flattened array.</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>Type of the returned array and of the accumulator in which the elements are summed. If dtype is not specified, it defaults to the dtype of a, unless a has an integer dtype with a precision less than that of the default platform integer. In that case, the default platform integer is used.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="org.apache.mxnet.SymbolAPIBase#degrees" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="degrees(data:Option[org.apache.mxnet.Symbol],name:String,attr:Map[String,String]):org.apache.mxnet.Symbol"></a>
       <a id="degrees(Option[Symbol],String,Map[String,String]):Symbol"></a>
@@ -4938,7 +4962,7 @@ The storage <span class="kw">type</span> of ``degrees`` output depends upon the 
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L245</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L274</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -4993,7 +5017,7 @@ Example::
                             [<span class="num">15</span>, <span class="num">21</span>, <span class="num">16</span>, <span class="num">22</span>, <span class="num">17</span>, <span class="num">23</span>] ] ] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L1058</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input ndarray</p></dd><dt class="param">block_size</dt><dd class="cmt"><p>Blocks of [block_size. block_size] are moved</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L1065</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input ndarray</p></dd><dt class="param">block_size</dt><dd class="cmt"><p>Blocks of [block_size. block_size] are moved</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -5279,7 +5303,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1044</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L885</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -5308,7 +5332,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1065</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L906</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -5342,7 +5366,7 @@ The storage <span class="kw">type</span> of ``exp`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1124</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_logexp.cc:L63</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -5370,7 +5394,7 @@ will <span class="kw">return</span> a <span class="kw">new</span> array <span cl
 
 
 
-Defined in src/operator/tensor/matrix_op.cc:L418</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>Position where new axis is to be inserted. Suppose that the input <code>NDArray</code>'s dimension is <code>ndim</code>, the range of the inserted axis is <code>[-ndim, ndim]</code></p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L421</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>Position where new axis is to be inserted. Suppose that the input <code>NDArray</code>'s dimension is <code>ndim</code>, the range of the inserted axis is <code>[-ndim, ndim]</code></p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -5403,7 +5427,7 @@ The storage <span class="kw">type</span> of ``expm1`` output depends upon the in
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1285</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_logexp.cc:L224</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -5460,7 +5484,7 @@ The storage <span class="kw">type</span> of ``fix`` output depends upon the inpu
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L923</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L874</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -5545,7 +5569,7 @@ Examples::
                         [ <span class="num">9.</span>,  <span class="num">8.</span>,  <span class="num">7.</span>,  <span class="num">6.</span>,  <span class="num">5.</span>] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L906</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data array</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis which to reverse elements.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L913</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data array</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis which to reverse elements.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -5582,7 +5606,7 @@ The storage <span class="kw">type</span> of ``floor`` output depends upon the in
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L885</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L836</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -6781,7 +6805,7 @@ The storage <span class="kw">type</span> of ``log`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1137</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_logexp.cc:L76</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -6810,7 +6834,7 @@ The storage <span class="kw">type</span> of ``log10`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1154</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_logexp.cc:L93</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -6844,7 +6868,7 @@ The storage <span class="kw">type</span> of ``log1p`` output depends upon the in
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1267</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_logexp.cc:L206</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -6873,7 +6897,7 @@ The storage <span class="kw">type</span> of ``log2`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1166</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_logexp.cc:L105</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -6997,7 +7021,7 @@ Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L360</pre></div><dl cl
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"><p></p><pre>Computes the max of array elements over given axes.
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L191</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/./broadcast_reduce_op.h:L32</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -7023,7 +7047,7 @@ Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L191</pre></div><dl 
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"><p></p><pre>Computes the max of array elements over given axes.
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L191</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/./broadcast_reduce_op.h:L32</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -7049,7 +7073,7 @@ Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L191</pre></div><dl 
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"><p></p><pre>Computes the mean of array elements over given axes.
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L132</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/./broadcast_reduce_op.h:L83</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -7075,7 +7099,7 @@ Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L132</pre></div><dl 
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"><p></p><pre>Computes the min of array elements over given axes.
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L205</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/./broadcast_reduce_op.h:L46</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -7101,7 +7125,7 @@ Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L205</pre></div><dl 
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"><p></p><pre>Computes the min of array elements over given axes.
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L205</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/./broadcast_reduce_op.h:L46</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -7436,7 +7460,7 @@ Defined in src/operator/optimizer_op.cc:L724</pre></div><dl class="paramcmts blo
 
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L177</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/broadcast_reduce_prod_value.cc:L46</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -7464,7 +7488,7 @@ Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L177</pre></div><dl 
 
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L162</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/broadcast_reduce_sum_value.cc:L100</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -7544,7 +7568,7 @@ Examples::
 
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L352</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">ord</dt><dd class="cmt"><p>Order of the norm. Currently ord=1 and ord=2 is supported.</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.
+Defined in src/operator/tensor/broadcast_reduce_norm_value.cc:L89</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">ord</dt><dd class="cmt"><p>Order of the norm. Currently ord=1 and ord=2 is supported.</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.
       The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.
       If <code>axis</code> is int, a reduction is performed on a particular axis.
@@ -7638,7 +7662,7 @@ Examples::
                                       [ <span class="num">1.</span>  <span class="num">0.</span>  <span class="num">0.</span>] ] ]
 
 
-Defined in src/operator/tensor/indexing_op.cc:L801</pre></div><dl class="paramcmts block"><dt class="param">indices</dt><dd class="cmt"><p>array of locations where to set on_value</p></dd><dt class="param">depth</dt><dd class="cmt"><p>Depth of the one hot dimension.</p></dd><dt class="param">on_value</dt><dd class="cmt"><p>The value assigned to the locations represented by indices.</p></dd><dt class="param">off_value</dt><dd class="cmt"><p>The value assigned to the locations not represented by indices.</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>DType of the output</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/indexing_op.cc:L812</pre></div><dl class="paramcmts block"><dt class="param">indices</dt><dd class="cmt"><p>array of locations where to set on_value</p></dd><dt class="param">depth</dt><dd class="cmt"><p>Depth of the one hot dimension.</p></dd><dt class="param">on_value</dt><dd class="cmt"><p>The value assigned to the locations represented by indices.</p></dd><dt class="param">off_value</dt><dd class="cmt"><p>The value assigned to the locations not represented by indices.</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>DType of the output</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -7859,7 +7883,7 @@ Defined in src/operator/tensor/broadcast_reduce_op_index.cc:L155</pre></div><dl 
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"><p></p><pre>Computes the product of array elements over given axes.
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L147</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/./broadcast_reduce_op.h:L31</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -7896,7 +7920,7 @@ The storage <span class="kw">type</span> of ``radians`` output depends upon the 
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L264</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L293</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -8461,18 +8485,18 @@ Defined in src/operator/random/sample_op.cc:L152</pre></div><dl class="paramcmts
               
         </dd></dl></div>
     </li><li name="org.apache.mxnet.SymbolAPIBase#random_randint" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="random_randint(low:Any,high:Any,shape:Option[org.apache.mxnet.Shape],ctx:Option[String],dtype:Option[String],name:String,attr:Map[String,String]):org.apache.mxnet.Symbol"></a>
-      <a id="random_randint(Any,Any,Option[Shape],Option[String],Option[String],String,Map[String,String]):Symbol"></a>
+      <a id="random_randint(low:Long,high:Long,shape:Option[org.apache.mxnet.Shape],ctx:Option[String],dtype:Option[String],name:String,attr:Map[String,String]):org.apache.mxnet.Symbol"></a>
+      <a id="random_randint(Long,Long,Option[Shape],Option[String],Option[String],String,Map[String,String]):Symbol"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">random_randint</span><span class="params">(<span name="low">low: <span class="extype" name="scala.Any">Any</span></span>, <span name="high">high: <span class="extype" name="scala.Any">Any</span></span>, <span name="shape">shape: <span class="extype" name="scala.Option">Option</span>[<a href="Shape.html" class="extype" name="org.apache.mxnet.Shape">Shape</a>] = <span class="symbol">None</span></span>, <span name="ctx">ctx: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dtype">dtype: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="attr">attr: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">null</span></span>)</span><span class="result">: <a href="Symbol.html" class="extype" name="org.apache.mxnet.Symbol">Symbol</a></span>
+        <span class="name">random_randint</span><span class="params">(<span name="low">low: <span class="extype" name="scala.Long">Long</span></span>, <span name="high">high: <span class="extype" name="scala.Long">Long</span></span>, <span name="shape">shape: <span class="extype" name="scala.Option">Option</span>[<a href="Shape.html" class="extype" name="org.apache.mxnet.Shape">Shape</a>] = <span class="symbol">None</span></span>, <span name="ctx">ctx: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dtype">dtype: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>, <span name="attr">attr: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">null</span></span>)</span><span class="result">: <a href="Symbol.html" class="extype" name="org.apache.mxnet.Symbol">Symbol</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../index.html#org.apache.mxnet.SymbolAPIBase@random_randint(low:Any,high:Any,shape:Option[org.apache.mxnet.Shape],ctx:Option[String],dtype:Option[String],name:String,attr:Map[String,String]):org.apache.mxnet.Symbol" title="Permalink" target="_top">
+      <a href="../../../index.html#org.apache.mxnet.SymbolAPIBase@random_randint(low:Long,high:Long,shape:Option[org.apache.mxnet.Shape],ctx:Option[String],dtype:Option[String],name:String,attr:Map[String,String]):org.apache.mxnet.Symbol" title="Permalink" target="_top">
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
@@ -8488,7 +8512,7 @@ Example::
 
 
 
-Defined in src/operator/random/sample_op.cc:L195</pre></div><dl class="paramcmts block"><dt class="param">low</dt><dd class="cmt"><p>Lower bound of the distribution.</p></dd><dt class="param">high</dt><dd class="cmt"><p>Upper bound of the distribution.</p></dd><dt class="param">shape</dt><dd class="cmt"><p>Shape of the output.</p></dd><dt class="param">ctx</dt><dd class="cmt"><p>Context of output, in format [cpu|gpu|cpu_pinned](n). Only used for imperative calls.</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>DType of the output in case this can't be inferred. Defaults to int32 if not defined (dtype=None).</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/random/sample_op.cc:L196</pre></div><dl class="paramcmts block"><dt class="param">low</dt><dd class="cmt"><p>Lower bound of the distribution.</p></dd><dt class="param">high</dt><dd class="cmt"><p>Upper bound of the distribution.</p></dd><dt class="param">shape</dt><dd class="cmt"><p>Shape of the output.</p></dd><dt class="param">ctx</dt><dd class="cmt"><p>Context of output, in format [cpu|gpu|cpu_pinned](n). Only used for imperative calls.</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>DType of the output in case this can't be inferred. Defaults to int32 if not defined (dtype=None).</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -8586,7 +8610,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1084</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_pow.cc:L269</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -8617,7 +8641,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L716</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_pow.cc:L42</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -8697,7 +8721,7 @@ The parameter ``axis`` specifies the axis along which to perform repeat::
 
 
 
-Defined in src/operator/tensor/matrix_op.cc:L803</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data array</p></dd><dt class="param">repeats</dt><dd class="cmt"><p>The number of repetitions for each element.</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis along which to repeat values. The negative numbers are interpreted counting from the backward. By default, use the flattened input array, and return a flat output array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L810</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data array</p></dd><dt class="param">repeats</dt><dd class="cmt"><p>The number of repetitions for each element.</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis along which to repeat values. The negative numbers are interpreted counting from the backward. By default, use the flattened input array, and return a flat output array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -8866,7 +8890,7 @@ Examples::
                         [ <span class="num">9.</span>,  <span class="num">8.</span>,  <span class="num">7.</span>,  <span class="num">6.</span>,  <span class="num">5.</span>] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L906</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data array</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis which to reverse elements.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L913</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data array</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis which to reverse elements.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -8905,7 +8929,7 @@ The storage <span class="kw">type</span> of ``rint`` output depends upon the inp
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L847</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L798</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -9041,7 +9065,7 @@ The storage <span class="kw">type</span> of ``round`` output depends upon the in
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L826</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L777</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -9075,7 +9099,7 @@ The storage <span class="kw">type</span> of ``rsqrt`` output is always dense
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L1007</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_pow.cc:L193</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -9729,7 +9753,7 @@ The storage <span class="kw">type</span> of ``sign`` output depends upon the inp
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L807</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L758</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -9840,7 +9864,7 @@ The storage <span class="kw">type</span> of ``sin`` output depends upon the inpu
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L46</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L47</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -9874,7 +9898,7 @@ The storage <span class="kw">type</span> of ``sinh`` output depends upon the inp
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L283</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L313</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -9970,7 +9994,7 @@ Example::
                                                             [<span class="num">1.</span>,  <span class="num">3.</span>] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L508</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">begin</dt><dd class="cmt"><p>starting indices for the slice operation, supports negative indices.</p></dd><dt class="param">end</dt><dd class="cmt"><p>ending indices for the slice operation, supports negative indices.</p></dd><dt class="param">step</dt><dd class="cmt"><p>step for the slice operation, supports negative values.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L511</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">begin</dt><dd class="cmt"><p>starting indices for the slice operation, supports negative indices.</p></dd><dt class="param">end</dt><dd class="cmt"><p>ending indices for the slice operation, supports negative indices.</p></dd><dt class="param">step</dt><dd class="cmt"><p>step for the slice operation, supports negative values.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10014,7 +10038,7 @@ Examples::
                                              [ <span class="num">10.</span>,  <span class="num">11.</span>] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L599</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>Axis along which to be sliced, supports negative indexes.</p></dd><dt class="param">begin</dt><dd class="cmt"><p>The beginning index along the axis to be sliced,  supports negative indexes.</p></dd><dt class="param">end</dt><dd class="cmt"><p>The ending index along the axis to be sliced,  supports negative indexes.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L605</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>Axis along which to be sliced, supports negative indexes.</p></dd><dt class="param">begin</dt><dd class="cmt"><p>The beginning index along the axis to be sliced,  supports negative indexes.</p></dd><dt class="param">end</dt><dd class="cmt"><p>The ending index along the axis to be sliced,  supports negative indexes.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10087,7 +10111,7 @@ Example::
                                  [  <span class="num">9.</span>,  <span class="num">10.</span>,  <span class="num">11.</span>] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L668</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">shape_like</dt><dd class="cmt"><p>Shape like input</p></dd><dt class="param">axes</dt><dd class="cmt"><p>List of axes on which input data will be sliced according to the corresponding size of the second input. By default will slice on all axes. Negative axes are supported.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L674</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">shape_like</dt><dd class="cmt"><p>Shape like input</p></dd><dt class="param">axes</dt><dd class="cmt"><p>List of axes on which input data will be sliced according to the corresponding size of the second input. By default will slice on all axes. Negative axes are supported.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10127,7 +10151,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/elemwise_binary_scalar_op_extended.cc:L105</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>source input</p></dd><dt class="param">scalar</dt><dd class="cmt"><p>scalar input</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_binary_scalar_op_extended.cc:L107</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>source input</p></dd><dt class="param">scalar</dt><dd class="cmt"><p>scalar input</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10269,7 +10293,7 @@ Example::
 
 
 
-Defined in src/operator/nn/softmax.cc:L177</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis along which to compute softmax.</p></dd><dt class="param">temperature</dt><dd class="cmt"><p>Temperature parameter in softmax</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>DType of the output in case this can't be inferred. Defaults to the same as input's dtype if not defined (dtype=None).</p></dd><dt class="param">use_length</dt><dd class="cmt"><p>Whether to use the length input as a mask over the data input.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/nn/softmin.cc:L57</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis along which to compute softmax.</p></dd><dt class="param">temperature</dt><dd class="cmt"><p>Temperature parameter in softmax</p></dd><dt class="param">dtype</dt><dd class="cmt"><p>DType of the output in case this can't be inferred. Defaults to the same as input's dtype if not defined (dtype=None).</p></dd><dt class="param">use_length</dt><dd class="cmt"><p>Whether to use the length input as a mask over the data input.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10401,7 +10425,7 @@ Example::
                             [<span class="num">21</span>, <span class="num">22</span>, <span class="num">23</span>] ] ] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L1112</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input ndarray</p></dd><dt class="param">block_size</dt><dd class="cmt"><p>Blocks of [block_size. block_size] are moved</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L1119</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input ndarray</p></dd><dt class="param">block_size</dt><dd class="cmt"><p>Blocks of [block_size. block_size] are moved</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10520,7 +10544,7 @@ The storage <span class="kw">type</span> of ``sqrt`` output depends upon the inp
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L987</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_pow.cc:L142</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10558,7 +10582,7 @@ The storage <span class="kw">type</span> of ``square`` output depends upon the i
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L963</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_pow.cc:L118</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10733,7 +10757,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L116</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/broadcast_reduce_sum_value.cc:L67</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -10793,7 +10817,7 @@ Example::
 
 
 
-Defined in src/operator/tensor/broadcast_reduce_op_value.cc:L116</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
+Defined in src/operator/tensor/broadcast_reduce_sum_value.cc:L67</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis or axes along which to perform the reduction.</p><p>      The default, <code>axis=()</code>, will compute over all elements into a
       scalar array with shape <code>(1,)</code>.</p><p>      If <code>axis</code> is int, a reduction is performed on a particular axis.</p><p>      If <code>axis</code> is a tuple of ints, a reduction is performed on all the axes
       specified in the tuple.</p><p>      If <code>exclude</code> is true, reduction will be performed on the axes that are
       NOT in axis instead.</p><p>      Negative values means indexing from right to left.</p></dd><dt class="param">keepdims</dt><dd class="cmt"><p>If this is set to <code>True</code>, the reduced axes are left in the result as dimension with size one.</p></dd><dt class="param">exclude</dt><dd class="cmt"><p>Whether to perform reduction on axis that are NOT in axis instead.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
@@ -10909,7 +10933,7 @@ The storage <span class="kw">type</span> of ``take`` output depends upon the inp
 
 
 
-Defined in src/operator/tensor/indexing_op.cc:L696</pre></div><dl class="paramcmts block"><dt class="param">a</dt><dd class="cmt"><p>The input array.</p></dd><dt class="param">indices</dt><dd class="cmt"><p>The indices of the values to be extracted.</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis of input array to be taken.For input tensor of rank r, it could be in the range of [-r, r-1]</p></dd><dt class="param">mode</dt><dd class="cmt"><p>Specify how out-of-bound indices bahave. Default is &quot;clip&quot;. &quot;clip&quot; means clip to the range. So, if all indices mentioned are too large, they are replaced by the index that addresses the last element along an axis.  &quot;wrap&quot; means to wrap around.  &quot;raise&quot; means to raise an error, not supported yet.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/indexing_op.cc:L707</pre></div><dl class="paramcmts block"><dt class="param">a</dt><dd class="cmt"><p>The input array.</p></dd><dt class="param">indices</dt><dd class="cmt"><p>The indices of the values to be extracted.</p></dd><dt class="param">axis</dt><dd class="cmt"><p>The axis of input array to be taken.For input tensor of rank r, it could be in the range of [-r, r-1]</p></dd><dt class="param">mode</dt><dd class="cmt"><p>Specify how out-of-bound indices bahave. Default is &quot;clip&quot;. &quot;clip&quot; means clip to the range. So, if all indices mentioned are too large, they are replaced by the index that addresses the last element along an axis.  &quot;wrap&quot; means to wrap around.  &quot;raise&quot; means to raise an error, not supported yet.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10945,7 +10969,7 @@ The storage <span class="kw">type</span> of ``tan`` output depends upon the inpu
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L139</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L140</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -10979,7 +11003,7 @@ The storage <span class="kw">type</span> of ``tanh`` output depends upon the inp
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L316</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_trig.cc:L393</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -11036,7 +11060,7 @@ three cases:
                               [ <span class="num">3.</span>,  <span class="num">4.</span>,  <span class="num">3.</span>,  <span class="num">4.</span>,  <span class="num">3.</span>,  <span class="num">4.</span>] ] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L865</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data array</p></dd><dt class="param">reps</dt><dd class="cmt"><p>The number of times for repeating the tensor a. Each dim size of reps must be a positive integer. If reps has length d, the result will have dimension of max(d, a.ndim); If a.ndim &lt; d, a is promoted to be d-dimensional by prepending new axes. If a.ndim &gt; d, reps is promoted to a.ndim by pre-pending 1's to it.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L872</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Input data array</p></dd><dt class="param">reps</dt><dd class="cmt"><p>The number of times for repeating the tensor a. Each dim size of reps must be a positive integer. If reps has length d, the result will have dimension of max(d, a.ndim); If a.ndim &lt; d, a is promoted to be d-dimensional by prepending new axes. If a.ndim &gt; d, reps is promoted to a.ndim by pre-pending 1's to it.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -11137,7 +11161,7 @@ Examples::
                                  [ <span class="num">7.</span>,  <span class="num">8.</span>] ] ]
 
 
-Defined in src/operator/tensor/matrix_op.cc:L376</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">axes</dt><dd class="cmt"><p>Target axis order. By default the axes will be inverted.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/matrix_op.cc:L379</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>Source input</p></dd><dt class="param">axes</dt><dd class="cmt"><p>Target axis order. By default the axes will be inverted.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               
@@ -11175,7 +11199,7 @@ The storage <span class="kw">type</span> of ``trunc`` output depends upon the in
 
 
 
-Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L905</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
+Defined in src/operator/tensor/elemwise_unary_op_basic.cc:L856</pre></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>The input array.</p></dd><dt>returns</dt><dd class="cmt"><p>org.apache.mxnet.Symbol
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@<a href="annotation/Experimental.html" class="extype" name="org.apache.mxnet.annotation.Experimental">Experimental</a></span><span class="args">()</span>
               

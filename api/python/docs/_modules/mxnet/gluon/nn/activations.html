@@ -2664,6 +2664,7 @@
 
 <span class="kn">from</span> <span class="nn">...</span> <span class="k">import</span> <span class="n">initializer</span>
 <span class="kn">from</span> <span class="nn">..block</span> <span class="k">import</span> <span class="n">HybridBlock</span>
+<span class="kn">from</span> <span class="nn">...util</span> <span class="k">import</span> <span class="n">is_np_array</span>
 
 
 <span class="k">class</span> <span class="nc">Activation</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
@@ -2690,7 +2691,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_act_type</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_act_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span>
+        <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">activation</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span>
+        <span class="k">return</span> <span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_act_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">(</span><span class="si">{_act_type}</span><span class="s1">)&#39;</span>
@@ -2730,7 +2732,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">=</span> <span class="n">alpha</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;leaky&#39;</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span>
+        <span class="n">leaky_relu</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">leaky_relu</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span>
+        <span class="k">return</span> <span class="n">leaky_relu</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;leaky&#39;</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">(</span><span class="si">{alpha}</span><span class="s1">)&#39;</span>
@@ -2776,7 +2779,7 @@
         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;prelu&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">ELU</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<div class="viewcode-block" id="ELU"><a class="viewcode-back" href="../../../../api/gluon/_autogen/mxnet.gluon.nn.ELU.html#mxnet.gluon.nn.ELU">[docs]</a><span class="k">class</span> <span class="nc">ELU</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Exponential Linear Unit (ELU)</span>
 <span class="sd">        &quot;Fast and Accurate Deep Network Learning by Exponential Linear Units&quot;, Clevert et al, 2016</span>
@@ -2796,15 +2799,15 @@
 <span class="sd">        - **out**: output tensor with the same shape as `data`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ELU.__init__"><a class="viewcode-back" href="../../../../api/gluon/_autogen/mxnet.gluon.nn.ELU.html#mxnet.gluon.nn.ELU.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ELU</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span> <span class="o">=</span> <span class="n">alpha</span></div>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;elu&#39;</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;elu&#39;</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_alpha</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="SELU"><a class="viewcode-back" href="../../../../api/gluon/_autogen/mxnet.gluon.nn.SELU.html#mxnet.gluon.nn.SELU">[docs]</a><span class="k">class</span> <span class="nc">SELU</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">SELU</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Scaled Exponential Linear Unit (SELU)</span>
 <span class="sd">        &quot;Self-Normalizing Neural Networks&quot;, Klambauer et al, 2017</span>
@@ -2817,11 +2820,11 @@
 <span class="sd">    Outputs:</span>
 <span class="sd">        - **out**: output tensor with the same shape as `data`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="SELU.__init__"><a class="viewcode-back" href="../../../../api/gluon/_autogen/mxnet.gluon.nn.SELU.html#mxnet.gluon.nn.SELU.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SELU</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SELU</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;selu&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;selu&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">GELU</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -2843,7 +2846,7 @@
         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s1">&#39;gelu&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Swish"><a class="viewcode-back" href="../../../../api/gluon/_autogen/mxnet.gluon.nn.Swish.html#mxnet.gluon.nn.Swish">[docs]</a><span class="k">class</span> <span class="nc">Swish</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Swish</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Swish Activation function</span>
 <span class="sd">        https://arxiv.org/pdf/1710.05941.pdf</span>
@@ -2861,12 +2864,12 @@
 <span class="sd">        - **out**: output tensor with the same shape as `data`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Swish.__init__"><a class="viewcode-back" href="../../../../api/gluon/_autogen/mxnet.gluon.nn.Swish.html#mxnet.gluon.nn.Swish.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Swish</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span> <span class="o">=</span> <span class="n">beta</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_beta</span> <span class="o">=</span> <span class="n">beta</span>
 
     <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">F</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_beta</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">F</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_beta</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">)</span>
 </pre></div>
 
         </div>

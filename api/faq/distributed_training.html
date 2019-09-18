@@ -311,7 +311,35 @@
         </ul>
     </div>
     <div class="col-9">
-        <h1 id="distributed-training-in-mxnet">Distributed Training in MXNet</h1>
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="distributed-training-in-mxnet">Distributed Training in MXNet</h1>
 
 <p>MXNet supports distributed training enabling us to leverage multiple machines for faster training.
 In this document, we describe how it works, how to launch a distributed training job and
@@ -347,7 +375,7 @@ The scheduler then lets all processes know about every other node in the cluster
 
 <h3 id="kv-store">KV Store</h3>
 
-<p>MXNet provides a key-value store, which is a critical component used for multi-device training. The communication of parameters across devices on a single machine, as well as across multiple machines, is relayed through one or more servers with a key-value store for the parameters. Each value in this store is represented by a key and value, where each parameter array in the network is assigned a key, and value refers to the weights of that parameter array. Workers <code>push</code> gradients after processing a batch, and <code>pull</code> updated weights before processing a new batch. 
+<p>MXNet provides a key-value store, which is a critical component used for multi-device training. The communication of parameters across devices on a single machine, as well as across multiple machines, is relayed through one or more servers with a key-value store for the parameters. Each value in this store is represented by a key and value, where each parameter array in the network is assigned a key, and value refers to the weights of that parameter array. Workers <code>push</code> gradients after processing a batch, and <code>pull</code> updated weights before processing a new batch.
 We can also pass in optimizers for the KVStore to use while updating each weight. Optimizers like Stochastic Gradient Descent define an update rule,
 essentially a mathematical formula to compute the new weight based on the old weight, gradient, and some parameters.</p>
 
@@ -356,7 +384,7 @@ it uses a kvstore object internally to aggregate gradients from multiple devices
 
 <p>Although the API remains the same whether or not multiple machines are being used,
 the notion of kvstore server exists only during distributed training.
-In this case, each <code>push</code> and <code>pull</code> involves communication with the kvstore servers. When there are multiple devices on a single machine, gradients from these devices are first aggregated on the machine and then sent to the servers.<br>
+In this case, each <code>push</code> and <code>pull</code> involves communication with the kvstore servers. When there are multiple devices on a single machine, gradients from these devices are first aggregated on the machine and then sent to the servers.
 Note that we need to compile MXNet with the build flag <code>USE_DIST_KVSTORE=1</code> to use distributed training.</p>
 
 <p>The distributed mode of KVStore is enabled by calling <code>mxnet.kvstore.create</code> function
@@ -399,7 +427,7 @@ to see an example usage.</p>
 
 <h3 id="updating-weights">Updating weights</h3>
 
-<p>KVStore server supports two modes, one which aggregates the gradients and updates the weights using those gradients, and second where the server only aggregates gradients. In the latter case, when a worker process pulls from kvstore, it gets the aggregated gradients. The worker then uses these gradients and applies the weights locally. </p>
+<p>KVStore server supports two modes, one which aggregates the gradients and updates the weights using those gradients, and second where the server only aggregates gradients. In the latter case, when a worker process pulls from kvstore, it gets the aggregated gradients. The worker then uses these gradients and applies the weights locally.</p>
 
 <p>When using Gluon there is an option to choose between these modes by passing <code>update_on_kvstore</code> variable when you create the <a href="/api/python/docs/api/gluon/mxnet.gluon.Trainer.html">Trainer</a> object like this:</p>
 <div class="highlight"><pre><code class="language-" data-lang="">trainer = gluon.Trainer(net.collect_params(), optimizer='sgd',
@@ -428,7 +456,7 @@ This means that a worker who finishes processing a batch can pull the current pa
 even if other workers haven&#39;t finished processing the earlier batch.
 This is faster than <code>dist_sync</code> because there is no cost of synchronization, but can take more epochs to converge.
 The update of weights is atomic, meaning no two updates happen on the same weight at the same time. However, the order  of updates is not guaranteed.
-In <code>async</code> mode, it is required to pass an optimizer because in the absence of an optimizer kvstore would replace the stored weights with received weights and this doesn&#39;t make sense for training in asynchronous mode. Hence, when using Gluon with <code>async</code> mode we need to set <code>update_on_kvstore</code> to <code>True</code>. </p></li>
+In <code>async</code> mode, it is required to pass an optimizer because in the absence of an optimizer kvstore would replace the stored weights with received weights and this doesn&#39;t make sense for training in asynchronous mode. Hence, when using Gluon with <code>async</code> mode we need to set <code>update_on_kvstore</code> to <code>True</code>.</p></li>
 <li><p><code>dist_sync_device</code>: Same as <code>dist_sync</code> except that when there are multiple GPUs being used on each node,
 this mode aggregates gradients and updates weights on GPU while dist_sync does so on CPU memory.
 This is faster than <code>dist_sync</code> because it reduces expensive communication between GPU and CPU, but it increases memory usage on GPU.</p></li>
@@ -532,7 +560,7 @@ If the hosts file has exactly <code>n</code> number of worker nodes, it will lau
   172.30.1.174
 </code>
 - <code>--sync-dst-dir</code> takes the path of a directory on all hosts to which the current working directory will be synchronized. This only supports <code>ssh</code> launcher mode.
-This is necessary when the working directory is not accessible to all machines in the cluster. Setting this option synchronizes the current directory using rsync before the job is launched.<br>
+This is necessary when the working directory is not accessible to all machines in the cluster. Setting this option synchronizes the current directory using rsync before the job is launched.
 If you have not installed MXNet system-wide
 then you have to copy the folder <code>python/mxnet</code> and the file <code>lib/libmxnet.so</code> into the current directory before running <code>launch.py</code>.
 For example if you are in <code>example/gluon</code>, you can do this with <code>cp -r ../../python/mxnet ../../lib/libmxnet.so .</code>. This would work if your <code>lib</code> folder contains <code>libmxnet.so</code>, as would be the case when you use make. If you use CMake, this file would be in your <code>build</code> directory.</p>
@@ -636,6 +664,7 @@ If ACK is not received in <code>PS_RESEND_TIMEOUT</code> milliseconds, then the 
 
     </div>
 </div>
+
         </div>
     </div>
 

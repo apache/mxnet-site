@@ -2657,7 +2657,7 @@
 <span class="c1"># specific language governing permissions and limitations</span>
 <span class="c1"># under the License.</span>
 
-<span class="c1"># pylint: disable=unused-import</span>
+<span class="c1"># pylint: disable=unused-import, too-many-lines</span>
 <span class="sd">&quot;&quot;&quot;Read images and perform augmentations for object detection.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">print_function</span>
@@ -2676,6 +2676,8 @@
 <span class="kn">from</span> <span class="nn">.image</span> <span class="k">import</span> <span class="n">RandomOrderAug</span><span class="p">,</span> <span class="n">ColorJitterAug</span><span class="p">,</span> <span class="n">LightingAug</span><span class="p">,</span> <span class="n">ColorNormalizeAug</span>
 <span class="kn">from</span> <span class="nn">.image</span> <span class="k">import</span> <span class="n">ResizeAug</span><span class="p">,</span> <span class="n">ForceResizeAug</span><span class="p">,</span> <span class="n">CastAug</span><span class="p">,</span> <span class="n">HueJitterAug</span><span class="p">,</span> <span class="n">RandomGrayAug</span>
 <span class="kn">from</span> <span class="nn">.image</span> <span class="k">import</span> <span class="n">fixed_crop</span><span class="p">,</span> <span class="n">ImageIter</span><span class="p">,</span> <span class="n">Augmenter</span>
+<span class="kn">from</span> <span class="nn">..util</span> <span class="k">import</span> <span class="n">is_np_array</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">_mx_np</span>  <span class="c1"># pylint: disable=reimported</span>
 
 
 <span class="k">class</span> <span class="nc">DetAugmenter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -3404,6 +3406,7 @@
         <span class="sd">&quot;&quot;&quot;Override the helper function for batchifying data&quot;&quot;&quot;</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">start</span>
         <span class="n">batch_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span>
+        <span class="n">array_fn</span> <span class="o">=</span> <span class="n">_mx_np</span><span class="o">.</span><span class="n">array</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">batch_size</span><span class="p">:</span>
                 <span class="n">label</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next_sample</span><span class="p">()</span>
@@ -3420,7 +3423,7 @@
                     <span class="k">assert</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">batch_size</span><span class="p">,</span> <span class="s1">&#39;Batch size must be multiples of augmenter output length&#39;</span>
                     <span class="n">batch_data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postprocess_data</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
                     <span class="n">num_object</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                    <span class="n">batch_label</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">num_object</span><span class="p">]</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">batch_label</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">num_object</span><span class="p">]</span> <span class="o">=</span> <span class="n">array_fn</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">num_object</span> <span class="o">&lt;</span> <span class="n">batch_label</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                         <span class="n">batch_label</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">num_object</span><span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
                     <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -3443,8 +3446,14 @@
             <span class="n">batch_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_label</span>
             <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cache_idx</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">batch_data</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
-            <span class="n">batch_label</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provide_label</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">is_np_array</span><span class="p">():</span>
+                <span class="n">zeros_fn</span> <span class="o">=</span> <span class="n">_mx_np</span><span class="o">.</span><span class="n">zeros</span>
+                <span class="n">empty_fn</span> <span class="o">=</span> <span class="n">_mx_np</span><span class="o">.</span><span class="n">empty</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">zeros_fn</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">zeros</span>
+                <span class="n">empty_fn</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">empty</span>
+            <span class="n">batch_data</span> <span class="o">=</span> <span class="n">zeros_fn</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+            <span class="n">batch_label</span> <span class="o">=</span> <span class="n">empty_fn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">provide_label</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
             <span class="n">batch_label</span><span class="p">[:]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
             <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_batchify</span><span class="p">(</span><span class="n">batch_data</span><span class="p">,</span> <span class="n">batch_label</span><span class="p">)</span>
         <span class="c1"># calculate the padding</span>

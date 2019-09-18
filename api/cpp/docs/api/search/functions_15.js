@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['wait',['wait',['../classdmlc_1_1ManualEvent.html#a24af45c7c96d8b9421ed3337c5def886',1,'dmlc::ManualEvent::wait()'],['../structmshadow_1_1Stream_3_01gpu_01_4.html#a46151b12d2eae79e0a1de4adc2a1d706',1,'mshadow::Stream&lt; gpu &gt;::Wait()'],['../structmshadow_1_1Stream.html#ab17a2b049aacf5d71d8860262c4a98fd',1,'mshadow::Stream::Wait()']]],
+  ['wait',['Wait',['../structmshadow_1_1Stream_3_01gpu_01_4.html#a46151b12d2eae79e0a1de4adc2a1d706',1,'mshadow::Stream&lt; gpu &gt;::Wait()'],['../structmshadow_1_1Stream.html#ab17a2b049aacf5d71d8860262c4a98fd',1,'mshadow::Stream::Wait()'],['../classdmlc_1_1ManualEvent.html#a24af45c7c96d8b9421ed3337c5def886',1,'dmlc::ManualEvent::wait()']]],
   ['waitall',['WaitAll',['../classmxnet_1_1cpp_1_1NDArray.html#aeb8b119ca4ad4da3949ac5f7643b66ae',1,'mxnet::cpp::NDArray']]],
   ['waitforall',['WaitForAll',['../classmxnet_1_1Engine.html#a64483aecce780e96056be89d6289e782',1,'mxnet::Engine']]],
   ['waitforvar',['WaitForVar',['../classmxnet_1_1Engine.html#aed51bd7f294d9f2b569764a0c151d883',1,'mxnet::Engine']]],
