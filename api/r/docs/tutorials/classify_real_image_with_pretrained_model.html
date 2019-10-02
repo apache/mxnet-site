@@ -5,23 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Classify Images with a PreTrained Model | Apache MXNet</title>
-<meta name="generator" content="Jekyll v3.8.6" />
+<meta name="generator" content="Jekyll v4.0.0" />
 <meta property="og:title" content="Classify Images with a PreTrained Model" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="A flexible and efficient library for deep learning." />
 <meta property="og:description" content="A flexible and efficient library for deep learning." />
-<link rel="canonical" href="https://mxnet.incubator.apache.org/api/r/docs/tutorials/classify_real_image_with_pretrained_model" />
-<meta property="og:url" content="https://mxnet.incubator.apache.org/api/r/docs/tutorials/classify_real_image_with_pretrained_model" />
+<link rel="canonical" href="https://mxnet.apache.org/api/r/docs/tutorials/classify_real_image_with_pretrained_model" />
+<meta property="og:url" content="https://mxnet.apache.org/api/r/docs/tutorials/classify_real_image_with_pretrained_model" />
 <meta property="og:site_name" content="Apache MXNet" />
 <script type="application/ld+json">
-{"description":"A flexible and efficient library for deep learning.","@type":"WebPage","headline":"Classify Images with a PreTrained Model","url":"https://mxnet.incubator.apache.org/api/r/docs/tutorials/classify_real_image_with_pretrained_model","@context":"https://schema.org"}</script>
+{"url":"https://mxnet.apache.org/api/r/docs/tutorials/classify_real_image_with_pretrained_model","headline":"Classify Images with a PreTrained Model","description":"A flexible and efficient library for deep learning.","@type":"WebPage","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <script src="https://medium-widget.pixelpoint.io/widget.js"></script>
-  <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.incubator.apache.org/feed.xml" title="Apache MXNet" /><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  <script src="/assets/js/clipboard.js"></script>
-  <script src="/assets/js/copycode.js"></script>
-</head>
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="/assets/js/jquery-3.3.1.min.js"></script><script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js" defer></script>
+  <script src="/assets/js/globalSearch.js" defer></script>
+  <script src="/assets/js/clipboard.js" defer></script>
+  <script src="/assets/js/copycode.js" defer></script></head>
 <body><header class="site-header" role="banner">
 
   <script>
@@ -59,14 +71,173 @@
             </svg>
           </span>
       </label>
-
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">master</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions active">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
       <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions active">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
         <a class="page-link" href="/get_started">Get Started</a>
         <a class="page-link" href="/blog">Blog</a>
         <a class="page-link" href="/features">Features</a>
         <a class="page-link" href="/ecosystem">Ecosystem</a>
         <a class="page-link" href="/api">Docs & Tutorials</a>
         <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">master
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            
+              
+                <a class="dropdown-option-active" href="/">master</a>
+              
+            
+              
+                <a href="/versions/1.6/">1.6</a>
+              
+            
+              
+                <a href="/versions/1.5.0/">1.5.0</a>
+              
+            
+              
+                <a href="/versions/1.4.1/">1.4.1</a>
+              
+            
+              
+                <a href="/versions/1.3.1/">1.3.1</a>
+              
+            
+              
+                <a href="/versions/1.2.1/">1.2.1</a>
+              
+            
+              
+                <a href="/versions/1.1.0/">1.1.0</a>
+              
+            
+              
+                <a href="/versions/1.0.0/">1.0.0</a>
+              
+            
+              
+                <a href="/versions/0.12.1/">0.12.1</a>
+              
+            
+              
+                <a href="/versions/0.11.0/">0.11.0</a>
+              
+            
+          </div>
+        </div>
       </div>
     </nav>
   </div>
@@ -91,342 +262,11 @@
         
            <!-- resource-p -->
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <div class="docs-card docs-side">
-            <ul>
-                <div class="docs-action-btn">
-                    <a href="/api/r"> <img src="/assets/img/compass.svg"
-                                                                      class="docs-logo-docs">R Guide <span
-                            class="span-accented">›</span></a>
-                </div>
-                <div class="docs-action-btn">
-                    <a href="/api/r/docs/tutorials"> <img
-                            src="/assets/img/video-tutorial.svg" class="docs-logo-docs">R
-                        Tutorials <span class="span-accented">›</span></a>
-                </div>
-                <div class="docs-action-btn">
-                    <a href="https://s3.amazonaws.com/mxnet-prod/docs/R/mxnet-r-reference-manual.pdf"> <img src="/assets/img/api.svg"
-                                                                    class="docs-logo-docs">R API Reference
-                        <span class="span-accented">›</span></a>
-                </div>
-
-                <!-- Let's show the list of tutorials -->
-                <br>
-                
-                <h3>Tutorials</h3>
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/callback_function">Callback Function</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/char_rnn_model">Char RNN Model</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/classify_real_image_with_pretrained_model">Classify Images with a PreTrained Model</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/custom_iterator">Custom Iterator Tutorial</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/custom_loss_function">Custom Loss Function</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/five_minutes_neural_network">Five Minutes Neural Network</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/mnist_competition">MNIST Competition</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/multi_dim_lstm">LSTM Time Serie</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/ndarray">NDArray</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                
-                <li><a href="/api/r/docs/tutorials/symbol">NDArray</a></li>
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                
-                  <!-- page-category -->
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                
-                   <!-- resource-p -->
-                  <!-- page -->
-                
-            </ul>
-        </div>
-        
-        
-        
-        
            <!-- resource-p -->
         
-           <!-- resource-p -->
         
-           <!-- resource-p -->
         
-           <!-- resource-p -->
         
-           <!-- resource-p -->
-        
-           <!-- resource-p -->
         
            <!-- resource-p -->
         
@@ -604,54 +444,48 @@
     </div>
     <div class="col-9">
         <!--- Licensed to the Apache Software Foundation (ASF) under one -->
-
 <!--- or more contributor license agreements.  See the NOTICE file -->
-
 <!--- distributed with this work for additional information -->
-
 <!--- regarding copyright ownership.  The ASF licenses this file -->
-
 <!--- to you under the Apache License, Version 2.0 (the -->
-
 <!--- "License"); you may not use this file except in compliance -->
-
 <!--- with the License.  You may obtain a copy of the License at -->
 
 <!---   http://www.apache.org/licenses/LICENSE-2.0 -->
 
 <!--- Unless required by applicable law or agreed to in writing, -->
-
 <!--- software distributed under the License is distributed on an -->
-
 <!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
-
 <!--- KIND, either express or implied.  See the License for the -->
-
 <!--- specific language governing permissions and limitations -->
-
 <!--- under the License. -->
 
 <h1 id="classify-images-with-a-pretrained-model">Classify Images with a PreTrained Model</h1>
-
 <p>MXNet is a flexible and efficient deep learning framework. One of the interesting things that a deep learning
 algorithm can do is classify real world images.</p>
 
 <p>In this tutorial, we show how to use a pre-trained Inception-BatchNorm network to predict the class of an
 image. For information about the network architecture, see  [1].</p>
 
-<p>The pre-trained Inception-BatchNorm network is able to be downloaded from <a href="http://data.mxnet.io/mxnet/data/Inception.zip">this link</a>
+<p>The pre-trained Inception-BatchNorm network is able to be downloaded from <a href="https://data.mxnet.io/mxnet/data/Inception.zip">this link</a>
 This model gives the recent state-of-art prediction accuracy on image net dataset.</p>
 
 <h2 id="load-the-mxnet-package">Load the MXNet Package</h2>
-
 <p>To get started, load the mxnet package:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">require</span><span class="p">(</span><span class="n">mxnet</span><span class="p">)</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## Loading required package: mxnet
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">require</span><span class="p">(</span><span class="n">mxnet</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ## Loading required package: mxnet
     ## Loading required package: methods
-</code></pre></div>
+</code></pre></div></div>
+
 <p>Now load the imager package to load and preprocess the images in R:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">require</span><span class="p">(</span><span class="n">imager</span><span class="p">)</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## Loading required package: imager
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">require</span><span class="p">(</span><span class="n">imager</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ## Loading required package: imager
     ## Loading required package: plyr
     ## Loading required package: magrittr
     ## Loading required package: stringr
@@ -679,32 +513,38 @@ This model gives the recent state-of-art prediction accuracy on image net datase
     ## The following object is masked from 'package:base':
     ##
     ##     save.image
-</code></pre></div>
-<h2 id="load-the-pretrained-model">Load the PreTrained Model</h2>
+</code></pre></div></div>
 
+<h2 id="load-the-pretrained-model">Load the PreTrained Model</h2>
 <p>Make sure you unzip the pre-trained model in the current folder. Use the model
 loading function to load the model into R:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mx.model.load</span><span class="p">(</span><span class="s2">"Inception/Inception_BN"</span><span class="p">,</span><span class="w"> </span><span class="n">iteration</span><span class="o">=</span><span class="m">39</span><span class="p">)</span><span class="w">
-</span></code></pre></div>
-<p>Load in the mean image, which is used for preprocessing using:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">mean.img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">as.array</span><span class="p">(</span><span class="n">mx.nd.load</span><span class="p">(</span><span class="s2">"Inception/mean_224.nd"</span><span class="p">)[[</span><span class="s2">"mean_img"</span><span class="p">]])</span><span class="w">
-</span></code></pre></div>
-<h2 id="load-and-preprocess-the-image">Load and Preprocess the Image</h2>
 
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mx.model.load</span><span class="p">(</span><span class="s2">"Inception/Inception_BN"</span><span class="p">,</span><span class="w"> </span><span class="n">iteration</span><span class="o">=</span><span class="m">39</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Load in the mean image, which is used for preprocessing using:</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">mean.img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">as.array</span><span class="p">(</span><span class="n">mx.nd.load</span><span class="p">(</span><span class="s2">"Inception/mean_224.nd"</span><span class="p">)[[</span><span class="s2">"mean_img"</span><span class="p">]])</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="load-and-preprocess-the-image">Load and Preprocess the Image</h2>
 <p>Now, we are ready to classify a real image. In this example, we simply take the parrots image
 from the imager package. You can use another image, if   you prefer.</p>
 
 <p>Load and plot the image:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">im</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">load.image</span><span class="p">(</span><span class="n">system.file</span><span class="p">(</span><span class="s2">"extdata/parrots.png"</span><span class="p">,</span><span class="w"> </span><span class="n">package</span><span class="o">=</span><span class="s2">"imager"</span><span class="p">))</span><span class="w">
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">im</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">load.image</span><span class="p">(</span><span class="n">system.file</span><span class="p">(</span><span class="s2">"extdata/parrots.png"</span><span class="p">,</span><span class="w"> </span><span class="n">package</span><span class="o">=</span><span class="s2">"imager"</span><span class="p">))</span><span class="w">
     </span><span class="n">plot</span><span class="p">(</span><span class="n">im</span><span class="p">)</span><span class="w">
-</span></code></pre></div>
-<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/knitr/classifyRealImageWithPretrainedModel-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"></p>
+</span></code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/knitr/classifyRealImageWithPretrainedModel-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5" /></p>
 
 <p>Before feeding the image to the deep network, we need to perform some preprocessing
 to make the image meet the deep network input requirements. Preprocessing
 includes cropping  and subtracting the mean.
 Because MXNet is deeply integrated with R, we can do all the processing in an R function:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">preproc.image</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="n">mean.image</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">preproc.image</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="n">mean.image</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="c1"># crop the image</span><span class="w">
       </span><span class="n">shape</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">dim</span><span class="p">(</span><span class="n">im</span><span class="p">)</span><span class="w">
       </span><span class="n">short.edge</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">2</span><span class="p">])</span><span class="w">
@@ -722,48 +562,61 @@ Because MXNet is deeply integrated with R, we can do all the processing in an R 
       </span><span class="nf">dim</span><span class="p">(</span><span class="n">normed</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">224</span><span class="p">,</span><span class="w"> </span><span class="m">224</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
       </span><span class="nf">return</span><span class="p">(</span><span class="n">normed</span><span class="p">)</span><span class="w">
     </span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<p>Use the defined preprocessing function to get the normalized image:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">normed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">preproc.image</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="n">mean.img</span><span class="p">)</span><span class="w">
-</span></code></pre></div>
-<h2 id="classify-the-image">Classify the Image</h2>
+</span></code></pre></div></div>
 
-<p>Now we are ready to classify the image! Use the <code>predict</code> function
+<p>Use the defined preprocessing function to get the normalized image:</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">normed</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">preproc.image</span><span class="p">(</span><span class="n">im</span><span class="p">,</span><span class="w"> </span><span class="n">mean.img</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="classify-the-image">Classify the Image</h2>
+<p>Now we are ready to classify the image! Use the <code class="highlighter-rouge">predict</code> function
 to get the probability over classes:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">prob</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">=</span><span class="n">normed</span><span class="p">)</span><span class="w">
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">prob</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">=</span><span class="n">normed</span><span class="p">)</span><span class="w">
     </span><span class="nf">dim</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## [1] 1000    1
-</code></pre></div>
-<p>As you can see, <code>prob</code> is a 1 times 1000 array, which gives the probability
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ## [1] 1000    1
+</code></pre></div></div>
+
+<p>As you can see, <code class="highlighter-rouge">prob</code> is a 1 times 1000 array, which gives the probability
 over the 1000 image classes of the input.</p>
 
-<p>Use the <code>max.col</code> on the transpose of <code>prob</code> to get the class index:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">max.idx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">max.col</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">prob</span><span class="p">))</span><span class="w">
+<p>Use the <code class="highlighter-rouge">max.col</code> on the transpose of <code class="highlighter-rouge">prob</code> to get the class index:</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">max.idx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">max.col</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">prob</span><span class="p">))</span><span class="w">
     </span><span class="n">max.idx</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## [1] 89
-</code></pre></div>
-<p>The index doesn&#39;t make much sense, so let&#39;s see what it really means.
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ## [1] 89
+</code></pre></div></div>
+
+<p>The index doesn’t make much sense, so let’s see what it really means.
 Read the names of the classes from the following file:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">synsets</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readLines</span><span class="p">(</span><span class="s2">"Inception/synset.txt"</span><span class="p">)</span><span class="w">
-</span></code></pre></div>
-<p>Let&#39;s see what the image really is:</p>
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">print</span><span class="p">(</span><span class="n">paste0</span><span class="p">(</span><span class="s2">"Predicted Top-class: "</span><span class="p">,</span><span class="w"> </span><span class="n">synsets</span><span class="w">  </span><span class="p">[[</span><span class="n">max.idx</span><span class="p">]]))</span><span class="w">
-</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## [1] "Predicted Top-class: n01818515 macaw"
-</code></pre></div>
-<p>It&#39;s a macaw!</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">synsets</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readLines</span><span class="p">(</span><span class="s2">"Inception/synset.txt"</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Let’s see what the image really is:</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">    </span><span class="n">print</span><span class="p">(</span><span class="n">paste0</span><span class="p">(</span><span class="s2">"Predicted Top-class: "</span><span class="p">,</span><span class="w"> </span><span class="n">synsets</span><span class="w">  </span><span class="p">[[</span><span class="n">max.idx</span><span class="p">]]))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ## [1] "Predicted Top-class: n01818515 macaw"
+</code></pre></div></div>
+
+<p>It’s a macaw!</p>
 
 <h2 id="reference">Reference</h2>
-
-<p>[1] Ioffe, Sergey, and Christian Szegedy. &quot;Batch normalization: Accelerating deep network training by reducing internal covariate shift.&quot; arXiv preprint arXiv:1502.03167 (2015).</p>
+<p>[1] Ioffe, Sergey, and Christian Szegedy. “Batch normalization: Accelerating deep network training by reducing internal covariate shift.” arXiv preprint arXiv:1502.03167 (2015).</p>
 
 <h2 id="next-steps">Next Steps</h2>
-
 <ul>
-<li><a href="http://mxnet.io/tutorials/r/mnistCompetition.html">Handwritten Digits Classification Competition</a></li>
-<li><a href="http://mxnet.io/tutorials/r/charRnnModel.html">Character Language Model using RNN</a></li>
+  <li><a href="https://mxnet.io/tutorials/r/mnistCompetition.html">Handwritten Digits Classification Competition</a></li>
+  <li><a href="https://mxnet.io/tutorials/r/charRnnModel.html">Character Language Model using RNN</a></li>
 </ul>
-
-    </div>
+</div>
 </div>
 
         </div>
@@ -777,13 +630,12 @@ Read the names of the classes from the following file:</p>
             <div class="col-4">
                 <h4 class="footer-category-title">Resources</h4>
                 <ul class="contact-list">
-                    <li><a class="u-email" href="mailto:dev@mxnet.apache.org">Dev list</a></li>
-                    <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
-                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
-                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
-                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="/community#stay-connected">Mailing lists</a></li>
                     <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
-                    <li><a href="/community/contribute">Contribute To MXNet</a></li>
+                    <li><a href="/community#github-issues">Github Issues</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/projects">Projects</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="/community">Contribute To MXNet</a></li>
 
                 </ul>
             </div>

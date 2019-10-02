@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="LSTM time series example" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="LSTM time series example" property="og:description"/>
+<title>LSTM time series example — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../../_static/underscore.js" type="text/javascript"></script>
+<script src="../../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../../_static/doctools.js" type="text/javascript"></script>
+<script src="../../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.5.0/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../../genindex.html" rel="index" title="Index">
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="index.html" rel="up" title="R Tutorials"/>
+<link href="charRnnModel.html" rel="next" title="Character-level Language Model using RNN"/>
+<link href="CustomLossFunction.html" rel="prev" title="Customized loss function"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.5.0/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.5.0/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/ecosystem.html">Ecosystem</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.5.0<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.5.0/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.5.0/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.5.0/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.5.0/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.5.0/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.5.0/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.5.0/community/ecosystem.html" tabindex="-1">Ecosystem</a></li>
+<li><a href="/versions/1.5.0/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.5.0</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">MXNet APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">MXNet Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">MXNet Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/index.html">MXNet FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gluon/index.html">About Gluon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Installing MXNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#nvidia-jetson-tx-family">Nvidia Jetson TX family</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#source-download">Source Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_zoo/index.html">MXNet Model Zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Tutorials</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<!--- Licensed to the Apache Software Foundation (ASF) under one -->
+<!--- or more contributor license agreements.  See the NOTICE file -->
+<!--- distributed with this work for additional information -->
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+<!--- to you under the Apache License, Version 2.0 (the -->
+<!--- "License"); you may not use this file except in compliance -->
+<!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, -->
+<!--- software distributed under the License is distributed on an -->
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+<!--- KIND, either express or implied.  See the License for the -->
+<!--- specific language governing permissions and limitations -->
+<!--- under the License. --><div class="section" id="lstm-time-series-example">
+<span id="lstm-time-series-example"></span><h1>LSTM time series example<a class="headerlink" href="#lstm-time-series-example" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial shows how to use an LSTM model with multivariate data, and generate predictions from it. For demonstration purposes, we used an open source <a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/Beijing+PM2.5+Data">pollution data</a>.
+The tutorial is an illustration of how to use LSTM models with MXNet-R. We are forecasting the air pollution with data recorded at the US embassy in Beijing, China for five years.</p>
+<p>Dataset Attribution:
+“PM2.5 data of US Embassy in Beijing”
+We want to predict pollution levels(PM2.5 concentration) in the city given the above dataset.</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="n">Dataset</span> <span class="n">description</span><span class="o">:</span>
+<span class="n">No</span><span class="o">:</span> <span class="n">row</span> <span class="n">number</span>
+<span class="n">year</span><span class="o">:</span> <span class="n">year</span> <span class="n">of</span> <span class="n">data</span> <span class="n">in</span> <span class="n">this</span> <span class="n">row</span>
+<span class="n">month</span><span class="o">:</span> <span class="n">month</span> <span class="n">of</span> <span class="n">data</span> <span class="n">in</span> <span class="n">this</span> <span class="n">row</span>
+<span class="n">day</span><span class="o">:</span> <span class="n">day</span> <span class="n">of</span> <span class="n">data</span> <span class="n">in</span> <span class="n">this</span> <span class="n">row</span>
+<span class="n">hour</span><span class="o">:</span> <span class="n">hour</span> <span class="n">of</span> <span class="n">data</span> <span class="n">in</span> <span class="n">this</span> <span class="n">row</span>
+<span class="n">pm2.5</span><span class="o">:</span> <span class="n">PM2.5</span> <span class="n">concentration</span>
+<span class="n">DEWP</span><span class="o">:</span> <span class="n">Dew</span> <span class="n">Point</span>
+<span class="n">TEMP</span><span class="o">:</span> <span class="n">Temperature</span>
+<span class="n">PRES</span><span class="o">:</span> <span class="n">Pressure</span>
+<span class="n">cbwd</span><span class="o">:</span> <span class="n">Combined</span> <span class="n">wind</span> <span class="n">direction</span>
+<span class="n">Iws</span><span class="o">:</span> <span class="n">Cumulated</span> <span class="n">wind</span> <span class="n">speed</span>
+<span class="n">Is</span><span class="o">:</span> <span class="n">Cumulated</span> <span class="n">hours</span> <span class="n">of</span> <span class="n">snow</span>
+<span class="n">Ir</span><span class="o">:</span> <span class="n">Cumulated</span> <span class="n">hours</span> <span class="n">of</span> <span class="n">rain</span>
+</pre></div>
+</div>
+<p>We use past PM2.5 concentration, dew point, temperature, pressure, wind speed, snow and rain to predict
+PM2.5 concentration levels.</p>
+<div class="section" id="load-and-pre-process-the-data">
+<span id="load-and-pre-process-the-data"></span><h2>Load and pre-process the data<a class="headerlink" href="#load-and-pre-process-the-data" title="Permalink to this headline">¶</a></h2>
+<p>The first step is to load in the data and preprocess it. It is assumed that the data has been downloaded in a .csv file: data.csv from the <a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/Beijing+PM2.5+Data">pollution dataset</a></p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="c1">## Loading required packages</span>
+<span class="nf">library</span><span class="p">(</span><span class="s">"readr"</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="s">"dplyr"</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="s">"mxnet"</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="s">"abind"</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="c1">## Preprocessing steps</span>
+<span class="n">Data</span> <span class="o"><-</span> <span class="nf">read.csv</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="s">"/Users/khedia/Downloads/data.csv"</span><span class="p">,</span>
+                 <span class="n">header</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+                 <span class="n">sep</span> <span class="o">=</span> <span class="s">","</span><span class="p">)</span>
+
+<span class="c1">## Extracting specific features from the dataset as variables for time series We extract</span>
+<span class="c1">## pollution, temperature, pressue, windspeed, snowfall and rainfall information from dataset</span>
+<span class="n">df</span> <span class="o"><-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">Data</span><span class="o">$</span><span class="n">pm2.5</span><span class="p">,</span>
+                 <span class="n">Data</span><span class="o">$</span><span class="n">DEWP</span><span class="p">,</span>
+                 <span class="n">Data</span><span class="o">$</span><span class="n">TEMP</span><span class="p">,</span>
+                 <span class="n">Data</span><span class="o">$</span><span class="n">PRES</span><span class="p">,</span>
+                 <span class="n">Data</span><span class="o">$</span><span class="n">Iws</span><span class="p">,</span>
+                 <span class="n">Data</span><span class="o">$</span><span class="n">Is</span><span class="p">,</span>
+                 <span class="n">Data</span><span class="o">$</span><span class="n">Ir</span><span class="p">)</span>
+<span class="n">df</span><span class="nf">[is.na</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="n">]</span> <span class="o"><-</span> <span class="m">0</span>
+
+<span class="c1">## Now we normalise each of the feature set to a range(0,1)</span>
+<span class="n">df</span> <span class="o"><-</span> <span class="nf">matrix</span><span class="p">(</span><span class="nf">as.matrix</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
+             <span class="n">ncol</span> <span class="o">=</span> <span class="nf">ncol</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
+             <span class="n">dimnames</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span>
+
+<span class="n">rangenorm</span> <span class="o"><-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="nf">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="nf">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="p">}</span>
+<span class="n">df</span> <span class="o"><-</span> <span class="nf">apply</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="n">rangenorm</span><span class="p">)</span>
+<span class="n">df</span> <span class="o"><-</span> <span class="nf">t</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For using multidimesional data with MXNet-R, we need to convert training data to the form
+(n_dim x seq_len x num_samples). For one-to-one RNN flavours labels should be of the form (seq_len x num_samples) while for many-to-one flavour, the labels should be of the form (1 x num_samples). Please note that MXNet-R currently supports only these two flavours of RNN.
+We have used n_dim = 7, seq_len = 100,  and num_samples = 430 because the dataset has 430 samples, each the length of 100 timestamps, we have seven time series as input features so each input has dimesnion of seven at each time step.</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="n">n_dim</span> <span class="o"><-</span> <span class="m">7</span>
+<span class="n">seq_len</span> <span class="o"><-</span> <span class="m">100</span>
+<span class="n">num_samples</span> <span class="o"><-</span> <span class="m">430</span>
+
+<span class="c1">## extract only required data from dataset</span>
+<span class="n">trX</span> <span class="o"><-</span> <span class="n">df[1</span><span class="o">:</span><span class="n">n_dim</span><span class="p">,</span> <span class="m">25</span><span class="o">:</span><span class="p">(</span><span class="m">24</span> <span class="o">+</span> <span class="p">(</span><span class="n">seq_len</span> <span class="o">*</span> <span class="n">num_samples</span><span class="p">))</span><span class="n">]</span>
+
+<span class="c1">## the label data(next PM2.5 concentration) should be one time step</span>
+<span class="c1">## ahead of the current PM2.5 concentration</span>
+<span class="n">trY</span> <span class="o"><-</span> <span class="n">df[1</span><span class="p">,</span> <span class="m">26</span><span class="o">:</span><span class="p">(</span><span class="m">25</span> <span class="o">+</span> <span class="p">(</span><span class="n">seq_len</span> <span class="o">*</span> <span class="n">num_samples</span><span class="p">))</span><span class="n">]</span>
+
+<span class="c1">## reshape the matrices in the format acceptable by MXNetR RNNs</span>
+<span class="n">trainX</span> <span class="o"><-</span> <span class="n">trX</span>
+<span class="nf">dim</span><span class="p">(</span><span class="n">trainX</span><span class="p">)</span> <span class="o"><-</span> <span class="nf">c</span><span class="p">(</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+<span class="n">trainY</span> <span class="o"><-</span> <span class="n">trY</span>
+<span class="nf">dim</span><span class="p">(</span><span class="n">trainY</span><span class="p">)</span> <span class="o"><-</span> <span class="nf">c</span><span class="p">(</span><span class="n">seq_len</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="defining-and-training-the-network">
+<span id="defining-and-training-the-network"></span><h2>Defining and training the network<a class="headerlink" href="#defining-and-training-the-network" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="n">batch.size</span> <span class="o"><-</span> <span class="m">32</span>
+
+<span class="c1"># take first 300 samples for training - remaining 100 for evaluation</span>
+<span class="n">train_ids</span> <span class="o"><-</span> <span class="m">1</span><span class="o">:</span><span class="m">300</span>
+<span class="n">eval_ids</span> <span class="o"><-</span> <span class="m">301</span><span class="o">:</span><span class="m">400</span>
+
+<span class="c1">## The number of samples used for training and evaluation is arbitrary.  I have kept aside few</span>
+<span class="c1">## samples for testing purposes create dataiterators</span>
+<span class="n">train.data</span> <span class="o"><-</span> <span class="nf">mx.io.arrayiter</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">trainX[</span><span class="p">,</span> <span class="p">,</span> <span class="n">train_ids</span><span class="p">,</span> <span class="n">drop</span> <span class="o">=</span> <span class="bp">F</span><span class="n">]</span><span class="p">,</span> 
+                              <span class="n">label</span> <span class="o">=</span> <span class="n">trainY[</span><span class="p">,</span> <span class="n">train_ids]</span><span class="p">,</span>
+                              <span class="n">batch.size</span> <span class="o">=</span> <span class="n">batch.size</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+
+<span class="n">eval.data</span> <span class="o"><-</span> <span class="nf">mx.io.arrayiter</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">trainX[</span><span class="p">,</span> <span class="p">,</span> <span class="n">eval_ids</span><span class="p">,</span> <span class="n">drop</span> <span class="o">=</span> <span class="bp">F</span><span class="n">]</span><span class="p">,</span> 
+                             <span class="n">label</span> <span class="o">=</span> <span class="n">trainY[</span><span class="p">,</span> <span class="n">eval_ids]</span><span class="p">,</span>
+                             <span class="n">batch.size</span> <span class="o">=</span> <span class="n">batch.size</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+
+<span class="c1">## Create the symbol for RNN</span>
+<span class="n">symbol</span> <span class="o"><-</span> <span class="nf">rnn.graph</span><span class="p">(</span><span class="n">num_rnn_layer</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+                    <span class="n">num_hidden</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+                    <span class="n">input_size</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                    <span class="n">num_embed</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                    <span class="n">num_decode</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+                    <span class="n">masking</span> <span class="o">=</span> <span class="bp">F</span><span class="p">,</span> 
+                    <span class="n">loss_output</span> <span class="o">=</span> <span class="s">"linear"</span><span class="p">,</span>
+                    <span class="n">dropout</span> <span class="o">=</span> <span class="m">0.2</span><span class="p">,</span> 
+                    <span class="n">ignore_label</span> <span class="o">=</span> <span class="m">-1</span><span class="p">,</span> 
+                    <span class="n">cell_type</span> <span class="o">=</span> <span class="s">"lstm"</span><span class="p">,</span> 
+                    <span class="n">output_last_state</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span>
+                    <span class="n">config</span> <span class="o">=</span> <span class="s">"one-to-one"</span><span class="p">)</span>
+
+
+
+<span class="n">mx.metric.mse.seq</span> <span class="o"><-</span> <span class="nf">mx.metric.custom</span><span class="p">(</span><span class="s">"MSE"</span><span class="p">,</span> <span class="nf">function</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="nf">mx.nd.reshape</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="m">-1</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="nf">mx.nd.reshape</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="m">-1</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o"><-</span> <span class="nf">mx.nd.mean</span><span class="p">(</span><span class="nf">mx.nd.square</span><span class="p">(</span><span class="n">label</span> <span class="o">-</span> <span class="n">pred</span><span class="p">))</span>
+    <span class="nf">return</span><span class="p">(</span><span class="nf">as.array</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
+<span class="p">})</span>
+
+
+
+<span class="n">ctx</span> <span class="o"><-</span> <span class="nf">mx.cpu</span><span class="p">()</span>
+
+<span class="n">initializer</span> <span class="o"><-</span> <span class="nf">mx.init.Xavier</span><span class="p">(</span><span class="n">rnd_type</span> <span class="o">=</span> <span class="s">"gaussian"</span><span class="p">,</span>
+                              <span class="n">factor_type</span> <span class="o">=</span> <span class="s">"avg"</span><span class="p">,</span> 
+                              <span class="n">magnitude</span> <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o"><-</span> <span class="nf">mx.opt.create</span><span class="p">(</span><span class="s">"adadelta"</span><span class="p">,</span>
+                           <span class="n">rho</span> <span class="o">=</span> <span class="m">0.9</span><span class="p">,</span> 
+                           <span class="n">eps</span> <span class="o">=</span> <span class="m">1e-05</span><span class="p">,</span> 
+                           <span class="n">wd</span> <span class="o">=</span> <span class="m">1e-06</span><span class="p">,</span> 
+                           <span class="n">clip_gradient</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> 
+                           <span class="n">rescale.grad</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="n">batch.size</span><span class="p">)</span>
+
+<span class="n">logger</span> <span class="o"><-</span> <span class="nf">mx.metric.logger</span><span class="p">()</span>
+<span class="n">epoch.end.callback</span> <span class="o"><-</span> <span class="nf">mx.callback.log.train.metric</span><span class="p">(</span><span class="n">period</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span> 
+                                                   <span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="p">)</span>
+
+<span class="c1">## train the network</span>
+<span class="nf">system.time</span><span class="p">(</span><span class="n">model</span> <span class="o"><-</span> <span class="nf">mx.model.buckets</span><span class="p">(</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span><span class="p">,</span> 
+                                      <span class="n">train.data</span> <span class="o">=</span> <span class="n">train.data</span><span class="p">,</span> 
+                                      <span class="n">eval.data</span> <span class="o">=</span> <span class="n">eval.data</span><span class="p">,</span>
+                                      <span class="n">num.round</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> 
+                                      <span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span><span class="p">,</span> 
+                                      <span class="n">verbose</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> 
+                                      <span class="n">metric</span> <span class="o">=</span> <span class="n">mx.metric.mse.seq</span><span class="p">,</span> 
+                                      <span class="n">initializer</span> <span class="o">=</span> <span class="n">initializer</span><span class="p">,</span>
+                                      <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span><span class="p">,</span> 
+                                      <span class="n">batch.end.callback</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> 
+                                      <span class="n">epoch.end.callback</span> <span class="o">=</span> <span class="n">epoch.end.callback</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Start</span> <span class="n">training</span> <span class="k">with</span> <span class="mi">1</span> <span class="n">devices</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.197570244409144</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.0153861071448773</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.0152517843060195</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.0128299412317574</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.0124418652616441</span>
+<span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.010827143676579</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.0105128229130059</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00940261723008007</span>
+<span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00914482437074184</span>
+<span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00830172537826002</span>
+<span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00813581114634871</span>
+<span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00747016374953091</span>
+<span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00735094994306564</span>
+<span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00679832429159433</span>
+<span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00672049634158611</span>
+<span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00623159145470709</span>
+<span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00620287149213254</span>
+<span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00577476259786636</span>
+<span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00577280316501856</span>
+<span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00539038667920977</span>
+<span class="o">..........</span>
+<span class="o">..........</span>
+<span class="p">[</span><span class="mi">91</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00177705133100972</span>
+<span class="p">[</span><span class="mi">91</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00154715491225943</span>
+<span class="p">[</span><span class="mi">92</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00177639147732407</span>
+<span class="p">[</span><span class="mi">92</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00154592350008897</span>
+<span class="p">[</span><span class="mi">93</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00177577760769054</span>
+<span class="p">[</span><span class="mi">93</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00154474508599378</span>
+<span class="p">[</span><span class="mi">94</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.0017752077546902</span>
+<span class="p">[</span><span class="mi">94</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.0015436161775142</span>
+<span class="p">[</span><span class="mi">95</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00177468206966296</span>
+<span class="p">[</span><span class="mi">95</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00154253660002723</span>
+<span class="p">[</span><span class="mi">96</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00177419915562496</span>
+<span class="p">[</span><span class="mi">96</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00154150440357625</span>
+<span class="p">[</span><span class="mi">97</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.0017737578949891</span>
+<span class="p">[</span><span class="mi">97</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00154051734716631</span>
+<span class="p">[</span><span class="mi">98</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00177335749613121</span>
+<span class="p">[</span><span class="mi">98</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00153957353904843</span>
+<span class="p">[</span><span class="mi">99</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00177299699280411</span>
+<span class="p">[</span><span class="mi">99</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00153867155313492</span>
+<span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="n">Train</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00177267640829086</span>
+<span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="n">Validation</span><span class="o">-</span><span class="n">MSE</span><span class="o">=</span><span class="mf">0.00153781197150238</span>
+
+   <span class="n">user</span>  <span class="n">system</span> <span class="n">elapsed</span> 
+ <span class="mf">21.937</span>   <span class="mf">1.914</span>  <span class="mf">13.402</span> 
+</pre></div>
+</div>
+<p>We can see how mean squared error varies with epochs below.</p>
+<p><img alt="png" src="https://github.com/dmlc/web-data/blob/master/mxnet/doc/tutorials/r/images/loss.png?raw=true"><!--notebook-skip-line--></img></p>
+</div>
+<div class="section" id="inference-on-the-network">
+<span id="inference-on-the-network"></span><h2>Inference on the network<a class="headerlink" href="#inference-on-the-network" title="Permalink to this headline">¶</a></h2>
+<p>Now we have trained the network. Let’s use it for inference.</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="c1">## We extract the state symbols for RNN</span>
+<span class="n">internals</span> <span class="o"><-</span> <span class="n">model</span><span class="o">$</span><span class="n">symbol</span><span class="o">$</span><span class="nf">get.internals</span><span class="p">()</span>
+<span class="n">sym_state</span> <span class="o"><-</span> <span class="n">internals</span><span class="o">$</span><span class="nf">get.output</span><span class="p">(</span><span class="nf">which</span><span class="p">(</span><span class="n">internals</span><span class="o">$</span><span class="n">outputs</span> <span class="o">%in%</span> <span class="s">"RNN_state"</span><span class="p">))</span>
+<span class="n">sym_state_cell</span> <span class="o"><-</span> <span class="n">internals</span><span class="o">$</span><span class="nf">get.output</span><span class="p">(</span><span class="nf">which</span><span class="p">(</span><span class="n">internals</span><span class="o">$</span><span class="n">outputs</span> <span class="o">%in%</span> <span class="s">"RNN_state_cell"</span><span class="p">))</span>
+<span class="n">sym_output</span> <span class="o"><-</span> <span class="n">internals</span><span class="o">$</span><span class="nf">get.output</span><span class="p">(</span><span class="nf">which</span><span class="p">(</span><span class="n">internals</span><span class="o">$</span><span class="n">outputs</span> <span class="o">%in%</span> <span class="s">"loss_output"</span><span class="p">))</span>
+<span class="n">symbol</span> <span class="o"><-</span> <span class="nf">mx.symbol.Group</span><span class="p">(</span><span class="n">sym_output</span><span class="p">,</span> <span class="n">sym_state</span><span class="p">,</span> <span class="n">sym_state_cell</span><span class="p">)</span>
+
+<span class="c1">## We will predict 100 timestamps for 401st sample (first sample from the test samples)</span>
+<span class="n">pred_length</span> <span class="o"><-</span> <span class="m">100</span>
+<span class="n">predicted</span> <span class="o"><-</span> <span class="nf">numeric</span><span class="p">()</span>
+
+<span class="c1">## We pass the 400th sample through the network to get the weights and use it for predicting next</span>
+<span class="c1">## 100 time stamps.</span>
+<span class="n">data</span> <span class="o"><-</span> <span class="nf">mx.nd.array</span><span class="p">(</span><span class="n">trainX[</span><span class="p">,</span> <span class="p">,</span> <span class="m">400</span><span class="p">,</span> <span class="n">drop</span> <span class="o">=</span> <span class="bp">F</span><span class="n">]</span><span class="p">)</span>
+<span class="n">label</span> <span class="o"><-</span> <span class="nf">mx.nd.array</span><span class="p">(</span><span class="n">trainY[</span><span class="p">,</span> <span class="m">400</span><span class="p">,</span> <span class="n">drop</span> <span class="o">=</span> <span class="bp">F</span><span class="n">]</span><span class="p">)</span>
+
+
+<span class="c1">## We create dataiterators for the input, please note that the label is required to create</span>
+<span class="c1">## iterator and will not be used in the inference. You can use dummy values too in the label.</span>
+<span class="n">infer.data</span> <span class="o"><-</span> <span class="nf">mx.io.arrayiter</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> 
+                              <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="p">,</span> 
+                              <span class="n">batch.size</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> 
+                              <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+
+<span class="n">infer</span> <span class="o"><-</span> <span class="nf">mx.infer.rnn.one</span><span class="p">(</span><span class="n">infer.data</span> <span class="o">=</span> <span class="n">infer.data</span><span class="p">,</span> 
+                          <span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span><span class="p">,</span> 
+                          <span class="n">arg.params</span> <span class="o">=</span> <span class="n">model</span><span class="o">$</span><span class="n">arg.params</span><span class="p">,</span>
+                          <span class="n">aux.params</span> <span class="o">=</span> <span class="n">model</span><span class="o">$</span><span class="n">aux.params</span><span class="p">,</span> 
+                          <span class="n">input.params</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> 
+                          <span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span><span class="p">)</span>
+<span class="c1">## Once we get the weights for the above time series, we try to predict the next 100 steps for</span>
+<span class="c1">## this time series, which is technically our 401st time series.</span>
+
+<span class="n">actual</span> <span class="o"><-</span> <span class="n">trainY[</span><span class="p">,</span> <span class="m">401</span><span class="n">]</span>
+
+<span class="c1">## Now we iterate one by one to generate each of the next timestamp pollution values</span>
+
+<span class="nf">for </span><span class="p">(</span><span class="n">i</span> <span class="n">in</span> <span class="m">1</span><span class="o">:</span><span class="n">pred_length</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">data</span> <span class="o"><-</span> <span class="nf">mx.nd.array</span><span class="p">(</span><span class="n">trainX[</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="m">401</span><span class="p">,</span> <span class="n">drop</span> <span class="o">=</span> <span class="bp">F</span><span class="n">]</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o"><-</span> <span class="nf">mx.nd.array</span><span class="p">(</span><span class="n">trainY[i</span><span class="p">,</span> <span class="m">401</span><span class="p">,</span> <span class="n">drop</span> <span class="o">=</span> <span class="bp">F</span><span class="n">]</span><span class="p">)</span>
+    <span class="n">infer.data</span> <span class="o"><-</span> <span class="nf">mx.io.arrayiter</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> 
+                                  <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="p">,</span> 
+                                  <span class="n">batch.size</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> 
+                                  <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+    <span class="c1">## note that we use rnn state values from previous iterations here</span>
+    <span class="n">infer</span> <span class="o"><-</span> <span class="nf">mx.infer.rnn.one</span><span class="p">(</span><span class="n">infer.data</span> <span class="o">=</span> <span class="n">infer.data</span><span class="p">,</span>
+                              <span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span><span class="p">,</span>
+                              <span class="n">ctx</span> <span class="o">=</span> <span class="n">ctx</span><span class="p">,</span> 
+                              <span class="n">arg.params</span> <span class="o">=</span> <span class="n">model</span><span class="o">$</span><span class="n">arg.params</span><span class="p">,</span>
+                              <span class="n">aux.params</span> <span class="o">=</span> <span class="n">model</span><span class="o">$</span><span class="n">aux.params</span><span class="p">,</span> 
+                              <span class="n">input.params</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">rnn.state</span> <span class="o">=</span> <span class="n">infer[[2]]</span><span class="p">,</span> 
+                                                  <span class="n">rnn.state.cell</span> <span class="o">=</span> <span class="n">infer[[3]]</span><span class="p">))</span>
+
+    <span class="n">pred</span> <span class="o"><-</span> <span class="n">infer[[1]]</span>
+    <span class="n">predicted</span> <span class="o"><-</span> <span class="nf">c</span><span class="p">(</span><span class="n">predicted</span><span class="p">,</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">as.array</span><span class="p">(</span><span class="n">pred</span><span class="p">)))</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now predicted contains the predicted 100 values. We use ggplot to plot the actual and predicted values as shown below.</p>
+<p><img alt="png" src="https://github.com/dmlc/web-data/blob/master/mxnet/doc/tutorials/r/images/sample_401.png?raw=true"/><!--notebook-skip-line--></p>
+<p>We also repeated the above experiments to generate the next 100 samples to 301st time series and we got the following results.</p>
+<p><img alt="png" src="https://github.com/dmlc/web-data/blob/master/mxnet/doc/tutorials/r/images/sample_301.png?raw=true"/><!--notebook-skip-line--></p>
+<p>The above tutorial is just for demonstration purposes and has not been tuned extensively for accuracy.</p>
+<p>For more tutorials on MXNet-R, head on to <a class="reference external" href="/versions/1.5.0/tutorials/r/index.html">MXNet-R tutorials</a></p>
+</div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">LSTM time series example</a><ul>
+<li><a class="reference internal" href="#load-and-pre-process-the-data">Load and pre-process the data</a></li>
+<li><a class="reference internal" href="#defining-and-training-the-network">Defining and training the network</a></li>
+<li><a class="reference internal" href="#inference-on-the-network">Inference on the network</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../../_static/js/search.js" type="text/javascript"></script>
+<script src="../../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../../_static/js/page.js" type="text/javascript"></script>
+<script src="../../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['scalar',['scalar',['../structmxnet_1_1op_1_1EnvArguments.html#a74dfe03602a990b6552c8f7a01b2ecb5',1,'mxnet::op::EnvArguments']]],
+  ['shape_5f',['shape_',['../classmxnet_1_1TBlob.html#af0e813ff066c775051d1f1f78a4a2029',1,'mxnet::TBlob']]],
+  ['shared_5fid',['shared_id',['../structmxnet_1_1Storage_1_1Handle.html#ad938f8d0ddba567350ee7b3aae14b4c1',1,'mxnet::Storage::Handle']]],
+  ['shared_5fpid',['shared_pid',['../structmxnet_1_1Storage_1_1Handle.html#ac92111bc6d73d7402331615506684b74',1,'mxnet::Storage::Handle']]],
+  ['sigma',['sigma',['../classmxnet_1_1cpp_1_1Normal.html#ada8a6b37d8422f72d104e979299ebc7f',1,'mxnet::cpp::Normal']]],
+  ['size',['size',['../structmkldnn__wino__desc__t.html#a21b0565adbbb09671e0bdc91c92a2f6d',1,'mkldnn_wino_desc_t::size()'],['../structmkldnn__rnn__packed__desc__t.html#a6d28710f39fd0b5c0d2d9fae1cad7591',1,'mkldnn_rnn_packed_desc_t::size()'],['../structmxnet_1_1Storage_1_1Handle.html#ab93b9db0c83e4ef3803fb587377a74a0',1,'mxnet::Storage::Handle::size()']]],
+  ['softmax_5faxis',['softmax_axis',['../structmkldnn__softmax__desc__t.html#a5d94f826587310a84027c88eb41e1b4f',1,'mkldnn_softmax_desc_t']]],
+  ['src_5fdesc',['src_desc',['../structmkldnn__convolution__desc__t.html#ac1ac756cd9506ffaf1e7d68e334e9420',1,'mkldnn_convolution_desc_t::src_desc()'],['../structmkldnn__pooling__desc__t.html#a3145a3354e2c46b2827a645fe90c1b04',1,'mkldnn_pooling_desc_t::src_desc()'],['../structmkldnn__inner__product__desc__t.html#ab2ab25825825a88d9be4b15ca3ee6105',1,'mkldnn_inner_product_desc_t::src_desc()']]],
+  ['src_5fiter_5fdesc',['src_iter_desc',['../structmkldnn__rnn__desc__t.html#a6afddc2a8bfaae0f9a4bd8a980bc5814',1,'mkldnn_rnn_desc_t']]],
+  ['src_5flayer_5fdesc',['src_layer_desc',['../structmkldnn__rnn__desc__t.html#a5f6cd0b14dd42bd90f72df70aea1ec68',1,'mkldnn_rnn_desc_t']]],
+  ['stat_5ffunc',['stat_func',['../classmxnet_1_1cpp_1_1Monitor.html#a0c2cd0bfb9606b90f3d0dfbf3d17638a',1,'mxnet::cpp::Monitor']]],
+  ['state',['state',['../classmxnet_1_1Imperative_1_1AGInfo.html#a027a81d4864241f12ae79388efd482da',1,'mxnet::Imperative::AGInfo']]],
+  ['stats',['stats',['../classmxnet_1_1cpp_1_1Monitor.html#a1d9e848db7de2072089ac3bb34fa680a',1,'mxnet::cpp::Monitor']]],
+  ['step',['step',['../classmxnet_1_1cpp_1_1Monitor.html#a08b467e2c6f229157d5e712b7e30371d',1,'mxnet::cpp::Monitor']]],
+  ['str_5fupdater_5f',['str_updater_',['../classmxnet_1_1KVStore.html#abf0f494ba57dd7b035ece0d96eb5575f',1,'mxnet::KVStore']]],
+  ['stream',['stream',['../structmxnet_1_1RunContext.html#a5c4294a44199f4056915e32a7f70fe0e',1,'mxnet::RunContext']]],
+  ['strides',['strides',['../structmkldnn__blocking__desc__t.html#a2906f6a386b81fa43b19043a59487576',1,'mkldnn_blocking_desc_t::strides()'],['../structmkldnn__convolution__desc__t.html#a55fa258e8e2ddc24de4c6fdf5562501f',1,'mkldnn_convolution_desc_t::strides()'],['../structmkldnn__pooling__desc__t.html#a8c339dae420e12a19a4bef3c7de08948',1,'mkldnn_pooling_desc_t::strides()']]],
+  ['sum_5fmetric',['sum_metric',['../classmxnet_1_1cpp_1_1EvalMetric.html#a04b41a66d3c72e1befaf96205eb3a2d0',1,'mxnet::cpp::EvalMetric']]],
+  ['symbol',['symbol',['../structmxnet_1_1cpp_1_1FeedForwardConfig.html#ab3bc45d89c8bbab4d55a8e8f28900e63',1,'mxnet::cpp::FeedForwardConfig']]]
+];

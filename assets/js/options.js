@@ -2,7 +2,7 @@
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file 
+ * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -17,9 +17,15 @@
  * under the License.
  */
 
-/* Installation page display functions for install selector */
+/* Installation page display functions for install selector.
+   This utility allows direct links to specific install instructions.
+*/
 
 $(document).ready(function () {
+    const dropdownVersions = $("#version-dropdown-container ul li")
+        .toArray()
+        .map((li) => li.innerText);
+
     function label(lbl) {
         lbl = lbl.replace(/[ .]/g, '-').toLowerCase();
 
@@ -27,13 +33,16 @@ $(document).ready(function () {
     }
 
     function urlSearchParams(searchString) {
-        let urlDict = new Map();
+        let searchDict = new Map();
         let searchParams = searchString.substring(1).split("&");
         searchParams.forEach(function (element) {
             kvPair = element.split("=");
-            urlDict.set(kvPair[0], kvPair[1]);
+            if (kvPair[0] === 'version' && dropdownVersions.indexOf(kvPair[1]) == -1) {
+                kvPair[1] = dropdownVersions[0];
+            }
+            searchDict.set(kvPair[0], kvPair[1]);
         });
-        return urlDict;
+        return searchDict;
     }
 
     function is_a_match(elem, text) {
@@ -43,31 +52,50 @@ $(document).ready(function () {
         }
     }
 
-    function setSelects() {
-        let urlParams = urlSearchParams(window.location.search);
-        if (urlParams.get('version'))
-            versionSelect = urlParams.get('version');
-        $('.current-version').html( versionSelect + ' <span class="caret"></span></button>' );
-        if (urlParams.get('platform'))
-            platformSelect = label(urlParams.get('platform'));
-        if (urlParams.get('language'))
-            languageSelect = label(urlParams.get('language'));
-        if (urlParams.get('processor'))
-            processorSelect = label(urlParams.get('processor'));
-        if (urlParams.get('environ'))
-            environSelect = label(urlParams.get('environ'));
-
-        $('li.versions').removeClass('active');
-        $('li.versions').each(function(){is_a_match($(this), versionSelect)});
+    function setSelects(urlParams, dontPushState) {
+        let queryString = '?';
         $('button.opt').removeClass('active');
-        $('button.opt').each(function(){is_a_match($(this), platformSelect)});
-        $('button.opt').each(function(){is_a_match($(this), languageSelect)});
-        $('button.opt').each(function(){is_a_match($(this), processorSelect)});
-        $('button.opt').each(function(){is_a_match($(this), environSelect)});
+        if (urlParams.get('version')) {
+            versionSelect = urlParams.get('version');
+            $('li.versions').removeClass('active');
+            $('li.versions').each(function () { is_a_match($(this), versionSelect) });
+            $('.current-version').html(versionSelect + '<svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>');
+            queryString += 'version=' + versionSelect + '&';
+        }
+        if (urlParams.get('platform')) {
+            platformSelect = label(urlParams.get('platform'));
+            $('button.opt').each(function(){is_a_match($(this), platformSelect)});
+            queryString += 'platform=' + platformSelect + '&';
+        }
+        if (urlParams.get('language')) {
+            languageSelect = label(urlParams.get('language'));
+            $('button.opt').each(function(){
+                if (label($(this).text()) === label(languageSelect)) {
+                    $(this).addClass(('active'))
+                }
+            });
+            queryString += 'language=' + languageSelect + '&';
+        }
+        if (urlParams.get('processor')) {
+            processorSelect = label(urlParams.get('processor'));
+            $('button.opt').each(function(){is_a_match($(this), processorSelect)});
+            queryString += 'processor=' + processorSelect + '&';
+        }
+        if (urlParams.get('environ')) {
+            environSelect = label(urlParams.get('environ'));
+            $('button.opt').each(function(){is_a_match($(this), environSelect)});
+            queryString += 'environ=' + environSelect + '&';
+        }
+        if (urlParams.get('iot')) {
+            iotSelect = label(urlParams.get('iot'));
+            $('button.opt').each(function(){is_a_match($(this), iotSelect)});
+            queryString += 'iot=' + iotSelect + '&';
+        }
 
         showContent();
-        if (window.location.href.indexOf("/get_started/") >= 0) {
-            history.pushState(null, null, '?version=' + versionSelect + '&platform=' + platformSelect + '&language=' + languageSelect + '&environ=' + environSelect + '&processor=' + processorSelect);
+
+        if (window.location.href.indexOf("/get_started") >= 0 && !dontPushState) {
+            history.pushState(null, null, queryString);
         }
     }
 
@@ -80,8 +108,7 @@ $(document).ready(function () {
         });
     }
 
-    showContent();
-    setSelects();
+    setSelects(urlSearchParams(window.location.search));
 
     function setContent() {
         var el = $(this);
@@ -90,31 +117,47 @@ $(document).ready(function () {
         el.addClass('active');
         if ($(this).hasClass("versions")) {
             $('.current-version').html($(this).text());
-            if (window.location.search.indexOf("version") < 0) {
-                if (window.location.search.length > 0) {
-                    var url = 'index.html' + window.location.search.concat('&version=' + $(this).text());
-                } else {
-                    var url = 'index.html?version=' + $(this).text();
-                }
-                history.pushState(null, null, url);
-            } else {
-                history.pushState(null, null, 'index.html' + window.location.search.replace(urlParams.get('version'), $(this).text()));
-            }
+            urlParams.set("version", $(this).text());
         } else if ($(this).hasClass("platforms")) {
-            history.pushState(null, null, 'index.html' + window.location.search.replace('='+urlParams.get('platform'), '='+label($(this).text())));
+            urlParams.set("platform", label($(this).text()));
         } else if ($(this).hasClass("languages")) {
-            history.pushState(null, null, 'index.html' + window.location.search.replace('='+urlParams.get('language'), '='+label($(this).text())));
+            urlParams.set("language", label($(this).text()));
         } else if ($(this).hasClass("processors")) {
-            history.pushState(null, null, 'index.html' + window.location.search.replace('='+urlParams.get('processor'), '='+label($(this).text())));
+            urlParams.set("processor", label($(this).text()));
         } else if ($(this).hasClass("environs")) {
-            history.pushState(null, null, 'index.html' + window.location.search.replace('='+urlParams.get('environ'), '='+label($(this).text())));
+            urlParams.set("environ", label($(this).text()));
+        } else if ($(this).hasClass("iots")) {
+            console.log($(this));
+            urlParams.set("iot", label($(this).text()));
         }
-
-        showContent();
+        setSelects(urlParams);
     }
 
     $('.opt-group').on('click', '.opt', setContent);
     $('.install-widget').css("visibility", "visible");
     $('.install-content').css("visibility", "visible");
+    $(window).on('popstate', function(){
+        setSelects(urlSearchParams(window.location.search), true);
+    });
 
+    let timer;
+    const toggleDropdown = function(showContent) {
+        if (timer) clearTimeout(timer);
+        if (showContent) {
+            timer = setTimeout(function() {
+                $(".version-dropdown").show()
+            }, 250);  
+        } else {
+            $(".version-dropdown").hide()
+        }
+    }
+
+    $("#version-dropdown-container")
+        .mouseenter(toggleDropdown.bind(null, true))
+        .mouseleave(toggleDropdown.bind(null, false))
+        .click(function() {$(".version-dropdown").toggle()});
+
+    $("ul.version-dropdown").click(function(e) {
+        e.preventDefault();
+    });
 });

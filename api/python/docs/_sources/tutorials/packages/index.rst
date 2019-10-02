@@ -38,28 +38,20 @@ Shared APIs
 .. container:: cards
 
    .. card::
-      :title: NDArray API
-      :link: ndarray/index.html
+      :title: NP API
+      :link: np/index.html
 
-      How to use the NDArray API to manipulate data.
-      A useful set of tutorials for beginners.
-
-   .. card::
-      :title: Symbol API
-      :link: symbol/index.html
-
-      How to use MXNet's Symbol API.
+      Hints on MXNet NP and NPX modules, an array library that provides NumPy-compatible interfaces.
 
    .. card::
       :title: Autograd API
-      :link: autograd/autograd.html
+      :link: autograd/index.html
 
       How to use Automatic Differentiation with the Autograd API.
 
    .. card::
       :title: Learning Rate
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/gluon/learning_rate_schedules.html
-
+      :link: gluon/training/learning_rates/learning_rate_schedules.html
       How to use the Learning Rate Scheduler.
 
    .. card::
@@ -70,7 +62,7 @@ Shared APIs
 
    .. card::
       :title: Data APIs
-      :link: data/index.html
+      :link: gluon/data/index.html
 
       How to use MXNet's data APIs.
 
@@ -86,55 +78,20 @@ Shared APIs
 
       How to use Open Neural Network Exchange (ONNX) with MXNet.
 
-   ..
-      .. card::
-         :title: Optimizer
-         :link: optimizer.html
+   .. card::
+      :title: Optimizer
+      :link: optimizer/index.html
 
-         How to use optimizer.
-   ..
-
-Old APIs
---------
-Currently supported, but not recommended APIs.
-
-.. container:: cards
+      How to use the optimizers.
 
    .. card::
-      :title: Module
-      :link: module/index.html
+      :title: Legacy
+      :link: legacy/index.html
 
-      MXNet's symbolic interface for Python.
-
+      Legacy modules from MXNet 1.x.
 
 .. toctree::
    :hidden:
+   :glob:
 
-   gluon/index
-   ndarray/index
-   symbol/index
-   autograd/autograd
-   onnx/index
-
-..
-   Basic
-   -----
-
-   .. toctree::
-      :maxdepth: 1
-
-      mxboard
-      gpus
-
-   Advanced
-   --------
-
-
-   .. toctree::
-      :maxdepth: 1
-
-      symbol
-      record-io
-      sparse
-      control-flow
-      distributed-training
+   */index*

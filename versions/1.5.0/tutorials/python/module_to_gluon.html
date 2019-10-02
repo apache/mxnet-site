@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Converting Module API code to the Gluon API" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="Converting Module API code to the Gluon API" property="og:description"/>
+<title>Converting Module API code to the Gluon API — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../../_static/underscore.js" type="text/javascript"></script>
+<script src="../../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../../_static/doctools.js" type="text/javascript"></script>
+<script src="../../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.5.0/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../../genindex.html" rel="index" title="Index">
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="index.html" rel="up" title="Tutorials"/>
+<link href="predict_image.html" rel="next" title="Predict with pre-trained models"/>
+<link href="mnist.html" rel="prev" title="Handwritten Digit Recognition"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.5.0/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.5.0/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/ecosystem.html">Ecosystem</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.5.0<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.5.0/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.5.0/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.5.0/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.5.0/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.5.0/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.5.0/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.5.0/community/ecosystem.html" tabindex="-1">Ecosystem</a></li>
+<li><a href="/versions/1.5.0/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.5.0</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">MXNet APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">MXNet Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">MXNet Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/index.html">MXNet FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gluon/index.html">About Gluon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Installing MXNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#nvidia-jetson-tx-family">Nvidia Jetson TX family</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#source-download">Source Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_zoo/index.html">MXNet Model Zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Tutorials</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<!--- Licensed to the Apache Software Foundation (ASF) under one -->
+<!--- or more contributor license agreements.  See the NOTICE file -->
+<!--- distributed with this work for additional information -->
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+<!--- to you under the Apache License, Version 2.0 (the -->
+<!--- "License"); you may not use this file except in compliance -->
+<!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, -->
+<!--- software distributed under the License is distributed on an -->
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+<!--- KIND, either express or implied.  See the License for the -->
+<!--- specific language governing permissions and limitations -->
+<!--- under the License. --><div class="section" id="converting-module-api-code-to-the-gluon-api">
+<span id="converting-module-api-code-to-the-gluon-api"></span><h1>Converting Module API code to the Gluon API<a class="headerlink" href="#converting-module-api-code-to-the-gluon-api" title="Permalink to this headline">¶</a></h1>
+<p>Sometimes you find yourself in the situation where the model you want to use has been written using the symbolic Module API rather than the simpler, easier-to-debug, more flexible, imperative Gluon API. In this tutorial, we will give you a comprehensive guide for transforming Module code to Gluon code.</p>
+<p>The different steps to take into consideration are:</p>
+<p>I) Data loading</p>
+<p>II) Model definition</p>
+<p>III) Loss</p>
+<p>IV) Training Loop</p>
+<p>V) Exporting Models</p>
+<p>VI) Loading Models for Inference</p>
+<p>In the following section we will look at 1:1 mappings between the Module and the Gluon ways of training a neural network.</p>
+<div class="section" id="i-data-loading">
+<span id="i-data-loading"></span><h2>I - Data Loading<a class="headerlink" href="#i-data-loading" title="Permalink to this headline">¶</a></h2>
+<p>In this section we will be looking at the difference in loading data between Module and Gluon.
+Let’s first import a few Python modules.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">mxnet</span> <span class="kn">as</span> <span class="nn">mx</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon.data</span> <span class="kn">import</span> <span class="n">ArrayDataset</span><span class="p">,</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon</span> <span class="kn">import</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">gluon</span>
+
+<span class="c1"># parameters</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">dataset_length</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="c1"># random seeds</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="module">
+<span id="module"></span><h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>When using the Module API we use a <a class="reference external" href="/api/python/io/io.html?highlight=dataiter#mxnet.io.DataIter"><code class="docutils literal"><span class="pre">DataIter</span></code></a>, in addition to the data itself, the <a class="reference external" href="/api/python/io/io.html?highlight=dataiter#mxnet.io.DataIter"><code class="docutils literal"><span class="pre">DataIter</span></code></a> contains information about the name of the input symbols.</p>
+<p>In the Module API, <code class="docutils literal"><span class="pre">DataIter</span></code>s are responsible for both holding the data and iterating through it. Some <code class="docutils literal"><span class="pre">DataIter</span></code>s support multi-threading like the <a class="reference external" href="/api/python/io/io.html#mxnet.io.ImageRecordIter"><code class="docutils literal"><span class="pre">ImageRecordIter</span></code></a>, while other don’t, such as the <a class="reference external" href="/api/python/io/io.html?highlight=ndarrayiter#mxnet.io.NDArrayIter"><code class="docutils literal"><span class="pre">NDArrayIter</span></code></a>.</p>
+<p>Let’s create some random data, following the same format as grayscale 28x28 images.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">train_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">dataset_length</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'float32'</span><span class="p">)</span>
+<span class="n">train_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">(</span><span class="n">dataset_length</span><span class="p">,))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'float32'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now wraps this data into an ArrayIterator that will create batches of data using the first dimension of the provided array as the batch dimension.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">data_iter</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">NDArrayIter</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">train_data</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">train_label</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">data_name</span><span class="o">=</span><span class="s1">'data'</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s1">'softmax_label'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">data_iter</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">break</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span> 
+<span class="p">[</span><span class="mf">5.</span> <span class="mf">0.</span> <span class="mf">3.</span> <span class="mf">4.</span> <span class="mf">9.</span><span class="p">]</span>
+<span class="o"><</span><span class="n">NDArray</span> <span class="mi">5</span> <span class="nd">@cpu</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gluon">
+<span id="gluon"></span><h3>Gluon<a class="headerlink" href="#gluon" title="Permalink to this headline">¶</a></h3>
+<p>With Gluon, the preferred method is to use a <a class="reference external" href="/api/python/gluon/data.html?highlight=dataloader#mxnet.gluon.data.DataLoader"><code class="docutils literal"><span class="pre">DataLoader</span></code></a> that makes use of a <a class="reference external" href="/api/python/gluon/data.html?highlight=dataset#mxnet.gluon.data.Dataset"><code class="docutils literal"><span class="pre">Dataset</span></code></a> to asynchronously prefetch the data.</p>
+<p>The Gluon API offers you the ability to efficiently fetch data and separate the concerns of loading versus holding data. The DataLoader role is to request certain indices of the dataset. The Dataset has ownership of the data.
+The <code class="docutils literal"><span class="pre">Dataset</span></code> data can be in or out of memory, and the <code class="docutils literal"><span class="pre">DataLoader</span></code> role is to request certain indices of the dataset, in the main thread or through multi-processing (or multi-threaded) workers and batch the data together.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">ArrayDataset</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">train_label</span><span class="p">)</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+    <span class="k">break</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span> 
+<span class="p">[</span><span class="mf">5.</span> <span class="mf">0.</span> <span class="mf">3.</span> <span class="mf">4.</span> <span class="mf">9.</span><span class="p">]</span>
+<span class="o"><</span><span class="n">NDArray</span> <span class="mi">5</span> <span class="nd">@cpu</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">></span>
+</pre></div>
+</div>
+<p>You can check the <a class="reference external" href="/versions/1.5.0/tutorials/gluon/datasets.html"><code class="docutils literal"><span class="pre">Dataset</span></code> and <code class="docutils literal"><span class="pre">DataLoader</span></code> tutorials</a> out. You can either rewrite your code in order to use one of the provided <a class="reference external" href="/api/python/gluon/data.html?highlight=dataset#mxnet.gluon.data.Dataset"><code class="docutils literal"><span class="pre">Dataset</span></code></a> class, like the <a class="reference external" href="/api/python/gluon/data.html?highlight=arraydataset#mxnet.gluon.data.ArrayDataset"><code class="docutils literal"><span class="pre">ArrayDataset</span></code></a> or the <a class="reference external" href="/api/python/gluon/data.html?highlight=imagefolderdataset#mxnet.gluon.data.vision.datasets.ImageFolderDataset"><code class="docutils literal"><span class="pre">ImageFolderDataset</span></code></a></p>
+</div>
+</div>
+<div class="section" id="ii-model-definition">
+<span id="ii-model-definition"></span><h2>II - Model Definition<a class="headerlink" href="#ii-model-definition" title="Permalink to this headline">¶</a></h2>
+<p>Let’s look at the model definition from the <a class="reference external" href="/versions/1.5.0/tutorials/python/mnist.html">MNIST Module Tutorial</a>:</p>
+<div class="section" id="module">
+<span id="id1"></span><h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>For the Module API, you define the data flow by setting <code class="docutils literal"><span class="pre">data</span></code> keyword argument of one layer to the next.
+You then bind the symbolic model to a specific compute context and specify the symbol names for the data and the label.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># context</span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">get_module_network</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">fc1</span>  <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">num_hidden</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+    <span class="n">act1</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">fc1</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">)</span>
+    <span class="n">fc2</span>  <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">act1</span><span class="p">,</span> <span class="n">num_hidden</span> <span class="o">=</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="n">act2</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">fc2</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">)</span>
+    <span class="n">fc3</span>  <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">act2</span><span class="p">,</span> <span class="n">num_hidden</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">mlp</span>  <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">SoftmaxOutput</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">fc3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'softmax'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mlp</span>
+
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">get_module_network</span><span class="p">()</span>
+<span class="c1"># Bind model to Module</span>
+<span class="n">mlp_model</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="n">mlp</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">data_names</span><span class="o">=</span><span class="p">[</span><span class="s1">'data'</span><span class="p">],</span> <span class="n">label_names</span><span class="o">=</span><span class="p">[</span><span class="s1">'softmax_label'</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gluon">
+<span id="id2"></span><h3>Gluon<a class="headerlink" href="#gluon" title="Permalink to this headline">¶</a></h3>
+<p>In Gluon, for the equivalent model, you would create a <code class="docutils literal"><span class="pre">Sequential</span></code> block, in that case a <code class="docutils literal"><span class="pre">HybridSequential</span></code> block to allow for future hybridization since we are only using <a class="reference external" href="/versions/1.5.0/tutorials/gluon/hybrid.html">hybridizable blocks</a>. The flow of the data will be automatically set from one layer to the next, since they are held in a <code class="docutils literal"><span class="pre">Sequential</span></code> block.
+Note that we don’t need named symbols for the input, and we show how the loss is handled in Gluon in the next section.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_gluon_network</span><span class="p">():</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">net</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+        <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">net</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">get_gluon_network</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="iii-loss">
+<span id="iii-loss"></span><h2>III - Loss<a class="headerlink" href="#iii-loss" title="Permalink to this headline">¶</a></h2>
+<p>The loss, that you are trying to minimize using an optimization algorithm like SGD, is defined differently in the Module API than in Gluon.</p>
+<div class="section" id="module">
+<span id="id3"></span><h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>In the module API, the loss is part of the network. It has usually a forward pass result, that is the inference value, and a backward pass that is the gradient of the output with respect to that particular loss.</p>
+<p>For example, the <a class="reference external" href="/api/python/symbol/symbol.html?highlight=softmaxout#mxnet.symbol.SoftmaxOutput">sym.SoftmaxOutput</a> is a softmax output in the forward pass and the gradient with respect to the cross-entropy loss in the backward pass.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Softmax with cross entropy loss, directly part of the network</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">SoftmaxOutput</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">mlp</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'softmax'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gluon">
+<span id="id4"></span><h3>Gluon<a class="headerlink" href="#gluon" title="Permalink to this headline">¶</a></h3>
+<p>In Gluon, it is a lot more transparent. Losses, like the <a class="reference external" href="/api/python/gluon/loss.html?highlight=softmaxcross#mxnet.gluon.loss.SoftmaxCrossEntropyLoss">SoftmaxCrossEntropyLoss</a>, are only computing the actual value of the loss. You then call <code class="docutils literal"><span class="pre">.backward()</span></code> on the loss value to compute the gradient of the parameters with respect to that loss. At inference time, you simply call <code class="docutils literal"><span class="pre">.softmax()</span></code> on your output to get the output of your network normalized according to the softmax function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># We simply create a loss function we will use in our training loop</span>
+<span class="n">loss_fn</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">SoftmaxCrossEntropyLoss</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In the next section we will show how you use this loss function in Gluon to generate the loss value in the main training loop.</p>
+</div>
+</div>
+<div class="section" id="iv-training-loop">
+<span id="iv-training-loop"></span><h2>IV - Training Loop<a class="headerlink" href="#iv-training-loop" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module">
+<span id="id5"></span><h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>The Module API provides a <a class="reference external" href="/api/python/module/module.html?highlight=.fit#mxnet.module.BaseModule.fit"><code class="docutils literal"><span class="pre">.fit()</span></code></a> function that takes care of fitting training data to your symbolic model. With Gluon, your execution flow controls the data flow, so you need to write your own loop. It might seems like it is more verbose, but you have a lot more control as to what is happening during the training.
+With the <a class="reference external" href="/api/python/module/module.html?highlight=.fit#mxnet.module.BaseModule.fit"><code class="docutils literal"><span class="pre">.fit()</span></code></a> function, you control the metric reporting, checkpointing or weights initialization through a lot of different keyword arguments (check the <a class="reference external" href="/api/python/module/module.html?highlight=.fit#mxnet.module.BaseModule.fit">docs</a>). That is where you define the optimizer for example.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">mlp_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_iter</span><span class="p">,</span>  <span class="c1"># train data</span>
+              <span class="n">eval_data</span><span class="o">=</span><span class="n">data_iter</span><span class="p">,</span>  <span class="c1"># validation data</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="s1">'sgd'</span><span class="p">,</span>  <span class="c1"># use SGD to train</span>
+              <span class="n">force_init</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+              <span class="n">force_rebind</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+              <span class="n">optimizer_params</span><span class="o">=</span><span class="p">{</span><span class="s1">'learning_rate'</span><span class="p">:</span><span class="mf">0.1</span><span class="p">},</span>  <span class="c1"># use fixed learning rate</span>
+              <span class="n">eval_metric</span><span class="o">=</span><span class="s1">'acc'</span><span class="p">,</span>  <span class="c1"># report accuracy during training</span>
+              <span class="n">num_epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># train for 5 full dataset passes</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">INFO:root:Epoch[4]</span> <span class="pre">Train-accuracy=0.070000</span></code><!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">INFO:root:Epoch[4]</span> <span class="pre">Time</span> <span class="pre">cost=0.038</span></code><!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">INFO:root:Epoch[4]</span> <span class="pre">Validation-accuracy=0.125000</span></code><!--notebook-skip-line--></p>
+</div>
+<div class="section" id="gluon">
+<span id="id6"></span><h3>Gluon<a class="headerlink" href="#gluon" title="Permalink to this headline">¶</a></h3>
+<p>With Gluon, you do these operations directly in the training loop, and the optimizer is part of the <a class="reference external" href="/api/python/gluon/gluon.html?highlight=trainer#mxnet.gluon.Trainer"><code class="docutils literal"><span class="pre">Trainer</span></code></a> object that handles the weight updates of your parameters.</p>
+<p>Notice the <code class="docutils literal"><span class="pre">loss.backward()</span></code> we call before updating the weight as mentionned in the previous section</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Xavier</span><span class="p">(</span><span class="n">magnitude</span><span class="o">=</span><span class="mf">2.24</span><span class="p">),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span> <span class="c1"># Initialize network and trainer</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">collect_params</span><span class="p">(),</span> <span class="s1">'sgd'</span><span class="p">,</span> <span class="p">{</span><span class="s1">'learning_rate'</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">})</span>
+
+<span class="n">metric</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">Accuracy</span><span class="p">()</span> <span class="c1"># Pick a metric</span>
+
+<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="c1"># start of epoch</span>
+    
+    <span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span> <span class="c1"># start of mini-batch</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="n">mx</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">record</span><span class="p">():</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1"># forward pass</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="c1"># get loss</span>
+            
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span> <span class="c1"># compute gradients</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># update weights with SGD</span>
+        <span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span> <span class="c1"># update the metrics # end of mini-batch</span>
+
+    <span class="n">name</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'training metrics at epoch </span><span class="si">%d</span><span class="s1">: </span><span class="si">%s</span><span class="s1">=</span><span class="si">%f</span><span class="s1">'</span><span class="o">%</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">acc</span><span class="p">))</span>
+    <span class="n">metric</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> <span class="c1"># end of epoch</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">training</span> <span class="pre">metrics</span> <span class="pre">at</span> <span class="pre">epoch</span> <span class="pre">3:</span> <span class="pre">accuracy=0.155000</span></code><!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">training</span> <span class="pre">metrics</span> <span class="pre">at</span> <span class="pre">epoch</span> <span class="pre">4:</span> <span class="pre">accuracy=0.145000</span></code><!--notebook-skip-line--></p>
+<p>The Gluon training code is more verbose than the simple <code class="docutils literal"><span class="pre">.fit</span></code> from Module. However that is also the main advantage, there is no black magic going on here, you have full control of your training loop. You can for example easily set breakpoints, modify a learning rate or print data during the training flow. This flexibility also makes easy to implement more complex use-case like gradient accumulation across batches.</p>
+</div>
+</div>
+<div class="section" id="v-exporting-model">
+<span id="v-exporting-model"></span><h2>V - Exporting Model<a class="headerlink" href="#v-exporting-model" title="Permalink to this headline">¶</a></h2>
+<p>The ultimate purpose of training a model is to be able to export it and share it, whether it is for deployment or simply reproducibility purposes.</p>
+<div class="section" id="module">
+<span id="id7"></span><h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>With the Module API, you can save model using the <a class="reference external" href="/api/python/module/module.html?highlight=save_chec#mxnet.module.Module.save_checkpoint"><code class="docutils literal"><span class="pre">.save_checkpoint()</span></code></a> and get a <code class="docutils literal"><span class="pre">-symbol.json</span></code> and a <code class="docutils literal"><span class="pre">.params</span></code> file that represent your network.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">mlp_model</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="s1">'module-model'</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># module-model-0005.params module-model-symbol.json</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">INFO:root:Saved</span> <span class="pre">checkpoint</span> <span class="pre">to</span> <span class="pre">"module-model-0005.params"</span></code><!--notebook-skip-line--></p>
+</div>
+<div class="section" id="gluon">
+<span id="id8"></span><h3>Gluon<a class="headerlink" href="#gluon" title="Permalink to this headline">¶</a></h3>
+<p>With Gluon, network parameters are associated with a <code class="docutils literal"><span class="pre">Block</span></code>, but the execution flow is controlled in python through the code in <code class="docutils literal"><span class="pre">.forward()</span></code> function. Hence only <a class="reference external" href="#">hybridized networks</a> can be exported with a <code class="docutils literal"><span class="pre">-symbol.json</span></code> and <code class="docutils literal"><span class="pre">.params</span></code> file using <a class="reference external" href="/api/python/gluon/gluon.html?highlight=export#mxnet.gluon.HybridBlock.export"><code class="docutils literal"><span class="pre">.export()</span></code></a>, non-hybridized models can only have their parameters exported using <a class="reference external" href="/api/python/gluon/gluon.html?highlight=save_pa#mxnet.gluon.Block.save_parameters"><code class="docutils literal"><span class="pre">.save_parameters()</span></code></a>. Check this great tutorial to learn more: <a class="reference external" href="/versions/1.5.0/tutorials/gluon/save_load_params.html">Saving and Loading Gluon Models</a>.</p>
+<p>Any models:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># save only the parameters</span>
+<span class="n">net</span><span class="o">.</span><span class="n">save_parameters</span><span class="p">(</span><span class="s1">'gluon-model.params'</span><span class="p">)</span>
+<span class="c1"># gluon-model.params</span>
+</pre></div>
+</div>
+<p>Hybridized models:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># save the parameters and the symbolic representation</span>
+<span class="n">net</span><span class="o">.</span><span class="n">hybridize</span><span class="p">()</span>
+<span class="n">net</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">),</span> <span class="n">ctx</span><span class="p">))</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s1">'gluon-model-hybrid'</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="c1"># gluon-model-hybrid-symbol.json gluon-model-hybrid-0005.params</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="vi-loading-model-for-inference">
+<span id="vi-loading-model-for-inference"></span><h2>VI - Loading Model for Inference<a class="headerlink" href="#vi-loading-model-for-inference" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module">
+<span id="id9"></span><h3>Module<a class="headerlink" href="#module" title="Permalink to this headline">¶</a></h3>
+<p>For inference, in the Module API, you need to first load the parameters and symbol, bind the symbol to a module and load the corresponding parameters. You can then pass a batch of data through that module and request the output of the network.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Load the symbol and parameters</span>
+<span class="n">sym</span><span class="p">,</span> <span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_checkpoint</span><span class="p">(</span><span class="s1">'module-model'</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Bind them in a module</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="n">sym</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">label_names</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">for_training</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">data_shapes</span><span class="o">=</span><span class="p">[(</span><span class="s1">'data'</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))],</span> 
+         <span class="n">label_shapes</span><span class="o">=</span><span class="n">mod</span><span class="o">.</span><span class="n">_label_shapes</span><span class="p">)</span>
+
+<span class="c1"># Set the parameters</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">arg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># Run the inference</span>
+<span class="n">Batch</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">'Batch'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'data'</span><span class="p">])</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">Batch</span><span class="p">([</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))]))</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">"Output probabilities: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prob</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Output</span> <span class="pre">probabilities:</span> <span class="pre">[[0.05537598</span> <span class="pre">0.03889056</span> <span class="pre">0.06126577</span> <span class="pre">0.08879893</span> <span class="pre">0.12371024</span> <span class="pre">0.05759033</span> <span class="pre">0.1378248</span> <span class="pre">0.26134694</span> <span class="pre">0.07905186</span> <span class="pre">0.09614458]]</span></code><!--notebook-skip-line--></p>
+</div>
+<div class="section" id="gluon-symbolic-model">
+<span id="gluon-symbolic-model"></span><h3>Gluon (Symbolic Model)<a class="headerlink" href="#gluon-symbolic-model" title="Permalink to this headline">¶</a></h3>
+<p>For the Gluon API, it is a lot simpler. You can just load a serialized model in a <a class="reference external" href="/api/python/gluon/gluon.html?highlight=symbolblo#mxnet.gluon.SymbolBlock"><code class="docutils literal"><span class="pre">SymbolBlock</span></code></a> and run inference directly.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">SymbolBlock</span><span class="o">.</span><span class="n">imports</span><span class="p">(</span><span class="s1">'module-model-symbol.json'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'data'</span><span class="p">,</span> <span class="s1">'softmax_label'</span><span class="p">],</span> <span class="s1">'module-model-0005.params'</span><span class="p">)</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">)),</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># note the second argument here to account for the softmax_label symbol</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">"Output probabilities: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prob</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Output</span> <span class="pre">probabilities:</span> <span class="pre">[[0.05537598</span> <span class="pre">0.03889056</span> <span class="pre">0.06126577</span> <span class="pre">0.08879893</span> <span class="pre">0.12371024</span> <span class="pre">0.05759033</span> <span class="pre">0.1378248</span> <span class="pre">0.26134694</span> <span class="pre">0.07905186</span> <span class="pre">0.09614458]]</span></code><!--notebook-skip-line--></p>
+</div>
+<div class="section" id="gluon-imperative-model">
+<span id="gluon-imperative-model"></span><h3>Gluon (Imperative Model)<a class="headerlink" href="#gluon-imperative-model" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">get_gluon_network</span><span class="p">()</span>
+<span class="n">net</span><span class="o">.</span><span class="n">load_parameters</span><span class="p">(</span><span class="s1">'gluon-model.params'</span><span class="p">)</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">)))</span><span class="o">.</span><span class="n">softmax</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">"Output probabilities: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prob</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Output</span> <span class="pre">probabilities:</span> <span class="pre">[[0.01298077</span> <span class="pre">0.00173413</span> <span class="pre">0.01661885</span> <span class="pre">0.3362421</span> <span class="pre">0.00536332</span> <span class="pre">0.02099853</span> <span class="pre">0.01413316</span> <span class="pre">0.5528366</span> <span class="pre">0.0133819</span> <span class="pre">0.02571066]]</span></code><!--notebook-skip-line--></p>
+</div>
+</div>
+<div class="section" id="conclusion">
+<span id="conclusion"></span><h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial lead you through the steps necessary to train a deep learning model and showed you the differences between the symbolic approach of the Module API and the imperative one of the Gluon API. If you need more help converting your Module API code to the Gluon API, reach out to the community on the <a class="reference external" href="https://discuss.mxnet.io">discuss forum</a>!
+You can also compare the scripts for training MNIST in <a class="reference external" href="/versions/1.5.0/tutorials/gluon/mnist.html">Gluon</a> and <a class="reference external" href="/versions/1.5.0/tutorials/python/mnist.html">Module</a>.</p>
+<div class="btn-group" role="group">
+<div class="download-btn"><a download="module_to_gluon.ipynb" href="module_to_gluon.ipynb"><span class="glyphicon glyphicon-download-alt"></span> module_to_gluon.ipynb</a></div></div></div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">Converting Module API code to the Gluon API</a><ul>
+<li><a class="reference internal" href="#i-data-loading">I - Data Loading</a><ul>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#gluon">Gluon</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ii-model-definition">II - Model Definition</a><ul>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#gluon">Gluon</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#iii-loss">III - Loss</a><ul>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#gluon">Gluon</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#iv-training-loop">IV - Training Loop</a><ul>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#gluon">Gluon</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#v-exporting-model">V - Exporting Model</a><ul>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#gluon">Gluon</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#vi-loading-model-for-inference">VI - Loading Model for Inference</a><ul>
+<li><a class="reference internal" href="#module">Module</a></li>
+<li><a class="reference internal" href="#gluon-symbolic-model">Gluon (Symbolic Model)</a></li>
+<li><a class="reference internal" href="#gluon-imperative-model">Gluon (Imperative Model)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../../_static/js/search.js" type="text/javascript"></script>
+<script src="../../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../../_static/js/page.js" type="text/javascript"></script>
+<script src="../../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>

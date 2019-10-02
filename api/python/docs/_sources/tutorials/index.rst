@@ -48,21 +48,14 @@ Packages & Modules
       MXNet's imperative interface for Python. If you're new to MXNet, start here!
 
    .. card::
-      :title: NDArray API
-      :link: packages/ndarray/index.html
+      :title: NP and NPX
+      :link: packages/np/index.html
 
-      How to use the NDArray API to manipulate data.
-      A useful set of tutorials for beginners.
-
-   .. card::
-      :title: Symbol API
-      :link: packages/symbol/index.html
-
-      How to use MXNet's Symbol API.
+      This section contains the `mxnet.np` and `mxnet.npx` usage hints.
 
    .. card::
       :title: Autograd API
-      :link: packages/autograd/autograd.html
+      :link: /api/python/docs/tutorials/packages/autograd/index.html
 
       How to use Automatic Differentiation with the Autograd API.
 
@@ -86,13 +79,13 @@ Performance
 
    .. card::
       :title: Compression: int8
-      :link: performance/int8.html
+      :link: performance/compression/int8.html
 
       How to use int8 in your model to boost training speed.
 
    .. card::
       :title: MKL-DNN
-      :link: performance/backend/mkl-dnn.html
+      :link: performance/backend/mkldnn/index.html
 
       How to get the most from your CPU by using Intel's MKL-DNN.
 
