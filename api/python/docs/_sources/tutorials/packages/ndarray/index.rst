@@ -40,49 +40,21 @@ NDArray
       This guide will introduce you to how CPU and GPU contexts are handled with MXNet.
 
    .. card::
-      :title: NDArray API Quickstart
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/gluon/ndarray.html
+      :title: Sparse NDArray
+      :link: sparse/index.html
 
-      If you are familiar with NumPy you can start here.
-
-   .. card::
-      :title: Imperative tensor operations
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/basic/ndarray.html
-
-      A more detailed look at NDArray operations.
+      For Sparse NDArray tutorials
 
    .. card::
-      :title: Reshape vs Transpose
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/basic/ndarray_indexing.html
+      :title: NP on MXNet reference
+      :link: deepnumpy/index.html
 
-      A guide on the difference between the reshape and transpose operators.
-
-   .. card::
-      :title: NDArray Indexing
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/basic/ndarray_indexing.html
-
-      How to use the indexing features of NDArray.
-
-   .. card::
-      :title: RowSparseNDArray
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/sparse/row_sparse.html
-
-      How to implement sparse tensors in NDArray.
-
-   .. card::
-      :title: CSRNDArray
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/sparse/csr.html
-
-      How to store and manipulate large sparse matrices.
-
-   .. card::
-      :title: Sparse Symbols
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/sparse/train.html
-
-      How to train a linear regression model with sparse symbols.
+      This section contains the mxnet.np API reference documentation
 
 .. toctree::
    :hidden:
+   :glob:
 
-   ndarray
-   sparse
+   *
+   sparse/index
+   deepnumpy/index

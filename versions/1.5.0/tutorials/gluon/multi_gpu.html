@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Multiple GPUs training with Gluon API" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="Multiple GPUs training with Gluon API" property="og:description"/>
+<title>Multiple GPUs training with Gluon API — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../../_static/underscore.js" type="text/javascript"></script>
+<script src="../../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../../_static/doctools.js" type="text/javascript"></script>
+<script src="../../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.5.0/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../../genindex.html" rel="index" title="Index">
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="index.html" rel="up" title="Tutorials"/>
+<link href="naming.html" rel="next" title="Naming of Gluon Parameter and Blocks"/>
+<link href="mnist.html" rel="prev" title="Hand-written Digit Recognition"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.5.0/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.5.0/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/ecosystem.html">Ecosystem</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.5.0<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.5.0/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.5.0/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.5.0/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.5.0/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.5.0/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.5.0/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.5.0/community/ecosystem.html" tabindex="-1">Ecosystem</a></li>
+<li><a href="/versions/1.5.0/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.5.0</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">MXNet APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">MXNet Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">MXNet Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/index.html">MXNet FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gluon/index.html">About Gluon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Installing MXNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#nvidia-jetson-tx-family">Nvidia Jetson TX family</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#source-download">Source Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_zoo/index.html">MXNet Model Zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Tutorials</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<!--- Licensed to the Apache Software Foundation (ASF) under one -->
+<!--- or more contributor license agreements.  See the NOTICE file -->
+<!--- distributed with this work for additional information -->
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+<!--- to you under the Apache License, Version 2.0 (the -->
+<!--- "License"); you may not use this file except in compliance -->
+<!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, -->
+<!--- software distributed under the License is distributed on an -->
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+<!--- KIND, either express or implied.  See the License for the -->
+<!--- specific language governing permissions and limitations -->
+<!--- under the License. --><div class="section" id="multiple-gpus-training-with-gluon-api">
+<span id="multiple-gpus-training-with-gluon-api"></span><h1>Multiple GPUs training with Gluon API<a class="headerlink" href="#multiple-gpus-training-with-gluon-api" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we will walk through how one can train deep learning neural networks on multiple GPUs within a single machine. This tutorial focuses on data parallelism as opposed to model parallelism. Data parallelism approach assumes, that you can fit whole your model in a GPU and only training data needs to be partitioned. This is different from model parallelism, where the model is so big, that it doesn’t fit into a single GPU, so it needs to be partitioned as well. Model parallelism is not supported by Apache MXNet out of the box, and one has to manually route the data among different devices to achieve model parallelism. Check out <a class="reference external" href="/versions/master/faq/model_parallel_lstm.html">model parallelism tutorial</a> to learn more about it.
+Here we will focus on implementing data parallel training for a convolutional neural network called LeNet.</p>
+<div class="section" id="prerequisites">
+<span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Two or more GPUs</li>
+<li>CUDA 9 or higher</li>
+<li>cuDNN v7 or higher</li>
+<li>Knowledge of how to train a model using Gluon API</li>
+</ul>
+</div>
+<div class="section" id="storing-data-on-gpu">
+<span id="storing-data-on-gpu"></span><h2>Storing data on GPU<a class="headerlink" href="#storing-data-on-gpu" title="Permalink to this headline">¶</a></h2>
+<p>The basic primitive in Apache MXNet to specify a tensor is <a class="reference external" href="/api/python/ndarray/sparse.html#module-mxnet.ndarray">NDArray</a>. When you create NDArray you have to provide the context - the device where this tensor is going to be stored. The context can be either CPU or GPU and both can be indexed: if your machine has multiple GPUs, you can provide an index to specify which GPU to use. By default, CPU context is used, and that means that the tensor will live in main RAM. Below is an example how to create two tensors where one is stored on the first GPU and the second is stored on the second GPU. Notice, that this example will work even when you have one or no GPUs at all. We use <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/1.5.0/python/mxnet/context.py#L262">mx.context.num_gpus</a> to find the number of available GPUs.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mxnet</span> <span class="kn">as</span> <span class="nn">mx</span>
+
+<span class="n">n_gpu</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">num_gpus</span><span class="p">()</span>
+<span class="n">context</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span> <span class="k">if</span> <span class="n">n_gpu</span> <span class="o">>=</span> <span class="mi">2</span> <span class="k">else</span> \
+          <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">(),</span> <span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">()]</span> <span class="k">if</span> <span class="n">n_gpu</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> \
+          <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">()]</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">ctx</span><span class="o">=</span><span class="n">context</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="n">ctx</span><span class="o">=</span><span class="n">context</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The next step would be to do operations on these 2 NDArrays. But, unfortunately, if we try to do any operation involved both these arrays, Apache MXNet will return an error: <code class="docutils literal"><span class="pre">Check</span> <span class="pre">failed:</span> <span class="pre">e</span> <span class="pre">==</span> <span class="pre">cudaSuccess</span> <span class="pre">CUDA:</span> <span class="pre">an</span> <span class="pre">illegal</span> <span class="pre">memory</span> <span class="pre">access</span> <span class="pre">was</span> <span class="pre">encountered</span></code>. This error is returned because we tried to use arrays that are stored on different contexts: Apache MXNet wants users to explicitly control memory allocation and doesn’t automatically copy data between GPUs. If we want to do an operation on these arrays we have to have them in the same GPU. The result of the operation is going to be also stored on that GPU as well.</p>
+<p>We can manually copy data between GPUs using <a class="reference external" href="/api/python/ndarray/ndarray.html?#mxnet.ndarray.NDArray.as_in_context">as_in_context method</a>. We can get the current context of an NDArray via <a class="reference external" href="/api/python/ndarray/ndarray.html?#mxnet.ndarray.NDArray.context">context property</a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using this example, we have learnt that we can perform operations with NDArrays only if they are stored on the same GPU. So, how can we split the data between GPUs, but use the same model for training? We will answer this question in the next section.</p>
+</div>
+<div class="section" id="storing-the-network-on-multiple-gpus">
+<span id="storing-the-network-on-multiple-gpus"></span><h2>Storing the network on multiple GPUs<a class="headerlink" href="#storing-the-network-on-multiple-gpus" title="Permalink to this headline">¶</a></h2>
+<p>When you create a network using <a class="reference external" href="/api/python/gluon/gluon.html#mxnet.gluon.Block">Blocks</a> the parameters of blocks are also stored in NDArrays. When you initialize your network, you have to specify which context you are going to use for the underlying NDArrays. The feature of the <a class="reference external" href="/api/python/gluon/gluon.html#mxnet.gluon.Block.initialize">initialize method</a> is that it can accept the list of contexts, meaning that you can provide more than one context to store underlying parameters. In the example below, we create the LeNet network and initialize it to be stored on GPU(0) and GPU(1) simultaneously. Each GPU will receive its own copy of the parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">init</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon</span> <span class="kn">import</span> <span class="n">nn</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
+<span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'relu'</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'relu'</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">84</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"relu"</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="n">net</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="n">init</span><span class="o">.</span><span class="n">Xavier</span><span class="p">(),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The actual initialization will happen once we do the first forward pass on the network, but at this stage Apache MXNet knows that we are expecting parameters of the network to be on both GPUs.</p>
+</div>
+<div class="section" id="multiple-gpus-training-schema">
+<span id="multiple-gpus-training-schema"></span><h2>Multiple GPUs training schema<a class="headerlink" href="#multiple-gpus-training-schema" title="Permalink to this headline">¶</a></h2>
+<p>At this moment, we have learnt how to define NDArrays in different contexts and that a network can be initialized on two GPUs at the same time.</p>
+<p>To do multiple GPU training with a given batch of the data, we divide the examples in the batch into number of portions equal to the number of GPUs we use and distribute one to each GPU. Then, each GPU will individually calculate the local gradient of the model parameters based on the batch subset it was assigned and the model parameters it maintains. Next, we sum together the local gradients on the GPUs to get the current batch stochastic gradient. After that, each GPU uses this batch stochastic gradient to update the complete set of model parameters that it maintains. Figure below depicts the batch stochastic gradient calculation using data parallelism and two GPUs.</p>
+<p><img alt="data-parallel" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/doc/tutorials/gluon/data-parallel.svg"/></p>
+<p>This approach allows us to avoid the limitation of doing operations on different GPUs - we move subsets of data to each GPU and the operations are happening inside each individual GPU only. After that we aggregate the resulting gradients and each GPU receives a copy of the gradients to do model parameters update.</p>
+<p>Using that approach, knowing a way to move data between contexts and how to initialize a model on multiple contexts, we already know everything that is needed to do multiple GPU training. But Apache MXNet also provides us a convenient method to distribute data between multiple GPUs, which we are going to cover in the section below.</p>
+</div>
+<div class="section" id="splitting-data-between-gpus">
+<span id="splitting-data-between-gpus"></span><h2>Splitting data between GPUs<a class="headerlink" href="#splitting-data-between-gpus" title="Permalink to this headline">¶</a></h2>
+<p>Apache MXNet provides a utility method <a class="reference external" href="/api/python/gluon/gluon.html#mxnet.gluon.utils.split_and_load">gluon.utils.split_and_load</a> to split the data between multiple contexts. The result of the method’s call is a list of NDArrays each of which is stored on a separate context provided in the <code class="docutils literal"><span class="pre">ctx_list</span></code> argument. The code below demonstrates how to use the method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">split_and_load</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ctx_list</span><span class="o">=</span><span class="n">context</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If we explore the result, we will notice, that <code class="docutils literal"><span class="pre">split_and_load</span></code> method divided the data in two chunks of the same shape <code class="docutils literal"><span class="pre">(50,</span> <span class="pre">10)</span></code>. If the number of elements is uneven, we have to specify <code class="docutils literal"><span class="pre">even_split=False</span></code> to instruct the method to do uneven split.</p>
+<p>At this point we are ready to assemble a complete multiple GPUs training example.</p>
+</div>
+<div class="section" id="multiple-gpus-classification-of-mnist-images">
+<span id="multiple-gpus-classification-of-mnist-images"></span><h2>Multiple GPUs classification of MNIST images<a class="headerlink" href="#multiple-gpus-classification-of-mnist-images" title="Permalink to this headline">¶</a></h2>
+<p>In the first step, we are going to load the MNIST images and use <a class="reference external" href="https://mxnet.apache.org/api/python/gluon/data.html#mxnet.gluon.data.vision.transforms.ToTensor">ToTensor</a> to convert the format of the data from <code class="docutils literal"><span class="pre">height</span> <span class="pre">x</span> <span class="pre">width</span> <span class="pre">x</span> <span class="pre">channel</span></code> to <code class="docutils literal"><span class="pre">channel</span> <span class="pre">x</span> <span class="pre">height</span> <span class="pre">x</span> <span class="pre">width</span></code> and divide it by 255.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">train_data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">transform_first</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">())</span>
+<span class="n">val_data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">transform_first</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The next step is to create a <a class="reference external" href="/api/python/gluon/data.html#mxnet.gluon.data.DataLoader">DataLoader</a> which constructs batches from the dataset. We create one for the training and one for the validation datasets.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">val_data</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After that we define the <a class="reference external" href="/api/python/gluon/gluon.html#trainer">Trainer</a> that defines the optimization algorithm to be used and hyperparameters as well as the <a class="reference external" href="/api/python/gluon/loss.html#mxnet.gluon.loss.SoftmaxCrossEntropyLoss">Loss</a> function and a <a class="reference external" href="/api/python/metric/metric.html#mxnet.metric.Accuracy">metric</a> to track:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+    <span class="n">params</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">collect_params</span><span class="p">(),</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="s1">'sgd'</span><span class="p">,</span>
+    <span class="n">optimizer_params</span><span class="o">=</span><span class="p">{</span><span class="s1">'learning_rate'</span><span class="p">:</span> <span class="mf">0.04</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="n">metric</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">Accuracy</span><span class="p">()</span>
+<span class="n">loss_function</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">SoftmaxCrossEntropyLoss</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>After these preparations we are ready to define the training loop. In the training loop we will split the data between GPUs, pass them all through the individual GPU, do the backward step on each loss to accumulate the gradients, and call <a class="reference external" href="/api/python/gluon/gluon.html#mxnet.gluon.Trainer.step">trainer.step</a> to actually update the parameters of the model:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+        <span class="n">actual_batch_size</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Split data among GPUs. Since split_and_load is a deterministic function</span>
+        <span class="c1"># inputs and labels are going to be split in the same way between GPUs.</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">split_and_load</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">ctx_list</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="n">even_split</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">split_and_load</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">ctx_list</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="n">even_split</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+        <span class="c1"># The forward pass and the loss computation need to be wrapped</span>
+        <span class="c1"># in a `record()` scope to make sure the computational graph is</span>
+        <span class="c1"># recorded in order to automatically compute the gradients</span>
+        <span class="c1"># during the backward pass.</span>
+        <span class="k">with</span> <span class="n">mx</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">record</span><span class="p">():</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">net</span><span class="p">(</span><span class="n">input_slice</span><span class="p">)</span> <span class="k">for</span> <span class="n">input_slice</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]</span>
+            <span class="n">losses</span> <span class="o">=</span> <span class="p">[</span><span class="n">loss_function</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">o</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)]</span>
+
+        <span class="c1"># Iterate over losses to compute gradients for each input slice</span>
+        <span class="k">for</span> <span class="n">loss</span> <span class="ow">in</span> <span class="n">losses</span><span class="p">:</span>
+            <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+        <span class="c1"># update metric for each output</span>
+        <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+            <span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+
+        <span class="c1"># Update the parameters by stepping the trainer; the batch size</span>
+        <span class="c1"># is required to normalize the gradients by `1 / batch_size`.</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">actual_batch_size</span><span class="p">,</span> <span class="n">ignore_stale_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="c1"># Print the evaluation metric and reset it for the next epoch</span>
+    <span class="n">name</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'After epoch {}: {} = {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">acc</span><span class="p">))</span>
+    <span class="n">metric</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you run this example and run <code class="docutils literal"><span class="pre">nvidia-smi</span></code> tool from NVIDIA, you will notice that both GPUs are used to perform calculations.</p>
+</div>
+<div class="section" id="advanced-topic">
+<span id="advanced-topic"></span><h2>Advanced topic<a class="headerlink" href="#advanced-topic" title="Permalink to this headline">¶</a></h2>
+<p>As we mentioned above, the gradients for each data split are calculated independently and then later summed together. We haven’t mentioned yet where exactly this aggregation happens.</p>
+<p>Apache MXNet uses <a class="reference external" href="/versions/master/api/scala/kvstore.html">KVStore</a> - a virtual place for data sharing between different devices, including machines and GPUs. The KVStore is responsible for storing and, by default, aggregating the gradients of the model. The physical location of the KVStore is defined when we create a <a class="reference external" href="/versions/master/api/python/gluon/gluon.html#mxnet.gluon.Trainer">Trainer</a> and by default is set to <code class="docutils literal"><span class="pre">device</span></code>, which mean it will aggregate gradients and update weights on GPUs. The actual data is distributed in round-robin fashion among available GPUs per block. This statement means two things, which are important to know from practical perspective.</p>
+<p>The first thing is there is an additional memory allocation that happens on GPUs that is not directly related to your data and your model to store auxiliary information for GPUs sync-up. Depending on the complexity of your model, the amount of required memory can be significant, and you may even experience CUDA out of memory exceptions. If that is the case, and you cannot decrease batch size anymore, you may want to consider switching <code class="docutils literal"><span class="pre">KVStore</span></code> storage to RAM by setting <code class="docutils literal"><span class="pre">kvstore</span></code> argument to <code class="docutils literal"><span class="pre">local</span></code> during instantiation of the <code class="docutils literal"><span class="pre">Trainer</span></code>. Often this decreases the wall-clock performance time of your model, because the gradients and parameters would need to be copied to RAM and back.</p>
+<p>The second thing is that since  the auxiliary information is distributed among GPUs in round-robin fashion on per block level, <code class="docutils literal"><span class="pre">KVStore</span></code> may use more memory on some GPUs and less on others. For example, if your model has a very big embedding layer, you may see that your first GPU uses 90% of your memory while others use only 50%. That affects how much data you actually can load in a single batch, because the data between devices is split evenly. If that is the case and you have to keep or increase your batch size, you may want to switch to the <code class="docutils literal"><span class="pre">local</span></code> mode.</p>
+</div>
+<div class="section" id="conclusion">
+<span id="conclusion"></span><h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>With Apache MXNet training using multiple GPUs doesn’t need a lot of extra code. To do the multiple GPUs training you need to initialize a model on all GPUs, split the batches of data into separate splits where each is stored on a different GPU and run the model separately on every split. The synchronization of gradients and parameters between GPUs is done automatically by Apache MXNet.</p>
+</div>
+<div class="section" id="recommended-next-steps">
+<span id="recommended-next-steps"></span><h2>Recommended Next Steps<a class="headerlink" href="#recommended-next-steps" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Check out our two video tutorial on improving your code performance. In the <a class="reference external" href="https://www.youtube.com/watch?v=n8tN6pRZBdE">first video</a> we explain how to visualize the performance, and in the <a class="reference external" href="https://www.youtube.com/watch?v=Cqo7FPftNyo">second video</a> we show how to optimize it.</li>
+</ul>
+<div class="btn-group" role="group">
+<div class="download-btn"><a download="multi_gpu.ipynb" href="multi_gpu.ipynb"><span class="glyphicon glyphicon-download-alt"></span> multi_gpu.ipynb</a></div></div></div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">Multiple GPUs training with Gluon API</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#storing-data-on-gpu">Storing data on GPU</a></li>
+<li><a class="reference internal" href="#storing-the-network-on-multiple-gpus">Storing the network on multiple GPUs</a></li>
+<li><a class="reference internal" href="#multiple-gpus-training-schema">Multiple GPUs training schema</a></li>
+<li><a class="reference internal" href="#splitting-data-between-gpus">Splitting data between GPUs</a></li>
+<li><a class="reference internal" href="#multiple-gpus-classification-of-mnist-images">Multiple GPUs classification of MNIST images</a></li>
+<li><a class="reference internal" href="#advanced-topic">Advanced topic</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
+<li><a class="reference internal" href="#recommended-next-steps">Recommended Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../../_static/js/search.js" type="text/javascript"></script>
+<script src="../../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../../_static/js/page.js" type="text/javascript"></script>
+<script src="../../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>

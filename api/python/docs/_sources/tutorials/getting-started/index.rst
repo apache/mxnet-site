@@ -29,10 +29,10 @@ The following tutorials teach how to use MXNet.
       A quick overview of the core concepts of MXNet using the Gluon API.
 
    .. card::
-      :title: Linear Regression
-      :link: https://mxnet.incubator.apache.org/versions/master/tutorials/python/linear-regression.html
+      :title: What is NP on MXNet
+      :link: deepnumpy/index.html
 
-      A tutorial on implementing linear regression using MXNet APIs.
+      What is NP on MXNet
 
    .. card::
       :title: Moving from other frameworks
@@ -40,9 +40,32 @@ The following tutorials teach how to use MXNet.
 
       Guides that ease your transition to MXNet from other framework.
 
+   .. card::
+      :title: Logistic Regression Explained
+      :link: logistic_regression_explained.html
+
+      Logistic Regression with MXNet Gluon Explained
+
+   .. card::
+      :title: MNIST Training
+      :link: https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html
+
+      MNIST Training with MXNet
+
+   .. card::
+      :title: Gluon From Experiment To Deployment
+      :link: gluon_from_experiment_to_deployment.html
+
+      A tutorial on implementing linear regression using MXNet APIs.
+
 .. toctree::
    :hidden:
    :maxdepth: 2
 
    crash-course/index
+   deepnumpy/index
    to-mxnet/index
+   gluon_from_experiment_to_deployment
+   logistic_regression_explained.md
+   MNIST <https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html>
+

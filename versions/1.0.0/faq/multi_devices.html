@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Run MXNet on Multiple CPU/GPUs with Data Parallelism" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="Run MXNet on Multiple CPU/GPUs with Data Parallelism" property="og:description"/>
+<title>Run MXNet on Multiple CPU/GPUs with Data Parallelism — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../_static/underscore.js" type="text/javascript"></script>
+<script src="../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../_static/doctools.js" type="text/javascript"></script>
+<script src="../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.0.0/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.0.0/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.0.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.0.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.0.0/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/v1.0.0/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/v1.0.0">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.0.0<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.0.0/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.0.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.0.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.0.0/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.0.0/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.0.0/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/v1.0.0/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.0.0/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.0.0/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/v1.0.0" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.0.0/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.0.0/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.0.0</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/python/index.html">Python Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/r/index.html">R Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/julia/index.html">Julia Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/c++/index.html">C++ Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/scala/index.html">Scala Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/perl/index.html">Perl Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">HowTo Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">System Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/index.html">Community</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<div class="section" id="run-mxnet-on-multiple-cpu-gpus-with-data-parallelism">
+<span id="run-mxnet-on-multiple-cpu-gpus-with-data-parallelism"></span><h1>Run MXNet on Multiple CPU/GPUs with Data Parallelism<a class="headerlink" href="#run-mxnet-on-multiple-cpu-gpus-with-data-parallelism" title="Permalink to this headline">¶</a></h1>
+<p><em>MXNet</em> supports training with multiple CPUs and GPUs, which may be located on different physical machines.</p>
+<div class="section" id="data-parallelism-vs-model-parallelism">
+<span id="data-parallelism-vs-model-parallelism"></span><h2>Data Parallelism vs Model Parallelism<a class="headerlink" href="#data-parallelism-vs-model-parallelism" title="Permalink to this headline">¶</a></h2>
+<p>By default, <em>MXNet</em> uses data parallelism to partition the workload over multiple
+devices.
+Assume there are <em>n</em> devices.
+Then each one will receive a copy of the complete model
+and train it on <em>1/n</em> of the data.
+The results such as gradients and
+updated model are communicated across these devices.</p>
+<p>MXNet also supports model parallelism.
+In this approach, each device holds onto only part of the model.
+This proves useful when the model is too large to fit onto a single device.
+As an example, see the following <a class="reference internal" href="model_parallel_lstm.html"><span class="doc">tutorial</span></a>
+which shows how to use model parallelism for training a multi-layer LSTM model.
+In this tutorial, we’ll focus on data parallelism.</p>
+</div>
+<div class="section" id="multiple-gpus-within-a-single-machine">
+<span id="multiple-gpus-within-a-single-machine"></span><h2>Multiple GPUs within a Single Machine<a class="headerlink" href="#multiple-gpus-within-a-single-machine" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="workload-partitioning">
+<span id="workload-partitioning"></span><h3>Workload Partitioning<a class="headerlink" href="#workload-partitioning" title="Permalink to this headline">¶</a></h3>
+<p>By default, <em>MXNet</em> partitions a data batch evenly among the available GPUs.
+Assume a batch size <em>b</em> and assume there are <em>k</em> GPUs, then in one iteration
+each GPU will perform forward and backward on <em>b/k</em> examples. The
+gradients are then summed over all GPUs before updating the model.</p>
+</div>
+<div class="section" id="how-to-use">
+<span id="how-to-use"></span><h3>How to Use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div>To use GPUs, we need to compile MXNet with GPU support. For
+example, set <code class="docutils literal"><span class="pre">USE_CUDA=1</span></code> in <code class="docutils literal"><span class="pre">config.mk</span></code> before <code class="docutils literal"><span class="pre">make</span></code>. (see
+<a class="reference external" href="/versions/1.0.0/install/index.html">MXNet installation guide</a> for more options).</div></blockquote>
+<p>If a machine has one or more GPU cards installed,
+then each card is labeled by a number starting from 0.
+To use a particular GPU, one can either
+specify the context <code class="docutils literal"><span class="pre">context</span></code> in code
+or pass <code class="docutils literal"><span class="pre">--gpus</span></code> at the command line.
+For example, to use GPU 0 and 2 in python,
+one can typically create a module with</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mxnet</span> <span class="kn">as</span> <span class="nn">mx</span>
+<span class="n">module</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>while if the program accepts a <code class="docutils literal"><span class="pre">--gpus</span></code> flag (as seen in
+<a class="reference external" href="https://github.com/dmlc/mxnet/tree/master/example/image-classification">example/image-classification</a>),
+then we can try</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python train_mnist.py --gpus <span class="m">0</span>,2 ...
+</pre></div>
+</div>
+</div>
+<div class="section" id="advanced-usage">
+<span id="advanced-usage"></span><h3>Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h3>
+<p>If the available GPUs are not all equally powerful,
+we can partition the workload accordingly.
+For example, if GPU 0 is 3 times faster than GPU 2,
+then we might use the workload option <code class="docutils literal"><span class="pre">work_load_list=[3,</span> <span class="pre">1]</span></code>,
+see <a class="reference external" href="/versions/1.0.0/api/python/module.html#mxnet.module.Module">Module</a>
+for more details.</p>
+<p>Training with multiple GPUs should yield the same results
+as training on a single GPU if all other hyper-parameters are the same.
+In practice, the results may exhibit small differences,
+owing to the randomness of I/O (random order or other augmentations),
+weight initialization with different seeds, and CUDNN.</p>
+<p>We can control on which devices the gradient is aggregated
+and on which device the model is updated via <a class="reference external" href="/versions/1.0.0/api/python/kvstore.html"><code class="docutils literal"><span class="pre">KVStore</span></code></a>,
+the <em>MXNet</em> module that supports data communication.
+One can either use <code class="docutils literal"><span class="pre">mx.kvstore.create(type)</span></code> to get an instance
+or use the program flag <code class="docutils literal"><span class="pre">--kv-store</span> <span class="pre">type</span></code>.</p>
+<p>There are two commonly used types,</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">local</span></code>: all gradients are copied to CPU memory and weights are updated there.</li>
+<li><code class="docutils literal"><span class="pre">device</span></code>: both gradient aggregation and weight updates are run on GPUs.
+With this setting, the <code class="docutils literal"><span class="pre">KVStore</span></code> also attempts to use GPU peer-to-peer communication,
+potentially accelerating the communication.
+Note that this option may result in higher GPU memory usage.</li>
+</ul>
+<p>When using a large number of GPUs, e.g. >=4, we suggest using <code class="docutils literal"><span class="pre">device</span></code> for better performance.</p>
+</div>
+</div>
+<div class="section" id="distributed-training-with-multiple-machines">
+<span id="distributed-training-with-multiple-machines"></span><h2>Distributed Training with Multiple Machines<a class="headerlink" href="#distributed-training-with-multiple-machines" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">KVStore</span></code> also supports a number of options for running on multiple machines.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">dist_sync</span></code> behaves similarly to <code class="docutils literal"><span class="pre">local</span></code> but exhibits one major difference.
+With <code class="docutils literal"><span class="pre">dist_sync</span></code>, <code class="docutils literal"><span class="pre">batch-size</span></code> now means the batch size used on each machine.
+So if there are <em>n</em> machines and we use batch size <em>b</em>,
+then <code class="docutils literal"><span class="pre">dist_sync</span></code> behaves like <code class="docutils literal"><span class="pre">local</span></code> with batch size <em>n*b</em>.</li>
+<li><code class="docutils literal"><span class="pre">dist_device_sync</span></code> is similar to <code class="docutils literal"><span class="pre">dist_sync</span></code>. The difference between them is that
+<code class="docutils literal"><span class="pre">dist_device_sync</span></code> aggregates gradients and updates weight on GPUs
+while <code class="docutils literal"><span class="pre">dist_sync</span></code> does so on CPU memory.</li>
+<li><code class="docutils literal"><span class="pre">dist_async</span></code>  performs asynchronous updates.
+The weight is updated whenever gradients are received from any machine.
+The update is atomic, i.e., no two updates happen on the same weight at the same time.
+However, the order is not guaranteed.</li>
+</ul>
+<div class="section" id="how-to-launch-a-job">
+<span id="how-to-launch-a-job"></span><h3>How to Launch a Job<a class="headerlink" href="#how-to-launch-a-job" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div>To use distributed training, we need to compile with <code class="docutils literal"><span class="pre">USE_DIST_KVSTORE=1</span></code>
+(see <a class="reference external" href="/versions/1.0.0/install/index.html">MXNet installation guide</a> for more options).</div></blockquote>
+<p>Launching a distributed job is a bit different from running on a single
+machine. MXNet provides
+<a class="reference external" href="https://github.com/dmlc/mxnet/blob/master/tools/launch.py">tools/launch.py</a> to
+start a job by using <code class="docutils literal"><span class="pre">ssh</span></code>, <code class="docutils literal"><span class="pre">mpi</span></code>, <code class="docutils literal"><span class="pre">sge</span></code>, or <code class="docutils literal"><span class="pre">yarn</span></code>.</p>
+<p>An easy way to set up a cluster of EC2 instances for distributed deep learning
+is using an <a class="reference external" href="https://github.com/awslabs/deeplearning-cfn">AWS CloudFormation template</a>.
+If you do not have a cluster, you can check the repository before you continue.</p>
+<p>Assume we are at the directory <code class="docutils literal"><span class="pre">mxnet/example/image-classification</span></code>
+and want to train LeNet to classify MNIST images, as demonstrated here:
+<a class="reference external" href="https://github.com/dmlc/mxnet/blob/master/example/image-classification/train_mnist.py">train_mnist.py</a>.</p>
+<p>On a single machine, we can run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python train_mnist.py --network lenet
+</pre></div>
+</div>
+<p>Now, say we are given two ssh-able machines and <em>MXNet</em> is installed on both machines.
+We want to train LeNet on these two machines.
+First, we save the IPs (or hostname) of these two machines in file <code class="docutils literal"><span class="pre">hosts</span></code>, e.g.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ cat hosts
+<span class="m">172</span>.30.0.172
+<span class="m">172</span>.30.0.171
+</pre></div>
+</div>
+<p>Next, if the mxnet folder is accessible from both machines, e.g. on a
+<a class="reference external" href="https://help.ubuntu.com/lts/serverguide/network-file-system.html">network filesystem</a>,
+then we can run:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ../../tools/launch.py -n <span class="m">2</span> --launcher ssh -H hosts python train_mnist.py --network lenet --kv-store dist_sync
+</pre></div>
+</div>
+<p>Note that here we</p>
+<ul class="simple">
+<li>use <code class="docutils literal"><span class="pre">launch.py</span></code> to submit the job.</li>
+<li>provide launcher, <code class="docutils literal"><span class="pre">ssh</span></code> if all machines are ssh-able, <code class="docutils literal"><span class="pre">mpi</span></code> if <code class="docutils literal"><span class="pre">mpirun</span></code> is
+available, <code class="docutils literal"><span class="pre">sge</span></code> for Sun Grid Engine, and <code class="docutils literal"><span class="pre">yarn</span></code> for Apache Yarn.</li>
+<li><code class="docutils literal"><span class="pre">-n</span></code> number of worker nodes to run on</li>
+<li><code class="docutils literal"><span class="pre">-H</span></code> the host file which is required by <code class="docutils literal"><span class="pre">ssh</span></code> and <code class="docutils literal"><span class="pre">mpi</span></code></li>
+<li><code class="docutils literal"><span class="pre">--kv-store</span></code> use either <code class="docutils literal"><span class="pre">dist_sync</span></code> or <code class="docutils literal"><span class="pre">dist_async</span></code></li>
+</ul>
+</div>
+<div class="section" id="synchronize-directory">
+<span id="synchronize-directory"></span><h3>Synchronize Directory<a class="headerlink" href="#synchronize-directory" title="Permalink to this headline">¶</a></h3>
+<p>Now consider if the mxnet folder is not accessible.
+We can first copy the <code class="docutils literal"><span class="pre">MXNet</span></code> library to this folder by</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>cp -r ../../python/mxnet .
+cp -r ../../lib/libmxnet.so mxnet
+</pre></div>
+</div>
+<p>then ask <code class="docutils literal"><span class="pre">launch.py</span></code> to synchronize the current directory to all machines’
+<code class="docutils literal"><span class="pre">/tmp/mxnet</span></code> directory with <code class="docutils literal"><span class="pre">--sync-dst-dir</span></code></p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ../../tools/launch.py -n <span class="m">2</span> -H hosts --sync-dst-dir /tmp/mxnet <span class="se">\</span>
+   python train_mnist.py --network lenet --kv-store dist_sync
+</pre></div>
+</div>
+</div>
+<div class="section" id="gradient-compression">
+<span id="gradient-compression"></span><h3>Gradient compression<a class="headerlink" href="#gradient-compression" title="Permalink to this headline">¶</a></h3>
+<p>If your model has fully connected components or recurrent neural networks, you may achieve increased training speed using gradient compression with potentially slight loss of accuracy. Please see <a class="reference external" href="/versions/master/faq/gradient_compression.html">Gradient Compression</a> for more details on when and how to use it. For the above example, gradient compression can be enabled by running the following:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python ../../tools/launch.py -n <span class="m">2</span> --launcher ssh -H hosts python train_mnist.py --network lenet <span class="se">\</span>
+    --kv-store dist_sync --gc-type 2bit
+</pre></div>
+</div>
+<p>In this example, <code class="docutils literal"><span class="pre">gc-type</span></code> has been set to <code class="docutils literal"><span class="pre">2bit</span></code>, to enable two bit gradient compression.</p>
+</div>
+<div class="section" id="use-a-particular-network-interface">
+<span id="use-a-particular-network-interface"></span><h3>Use a Particular Network Interface<a class="headerlink" href="#use-a-particular-network-interface" title="Permalink to this headline">¶</a></h3>
+<p><em>MXNet</em> often chooses the first available network interface.
+But for machines that have multiple interfaces,
+we can specify which network interface to use for data
+communication by the environment variable <code class="docutils literal"><span class="pre">DMLC_INTERFACE</span></code>.
+For example, to use the interface <code class="docutils literal"><span class="pre">eth0</span></code>, we can</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">DMLC_INTERFACE</span><span class="o">=</span><span class="n">eth0</span><span class="p">;</span> <span class="n">python</span> <span class="o">../../</span><span class="n">tools</span><span class="o">/</span><span class="n">launch</span><span class="o">.</span><span class="n">py</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="debug-connection">
+<span id="debug-connection"></span><h3>Debug Connection<a class="headerlink" href="#debug-connection" title="Permalink to this headline">¶</a></h3>
+<p>Set<code class="docutils literal"><span class="pre">PS_VERBOSE=1</span></code> to see the debug logging, e.g</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PS_VERBOSE</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">python</span> <span class="o">../../</span><span class="n">tools</span><span class="o">/</span><span class="n">launch</span><span class="o">.</span><span class="n">py</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="more">
+<span id="more"></span><h3>More<a class="headerlink" href="#more" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>See more launch options by <code class="docutils literal"><span class="pre">python</span> <span class="pre">../../tools/launch.py</span> <span class="pre">-h</span></code></li>
+<li>See more options of <a class="reference external" href="http://ps-lite.readthedocs.org/en/latest/how_to.html">ps-lite</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">Run MXNet on Multiple CPU/GPUs with Data Parallelism</a><ul>
+<li><a class="reference internal" href="#data-parallelism-vs-model-parallelism">Data Parallelism vs Model Parallelism</a></li>
+<li><a class="reference internal" href="#multiple-gpus-within-a-single-machine">Multiple GPUs within a Single Machine</a><ul>
+<li><a class="reference internal" href="#workload-partitioning">Workload Partitioning</a></li>
+<li><a class="reference internal" href="#how-to-use">How to Use</a></li>
+<li><a class="reference internal" href="#advanced-usage">Advanced Usage</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#distributed-training-with-multiple-machines">Distributed Training with Multiple Machines</a><ul>
+<li><a class="reference internal" href="#how-to-launch-a-job">How to Launch a Job</a></li>
+<li><a class="reference internal" href="#synchronize-directory">Synchronize Directory</a></li>
+<li><a class="reference internal" href="#gradient-compression">Gradient compression</a></li>
+<li><a class="reference internal" href="#use-a-particular-network-interface">Use a Particular Network Interface</a></li>
+<li><a class="reference internal" href="#debug-connection">Debug Connection</a></li>
+<li><a class="reference internal" href="#more">More</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../_static/js/search.js" type="text/javascript"></script>
+<script src="../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../_static/js/page.js" type="text/javascript"></script>
+<script src="../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>
