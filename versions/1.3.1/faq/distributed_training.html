@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Distributed Training in MXNet" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="Distributed Training in MXNet" property="og:description"/>
+<title>Distributed Training in MXNet — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../_static/underscore.js" type="text/javascript"></script>
+<script src="../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../_static/doctools.js" type="text/javascript"></script>
+<script src="../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.3.1/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.3.1/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.3.1/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.3.1/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.3.1/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.3.1/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.3.1">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/community/ecosystem.html">Ecosystem</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.3.1<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.3.1/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.3.1/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.3.1/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.3.1/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.3.1/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.3.1/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.3.1/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.3.1/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.3.1" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.3.1/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.3.1/community/ecosystem.html" tabindex="-1">Ecosystem</a></li>
+<li><a href="/versions/1.3.1/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.3.1</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/python/index.html">Python Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/r/index.html">R Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/julia/index.html">Julia Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/c++/index.html">C++ Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/scala/index.html">Scala Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/perl/index.html">Perl Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">HowTo Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">System Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/contribute.html">Community</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<div class="section" id="distributed-training-in-mxnet">
+<span id="distributed-training-in-mxnet"></span><h1>Distributed Training in MXNet<a class="headerlink" href="#distributed-training-in-mxnet" title="Permalink to this headline">¶</a></h1>
+<p>MXNet supports distributed training enabling us to leverage multiple machines for faster training.
+In this document, we describe how it works, how to launch a distributed training job and
+some environment variables which provide more control.</p>
+<div class="section" id="types-of-parallelism">
+<span id="types-of-parallelism"></span><h2>Types of Parallelism<a class="headerlink" href="#types-of-parallelism" title="Permalink to this headline">¶</a></h2>
+<p>There are two ways in which we can distribute the workload of training a neural network across multiple devices (can be either GPU or CPU).
+The first way is <em>data parallelism</em>, which refers to the case where each device stores a complete copy of the model.
+Each device works with a different part of the dataset, and the devices collectively update a shared model.
+These devices can be located on a single machine or across multiple machines.
+In this document, we describe how to train a model with devices distributed across machines in a data parallel way.</p>
+<p>When models are so large that they don’t fit into device memory, then a second way called <em>model parallelism</em> is useful.
+Here, different devices are assigned the task of learning different parts of the model.
+Currently, MXNet supports Model parallelism in a single machine only. Refer <a class="reference external" href="/versions/master/faq/model_parallel_lstm.html">Training with multiple GPUs using model parallelism</a> for more on this.</p>
+</div>
+<div class="section" id="how-does-distributed-training-work">
+<span id="how-does-distributed-training-work"></span><h2>How Does Distributed Training Work?<a class="headerlink" href="#how-does-distributed-training-work" title="Permalink to this headline">¶</a></h2>
+<p>The following concepts are key to understanding distributed training in MXNet:</p>
+<div class="section" id="types-of-processes">
+<span id="types-of-processes"></span><h3>Types of Processes<a class="headerlink" href="#types-of-processes" title="Permalink to this headline">¶</a></h3>
+<p>MXNet has three types of processes which communicate with each other to accomplish training of a model.</p>
+<ul class="simple">
+<li>Worker: A worker node actually performs training on a batch of training samples.
+Before processing each batch, the workers pull weights from servers.
+The workers also send gradients to the servers after each batch.
+Depending on the workload for training a model, it might not be a good idea to run multiple worker processes on the same machine.</li>
+<li>Server: There can be multiple servers which store the model’s parameters, and communicate with workers.
+A server may or may not be co-located with the worker processes.</li>
+<li>Scheduler: There is only one scheduler. The role of the scheduler is to set up the cluster. This includes waiting for messages that each node has come up and which port the node is listening on.
+The scheduler then lets all processes know about every other node in the cluster, so that they can communicate with each other.</li>
+</ul>
+</div>
+<div class="section" id="kv-store">
+<span id="kv-store"></span><h3>KV Store<a class="headerlink" href="#kv-store" title="Permalink to this headline">¶</a></h3>
+<p>MXNet provides a key-value store, which is a critical component used for multi-device training. The communication of parameters across devices on a single machine, as well as across multiple machines, is relayed through one or more servers with a key-value store for the parameters. Each value in this store is represented by a key and value, where each parameter array in the network is assigned a key, and value refers to the weights of that parameter array. Workers <code class="docutils literal"><span class="pre">push</span></code> gradients after processing a batch, and <code class="docutils literal"><span class="pre">pull</span></code> updated weights before processing a new batch.
+We can also pass in optimizers for the KVStore to use while updating each weight. Optimizers like Stochastic Gradient Descent define an update rule,
+essentially a mathematical formula to compute the new weight based on the old weight, gradient, and some parameters.</p>
+<p>If you are using a Gluon Trainer object or the Module API,
+it uses a kvstore object internally to aggregate gradients from multiple devices on the same machine as well as across different machines.</p>
+<p>Although the API remains the same whether or not multiple machines are being used,
+the notion of kvstore server exists only during distributed training.
+In this case, each <code class="docutils literal"><span class="pre">push</span></code> and <code class="docutils literal"><span class="pre">pull</span></code> involves communication with the kvstore servers. When there are multiple devices on a single machine, gradients from these devices are first aggregated on the machine and then sent to the servers.Note that we need to compile MXNet with the build flag <code class="docutils literal"><span class="pre">USE_DIST_KVSTORE=1</span></code> to use distributed training.</p>
+<p>The distributed mode of KVStore is enabled by calling <code class="docutils literal"><span class="pre">mxnet.kvstore.create</span></code> function
+with a string argument which contains the word <code class="docutils literal"><span class="pre">dist</span></code> as follows:</p>
+<blockquote>
+<div>kv = mxnet.kvstore.create(‘dist_sync’)</div></blockquote>
+<p>Refer <a class="reference external" href="/versions/master/api/python/kvstore/kvstore.html">KVStore API</a> for more information about KVStore.</p>
+</div>
+<div class="section" id="distribution-of-keys">
+<span id="distribution-of-keys"></span><h3>Distribution of Keys<a class="headerlink" href="#distribution-of-keys" title="Permalink to this headline">¶</a></h3>
+<p>Each server doesn’t necessarily store all the keys or parameter arrays.
+Parameters are distributed across different servers. The decision of which server stores a particular key is made at random.
+This distribution of keys across different servers is handled transparently by the KVStore.
+It ensures that when a key is pulled, that request is sent to the server which has the corresponding value.
+If the value of some key is very large, it may be sharded across different servers. This means that different servers hold different parts of the value.
+Again, this is handled transparently so that the worker does not have to do anything different.
+The threshold for this sharding can be controlled with the environment variable <code class="docutils literal"><span class="pre">MXNET_KVSTORE_BIGARRAY_BOUND</span></code>.
+See <a class="reference external" href="#environment-variables">environment variables</a> for more details.</p>
+</div>
+<div class="section" id="split-training-data">
+<span id="split-training-data"></span><h3>Split training data<a class="headerlink" href="#split-training-data" title="Permalink to this headline">¶</a></h3>
+<p>When running distributed training in data parallel mode, we want each machine to be working on different parts of the dataset.</p>
+<p>For data parallel training on a single worker,
+we can use <code class="docutils literal"><span class="pre">mxnet.gluon.utils.split_and_load</span></code> to split a batch of samples provided by the data iterator, and then load each part of the batch on the device which will process it.</p>
+<p>In the case of distributed training though, we would need to divide the dataset into <code class="docutils literal"><span class="pre">n</span></code> parts at the beginning, so that each worker gets a different part. Each worker can then use <code class="docutils literal"><span class="pre">split_and_load</span></code> to again divide that part of the dataset across different devices on a single machine.</p>
+<p>Typically, this split of data for each worker happens through the data iterator,
+on passing the number of parts and the index of parts to iterate over.
+Some iterators in MXNet that support this feature are <a class="reference external" href="/versions/master/api/python/io/io.html#mxnet.io.MNISTIter">mxnet.io.MNISTIterator</a> and <a class="reference external" href="/versions/master/api/python/io/io.html#mxnet.io.ImageRecordIter">mxnet.io.ImageRecordIter</a>.
+If you are using a different iterator, you can look at how the above iterators implement this.
+We can use the kvstore object to get the number of workers (<code class="docutils literal"><span class="pre">kv.num_workers</span></code>) and rank of the current worker (<code class="docutils literal"><span class="pre">kv.rank</span></code>).
+These can be passed as arguments to the iterator.
+You can look at <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/example/gluon/image_classification.py">example/gluon/image_classification.py</a>
+to see an example usage.</p>
+</div>
+<div class="section" id="updating-weights">
+<span id="updating-weights"></span><h3>Updating weights<a class="headerlink" href="#updating-weights" title="Permalink to this headline">¶</a></h3>
+<p>KVStore server supports two modes, one which aggregates the gradients and updates the weights using those gradients, and second where the server only aggregates gradients. In the latter case, when a worker process pulls from kvstore, it gets the aggregated gradients. The worker then uses these gradients and applies the weights locally.</p>
+<p>When using Gluon there is an option to choose between these modes by passing <code class="docutils literal"><span class="pre">update_on_kvstore</span></code> variable when you create the <a class="reference external" href="/versions/master/api/python/gluon/gluon.html#mxnet.gluon.Trainer">Trainer</a> object like this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">collect_params</span><span class="p">(),</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">'sgd'</span><span class="p">,</span>
+                        <span class="n">optimizer_params</span><span class="o">=</span><span class="p">{</span><span class="s1">'learning_rate'</span><span class="p">:</span> <span class="n">opt</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span>
+                                          <span class="s1">'wd'</span><span class="p">:</span> <span class="n">opt</span><span class="o">.</span><span class="n">wd</span><span class="p">,</span>
+                                          <span class="s1">'momentum'</span><span class="p">:</span> <span class="n">opt</span><span class="o">.</span><span class="n">momentum</span><span class="p">,</span>
+                                          <span class="s1">'multi_precision'</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                        <span class="n">kvstore</span><span class="o">=</span><span class="n">kv</span><span class="p">,</span>
+                        <span class="n">update_on_kvstore</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When using the symbolic interface, it performs the weight updates on the server without the user having to do anything special.</p>
+</div>
+<div class="section" id="different-modes-of-distributed-training">
+<span id="different-modes-of-distributed-training"></span><h3>Different Modes of Distributed Training<a class="headerlink" href="#different-modes-of-distributed-training" title="Permalink to this headline">¶</a></h3>
+<p>Distributed training itself is enabled when kvstore creation string contains the word <code class="docutils literal"><span class="pre">dist</span></code>.</p>
+<p>Different modes of distributed training can be enabled by using different types of kvstore.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">dist_sync</span></code>: In synchronous distributed training, all workers use the same synchronized set of model parameters at the start of every batch.
+This means that after each batch, the server waits to receive gradients from each worker before it updates the model parameters.
+This synchronization comes at a cost because the worker pulling parameters would have to wait till the server finishes this process.
+In this mode, if a worker crashes, then it halts the progress of all workers.</li>
+<li><code class="docutils literal"><span class="pre">dist_async</span></code>: In asynchronous distributed training, the server receives gradients from one worker and immediately updates its store, which it uses to respond to any future pulls.
+This means that a worker who finishes processing a batch can pull the current parameters from server and start the next batch,
+even if other workers haven’t finished processing the earlier batch.
+This is faster than <code class="docutils literal"><span class="pre">dist_sync</span></code> because there is no cost of synchronization, but can take more epochs to converge.
+The update of weights is atomic, meaning no two updates happen on the same weight at the same time. However, the order  of updates is not guaranteed.
+In <code class="docutils literal"><span class="pre">async</span></code> mode, it is required to pass an optimizer because in the absence of an optimizer kvstore would replace the stored weights with received weights and this doesn’t make sense for training in asynchronous mode. Hence, when using Gluon with <code class="docutils literal"><span class="pre">async</span></code> mode we need to set <code class="docutils literal"><span class="pre">update_on_kvstore</span></code> to <code class="docutils literal"><span class="pre">True</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">dist_sync_device</span></code>: Same as <code class="docutils literal"><span class="pre">dist_sync</span></code> except that when there are multiple GPUs being used on each node,
+this mode aggregates gradients and updates weights on GPU while dist_sync does so on CPU memory.
+This is faster than <code class="docutils literal"><span class="pre">dist_sync</span></code> because it reduces expensive communication between GPU and CPU, but it increases memory usage on GPU.</li>
+<li><code class="docutils literal"><span class="pre">dist_async_device</span></code> : The analogue of <code class="docutils literal"><span class="pre">dist_sync_device</span></code> but in asynchronous mode.</li>
+</ul>
+</div>
+<div class="section" id="gradient-compression">
+<span id="gradient-compression"></span><h3>Gradient Compression<a class="headerlink" href="#gradient-compression" title="Permalink to this headline">¶</a></h3>
+<p>When communication is expensive, and the ratio of computation time to communication time is low, communication can become a bottleneck.
+In such cases, gradient compression can be used to reduce the cost of communication, thereby speeding up training.
+Refer <a class="reference external" href="/versions/master/faq/gradient_compression.html">Gradient compression</a> for more details.</p>
+<p>Note: For small models when the cost of computation is much lower than cost of communication,
+distributed training might actually be slower than training on a single machine because of the overhead of communication and synchronization.</p>
+</div>
+</div>
+<div class="section" id="how-to-start-distributed-training">
+<span id="how-to-start-distributed-training"></span><h2>How to Start Distributed Training?<a class="headerlink" href="#how-to-start-distributed-training" title="Permalink to this headline">¶</a></h2>
+<p>MXNet provides a script tools/launch.py to make it easy to launch a distributed training job. This supports various types of cluster resource managers like <code class="docutils literal"><span class="pre">ssh</span></code>, <code class="docutils literal"><span class="pre">mpirun</span></code>, <code class="docutils literal"><span class="pre">yarn</span></code> and <code class="docutils literal"><span class="pre">sge</span></code>.
+If you already have one of these clusters setup, you can skip the next section on setting up a cluster.
+If you want to use a type of cluster not mentioned above, skip ahead to Manually launching jobs section.</p>
+<div class="section" id="setting-up-the-cluster">
+<span id="setting-up-the-cluster"></span><h3>Setting up the Cluster<a class="headerlink" href="#setting-up-the-cluster" title="Permalink to this headline">¶</a></h3>
+<p>An easy way to set up a cluster of EC2 instances for distributed deep learning is by using the <a class="reference external" href="https://github.com/awslabs/deeplearning-cfn">AWS CloudFormation template</a>.
+If you can not use the above, this section will help you manually set up a cluster of instances
+to enable you to use <code class="docutils literal"><span class="pre">ssh</span></code> for launching a distributed training job.
+Let us denote one machine as the <code class="docutils literal"><span class="pre">master</span></code> of the cluster through which we will launch and monitor the distributed training on all machines.</p>
+<p>If the machines in your cluster are a part of a cloud computing platform like AWS EC2, then your instances should be using key-based authentication already.
+Ensure that you create all instances using the same key, say <code class="docutils literal"><span class="pre">mxnet-key</span></code> and in the same security group.
+Next, we need to ensure that master has access to all other machines in the cluster through <code class="docutils literal"><span class="pre">ssh</span></code> by
+adding this key to <a class="reference external" href="https://en.wikipedia.org/wiki/Ssh-agent">ssh-agent</a> and forwarding it to master when we log in. This will make <code class="docutils literal"><span class="pre">mxnet-key</span></code> the default key on master.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span><span class="o">-</span><span class="n">add</span> <span class="o">.</span><span class="n">ssh</span><span class="o">/</span><span class="n">mxnet</span><span class="o">-</span><span class="n">key</span>
+<span class="n">ssh</span> <span class="o">-</span><span class="n">A</span> <span class="n">user</span><span class="nd">@MASTER_IP_ADDRESS</span>
+</pre></div>
+</div>
+<p>If your machines use passwords for authentication, see <a class="reference external" href="https://help.ubuntu.com/community/SSH/OpenSSH/Keys">here</a> for instructions on setting up password-less authentication between machines.</p>
+<p>It is easier if all these machines have a shared file system so that they can access the training script. One way is to use Amazon Elastic File System to create your network file system.
+The options in the following command are the recommended options when mounting an AWS Elastic File System.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="n">efs</span> <span class="o">&amp;&amp;</span> <span class="n">sudo</span> <span class="n">mount</span> <span class="o">-</span><span class="n">t</span> <span class="n">nfs4</span> <span class="o">-</span><span class="n">o</span> <span class="n">nfsvers</span><span class="o">=</span><span class="mf">4.1</span><span class="p">,</span><span class="n">rsize</span><span class="o">=</span><span class="mi">1048576</span><span class="p">,</span><span class="n">wsize</span><span class="o">=</span><span class="mi">1048576</span><span class="p">,</span><span class="n">hard</span><span class="p">,</span><span class="n">timeo</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span><span class="n">retrans</span><span class="o">=</span><span class="mi">2</span> <span class="n">NETWORK_FILE_SYSTEM_IP</span><span class="p">:</span><span class="o">/</span> <span class="n">efs</span>
+</pre></div>
+</div>
+<p>Tip: You might find it helpful to store large datasets on S3 for easy access from all machines in the cluster. Refer <a class="reference external" href="/versions/master/faq/s3_integration.html">Using data from S3 for training</a> for more information.</p>
+</div>
+<div class="section" id="using-launch-py">
+<span id="using-launch-py"></span><h3>Using Launch.py<a class="headerlink" href="#using-launch-py" title="Permalink to this headline">¶</a></h3>
+<p>MXNet provides a script <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/tools/launch.py">tools/launch.py</a> to make it easy to launch distributed training on a cluster with <code class="docutils literal"><span class="pre">ssh</span></code>, <code class="docutils literal"><span class="pre">mpi</span></code>, <code class="docutils literal"><span class="pre">sge</span></code> or <code class="docutils literal"><span class="pre">yarn</span></code>.
+You can fetch this script by cloning the mxnet repository.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">recursive</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">mxnet</span>
+</pre></div>
+</div>
+<div class="section" id="example">
+<span id="example"></span><h4>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h4>
+<p>Let us consider training a VGG11 model on the CIFAR10 dataset using <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/example/gluon/image_classification.py">example/gluon/image_classification.py</a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">example</span><span class="o">/</span><span class="n">gluon</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>On a single machine, we can run this script as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">image_classification</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset</span> <span class="n">cifar10</span> <span class="o">--</span><span class="n">model</span> <span class="n">vgg11</span> <span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">epochs</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>For distributed training of this example, we would do the following:</p>
+<p>If the mxnet directory which contains the script <code class="docutils literal"><span class="pre">image_classification.py</span></code> is accessible to all machines in the cluster (for example if they are on a network file system), we can run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">tools</span><span class="o">/</span><span class="n">launch</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">n</span> <span class="mi">3</span> <span class="o">-</span><span class="n">H</span> <span class="n">hosts</span> <span class="o">--</span><span class="n">launcher</span> <span class="n">ssh</span> <span class="n">python</span> <span class="n">image_classification</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset</span> <span class="n">cifar10</span> <span class="o">--</span><span class="n">model</span> <span class="n">vgg11</span> <span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">epochs</span> <span class="mi">1</span> <span class="o">--</span><span class="n">kvstore</span> <span class="n">dist_sync</span>
+</pre></div>
+</div>
+<p>If the directory with the script is not accessible from the other machines in the cluster, then we can synchronize the current directory to all machines.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">../../</span><span class="n">tools</span><span class="o">/</span><span class="n">launch</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">n</span> <span class="mi">3</span> <span class="o">-</span><span class="n">H</span> <span class="n">hosts</span> <span class="o">--</span><span class="n">launcher</span> <span class="n">ssh</span> <span class="o">--</span><span class="n">sync</span><span class="o">-</span><span class="n">dst</span><span class="o">-</span><span class="nb">dir</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">mxnet_job</span><span class="o">/</span> <span class="n">python</span> <span class="n">image_classification</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset</span> <span class="n">cifar10</span> <span class="o">--</span><span class="n">model</span> <span class="n">vgg11</span> <span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">epochs</span> <span class="mi">1</span> <span class="o">--</span><span class="n">kvstore</span> <span class="n">dist_sync</span>
+</pre></div>
+</div>
+<blockquote>
+<div>Tip: If you don’t have a cluster ready and still want to try this out, pass the option <code class="docutils literal"><span class="pre">--launcher</span> <span class="pre">local</span></code> instead of <code class="docutils literal"><span class="pre">ssh</span></code></div></blockquote>
+</div>
+<div class="section" id="options">
+<span id="options"></span><h4>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h4>
+<p>Here, launch.py is used to submit the distributed training job. It takes the following options:</p>
+<ul>
+<li><p class="first"><code class="docutils literal"><span class="pre">-n</span></code> denotes the number of worker nodes to be launched.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">-s</span></code> denotes the number of server nodes to be launched.
+If it is not specified, it is taken to be equal to the number of worker nodes.
+The script tries to cycle through the hosts file to launch the servers and workers.
+For example, if you have 5 hosts in the hosts file and you passed <code class="docutils literal"><span class="pre">n</span></code> as 3 (and nothing for <code class="docutils literal"><span class="pre">s</span></code>).
+The script will launch a total of 3 server processes,
+one each for the first three hosts and launch a total of 3 worker processes, one each for the fourth, fifth and first host.
+If the hosts file has exactly <code class="docutils literal"><span class="pre">n</span></code> number of worker nodes, it will launch a server process and a worker process on each of the <code class="docutils literal"><span class="pre">n</span></code> hosts.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">--launcher</span></code> denotes the mode of communication. The options are:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">ssh</span></code> if machines can communicate through ssh without passwords. This is the default launcher mode.</li>
+<li><code class="docutils literal"><span class="pre">mpi</span></code> if Open MPI is available</li>
+<li><code class="docutils literal"><span class="pre">sge</span></code> for Sun Grid Engine</li>
+<li><code class="docutils literal"><span class="pre">yarn</span></code> for Apache Yarn</li>
+<li><code class="docutils literal"><span class="pre">local</span></code> for launching all processes on the same local machine. This can be used for debugging purposes.</li>
+</ul>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">-H</span></code> requires the path of the hosts file
+This file contains IPs of the machines in the cluster. These machines should be able to communicate with each other without using passwords.
+This file is only applicable and required when the launcher mode is <code class="docutils literal"><span class="pre">ssh</span></code> or <code class="docutils literal"><span class="pre">mpi</span></code>.
+An example of the contents of the hosts file would be:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">172.30</span><span class="o">.</span><span class="mf">0.172</span>
+<span class="mf">172.31</span><span class="o">.</span><span class="mf">0.173</span>
+<span class="mf">172.30</span><span class="o">.</span><span class="mf">1.174</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">--sync-dst-dir</span></code> takes the path of a directory on all hosts to which the current working directory will be synchronized. This only supports <code class="docutils literal"><span class="pre">ssh</span></code> launcher mode.
+This is necessary when the working directory is not accessible to all machines in the cluster. Setting this option synchronizes the current directory using rsync before the job is launched.If you have not installed MXNet system-wide
+then you have to copy the folder <code class="docutils literal"><span class="pre">python/mxnet</span></code> and the file <code class="docutils literal"><span class="pre">lib/libmxnet.so</span></code> into the current directory before running <code class="docutils literal"><span class="pre">launch.py</span></code>.
+For example if you are in <code class="docutils literal"><span class="pre">example/gluon</span></code>, you can do this with <code class="docutils literal"><span class="pre">cp</span> <span class="pre">-r</span> <span class="pre">../../python/mxnet</span> <span class="pre">../../lib/libmxnet.so</span> <span class="pre">.</span></code>. This would work if your <code class="docutils literal"><span class="pre">lib</span></code> folder contains <code class="docutils literal"><span class="pre">libmxnet.so</span></code>, as would be the case when you use make. If you use CMake, this file would be in your <code class="docutils literal"><span class="pre">build</span></code> directory.</p>
+</li>
+<li><p class="first"><code class="docutils literal"><span class="pre">python</span> <span class="pre">image_classification.py</span> <span class="pre">--dataset</span> <span class="pre">cifar10</span> <span class="pre">--model</span> <span class="pre">vgg11</span> <span class="pre">--num-epochs</span> <span class="pre">1</span> <span class="pre">--kvstore</span> <span class="pre">dist_sync</span></code>
+is the command for the training job on each machine. Note the use of <code class="docutils literal"><span class="pre">dist_sync</span></code> for the kvstore used in the script.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="terminating-jobs">
+<span id="terminating-jobs"></span><h4>Terminating Jobs<a class="headerlink" href="#terminating-jobs" title="Permalink to this headline">¶</a></h4>
+<p>If the training job crashes due to an error or if we try to terminate the launch script while training is running,
+jobs on all machines might not have terminated. In such a case, we would need to terminate them manually.
+If we are using <code class="docutils literal"><span class="pre">ssh</span></code> launcher, this can be done by running the following command where <code class="docutils literal"><span class="pre">hosts</span></code> is the path of the hostfile.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>while read -u 10 host; do ssh -o "StrictHostKeyChecking no" $host "pkill -f python" ; done 10<hosts
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="manually-launching-jobs">
+<span id="manually-launching-jobs"></span><h3>Manually Launching Jobs<a class="headerlink" href="#manually-launching-jobs" title="Permalink to this headline">¶</a></h3>
+<p>If for some reason, you do not want to use the script above to start distributed training, then this section will be helpful.
+MXNet uses environment variables to assign roles to different processes and to let different processes find the scheduler.
+The environment variables are required to be set correctly as follows for the training to start:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DMLC_ROLE</span></code>: Specifies the role of the process. This can be <code class="docutils literal"><span class="pre">server</span></code>, <code class="docutils literal"><span class="pre">worker</span></code> or <code class="docutils literal"><span class="pre">scheduler</span></code>. Note that there should only be one <code class="docutils literal"><span class="pre">scheduler</span></code>.
+When <code class="docutils literal"><span class="pre">DMLC_ROLE</span></code> is set to <code class="docutils literal"><span class="pre">server</span></code> or <code class="docutils literal"><span class="pre">scheduler</span></code>, these processes start when mxnet is imported.</li>
+<li><code class="docutils literal"><span class="pre">DMLC_PS_ROOT_URI</span></code>: Specifies the IP of the scheduler</li>
+<li><code class="docutils literal"><span class="pre">DMLC_PS_ROOT_PORT</span></code>: Specifies the port that the scheduler listens to</li>
+<li><code class="docutils literal"><span class="pre">DMLC_NUM_SERVER</span></code>: Specifies how many server nodes are in the cluster</li>
+<li><code class="docutils literal"><span class="pre">DMLC_NUM_WORKER</span></code>: Specifies how many worker nodes are in the cluster</li>
+</ul>
+<p>Below is an example to start all jobs locally on Linux or Mac. Note that starting all jobs on the same machine is not a good idea.
+This is only to make the usage clear.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">COMMAND</span><span class="o">=</span><span class="n">python</span> <span class="n">example</span><span class="o">/</span><span class="n">gluon</span><span class="o">/</span><span class="n">mnist</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset</span> <span class="n">cifar10</span> <span class="o">--</span><span class="n">model</span> <span class="n">vgg11</span> <span class="o">--</span><span class="n">num</span><span class="o">-</span><span class="n">epochs</span> <span class="mi">1</span> <span class="o">--</span><span class="n">kv</span><span class="o">-</span><span class="n">store</span> <span class="n">dist_async</span>
+<span class="n">DMLC_ROLE</span><span class="o">=</span><span class="n">server</span> <span class="n">DMLC_PS_ROOT_URI</span><span class="o">=</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="n">DMLC_PS_ROOT_PORT</span><span class="o">=</span><span class="mi">9092</span> <span class="n">DMLC_NUM_SERVER</span><span class="o">=</span><span class="mi">2</span> <span class="n">DMLC_NUM_WORKER</span><span class="o">=</span><span class="mi">2</span> <span class="n">COMMAND</span> <span class="o">&amp;</span>
+<span class="n">DMLC_ROLE</span><span class="o">=</span><span class="n">server</span> <span class="n">DMLC_PS_ROOT_URI</span><span class="o">=</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="n">DMLC_PS_ROOT_PORT</span><span class="o">=</span><span class="mi">9092</span> <span class="n">DMLC_NUM_SERVER</span><span class="o">=</span><span class="mi">2</span> <span class="n">DMLC_NUM_WORKER</span><span class="o">=</span><span class="mi">2</span> <span class="n">COMMAND</span> <span class="o">&amp;</span>
+<span class="n">DMLC_ROLE</span><span class="o">=</span><span class="n">scheduler</span> <span class="n">DMLC_PS_ROOT_URI</span><span class="o">=</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="n">DMLC_PS_ROOT_PORT</span><span class="o">=</span><span class="mi">9092</span> <span class="n">DMLC_NUM_SERVER</span><span class="o">=</span><span class="mi">2</span> <span class="n">DMLC_NUM_WORKER</span><span class="o">=</span><span class="mi">2</span> <span class="n">COMMAND</span> <span class="o">&amp;</span>
+<span class="n">DMLC_ROLE</span><span class="o">=</span><span class="n">worker</span> <span class="n">DMLC_PS_ROOT_URI</span><span class="o">=</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="n">DMLC_PS_ROOT_PORT</span><span class="o">=</span><span class="mi">9092</span> <span class="n">DMLC_NUM_SERVER</span><span class="o">=</span><span class="mi">2</span> <span class="n">DMLC_NUM_WORKER</span><span class="o">=</span><span class="mi">2</span> <span class="n">COMMAND</span> <span class="o">&amp;</span>
+<span class="n">DMLC_ROLE</span><span class="o">=</span><span class="n">worker</span> <span class="n">DMLC_PS_ROOT_URI</span><span class="o">=</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span> <span class="n">DMLC_PS_ROOT_PORT</span><span class="o">=</span><span class="mi">9092</span> <span class="n">DMLC_NUM_SERVER</span><span class="o">=</span><span class="mi">2</span> <span class="n">DMLC_NUM_WORKER</span><span class="o">=</span><span class="mi">2</span> <span class="n">COMMAND</span>
+</pre></div>
+</div>
+<p>For an in-depth discussion of how the scheduler sets up the cluster, you can go <a class="reference external" href="https://blog.kovalevskyi.com/mxnet-distributed-training-explained-in-depth-part-1-b90c84bda725">here</a>.</p>
+</div>
+</div>
+<div class="section" id="environment-variables">
+<span id="environment-variables"></span><h2>Environment Variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="for-tuning-performance">
+<span id="for-tuning-performance"></span><h3>For tuning performance<a class="headerlink" href="#for-tuning-performance" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">MXNET_KVSTORE_REDUCTION_NTHREADS</span></code>
+Value type: Integer
+Default value: 4
+The number of CPU threads used for summing up big arrays on a single machine
+This will also be used for <code class="docutils literal"><span class="pre">dist_sync</span></code> kvstore to sum up arrays from different contexts on a single machine.
+This does not affect summing up of arrays from different machines on servers.
+Summing up of arrays for <code class="docutils literal"><span class="pre">dist_sync_device</span></code> kvstore is also unaffected as that happens on GPUs.</li>
+<li><code class="docutils literal"><span class="pre">MXNET_KVSTORE_BIGARRAY_BOUND</span></code>
+Value type: Integer
+Default value: 1000000
+The minimum size of a <em>big array</em>.
+When the array size is bigger than this threshold, <code class="docutils literal"><span class="pre">MXNET_KVSTORE_REDUCTION_NTHREADS</span></code> threads are used for reduction.
+This parameter is also used as a load balancer in kvstore.
+It controls when to partition a single weight to all the servers.
+If the size of a single weight matrix is less than this bound, then it is sent to a single randomly picked server; otherwise, it is partitioned to all the servers.</li>
+<li><code class="docutils literal"><span class="pre">MXNET_ENABLE_GPU_P2P</span></code> GPU Peer-to-Peer communication
+Value type: 0(false) or 1(true)
+Default value: 1
+If true, MXNet tries to use GPU peer-to-peer communication, if available on your device. This is used only when kvstore has the type <code class="docutils literal"><span class="pre">device</span></code> in it.</li>
+</ul>
+</div>
+<div class="section" id="communication">
+<span id="communication"></span><h3>Communication<a class="headerlink" href="#communication" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DMLC_INTERFACE</span></code> Using a particular network interface
+Value type: Name of interface
+Example: <code class="docutils literal"><span class="pre">eth0</span></code>
+MXNet often chooses the first available network interface.
+But for machines with multiple interfaces, we can specify which network interface to use for data communication using this environment variable.</li>
+<li><code class="docutils literal"><span class="pre">PS_VERBOSE</span></code> Logging communication
+Value type: 1 or 2
+Default value: (empty)<ul>
+<li><code class="docutils literal"><span class="pre">PS_VERBOSE=1</span></code> logs connection information like the IPs and ports of all nodes</li>
+<li><code class="docutils literal"><span class="pre">PS_VERBOSE=2</span></code> logs all data communication information</li>
+</ul>
+</li>
+</ul>
+<p>When the network is unreliable, messages being sent from one node to another might get lost.
+The training process can hang when a critical message is not successfully delivered.
+In such cases, an additional ACK can be sent for each message to track its delivery.
+This can be done by setting <code class="docutils literal"><span class="pre">PS_RESEND</span></code> and <code class="docutils literal"><span class="pre">PS_RESEND_TIMEOUT</span></code></p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">PS_RESEND</span></code> Retransmission for unreliable network
+Value type: 0(false) or 1(true)
+Default value: 0
+Whether or not to enable retransmission of messages</li>
+<li><code class="docutils literal"><span class="pre">PS_RESEND_TIMEOUT</span></code> Timeout for ACK to be received
+Value type: Integer (in milliseconds)
+Default value: 1000
+If ACK is not received in <code class="docutils literal"><span class="pre">PS_RESEND_TIMEOUT</span></code> milliseconds, then the message will be resent.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">Distributed Training in MXNet</a><ul>
+<li><a class="reference internal" href="#types-of-parallelism">Types of Parallelism</a></li>
+<li><a class="reference internal" href="#how-does-distributed-training-work">How Does Distributed Training Work?</a><ul>
+<li><a class="reference internal" href="#types-of-processes">Types of Processes</a></li>
+<li><a class="reference internal" href="#kv-store">KV Store</a></li>
+<li><a class="reference internal" href="#distribution-of-keys">Distribution of Keys</a></li>
+<li><a class="reference internal" href="#split-training-data">Split training data</a></li>
+<li><a class="reference internal" href="#updating-weights">Updating weights</a></li>
+<li><a class="reference internal" href="#different-modes-of-distributed-training">Different Modes of Distributed Training</a></li>
+<li><a class="reference internal" href="#gradient-compression">Gradient Compression</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#how-to-start-distributed-training">How to Start Distributed Training?</a><ul>
+<li><a class="reference internal" href="#setting-up-the-cluster">Setting up the Cluster</a></li>
+<li><a class="reference internal" href="#using-launch-py">Using Launch.py</a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#options">Options</a></li>
+<li><a class="reference internal" href="#terminating-jobs">Terminating Jobs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#manually-launching-jobs">Manually Launching Jobs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#environment-variables">Environment Variables</a><ul>
+<li><a class="reference internal" href="#for-tuning-performance">For tuning performance</a></li>
+<li><a class="reference internal" href="#communication">Communication</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../_static/js/search.js" type="text/javascript"></script>
+<script src="../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../_static/js/page.js" type="text/javascript"></script>
+<script src="../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>

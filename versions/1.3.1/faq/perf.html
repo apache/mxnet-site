@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Some Tips for Improving MXNet Performance" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="Some Tips for Improving MXNet Performance" property="og:description"/>
+<title>Some Tips for Improving MXNet Performance — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../_static/underscore.js" type="text/javascript"></script>
+<script src="../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../_static/doctools.js" type="text/javascript"></script>
+<script src="../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.3.1/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../genindex.html" rel="index" title="Index">
+<link href="../search.html" rel="search" title="Search"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.3.1/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.3.1/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.3.1/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.3.1/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.3.1/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.3.1">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/community/ecosystem.html">Ecosystem</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.3.1<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.3.1/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.3.1/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.3.1/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.3.1/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.3.1/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.3.1/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.3.1/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.3.1/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.3.1/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.3.1" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.3.1/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.3.1/community/ecosystem.html" tabindex="-1">Ecosystem</a></li>
+<li><a href="/versions/1.3.1/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.3.1</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/python/index.html">Python Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/r/index.html">R Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/julia/index.html">Julia Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/c++/index.html">C++ Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/scala/index.html">Scala Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/perl/index.html">Perl Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">HowTo Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">System Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../community/contribute.html">Community</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<div class="section" id="some-tips-for-improving-mxnet-performance">
+<span id="some-tips-for-improving-mxnet-performance"></span><h1>Some Tips for Improving MXNet Performance<a class="headerlink" href="#some-tips-for-improving-mxnet-performance" title="Permalink to this headline">¶</a></h1>
+<p>Even after fixing the training or deployment environment and parallelization scheme,
+a number of configuration settings and data-handling choices can impact the <em>MXNet</em> performance.
+In this document, we address some tips for improving <em>MXNet</em> performance.</p>
+<p>Performance is mainly affected by the following 4 factors:</p>
+<ol class="simple">
+<li>Implementation of operators (Convolution, Pooling, ..)<ul>
+<li><a class="reference external" href="#intel-cpu">Intel CPU</a></li>
+<li><a class="reference external" href="#nvidia-gpu">Nvidia GPU</a></li>
+</ul>
+</li>
+<li>Input data loading and augmentation<ul>
+<li><a class="reference external" href="#input-data">Input Data</a></li>
+</ul>
+</li>
+<li>Workloads (computation graph) optimization and scheduling<ul>
+<li><a class="reference external" href="#profiler">Profiler</a></li>
+</ul>
+</li>
+<li>Communication for multi-devices training<ul>
+<li><a class="reference external" href="#multiple-devices">Multiple Devices</a></li>
+</ul>
+</li>
+</ol>
+<div class="section" id="intel-cpu">
+<span id="intel-cpu"></span><h2>Intel CPU<a class="headerlink" href="#intel-cpu" title="Permalink to this headline">¶</a></h2>
+<p>For using Intel Xeon CPUs for training and inference, we suggest enabling
+<code class="docutils literal"><span class="pre">USE_MKLDNN</span> <span class="pre">=</span> <span class="pre">1</span></code> in<code class="docutils literal"><span class="pre">config.mk</span></code>.</p>
+<p>We also find that setting the following two environment variables can help:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">export</span> <span class="pre">KMP_AFFINITY=granularity=fine,compact,1,0</span></code> if there are two physical CPUs</li>
+<li><code class="docutils literal"><span class="pre">export</span> <span class="pre">OMP_NUM_THREADS=vCPUs</span> <span class="pre">/</span> <span class="pre">2</span></code> in which <code class="docutils literal"><span class="pre">vCPUs</span></code> is the number of virtual CPUs.
+Whe using Linux, we can access this information by running <code class="docutils literal"><span class="pre">cat</span> <span class="pre">/proc/cpuinfo</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">processor</span> <span class="pre">|</span> <span class="pre">wc</span> <span class="pre">-l</span></code></li>
+</ul>
+<p>Note that <em>MXNet</em> treats all CPUs on a single machine as a single device.
+So whether you specify <code class="docutils literal"><span class="pre">cpu(0)</span></code> or <code class="docutils literal"><span class="pre">cpu()</span></code>, <em>MXNet</em> will use all CPU cores on the machine.</p>
+<div class="section" id="scoring-results">
+<span id="scoring-results"></span><h3>Scoring results<a class="headerlink" href="#scoring-results" title="Permalink to this headline">¶</a></h3>
+<p>The following table shows performance of <a class="reference external" href="https://github.com/apache/incubator-mxnet/releases/download/1.2.0.rc1/apache-mxnet-src-1.2.0.rc1-incubating.tar.gz">MXNet-1.2.0.rc1</a>,
+namely number of images that can be predicted per second.
+We used <a class="reference external" href="https://github.com/dmlc/mxnet/blob/master/example/image-classification/benchmark_score.py">example/image-classification/benchmark_score.py</a>
+to measure the performance on different AWS EC2 machines.</p>
+<p>AWS EC2 C5.18xlarge:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>390.53</td>
+<td>81.57</td>
+<td>124.13</td>
+<td>62.26</td>
+<td>76.22</td>
+<td>32.92</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>596.45</td>
+<td>100.84</td>
+<td>206.58</td>
+<td>93.36</td>
+<td>119.55</td>
+<td>46.80</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>710.77</td>
+<td>119.04</td>
+<td>275.55</td>
+<td>127.86</td>
+<td>148.62</td>
+<td>59.36</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>921.40</td>
+<td>120.38</td>
+<td>380.82</td>
+<td>157.11</td>
+<td>167.95</td>
+<td>70.78</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>1018.43</td>
+<td>115.30</td>
+<td>411.67</td>
+<td>168.71</td>
+<td>178.54</td>
+<td>75.13</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>1290.31</td>
+<td>107.19</td>
+<td>483.34</td>
+<td>179.38</td>
+<td>193.47</td>
+<td>85.86</td>
+</tr>
+</tbody>
+</table>
+<p>AWS EC2 C5.9xlarge:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>257.77</td>
+<td>50.61</td>
+<td>130.99</td>
+<td>66.95</td>
+<td>75.38</td>
+<td>32.33</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>410.60</td>
+<td>63.02</td>
+<td>195.14</td>
+<td>87.84</td>
+<td>102.67</td>
+<td>41.57</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>462.59</td>
+<td>62.64</td>
+<td>263.15</td>
+<td>109.87</td>
+<td>127.15</td>
+<td>50.69</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>573.79</td>
+<td>63.95</td>
+<td>309.99</td>
+<td>121.36</td>
+<td>140.84</td>
+<td>59.01</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>709.47</td>
+<td>67.79</td>
+<td>350.19</td>
+<td>128.26</td>
+<td>147.41</td>
+<td>64.15</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>831.46</td>
+<td>69.58</td>
+<td>354.91</td>
+<td>129.92</td>
+<td>149.18</td>
+<td>64.25</td>
+</tr>
+</tbody>
+</table>
+<p>AWS EC2 C5.4xlarge:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>214.15</td>
+<td>29.32</td>
+<td>114.97</td>
+<td>47.96</td>
+<td>61.01</td>
+<td>23.92</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>310.04</td>
+<td>34.81</td>
+<td>150.09</td>
+<td>60.89</td>
+<td>71.16</td>
+<td>27.92</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>330.69</td>
+<td>34.56</td>
+<td>186.63</td>
+<td>74.15</td>
+<td>86.86</td>
+<td>34.37</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>378.88</td>
+<td>35.46</td>
+<td>204.89</td>
+<td>77.05</td>
+<td>91.10</td>
+<td>36.93</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>424.00</td>
+<td>36.49</td>
+<td>211.55</td>
+<td>78.39</td>
+<td>91.23</td>
+<td>37.34</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>481.95</td>
+<td>37.23</td>
+<td>213.71</td>
+<td>78.23</td>
+<td>91.68</td>
+<td>37.26</td>
+</tr>
+</tbody>
+</table>
+<p>AWS EC2 C5.2xlarge:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>131.01</td>
+<td>15.67</td>
+<td>78.75</td>
+<td>31.12</td>
+<td>37.30</td>
+<td>14.75</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>182.29</td>
+<td>18.01</td>
+<td>98.59</td>
+<td>39.13</td>
+<td>45.98</td>
+<td>17.84</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>189.31</td>
+<td>18.25</td>
+<td>110.26</td>
+<td>41.35</td>
+<td>49.21</td>
+<td>19.32</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>211.75</td>
+<td>18.57</td>
+<td>115.46</td>
+<td>42.53</td>
+<td>49.98</td>
+<td>19.81</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>236.06</td>
+<td>19.11</td>
+<td>117.18</td>
+<td>42.59</td>
+<td>50.20</td>
+<td>19.92</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>261.13</td>
+<td>19.46</td>
+<td>116.20</td>
+<td>42.72</td>
+<td>49.95</td>
+<td>19.80</td>
+</tr>
+</tbody>
+</table>
+<p>AWS EC2 C5.xlarge:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>36.64</td>
+<td>3.93</td>
+<td>27.06</td>
+<td>10.09</td>
+<td>12.98</td>
+<td>5.06</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>49.21</td>
+<td>4.49</td>
+<td>29.67</td>
+<td>10.80</td>
+<td>12.94</td>
+<td>5.14</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>50.12</td>
+<td>4.50</td>
+<td>30.31</td>
+<td>10.83</td>
+<td>13.17</td>
+<td>5.19</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>54.71</td>
+<td>4.58</td>
+<td>30.22</td>
+<td>10.89</td>
+<td>13.19</td>
+<td>5.20</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>60.23</td>
+<td>4.70</td>
+<td>30.20</td>
+<td>10.91</td>
+<td>13.23</td>
+<td>5.19</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>66.37</td>
+<td>4.76</td>
+<td>30.10</td>
+<td>10.90</td>
+<td>13.22</td>
+<td>5.15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="other-cpu">
+<span id="other-cpu"></span><h2>Other CPU<a class="headerlink" href="#other-cpu" title="Permalink to this headline">¶</a></h2>
+<p>If using CPUs (not just Intel CPUs – ARMs also), NNPACK can improve the running performance with 2x~7x, please check <a class="reference internal" href="nnpack.html"><span class="doc">nnpack.md</span></a> for details.</p>
+</div>
+<div class="section" id="nvidia-gpu">
+<span id="nvidia-gpu"></span><h2>Nvidia GPU<a class="headerlink" href="#nvidia-gpu" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">cuDNN</span></code> typically accelerates <em>MXNet</em> performance on NVIDIA GPUs significantly,
+especially for convolution layers.
+We suggest always checking to make sure that a recent cuDNN version is used.</p>
+<p>Setting the environment <code class="docutils literal"><span class="pre">export</span> <span class="pre">MXNET_CUDNN_AUTOTUNE_DEFAULT=1</span></code> sometimes also helps.</p>
+<p>We show results when using various GPUs including K80 (EC2 p2.2xlarge), M60 (EC2 g3.4xlarge),
+and V100 (EC2 p3.2xlarge).</p>
+<div class="section" id="scoring-results">
+<span id="id1"></span><h3>Scoring results<a class="headerlink" href="#scoring-results" title="Permalink to this headline">¶</a></h3>
+<p>Based on
+<a class="reference external" href="https://github.com/dmlc/mxnet/blob/master/example/image-classification/benchmark_score.py">example/image-classification/benchmark_score.py</a>
+and  <a class="reference external" href="https://github.com/apache/incubator-mxnet/releases/download/1.2.0.rc1/apache-mxnet-src-1.2.0.rc1-incubating.tar.gz">MXNet-1.2.0.rc1</a>, with cuDNN 7.0.5</p>
+<ul class="simple">
+<li>K80 (single GPU)</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>243.93</td>
+<td>43.59</td>
+<td>68.62</td>
+<td>35.52</td>
+<td>67.41</td>
+<td>23.65</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>338.16</td>
+<td>49.14</td>
+<td>113.41</td>
+<td>56.29</td>
+<td>93.35</td>
+<td>33.88</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>478.92</td>
+<td>53.44</td>
+<td>159.61</td>
+<td>74.43</td>
+<td>119.18</td>
+<td>45.23</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>683.52</td>
+<td>70.50</td>
+<td>190.49</td>
+<td>86.23</td>
+<td>131.32</td>
+<td>50.54</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>1004.66</td>
+<td>109.01</td>
+<td>254.20</td>
+<td>105.70</td>
+<td>155.40</td>
+<td>62.55</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>1238.55</td>
+<td>114.98</td>
+<td>285.49</td>
+<td>116.79</td>
+<td>159.42</td>
+<td>64.99</td>
+</tr>
+<tr class="row-even"><td>64</td>
+<td>1346.72</td>
+<td>123.56</td>
+<td>308.73</td>
+<td>122.21</td>
+<td>167.58</td>
+<td>70.21</td>
+</tr>
+<tr class="row-odd"><td>128</td>
+<td>1416.91</td>
+<td>OOM</td>
+<td>320.98</td>
+<td>123.11</td>
+<td>171.55</td>
+<td>71.85</td>
+</tr>
+<tr class="row-even"><td>256</td>
+<td>1462.97</td>
+<td>OOM</td>
+<td>329.16</td>
+<td>127.53</td>
+<td>153.01</td>
+<td>57.23</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>M60</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>243.49</td>
+<td>59.95</td>
+<td>101.97</td>
+<td>48.30</td>
+<td>95.46</td>
+<td>39.29</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>491.04</td>
+<td>69.14</td>
+<td>170.35</td>
+<td>80.27</td>
+<td>142.61</td>
+<td>60.17</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>711.54</td>
+<td>78.94</td>
+<td>257.89</td>
+<td>123.09</td>
+<td>182.36</td>
+<td>76.51</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>1077.73</td>
+<td>109.34</td>
+<td>343.42</td>
+<td>152.82</td>
+<td>208.74</td>
+<td>87.27</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>1447.21</td>
+<td>144.93</td>
+<td>390.25</td>
+<td>166.32</td>
+<td>220.73</td>
+<td>92.41</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>1797.66</td>
+<td>151.86</td>
+<td>416.69</td>
+<td>176.56</td>
+<td>230.19</td>
+<td>97.03</td>
+</tr>
+<tr class="row-even"><td>64</td>
+<td>1779.38</td>
+<td>150.18</td>
+<td>427.51</td>
+<td>183.47</td>
+<td>239.12</td>
+<td>101.59</td>
+</tr>
+<tr class="row-odd"><td>128</td>
+<td>1787.36</td>
+<td>OOM</td>
+<td>439.04</td>
+<td>185.29</td>
+<td>243.31</td>
+<td>103.39</td>
+</tr>
+<tr class="row-even"><td>256</td>
+<td>1899.10</td>
+<td>OOM</td>
+<td>450.22</td>
+<td>183.42</td>
+<td>242.36</td>
+<td>100.98</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>V100</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+<col width="14%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>659.51</td>
+<td>205.16</td>
+<td>157.37</td>
+<td>87.71</td>
+<td>162.15</td>
+<td>61.38</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>1248.21</td>
+<td>265.40</td>
+<td>297.34</td>
+<td>159.24</td>
+<td>293.74</td>
+<td>116.30</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>2122.41</td>
+<td>333.97</td>
+<td>520.91</td>
+<td>279.84</td>
+<td>479.14</td>
+<td>195.17</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>3894.30</td>
+<td>420.26</td>
+<td>898.09</td>
+<td>455.03</td>
+<td>699.39</td>
+<td>294.19</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>5815.58</td>
+<td>654.16</td>
+<td>1430.97</td>
+<td>672.54</td>
+<td>947.45</td>
+<td>398.79</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>7906.09</td>
+<td>708.43</td>
+<td>1847.26</td>
+<td>814.59</td>
+<td>1076.81</td>
+<td>451.82</td>
+</tr>
+<tr class="row-even"><td>64</td>
+<td>9486.26</td>
+<td>701.59</td>
+<td>2134.89</td>
+<td>899.01</td>
+<td>1168.37</td>
+<td>480.44</td>
+</tr>
+<tr class="row-odd"><td>128</td>
+<td>10177.84</td>
+<td>703.30</td>
+<td>2318.32</td>
+<td>904.33</td>
+<td>1233.15</td>
+<td>511.79</td>
+</tr>
+<tr class="row-even"><td>256</td>
+<td>10990.46</td>
+<td>473.62</td>
+<td>2425.28</td>
+<td>960.20</td>
+<td>1155.07</td>
+<td>449.35</td>
+</tr>
+</tbody>
+</table>
+<p>Below is the performance result on V100 using float 16.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%"/>
+<col width="17%"/>
+<col width="17%"/>
+<col width="17%"/>
+<col width="17%"/>
+<col width="17%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">VGG 16</th>
+<th class="head">Inception-BN</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+<th class="head">Resnet 152</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>276.29</td>
+<td>155.53</td>
+<td>150.99</td>
+<td>270.89</td>
+<td>96.79</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>476.91</td>
+<td>296.45</td>
+<td>282.02</td>
+<td>493.99</td>
+<td>176.88</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>711.92</td>
+<td>525.05</td>
+<td>492.45</td>
+<td>851.15</td>
+<td>321.52</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>1047.11</td>
+<td>900.26</td>
+<td>807.94</td>
+<td>1282.36</td>
+<td>517.66</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>1299.88</td>
+<td>1441.41</td>
+<td>1192.21</td>
+<td>1722.97</td>
+<td>724.57</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>1486.63</td>
+<td>1854.30</td>
+<td>1512.08</td>
+<td>2085.51</td>
+<td>887.34</td>
+</tr>
+<tr class="row-even"><td>64</td>
+<td>1219.65</td>
+<td>2138.61</td>
+<td>1687.35</td>
+<td>2341.67</td>
+<td>1002.90</td>
+</tr>
+<tr class="row-odd"><td>128</td>
+<td>1169.81</td>
+<td>2317.39</td>
+<td>1818.26</td>
+<td>2355.04</td>
+<td>1046.98</td>
+</tr>
+<tr class="row-even"><td>256</td>
+<td>764.16</td>
+<td>2425.16</td>
+<td>1653.74</td>
+<td>1991.88</td>
+<td>976.73</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="training-results">
+<span id="training-results"></span><h3>Training results<a class="headerlink" href="#training-results" title="Permalink to this headline">¶</a></h3>
+<p>Based on
+<a class="reference external" href="https://github.com/dmlc/mxnet/blob/master/example/image-classification/train_imagenet.py">example/image-classification/train_imagenet.py</a>
+and  <a class="reference external" href="https://github.com/apache/incubator-mxnet/releases/download/1.2.0.rc1/apache-mxnet-src-1.2.0.rc1-incubating.tar.gz">MXNet-1.2.0.rc1</a>, with CUDNN 7.0.5. The benchmark script is available at
+<a class="reference external" href="https://github.com/mli/mxnet-benchmark/blob/master/run_vary_batch.sh">here</a>,
+where the batch size for Alexnet is increased by 16x.</p>
+<ul class="simple">
+<li>K80 (single GPU)</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%"/>
+<col width="25%"/>
+<col width="25%"/>
+<col width="25%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet(*16)</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>300.30</td>
+<td>10.48</td>
+<td>15.61</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>406.08</td>
+<td>16.00</td>
+<td>23.88</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>461.01</td>
+<td>22.10</td>
+<td>32.26</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>484.00</td>
+<td>26.80</td>
+<td>39.42</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>490.45</td>
+<td>31.62</td>
+<td>46.69</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>414.72</td>
+<td>33.78</td>
+<td>49.48</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>M60</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%"/>
+<col width="25%"/>
+<col width="25%"/>
+<col width="25%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet(*16)</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>380.96</td>
+<td>14.06</td>
+<td>20.55</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>530.53</td>
+<td>21.90</td>
+<td>32.65</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>600.17</td>
+<td>31.96</td>
+<td>45.57</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>633.60</td>
+<td>40.58</td>
+<td>54.92</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>639.37</td>
+<td>46.88</td>
+<td>64.44</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>576.54</td>
+<td>50.05</td>
+<td>68.34</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>V100</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%"/>
+<col width="25%"/>
+<col width="25%"/>
+<col width="25%"/>
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Batch</th>
+<th class="head">Alexnet(*16)</th>
+<th class="head">Inception-v3</th>
+<th class="head">Resnet 50</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td>1629.52</td>
+<td>21.83</td>
+<td>34.54</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>2359.73</td>
+<td>40.11</td>
+<td>65.01</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>2687.89</td>
+<td>72.79</td>
+<td>113.49</td>
+</tr>
+<tr class="row-odd"><td>8</td>
+<td>2919.02</td>
+<td>118.43</td>
+<td>174.81</td>
+</tr>
+<tr class="row-even"><td>16</td>
+<td>2994.32</td>
+<td>173.15</td>
+<td>251.22</td>
+</tr>
+<tr class="row-odd"><td>32</td>
+<td>2585.61</td>
+<td>214.48</td>
+<td>298.51</td>
+</tr>
+<tr class="row-even"><td>64</td>
+<td>1984.21</td>
+<td>247.43</td>
+<td>343.19</td>
+</tr>
+<tr class="row-odd"><td>128</td>
+<td>OOM</td>
+<td>253.68</td>
+<td>363.69</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="multiple-devices">
+<span id="multiple-devices"></span><h2>Multiple Devices<a class="headerlink" href="#multiple-devices" title="Permalink to this headline">¶</a></h2>
+<p>If more than one GPU or machine are used, MXNet uses <code class="docutils literal"><span class="pre">kvstore</span></code> to communicate data.
+It’s critical to use the proper type of <code class="docutils literal"><span class="pre">kvstore</span></code> to get the best performance.
+Refer to <a class="reference external" href="/versions/1.3.1/faq/multi_devices.html">multi_device.md</a> for more
+details.</p>
+<p>Besides, we can use <a class="reference external" href="https://github.com/dmlc/mxnet/tree/master/tools/bandwidth">tools/bandwidth</a>
+to find the communication cost per batch.
+Ideally, the communication cost should be less than the time to compute a batch.
+To reduce the communication cost, we can consider:</p>
+<ul class="simple">
+<li>Exploring different <code class="docutils literal"><span class="pre">--kv-store</span></code> options.</li>
+<li>Increasing the batch size to improve the computation to communication ratio.</li>
+</ul>
+</div>
+<div class="section" id="input-data">
+<span id="input-data"></span><h2>Input Data<a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h2>
+<p>To make sure you’re handling input data in a reasonable way consider the following:</p>
+<ul class="simple">
+<li>Data format: If you are using the <code class="docutils literal"><span class="pre">rec</span></code> format, then everything should be fine.</li>
+<li>Decoding: By default, <em>MXNet</em> uses 4 CPU threads for decoding images.
+This is often sufficient to decode more than 1K images per second.
+If you are using a low-end CPU or your GPUs are very powerful, you can increase the number of threads.</li>
+<li>Storage location. Any local or distributed file system (HDFS, Amazon S3) should be fine.
+If multiple devices read the data from the shared network file system (NFS) at the same time, problems might occur.</li>
+<li>Use a large batch size. We often choose the largest one that fits into GPU memory.
+A value that’s too large can slow down convergence.
+For example, the safe batch size for CIFAR 10 is approximately 200, while for ImageNet 1K, the batch size can exceed 1K.</li>
+</ul>
+</div>
+<div class="section" id="profiler">
+<span id="profiler"></span><h2>Profiler<a class="headerlink" href="#profiler" title="Permalink to this headline">¶</a></h2>
+<p>As of v0.9.1 (with the NNVM merge), <em>MXNet</em> has a built-in profiler
+that gives detailed information about execution time at the symbol level.
+This feature complements general profiling tools like <em>nvprof</em> and <em>gprof</em>
+by summarizing at the operator level, instead of a function, kernel, or instruction level.</p>
+<p>In order to be able to use the profiler, you must compile <em>MXNet</em> with the <code class="docutils literal"><span class="pre">USE_PROFILER=1</span></code> flag in <code class="docutils literal"><span class="pre">config.mk</span></code>.</p>
+<p>The profiler can then be turned on with an <a class="reference external" href="/versions/1.3.1/faq/env_var.html#control-the-profiler">environment variable</a>
+for an entire program run, or programmatically for just part of a run.
+See <a class="reference external" href="https://github.com/dmlc/mxnet/tree/master/example/profiler">example/profiler</a>
+for complete examples of how to use the profiler in code, but briefly, the Python code looks like:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="n">mx</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">set_config</span><span class="p">(</span><span class="n">profile_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s1">'profile_output.json'</span><span class="p">)</span>
+    <span class="n">mx</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">'run'</span><span class="p">)</span>
+
+    <span class="c1"># Code to be profiled goes here...</span>
+
+    <span class="n">mx</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">'stop'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">mode</span></code> parameter can be set to</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">symbolic</span></code> to only include symbolic operations</li>
+<li><code class="docutils literal"><span class="pre">all</span></code> to include all operations</li>
+</ul>
+<p>After the program finishes, navigate to your browser’s tracing (Example - chrome://tracing in a Chrome browser) and load the <code class="docutils literal"><span class="pre">profile_output.json</span></code> file output by the profiler to inspect the results.</p>
+<p><img alt="MLP Profile" src="https://cloud.githubusercontent.com/assets/17693755/18035938/0a43484a-6d93-11e6-80d4-241c6ca552ea.png"/></p>
+<p>Note that the output file can grow extremely large, so this approach is not recommended for general use.</p>
+</div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">Some Tips for Improving MXNet Performance</a><ul>
+<li><a class="reference internal" href="#intel-cpu">Intel CPU</a><ul>
+<li><a class="reference internal" href="#scoring-results">Scoring results</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#other-cpu">Other CPU</a></li>
+<li><a class="reference internal" href="#nvidia-gpu">Nvidia GPU</a><ul>
+<li><a class="reference internal" href="#scoring-results">Scoring results</a></li>
+<li><a class="reference internal" href="#training-results">Training results</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#multiple-devices">Multiple Devices</a></li>
+<li><a class="reference internal" href="#input-data">Input Data</a></li>
+<li><a class="reference internal" href="#profiler">Profiler</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../_static/js/search.js" type="text/javascript"></script>
+<script src="../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../_static/js/page.js" type="text/javascript"></script>
+<script src="../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Using pre-trained models in MXNet" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="Using pre-trained models in MXNet" property="og:description"/>
+<title>Using pre-trained models in MXNet — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../../_static/underscore.js" type="text/javascript"></script>
+<script src="../../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../../_static/doctools.js" type="text/javascript"></script>
+<script src="../../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.5.0/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../../genindex.html" rel="index" title="Index">
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="index.html" rel="up" title="Tutorials"/>
+<link href="save_load_params.html" rel="next" title="Saving and Loading Gluon Models"/>
+<link href="ndarray.html" rel="prev" title="NDArray - Scientific computing on CPU and GPU"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.5.0/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.5.0/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/ecosystem.html">Ecosystem</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.5.0<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.5.0/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.5.0/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.5.0/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.5.0/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.5.0/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.5.0/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.5.0/community/ecosystem.html" tabindex="-1">Ecosystem</a></li>
+<li><a href="/versions/1.5.0/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.5.0</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">MXNet APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">MXNet Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">MXNet Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/index.html">MXNet FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gluon/index.html">About Gluon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Installing MXNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#nvidia-jetson-tx-family">Nvidia Jetson TX family</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#source-download">Source Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_zoo/index.html">MXNet Model Zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Tutorials</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<!--- Licensed to the Apache Software Foundation (ASF) under one -->
+<!--- or more contributor license agreements.  See the NOTICE file -->
+<!--- distributed with this work for additional information -->
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+<!--- to you under the Apache License, Version 2.0 (the -->
+<!--- "License"); you may not use this file except in compliance -->
+<!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, -->
+<!--- software distributed under the License is distributed on an -->
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+<!--- KIND, either express or implied.  See the License for the -->
+<!--- specific language governing permissions and limitations -->
+<!--- under the License. --><div class="section" id="using-pre-trained-models-in-mxnet">
+<span id="using-pre-trained-models-in-mxnet"></span><h1>Using pre-trained models in MXNet<a class="headerlink" href="#using-pre-trained-models-in-mxnet" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we will see how to use multiple pre-trained models with Apache MXNet. First, let’s download three image classification models from the Apache MXNet <a class="reference external" href="/api/python/gluon/model_zoo.html">Gluon model zoo</a>.</p>
+<ul class="simple">
+<li><strong>DenseNet-121</strong> (<a class="reference external" href="https://arxiv.org/abs/1608.06993">research paper</a>), improved state of the art on <a class="reference external" href="http://image-net.org/challenges/LSVRC">ImageNet dataset</a> in 2016.</li>
+<li><strong>MobileNet</strong> (<a class="reference external" href="https://arxiv.org/abs/1704.04861">research paper</a>), MobileNets are based on a streamlined architecture that uses depth-wise separable convolutions to build light weight deep neural networks, suitable for mobile applications.</li>
+<li><strong>ResNet-18</strong> (<a class="reference external" href="https://arxiv.org/abs/1512.03385v1">research paper</a>), the -152 version is the 2015 winner in multiple categories.</li>
+</ul>
+<p>Why would you want to try multiple models? Why not just pick the one with the best accuracy? As we will see later in the tutorial, even though these models have been trained on the same dataset and optimized for maximum accuracy, they do behave slightly differently on specific images. In addition, prediction speed and memory footprints can vary, and that is an important factor for many applications. By trying a few pretrained models, you have an opportunity to find a model that can be a good fit for solving your business problem.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">mxnet</span> <span class="kn">as</span> <span class="nn">mx</span>
+<span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">gluon</span><span class="p">,</span> <span class="n">nd</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon.model_zoo</span> <span class="kn">import</span> <span class="n">vision</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+</div>
+<div class="section" id="loading-the-model">
+<span id="loading-the-model"></span><h2>Loading the model<a class="headerlink" href="#loading-the-model" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="/api/python/gluon/model_zoo.html">Gluon Model Zoo</a> provides a collection of off-the-shelf models. You can get the ImageNet pre-trained model by using <code class="docutils literal"><span class="pre">pretrained=True</span></code>.
+If you want to train on your own classification problem from scratch, you can get an untrained network with a specific number of classes using the <code class="docutils literal"><span class="pre">classes</span></code> parameter: for example <code class="docutils literal"><span class="pre">net</span> <span class="pre">=</span> <span class="pre">vision.resnet18_v1(classes=10)</span></code>. However note that you cannot use the <code class="docutils literal"><span class="pre">pretrained</span></code> and <code class="docutils literal"><span class="pre">classes</span></code> parameter at the same time. If you want to use pre-trained weights as initialization of your network except for the last layer, have a look at the last section of this tutorial.</p>
+<p>We can specify the <em>context</em> where we want to run the model: the default behavior is to use a CPU context. There are two reasons for this:</p>
+<ul class="simple">
+<li>First, this will allow you to test the notebook even if your machine is not equipped with a GPU :)</li>
+<li>Second, we’re going to predict a single image and we don’t have any specific performance requirements. For production applications where you’d want to predict large batches of images with the best possible throughput, a GPU could definitely be the way to go.</li>
+<li>If you want to use a GPU, make sure you have pip installed the right version of mxnet, or you will get an error when using the <code class="docutils literal"><span class="pre">mx.gpu()</span></code> context. Refer to the <a class="reference external" href="/versions/1.5.0/install/index.html">install instructions</a></li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># We set the context to CPU, you can switch to GPU if you have one and installed a compatible version of MXNet </span>
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># We can load three the three models</span>
+<span class="n">densenet121</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">densenet121</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
+<span class="n">mobileNet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">mobilenet0_5</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
+<span class="n">resnet18</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">resnet18_v1</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can look at the description of the MobileNet network for example, which has a relatively simple yet deep architecture</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">mobileNet</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MobileNet</span><span class="p">(</span>
+  <span class="p">(</span><span class="n">features</span><span class="p">):</span> <span class="n">HybridSequential</span><span class="p">(</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">3</span> <span class="o">-></span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">5</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">6</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">16</span> <span class="o">-></span> <span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">7</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">8</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">9</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">10</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">11</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">12</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span> <span class="o">-></span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">13</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">14</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">15</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">16</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">17</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">18</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span> <span class="o">-></span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">19</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">20</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">21</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">22</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">23</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">24</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span> <span class="o">-></span> <span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">25</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">26</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">27</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">28</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">29</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">30</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span> <span class="o">-></span> <span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">31</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">32</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">33</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">34</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">35</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">36</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">37</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">38</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">39</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">40</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">41</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">42</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">256</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">43</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">44</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">45</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">46</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">47</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">48</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">256</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">49</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">50</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">51</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">52</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">53</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">54</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">256</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">55</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">56</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">57</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">58</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">59</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">60</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">256</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">61</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">62</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">63</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">64</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">65</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">66</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">256</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">67</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">68</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">69</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">70</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">71</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">72</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">256</span> <span class="o">-></span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">73</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">74</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">75</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span> <span class="o">-></span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">76</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">77</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">78</span><span class="p">):</span> <span class="n">Conv2D</span><span class="p">(</span><span class="mi">512</span> <span class="o">-></span> <span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">79</span><span class="p">):</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">fix_gamma</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_global_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">80</span><span class="p">):</span> <span class="n">Activation</span><span class="p">(</span><span class="n">relu</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">81</span><span class="p">):</span> <span class="n">GlobalAvgPool2D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">stride</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">ceil_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">82</span><span class="p">):</span> <span class="n">Flatten</span>
+  <span class="p">)</span>
+  <span class="p">(</span><span class="n">output</span><span class="p">):</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">512</span> <span class="o">-></span> <span class="mi">1000</span><span class="p">,</span> <span class="n">linear</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s have a closer look at the first convolution layer:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">mobileNet</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">mobilenet1_conv0_</span> <span class="pre">(Parameter</span> <span class="pre">mobilenet1_conv0_weight</span> <span class="pre">(shape=(16,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">3),</span> <span class="pre">dtype=<class</span> <span class="pre">'numpy.float32'>))</span></code><!--notebook-skip-line--></p>
+<p>The first layer applies <strong><code class="docutils literal"><span class="pre">16</span></code></strong> different convolutional masks, of size <strong><code class="docutils literal"><span class="pre">InputChannels</span> <span class="pre">x</span> <span class="pre">3</span> <span class="pre">x</span> <span class="pre">3</span></code></strong>. For the first convolution, there are <strong><code class="docutils literal"><span class="pre">3</span></code></strong> input channels, the <code class="docutils literal"><span class="pre">R</span></code>, <code class="docutils literal"><span class="pre">G</span></code>, <code class="docutils literal"><span class="pre">B</span></code> channels of the input image. That gives us the weight matrix of shape <strong><code class="docutils literal"><span class="pre">16</span> <span class="pre">x</span> <span class="pre">3</span> <span class="pre">x</span> <span class="pre">3</span> <span class="pre">x</span> <span class="pre">3</span></code></strong>. There is no bias applied in this convolution.</p>
+<p>Let’s have a look at the output layer now:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">mobileNet</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Dense(512</span> <span class="pre">-></span> <span class="pre">1000,</span> <span class="pre">linear)</span></code><!--notebook-skip-line--></p>
+<p>Did you notice the shape of layer? The weight matrix is <strong>1000 x 512</strong>. This layer contains 1,000 neurons: each of them will store an activation representative of the probability of the image belonging to a specific category. Each neuron is also fully connected to all 512 neurons in the previous layer.</p>
+<p>OK, enough exploring! Now let’s use these models to classify our own images.</p>
+</div>
+<div class="section" id="loading-the-data">
+<span id="loading-the-data"></span><h2>Loading the data<a class="headerlink" href="#loading-the-data" title="Permalink to this headline">¶</a></h2>
+<p>All three models have been pre-trained on the ImageNet data set which includes over 1.2 million pictures of objects and animals sorted in 1,000 categories.
+We get the imageNet list of labels. That way we have the mapping so when the model predicts for example category index <code class="docutils literal"><span class="pre">4</span></code>, we know it is predicting <code class="docutils literal"><span class="pre">hammerhead,</span> <span class="pre">hammerhead</span> <span class="pre">shark</span></code></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">mx</span><span class="o">.</span><span class="n">test_utils</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/doc/tutorials/onnx/image_net_labels.json'</span><span class="p">)</span>
+<span class="n">categories</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">'image_net_labels.json'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">categories</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">hammerhead,</span> <span class="pre">hammerhead</span> <span class="pre">shark</span></code> <!--notebook-skip-line--></p>
+<p>Get a test image</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">test_utils</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'https://github.com/dmlc/web-data/blob/master/mxnet/doc/tutorials/onnx/images/dog.jpg?raw=true'</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s1">'dog.jpg'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you want to use your own image for the test, copy the image to the same folder that contains the notebook and change the following line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s1">'dog.jpg'</span>
+</pre></div>
+</div>
+<p>Load the image as a NDArray</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><img alt="png" src="https://github.com/dmlc/web-data/blob/master/mxnet/doc/tutorials/onnx/images/dog.jpg?raw=true"><!--notebook-skip-line--></img></p>
+<p>Neural network expects input in a specific format. Usually images comes in the <code class="docutils literal"><span class="pre">Width</span> <span class="pre">x</span> <span class="pre">Height</span> <span class="pre">x</span> <span class="pre">Channels</span></code> format. Where channels are the RGB channels.
+This network accepts images in the <code class="docutils literal"><span class="pre">BatchSize</span> <span class="pre">x</span> <span class="pre">3</span> <span class="pre">x</span> <span class="pre">224</span> <span class="pre">x</span> <span class="pre">224</span></code>. <code class="docutils literal"><span class="pre">224</span> <span class="pre">x</span> <span class="pre">224</span></code> is the image resolution, that’s how the model was trained. <code class="docutils literal"><span class="pre">3</span></code> is the number of channels : Red, Green and Blue (in this order). In this case we use a <code class="docutils literal"><span class="pre">BatchSize</span></code> of <code class="docutils literal"><span class="pre">1</span></code> since we are predicting one image at a time.
+Here are the transformation steps:</p>
+<ul class="simple">
+<li>Read the image: this will return a NDArray shaped as (image height, image width, 3), with the three channels in RGB order.</li>
+<li>Resize the shorter edge of the image 224.</li>
+<li>Crop, using a size of 224x224 from the center of the image.</li>
+<li>Shift the mean and standard deviation of our color channels to match the ones of the dataset the network has been trained on.</li>
+<li>Transpose the array from (Height, Width, 3) to (3, Height, Width).</li>
+<li>Add a fourth dimension, the batch dimension.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="n">resized</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">resize_short</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span> <span class="c1">#minimum 224x224 images</span>
+    <span class="n">cropped</span><span class="p">,</span> <span class="n">crop_info</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">center_crop</span><span class="p">(</span><span class="n">resized</span><span class="p">,</span> <span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+    <span class="n">normalized</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">color_normalize</span><span class="p">(</span><span class="n">cropped</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span>
+                                      <span class="n">mean</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">]),</span>
+                                      <span class="n">std</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">]))</span> 
+    <span class="c1"># the network expect batches of the form (N,3,224,224)</span>
+    <span class="n">transposed</span> <span class="o">=</span> <span class="n">normalized</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># Transposing from (224, 224, 3) to (3, 224, 224)</span>
+    <span class="n">batchified</span> <span class="o">=</span> <span class="n">transposed</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># change the shape from (3, 224, 224) to (1, 3, 224, 224)</span>
+    <span class="k">return</span> <span class="n">batchified</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing-the-different-networks">
+<span id="testing-the-different-networks"></span><h2>Testing the different networks<a class="headerlink" href="#testing-the-different-networks" title="Permalink to this headline">¶</a></h2>
+<p>We run the image through each pre-trained network. The models output a <em>NDArray</em> holding 1,000 activation values, which we convert to probabilities using the <code class="docutils literal"><span class="pre">softmax()</span></code> function, corresponding to the 1,000 categories it has been trained on. The output prediction NDArray has only one row since batch size is equal to 1</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">resnet18</span><span class="p">(</span><span class="n">transform</span><span class="p">(</span><span class="n">image</span><span class="p">))</span><span class="o">.</span><span class="n">softmax</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">predictions</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">(1,</span> <span class="pre">1000)</span></code><!--notebook-skip-line--></p>
+<p>We then take the top <code class="docutils literal"><span class="pre">k</span></code> predictions for our image, here the top <code class="docutils literal"><span class="pre">3</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">top_pred</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And we print the categories predicted with their corresponding probabilities:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">top_pred</span><span class="p">:</span>
+    <span class="n">probability</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)]</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">categories</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">"{}: {:.2f}%"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">probability</span><span class="o">.</span><span class="n">asscalar</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">boxer:</span> <span class="pre">93.03%</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">bull</span> <span class="pre">mastiff:</span> <span class="pre">5.73%</span></code><!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">Staffordshire</span> <span class="pre">bullterrier,</span> <span class="pre">Staffordshire</span> <span class="pre">bull</span> <span class="pre">terrier:</span> <span class="pre">0.58%</span></code> <!--notebook-skip-line--></p>
+<p>Let’s turn this into a function. Our parameters are an image, a model, a list of categories and the number of top categories we’d like to print.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">transform</span><span class="p">(</span><span class="n">image</span><span class="p">))</span><span class="o">.</span><span class="n">softmax</span><span class="p">()</span>
+    <span class="n">top_pred</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">top_pred</span><span class="p">:</span>
+        <span class="n">probability</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)]</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="n">categories</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)]</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">"{}: {:.2f}%"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">probability</span><span class="o">.</span><span class="n">asscalar</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="densenet121">
+<span id="densenet121"></span><h3>DenseNet121<a class="headerlink" href="#densenet121" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+<span class="n">predict</span><span class="p">(</span><span class="n">densenet121</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">boxer:</span> <span class="pre">94.77%</span></code><!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">bull</span> <span class="pre">mastiff:</span> <span class="pre">2.26%</span></code><!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">American</span> <span class="pre">Staffordshire</span> <span class="pre">terrier,</span> <span class="pre">Staffordshire</span> <span class="pre">terrier,</span> <span class="pre">American</span> <span class="pre">pit</span> <span class="pre">bull</span> <span class="pre">terrier,</span> <span class="pre">pit</span> <span class="pre">bull</span> <span class="pre">terrier:</span> <span class="pre">1.69%</span></code><!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">CPU</span> <span class="pre">times:</span> <span class="pre">user</span> <span class="pre">360</span> <span class="pre">ms,</span> <span class="pre">sys:</span> <span class="pre">0</span> <span class="pre">ns,</span> <span class="pre">total:</span> <span class="pre">360</span> <span class="pre">ms</span></code><!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">Wall</span> <span class="pre">time:</span> <span class="pre">165</span> <span class="pre">ms</span></code><!--notebook-skip-line--></p>
+</div>
+<div class="section" id="mobilenet">
+<span id="mobilenet"></span><h3>MobileNet<a class="headerlink" href="#mobilenet" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+<span class="n">predict</span><span class="p">(</span><span class="n">mobileNet</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">boxer:</span> <span class="pre">84.02%</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">bull</span> <span class="pre">mastiff:</span> <span class="pre">13.63%</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">Rhodesian</span> <span class="pre">ridgeback:</span> <span class="pre">0.66%</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">CPU</span> <span class="pre">times:</span> <span class="pre">user</span> <span class="pre">72</span> <span class="pre">ms,</span> <span class="pre">sys:</span> <span class="pre">0</span> <span class="pre">ns,</span> <span class="pre">total:</span> <span class="pre">72</span> <span class="pre">ms</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">Wall</span> <span class="pre">time:</span> <span class="pre">31.2</span> <span class="pre">ms</span></code> <!--notebook-skip-line--></p>
+</div>
+<div class="section" id="resnet-18">
+<span id="resnet-18"></span><h3>Resnet-18<a class="headerlink" href="#resnet-18" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">time</span>
+<span class="n">predict</span><span class="p">(</span><span class="n">resnet18</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">boxer:</span> <span class="pre">93.03%</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">bull</span> <span class="pre">mastiff:</span> <span class="pre">5.73%</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">Staffordshire</span> <span class="pre">bullterrier,</span> <span class="pre">Staffordshire</span> <span class="pre">bull</span> <span class="pre">terrier:</span> <span class="pre">0.58%</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">CPU</span> <span class="pre">times:</span> <span class="pre">user</span> <span class="pre">156</span> <span class="pre">ms,</span> <span class="pre">sys:</span> <span class="pre">0</span> <span class="pre">ns,</span> <span class="pre">total:</span> <span class="pre">156</span> <span class="pre">ms</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">Wall</span> <span class="pre">time:</span> <span class="pre">77.1</span> <span class="pre">ms</span></code> <!--notebook-skip-line--></p>
+<p>As you can see, pre-trained networks produce slightly different predictions, and have different run-time. In this case, MobileNet is almost <strong>5 times faster</strong> than DenseNet!</p>
+</div>
+</div>
+<div class="section" id="fine-tuning-pre-trained-models">
+<span id="fine-tuning-pre-trained-models"></span><h2>Fine-tuning pre-trained models<a class="headerlink" href="#fine-tuning-pre-trained-models" title="Permalink to this headline">¶</a></h2>
+<p>You can replace the output layer of your pre-trained model to fit the right number of classes for your own image classification task like this, for example for 10 classes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">NUM_CLASSES</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">with</span> <span class="n">resnet18</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+    <span class="n">resnet18</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">NUM_CLASSES</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">resnet18</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Dense(None</span> <span class="pre">-></span> <span class="pre">10,</span> <span class="pre">linear)</span></code> <!--notebook-skip-line--></p>
+<p>Now you can train your model on your new data using the pre-trained weights as initialization. This is called transfer learning and it has proved to be very useful especially in the cases where you only have access to a small dataset. Your network will have already learned how to perform general pattern detection and feature extraction on the larger dataset.
+You can learn more about transfer learning and fine-tuning with MXNet in these tutorials:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://gluon.mxnet.io/chapter08_computer-vision/fine-tuning.html">Transferring knowledge through fine-tuning</a></li>
+<li class="toctree-l1"><a class="reference external" href="/versions/1.5.0/tutorials/onnx/fine_tuning_gluon.html">Fine Tuning an ONNX Model</a></li>
+</ul>
+</div>
+<p>That’s it! Explore the model zoo, have fun with pre-trained models!</p>
+<div class="btn-group" role="group">
+<div class="download-btn"><a download="pretrained_models.ipynb" href="pretrained_models.ipynb"><span class="glyphicon glyphicon-download-alt"></span> pretrained_models.ipynb</a></div></div></div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">Using pre-trained models in MXNet</a><ul>
+<li><a class="reference internal" href="#loading-the-model">Loading the model</a></li>
+<li><a class="reference internal" href="#loading-the-data">Loading the data</a></li>
+<li><a class="reference internal" href="#testing-the-different-networks">Testing the different networks</a><ul>
+<li><a class="reference internal" href="#densenet121">DenseNet121</a></li>
+<li><a class="reference internal" href="#mobilenet">MobileNet</a></li>
+<li><a class="reference internal" href="#resnet-18">Resnet-18</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fine-tuning-pre-trained-models">Fine-tuning pre-trained models</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../../_static/js/search.js" type="text/javascript"></script>
+<script src="../../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../../_static/js/page.js" type="text/javascript"></script>
+<script src="../../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>

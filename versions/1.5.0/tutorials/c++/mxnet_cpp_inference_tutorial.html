@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="MXNet C++ API inference tutorial" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="MXNet C++ API inference tutorial" property="og:description"/>
+<title>MXNet C++ API inference tutorial — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../../_static/underscore.js" type="text/javascript"></script>
+<script src="../../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../../_static/doctools.js" type="text/javascript"></script>
+<script src="../../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.5.0/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../../genindex.html" rel="index" title="Index">
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="index.html" rel="up" title="Tutorials"/>
+<link href="subgraphAPI.html" rel="next" title="Subgraph API"/>
+<link href="basics.html" rel="prev" title="Basics"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.5.0/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.5.0/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/ecosystem.html">Ecosystem</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.5.0<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.5.0/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.5.0/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.5.0/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.5.0/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.5.0/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.5.0/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.5.0/community/ecosystem.html" tabindex="-1">Ecosystem</a></li>
+<li><a href="/versions/1.5.0/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.5.0</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">MXNet APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">MXNet Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">MXNet Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/index.html">MXNet FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gluon/index.html">About Gluon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Installing MXNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#nvidia-jetson-tx-family">Nvidia Jetson TX family</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#source-download">Source Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_zoo/index.html">MXNet Model Zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Tutorials</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<!--- Licensed to the Apache Software Foundation (ASF) under one -->
+<!--- or more contributor license agreements.  See the NOTICE file -->
+<!--- distributed with this work for additional information -->
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+<!--- to you under the Apache License, Version 2.0 (the -->
+<!--- "License"); you may not use this file except in compliance -->
+<!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, -->
+<!--- software distributed under the License is distributed on an -->
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+<!--- KIND, either express or implied.  See the License for the -->
+<!--- specific language governing permissions and limitations -->
+<!--- under the License. --><div class="section" id="mxnet-c-api-inference-tutorial">
+<span id="mxnet-c-api-inference-tutorial"></span><h1>MXNet C++ API inference tutorial<a class="headerlink" href="#mxnet-c-api-inference-tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<span id="overview"></span><h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>MXNet provides various useful tools and interfaces for deploying your model for inference. For example, you can use <a class="reference external" href="https://github.com/awslabs/mxnet-model-server">MXNet Model Server</a> to start a service and host your trained model easily.
+Besides that, you can also use MXNet’s different language APIs to integrate your model with your existing service. We provide <a class="reference external" href="/api/python/module/module.html">Python</a>,    <a class="reference external" href="/api/java/index.html">Java</a>, <a class="reference external" href="/api/scala/index.html">Scala</a>, and <a class="reference external" href="/api/c++/index.html">C++</a> APIs.</p>
+<p>This tutorial is a continuation of the <a class="reference external" href="https://mxnet.apache.org/versions/master/tutorials/gluon/gluon_from_experiment_to_deployment.html">Gluon end to end tutorial</a>, we will focus on the MXNet C++ API. We have slightly modified the code in <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/cpp-package/example/inference">C++ Inference Example</a> for our use case.</p>
+</div>
+<div class="section" id="prerequisites">
+<span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>To complete this tutorial, you need:</p>
+<ul class="simple">
+<li>Complete the training part of <a class="reference external" href="https://mxnet.apache.org/versions/master/tutorials/gluon/gluon_from_experiment_to_deployment.html">Gluon end to end tutorial</a></li>
+<li>Learn the basics about <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/cpp-package">MXNet C++ API</a></li>
+</ul>
+</div>
+<div class="section" id="setup-the-mxnet-c-api">
+<span id="setup-the-mxnet-c-api"></span><h2>Setup the MXNet C++ API<a class="headerlink" href="#setup-the-mxnet-c-api" title="Permalink to this headline">¶</a></h2>
+<p>To use the C++ API in MXNet, you need to build MXNet from source with C++ package. Please follow the <a class="reference external" href="/install/ubuntu_setup.html">built from source guide</a>, and <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/cpp-package">C++ Package documentation</a>
+to enable the C++ API.
+The summary of those two documents is that you need to build MXNet from source with <code class="docutils literal"><span class="pre">USE_CPP_PACKAGE</span></code> flag set to 1. For example: <code class="docutils literal"><span class="pre">make</span> <span class="pre">-j</span> <span class="pre">USE_CPP_PACKAGE=1</span></code>.</p>
+</div>
+<div class="section" id="load-the-model-and-run-inference">
+<span id="load-the-model-and-run-inference"></span><h2>Load the model and run inference<a class="headerlink" href="#load-the-model-and-run-inference" title="Permalink to this headline">¶</a></h2>
+<p>After you complete <a class="reference external" href="https://mxnet.apache.org/versions/master/tutorials/gluon/gluon_from_experiment_to_deployment.html">the previous tutorial</a>, you will get the following output files:</p>
+<ol class="simple">
+<li>Model Architecture stored in <code class="docutils literal"><span class="pre">flower-recognition-symbol.json</span></code></li>
+<li>Model parameter values stored in <code class="docutils literal"><span class="pre">flower-recognition-0040.params</span></code> (<code class="docutils literal"><span class="pre">0040</span></code> is for 40 epochs we ran)</li>
+<li>Label names stored in <code class="docutils literal"><span class="pre">synset.txt</span></code></li>
+<li>Mean and standard deviation values stored in <code class="docutils literal"><span class="pre">mean_std_224</span></code> for image normalization.</li>
+</ol>
+<p>Now we need to write the C++ code to load them and run prediction on a test image.
+The full code is available in the <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/cpp-package/example/inference">C++ Inference Example</a>, we will walk you through it and point out the necessary changes to make for our use case.</p>
+<div class="section" id="write-a-predictor-using-the-mxnet-c-api">
+<span id="write-a-predictor-using-the-mxnet-c-api"></span><h3>Write a predictor using the MXNet C++ API<a class="headerlink" href="#write-a-predictor-using-the-mxnet-c-api" title="Permalink to this headline">¶</a></h3>
+<p>In general, the C++ inference code should follow the 4 steps below. We can do that using a Predictor class.</p>
+<ol class="simple">
+<li>Load the pre-trained model</li>
+<li>Load the parameters of pre-trained model</li>
+<li>Load the image to be classified in to NDArray and apply image transformation we did in training</li>
+<li>Run the forward pass and predict the class of the input image</li>
+</ol>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Predictor</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+    <span class="n">Predictor</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="n">Predictor</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">model_json_file</span><span class="p">,</span>
+              <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">model_params_file</span><span class="p">,</span>
+              <span class="k">const</span> <span class="n">Shape</span><span class="o">&amp;</span> <span class="n">input_shape</span><span class="p">,</span>
+              <span class="kt">bool</span> <span class="n">gpu_context_type</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span>
+              <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">synset_file</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
+              <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">mean_image_file</span> <span class="o">=</span> <span class="s">""</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">PredictImage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">image_file</span><span class="p">);</span>
+    <span class="o">~</span><span class="n">Predictor</span><span class="p">();</span>
+
+ <span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">LoadModel</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">model_json_file</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">LoadParameters</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">model_parameters_file</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">LoadSynset</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">synset_file</span><span class="p">);</span>
+    <span class="n">NDArray</span> <span class="nf">LoadInputImage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">image_file</span><span class="p">);</span>
+    <span class="kt">void</span> <span class="nf">LoadMeanImageData</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">LoadDefaultMeanImageData</span><span class="p">();</span>
+    <span class="kt">void</span> <span class="nf">NormalizeInput</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">mean_image_file</span><span class="p">);</span>
+    <span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">FileExists</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">struct</span> <span class="n">stat</span> <span class="n">buffer</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">stat</span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">buffer</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">NDArray</span> <span class="n">mean_img</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o"><</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">NDArray</span><span class="o">></span> <span class="n">args_map</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o"><</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">NDArray</span><span class="o">></span> <span class="n">aux_map</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o"><</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">></span> <span class="n">output_labels</span><span class="p">;</span>
+    <span class="n">Symbol</span> <span class="n">net</span><span class="p">;</span>
+    <span class="n">Executor</span> <span class="o">*</span><span class="n">executor</span><span class="p">;</span>
+    <span class="n">Shape</span> <span class="n">input_shape</span><span class="p">;</span>
+    <span class="n">NDArray</span> <span class="n">mean_image_data</span><span class="p">;</span>
+    <span class="n">NDArray</span> <span class="n">std_dev_image_data</span><span class="p">;</span>
+    <span class="n">Context</span> <span class="n">global_ctx</span> <span class="o">=</span> <span class="n">Context</span><span class="o">::</span><span class="n">cpu</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">mean_image_file</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-the-model-synset-file-and-normalization-values">
+<span id="load-the-model-synset-file-and-normalization-values"></span><h3>Load the model, synset file, and normalization values<a class="headerlink" href="#load-the-model-synset-file-and-normalization-values" title="Permalink to this headline">¶</a></h3>
+<p>In the Predictor constructor, you need to provide paths to saved json and param files. After that, add the following methods <code class="docutils literal"><span class="pre">LoadModel</span></code> and <code class="docutils literal"><span class="pre">LoadParameters</span></code> to load the network and its parameters. This part is the same as <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/cpp-package/example/inference/inception_inference.cpp">the example</a>.</p>
+<p>Next, we need to load synset file, and normalization values. We have made the following change since our synset file contains flower names and we used both mean and standard deviation for image normalization.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * The following function loads the synset file.</span>
+<span class="cm"> * This information will be used later to report the label of input image.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">Predictor</span><span class="o">::</span><span class="n">LoadSynset</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">synset_file</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">FileExists</span><span class="p">(</span><span class="n">synset_file</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">LG</span> <span class="o"><<</span> <span class="s">"Synset file "</span> <span class="o"><<</span> <span class="n">synset_file</span> <span class="o"><<</span> <span class="s">" does not exist"</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"Synset file does not exist"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">LG</span> <span class="o"><<</span> <span class="s">"Loading the synset file."</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">fi</span><span class="p">(</span><span class="n">synset_file</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fi</span><span class="p">.</span><span class="n">is_open</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o"><<</span> <span class="s">"Error opening synset file "</span> <span class="o"><<</span> <span class="n">synset_file</span> <span class="o"><<</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"Error in opening the synset file."</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">lemma</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">getline</span><span class="p">(</span><span class="n">fi</span><span class="p">,</span> <span class="n">lemma</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">output_labels</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">lemma</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">fi</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * The following function loads the mean and standard deviation values.</span>
+<span class="cm"> * This data will be used for normalizing the image before running the forward</span>
+<span class="cm"> * pass.</span>
+<span class="cm"> * The output data has the same shape as that of the input image data.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">Predictor</span><span class="o">::</span><span class="n">LoadMeanImageData</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">LG</span> <span class="o"><<</span> <span class="s">"Load the mean image data that will be used to normalize "</span>
+     <span class="o"><<</span> <span class="s">"the image before running forward pass."</span><span class="p">;</span>
+  <span class="n">mean_image_data</span> <span class="o">=</span> <span class="n">NDArray</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">global_ctx</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="n">mean_image_data</span><span class="p">.</span><span class="n">SyncCopyFromCPU</span><span class="p">(</span>
+        <span class="n">NDArray</span><span class="o">::</span><span class="n">LoadToMap</span><span class="p">(</span><span class="n">mean_image_file</span><span class="p">)[</span><span class="s">"mean_img"</span><span class="p">].</span><span class="n">GetData</span><span class="p">(),</span>
+        <span class="n">input_shape</span><span class="p">.</span><span class="n">Size</span><span class="p">());</span>
+  <span class="n">NDArray</span><span class="o">::</span><span class="n">WaitAll</span><span class="p">();</span>
+   <span class="n">std_dev_image_data</span> <span class="o">=</span> <span class="n">NDArray</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">global_ctx</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+   <span class="n">std_dev_image_data</span><span class="p">.</span><span class="n">SyncCopyFromCPU</span><span class="p">(</span>
+       <span class="n">NDArray</span><span class="o">::</span><span class="n">LoadToMap</span><span class="p">(</span><span class="n">mean_image_file</span><span class="p">)[</span><span class="s">"std_img"</span><span class="p">].</span><span class="n">GetData</span><span class="p">(),</span>
+       <span class="n">input_shape</span><span class="p">.</span><span class="n">Size</span><span class="p">());</span>
+    <span class="n">NDArray</span><span class="o">::</span><span class="n">WaitAll</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-input-image">
+<span id="load-input-image"></span><h3>Load input image<a class="headerlink" href="#load-input-image" title="Permalink to this headline">¶</a></h3>
+<p>Now let’s add a method to load the input image we want to predict and converts it to NDArray for prediction.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="n">NDArray</span> <span class="n">Predictor</span><span class="o">::</span><span class="n">LoadInputImage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">image_file</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">FileExists</span><span class="p">(</span><span class="n">image_file</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">LG</span> <span class="o"><<</span> <span class="s">"Image file "</span> <span class="o"><<</span> <span class="n">image_file</span> <span class="o"><<</span> <span class="s">" does not exist"</span><span class="p">;</span>
+    <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">"Image file does not exist"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">LG</span> <span class="o"><<</span> <span class="s">"Loading the image "</span> <span class="o"><<</span> <span class="n">image_file</span> <span class="o"><<</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o"><</span><span class="kt">float</span><span class="o">></span> <span class="n">array</span><span class="p">;</span>
+  <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">imread</span><span class="p">(</span><span class="n">image_file</span><span class="p">);</span>
+  <span class="cm">/*resize pictures to (224, 224) according to the pretrained model*/</span>
+  <span class="kt">int</span> <span class="n">height</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+  <span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+  <span class="kt">int</span> <span class="n">channels</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="n">cv</span><span class="o">::</span><span class="n">resize</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">Size</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">));</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">c</span> <span class="o"><</span> <span class="n">channels</span><span class="p">;</span> <span class="o">++</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o"><</span> <span class="n">height</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o"><</span> <span class="n">width</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">array</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">static_cast</span><span class="o"><</span><span class="kt">float</span><span class="o">></span><span class="p">(</span><span class="n">mat</span><span class="p">.</span><span class="n">data</span><span class="p">[(</span><span class="n">i</span> <span class="o">*</span> <span class="n">height</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="n">c</span><span class="p">]));</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">NDArray</span> <span class="n">image_data</span> <span class="o">=</span> <span class="n">NDArray</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">global_ctx</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+  <span class="n">image_data</span><span class="p">.</span><span class="n">SyncCopyFromCPU</span><span class="p">(</span><span class="n">array</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">input_shape</span><span class="p">.</span><span class="n">Size</span><span class="p">());</span>
+  <span class="n">NDArray</span><span class="o">::</span><span class="n">WaitAll</span><span class="p">();</span>
+  <span class="k">return</span> <span class="n">image_data</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="predict-the-image">
+<span id="predict-the-image"></span><h3>Predict the image<a class="headerlink" href="#predict-the-image" title="Permalink to this headline">¶</a></h3>
+<p>Finally, let’s run the inference. It’s basically using MXNet executor to do a forward pass. To run predictions on multiple images, you can load the images in a list of NDArrays and run prediction in batches. Note that the Predictor class may not be thread safe. Calling it in multi-threaded environments was not tested. To utilize multi-threaded prediction, you need to use the C predict API. Please follow the <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/example/image-classification/predict-cpp">C predict example</a>.</p>
+<p>An additional step is to normalize the image NDArrays values to <code class="docutils literal"><span class="pre">(0,</span> <span class="pre">1)</span></code> and apply mean and standard deviation we just loaded.</p>
+<div class="highlight-cpp"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * The following function runs the forward pass on the model.</span>
+<span class="cm"> * The executor is created in the constructor.</span>
+<span class="cm"> *</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">Predictor</span><span class="o">::</span><span class="n">PredictImage</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">image_file</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Load the input image</span>
+  <span class="n">NDArray</span> <span class="n">image_data</span> <span class="o">=</span> <span class="n">LoadInputImage</span><span class="p">(</span><span class="n">image_file</span><span class="p">);</span>
+
+  <span class="c1">// Normalize the image</span>
+  <span class="n">image_data</span><span class="p">.</span><span class="n">Slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/=</span> <span class="mf">255.0</span><span class="p">;</span>
+  <span class="n">image_data</span> <span class="o">-=</span> <span class="n">mean_image_data</span><span class="p">;</span>
+  <span class="n">image_data</span> <span class="o">/=</span> <span class="n">std_dev_image_data</span><span class="p">;</span>
+
+  <span class="n">LG</span> <span class="o"><<</span> <span class="s">"Running the forward pass on model to predict the image"</span><span class="p">;</span>
+  <span class="cm">/*</span>
+<span class="cm">   * The executor->arg_arrays represent the arguments to the model.</span>
+<span class="cm">   *</span>
+<span class="cm">   * Copying the image_data that contains the NDArray of input image</span>
+<span class="cm">   * to the arg map of the executor. The input is stored with the key "data" in the map.</span>
+<span class="cm">   *</span>
+<span class="cm">   */</span>
+  <span class="n">image_data</span><span class="p">.</span><span class="n">CopyTo</span><span class="p">(</span><span class="o">&amp;</span><span class="p">(</span><span class="n">executor</span><span class="o">-></span><span class="n">arg_dict</span><span class="p">()[</span><span class="s">"data"</span><span class="p">]));</span>
+  <span class="n">NDArray</span><span class="o">::</span><span class="n">WaitAll</span><span class="p">();</span>
+
+  <span class="c1">// Run the forward pass.</span>
+  <span class="n">executor</span><span class="o">-></span><span class="n">Forward</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+
+  <span class="c1">// The output is available in executor->outputs.</span>
+  <span class="k">auto</span> <span class="n">array</span> <span class="o">=</span> <span class="n">executor</span><span class="o">-></span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Copy</span><span class="p">(</span><span class="n">global_ctx</span><span class="p">);</span>
+  <span class="n">NDArray</span><span class="o">::</span><span class="n">WaitAll</span><span class="p">();</span>
+
+  <span class="cm">/*</span>
+<span class="cm">   * Find out the maximum accuracy and the index associated with that accuracy.</span>
+<span class="cm">   * This is done by using the argmax operator on NDArray.</span>
+<span class="cm">   */</span>
+  <span class="k">auto</span> <span class="n">predicted</span> <span class="o">=</span> <span class="n">array</span><span class="p">.</span><span class="n">ArgmaxChannel</span><span class="p">();</span>
+  <span class="n">NDArray</span><span class="o">::</span><span class="n">WaitAll</span><span class="p">();</span>
+
+  <span class="kt">int</span> <span class="n">best_idx</span> <span class="o">=</span> <span class="n">predicted</span><span class="p">.</span><span class="n">At</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="kt">float</span> <span class="n">best_accuracy</span> <span class="o">=</span> <span class="n">array</span><span class="p">.</span><span class="n">At</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">best_idx</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">output_labels</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">LG</span> <span class="o"><<</span> <span class="s">"The model predicts the highest accuracy of "</span> <span class="o"><<</span> <span class="n">best_accuracy</span> <span class="o"><<</span> <span class="s">" at index "</span>
+       <span class="o"><<</span> <span class="n">best_idx</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">LG</span> <span class="o"><<</span> <span class="s">"The model predicts the input image to be a ["</span> <span class="o"><<</span> <span class="n">output_labels</span><span class="p">[</span><span class="n">best_idx</span><span class="p">]</span>
+       <span class="o"><<</span> <span class="s">" ] with Accuracy = "</span> <span class="o"><<</span> <span class="n">best_accuracy</span> <span class="o"><<</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="compile-and-run-the-inference-code">
+<span id="compile-and-run-the-inference-code"></span><h3>Compile and run the inference code<a class="headerlink" href="#compile-and-run-the-inference-code" title="Permalink to this headline">¶</a></h3>
+<p>You can find the <a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/cpp-package/example/inference">full code for the inference example</a> in the <code class="docutils literal"><span class="pre">cpp-package</span></code> folder of the project
+, and to compile it use this <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/cpp-package/example/inference/Makefile">Makefile</a>.</p>
+<p>Make a copy of the example code, rename it to <code class="docutils literal"><span class="pre">flower_inference</span></code> and apply the changes we mentioned above. Now you will be able to compile and run inference. Run <code class="docutils literal"><span class="pre">make</span> <span class="pre">all</span></code>. Once this is complete, run inference with the following parameters. Remember to set your <code class="docutils literal"><span class="pre">LD_LIBRARY_PATH</span></code> to point to MXNet library if you have not done so.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>make all
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$LD_LIBRARY_PATH</span><span class="o">=</span>:path/to/incubator-mxnet/lib
+./flower_inference --symbol flower-recognition-symbol.json --params flower-recognition-0040.params --synset synset.txt --mean mean_std_224.nd --image ./data/test/lotus/image_01832.jpg
+</pre></div>
+</div>
+<p>Then it will predict your image:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span><span class="o">[</span><span class="m">17</span>:38:51<span class="o">]</span> resnet.cpp:150: Loading the model from flower-recognition-symbol.json
+
+<span class="o">[</span><span class="m">17</span>:38:51<span class="o">]</span> resnet.cpp:163: Loading the model parameters from flower-recognition-0040.params
+
+<span class="o">[</span><span class="m">17</span>:38:52<span class="o">]</span> resnet.cpp:190: Loading the synset file.
+<span class="o">[</span><span class="m">17</span>:38:52<span class="o">]</span> resnet.cpp:211: Load the mean image data that will be used to normalize the image before running forward pass.
+<span class="o">[</span><span class="m">17</span>:38:52<span class="o">]</span> resnet.cpp:263: Loading the image ./data/test/lotus/image_01832.jpg
+
+<span class="o">[</span><span class="m">17</span>:38:52<span class="o">]</span> resnet.cpp:299: Running the forward pass on model to predict the image
+<span class="o">[</span><span class="m">17</span>:38:52<span class="o">]</span> resnet.cpp:331: The model predicts the input image to be a <span class="o">[</span>lotus <span class="o">]</span> with <span class="nv">Accuracy</span> <span class="o">=</span> <span class="m">8</span>.63046
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="what-s-next">
+<span id="what-s-next"></span><h2>What’s next<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
+<p>Now you can explore more ways to run inference and deploy your models:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/1.5.0/scala-package/examples/src/main/java/org/apache/mxnetexamples/javaapi/infer">Java Inference examples</a></li>
+<li class="toctree-l1"><a class="reference external" href="/versions/1.5.0/tutorials/scala/">Scala Inference examples</a></li>
+<li class="toctree-l1"><a class="reference external" href="/versions/1.5.0/tutorials/onnx/inference_on_onnx_model.html">ONNX model inference examples</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/awslabs/mxnet-model-server/tree/master/examples">MXNet Model Server Examples</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="references">
+<span id="references"></span><h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://mxnet.apache.org/versions/master/tutorials/gluon/gluon_from_experiment_to_deployment.html">Gluon end to end tutorial</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/master/cpp-package/example/inference/">Gluon C++ inference example</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/cpp-package">Gluon C++ package</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">MXNet C++ API inference tutorial</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#setup-the-mxnet-c-api">Setup the MXNet C++ API</a></li>
+<li><a class="reference internal" href="#load-the-model-and-run-inference">Load the model and run inference</a><ul>
+<li><a class="reference internal" href="#write-a-predictor-using-the-mxnet-c-api">Write a predictor using the MXNet C++ API</a></li>
+<li><a class="reference internal" href="#load-the-model-synset-file-and-normalization-values">Load the model, synset file, and normalization values</a></li>
+<li><a class="reference internal" href="#load-input-image">Load input image</a></li>
+<li><a class="reference internal" href="#predict-the-image">Predict the image</a></li>
+<li><a class="reference internal" href="#compile-and-run-the-inference-code">Compile and run the inference code</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#what-s-next">What’s next</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../../_static/js/search.js" type="text/javascript"></script>
+<script src="../../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../../_static/js/page.js" type="text/javascript"></script>
+<script src="../../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>

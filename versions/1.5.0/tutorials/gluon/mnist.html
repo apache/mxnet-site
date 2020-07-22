@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Hand-written Digit Recognition" property="og:title">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image">
+<meta content="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/og-logo.png" property="og:image:secure_url">
+<meta content="Hand-written Digit Recognition" property="og:description"/>
+<title>Hand-written Digit Recognition — mxnet  documentation</title>
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet"/>
+<link href="../../_static/basic.css" rel="stylesheet" type="text/css">
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css">
+<link href="../../_static/mxnet.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="../../_static/underscore.js" type="text/javascript"></script>
+<script src="../../_static/searchtools_custom.js" type="text/javascript"></script>
+<script src="../../_static/doctools.js" type="text/javascript"></script>
+<script src="../../_static/selectlang.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script type="text/javascript"> jQuery(function() { Search.loadIndex("/versions/1.5.0/searchindex.js"); Search.init();}); </script>
+<script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new
+      Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-96378503-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/jquery.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/underscore.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="../../_static/doctools.js"></script> -->
+<!-- -->
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<!-- -->
+<link href="../../genindex.html" rel="index" title="Index">
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="index.html" rel="up" title="Tutorials"/>
+<link href="multi_gpu.html" rel="next" title="Multiple GPUs training with Gluon API"/>
+<link href="logistic_regression_explained.html" rel="prev" title="Logistic regression using Gluon API explained"/>
+<link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"/>
+</link></link></link></meta></meta></meta></head>
+<body background="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-background-compressed.jpeg" role="document">
+<div class="content-block"><div class="navbar navbar-fixed-top">
+<div class="container" id="navContainer">
+<div class="innder" id="header-inner">
+<h1 id="logo-wrap">
+<a href="../../" id="logo"><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet_logo.png"/></a>
+</h1>
+<nav class="nav-bar" id="main-nav">
+<a class="main-nav-link" href="/versions/1.5.0/install/index.html">Install</a>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Gluon <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="https://www.d2l.ai/">Dive into Deep Learning</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">API <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-docs">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Docs <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-docs">
+<li><a class="main-nav-link" href="/versions/1.5.0/faq/index.html">FAQ</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example">Examples</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/architecture/index.html">Architecture</a></li>
+<li><a class="main-nav-link" href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/model_zoo/index.html">Model Zoo</a></li>
+<li><a class="main-nav-link" href="https://github.com/onnx/onnx-mxnet">ONNX</a></li>
+</li></ul>
+</span>
+<span id="dropdown-menu-position-anchor-community">
+<a aria-expanded="true" aria-haspopup="true" class="main-nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">Community <span class="caret"></span></a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu-community">
+<li><a class="main-nav-link" href="http://discuss.mxnet.io">Forum</a></li>
+<li><a class="main-nav-link" href="https://github.com/apache/incubator-mxnet/tree/1.5.0">Github</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/contribute.html">Contribute</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/ecosystem.html">Ecosystem</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/community/powered_by.html">Powered By</a></li>
+</ul>
+</span>
+<span id="dropdown-menu-position-anchor-version" style="position: relative"><a href="#" class="main-nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">1.5.0<span class="caret"></span></a><ul id="package-dropdown-menu" class="dropdown-menu"><li><a href="/">master</a></li><li><a href=/versions/1.6/>1.6</a></li><li><a href=/versions/1.5.0/>1.5.0</a></li><li><a href=/versions/1.4.1/>1.4.1</a></li><li><a href=/versions/1.3.1/>1.3.1</a></li><li><a href=/versions/1.2.1/>1.2.1</a></li><li><a href=/versions/1.1.0/>1.1.0</a></li><li><a href=/versions/1.0.0/>1.0.0</a></li><li><a href=/versions/0.12.1/>0.12.1</a></li><li><a href=/versions/0.11.0/>0.11.0</a></li></ul></span></nav>
+<script> function getRootPath(){ return "../../" } </script>
+<div class="burgerIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">☰</a>
+<ul class="dropdown-menu" id="burgerMenu">
+<li><a href="/versions/1.5.0/install/index.html">Install</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/index.html">Tutorials</a></li>
+<li class="dropdown-submenu dropdown">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Gluon</a>
+<ul class="dropdown-menu navbar-menu" id="package-dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/tutorials/gluon/gluon.html">About</a></li>
+<li><a class="main-nav-link" href="http://gluon.mxnet.io">The Straight Dope (Tutorials)</a></li>
+<li><a class="main-nav-link" href="https://gluon-cv.mxnet.io">GluonCV Toolkit</a></li>
+<li><a class="main-nav-link" href="https://gluon-nlp.mxnet.io/">GluonNLP Toolkit</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">API</a>
+<ul class="dropdown-menu">
+<li><a class="main-nav-link" href="/versions/1.5.0/api/python/index.html">Python</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/c++/index.html">C++</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/clojure/index.html">Clojure</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/java/index.html">Java</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/julia/index.html">Julia</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/perl/index.html">Perl</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/r/index.html">R</a></li>
+<li><a class="main-nav-link" href="/versions/1.5.0/api/scala/index.html">Scala</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu">
+<a aria-expanded="true" aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" tabindex="-1">Docs</a>
+<ul class="dropdown-menu">
+<li><a href="/versions/1.5.0/faq/index.html" tabindex="-1">FAQ</a></li>
+<li><a href="/versions/1.5.0/tutorials/index.html" tabindex="-1">Tutorials</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0/example" tabindex="-1">Examples</a></li>
+<li><a href="/versions/1.5.0/architecture/index.html" tabindex="-1">Architecture</a></li>
+<li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home" tabindex="-1">Developer Wiki</a></li>
+<li><a href="/versions/1.5.0/model_zoo/index.html" tabindex="-1">Gluon Model Zoo</a></li>
+<li><a href="https://github.com/onnx/onnx-mxnet" tabindex="-1">ONNX</a></li>
+</ul>
+</li>
+<li class="dropdown-submenu dropdown">
+<a aria-haspopup="true" class="dropdown-toggle burger-link" data-toggle="dropdown" href="#" role="button" tabindex="-1">Community</a>
+<ul class="dropdown-menu">
+<li><a href="http://discuss.mxnet.io" tabindex="-1">Forum</a></li>
+<li><a href="https://github.com/apache/incubator-mxnet/tree/1.5.0" tabindex="-1">Github</a></li>
+<li><a href="/versions/1.5.0/community/contribute.html" tabindex="-1">Contribute</a></li>
+<li><a href="/versions/1.5.0/community/ecosystem.html" tabindex="-1">Ecosystem</a></li>
+<li><a href="/versions/1.5.0/community/powered_by.html" tabindex="-1">Powered By</a></li>
+</ul>
+</li>
+<li id="dropdown-menu-position-anchor-version-mobile" class="dropdown-submenu" style="position: relative"><a href="#" tabindex="-1">1.5.0</a><ul class="dropdown-menu"><li><a tabindex="-1" href=/>master</a></li><li><a tabindex="-1" href=/versions/1.6/>1.6</a></li><li><a tabindex="-1" href=/versions/1.5.0/>1.5.0</a></li><li><a tabindex="-1" href=/versions/1.4.1/>1.4.1</a></li><li><a tabindex="-1" href=/versions/1.3.1/>1.3.1</a></li><li><a tabindex="-1" href=/versions/1.2.1/>1.2.1</a></li><li><a tabindex="-1" href=/versions/1.1.0/>1.1.0</a></li><li><a tabindex="-1" href=/versions/1.0.0/>1.0.0</a></li><li><a tabindex="-1" href=/versions/0.12.1/>0.12.1</a></li><li><a tabindex="-1" href=/versions/0.11.0/>0.11.0</a></li></ul></li></ul>
+</div>
+<div class="plusIcon dropdown">
+<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"><span aria-hidden="true" class="glyphicon glyphicon-plus"></span></a>
+<ul class="dropdown-menu dropdown-menu-right" id="plusMenu"></ul>
+</div>
+<div id="search-input-wrap">
+<form action="../../search.html" autocomplete="off" class="" method="get" role="search">
+<div class="form-group inner-addon left-addon">
+<i class="glyphicon glyphicon-search"></i>
+<input class="form-control" name="q" placeholder="Search" type="text"/>
+</div>
+<input name="check_keywords" type="hidden" value="yes">
+<input name="area" type="hidden" value="default"/>
+</input></form>
+<div id="search-preview"></div>
+</div>
+<div id="searchIcon">
+<span aria-hidden="true" class="glyphicon glyphicon-search"></span>
+</div>
+<!-- <div id="lang-select-wrap"> -->
+<!--   <label id="lang-select-label"> -->
+<!--     <\!-- <i class="fa fa-globe"></i> -\-> -->
+<!--     <span></span> -->
+<!--   </label> -->
+<!--   <select id="lang-select"> -->
+<!--     <option value="en">Eng</option> -->
+<!--     <option value="zh">中文</option> -->
+<!--   </select> -->
+<!-- </div> -->
+<!--     <a id="mobile-nav-toggle">
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+        <span class="mobile-nav-toggle-bar"></span>
+      </a> -->
+</div>
+</div>
+</div>
+<script type="text/javascript">
+        $('body').css('background', 'white');
+    </script>
+<div class="container">
+<div class="row">
+<div aria-label="main navigation" class="sphinxsidebar leftsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">MXNet APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">MXNet Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../community/index.html">MXNet Community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq/index.html">MXNet FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gluon/index.html">About Gluon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Installing MXNet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#nvidia-jetson-tx-family">Nvidia Jetson TX family</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html#source-download">Source Download</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../model_zoo/index.html">MXNet Model Zoo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Tutorials</a></li>
+</ul>
+</div>
+</div>
+<div class="content">
+<div class="page-tracker"></div>
+<!--- Licensed to the Apache Software Foundation (ASF) under one -->
+<!--- or more contributor license agreements.  See the NOTICE file -->
+<!--- distributed with this work for additional information -->
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+<!--- to you under the Apache License, Version 2.0 (the -->
+<!--- "License"); you may not use this file except in compliance -->
+<!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, -->
+<!--- software distributed under the License is distributed on an -->
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+<!--- KIND, either express or implied.  See the License for the -->
+<!--- specific language governing permissions and limitations -->
+<!--- under the License. --><div class="section" id="hand-written-digit-recognition">
+<span id="hand-written-digit-recognition"></span><h1>Hand-written Digit Recognition<a class="headerlink" href="#hand-written-digit-recognition" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial, we’ll give you a step-by-step walkthrough of building a hand-written digit classifier using the <a class="reference external" href="https://en.wikipedia.org/wiki/MNIST_database">MNIST</a> dataset.</p>
+<p>MNIST is a widely used dataset for the hand-written digit classification task. It consists of 70,000 labeled grayscale images of hand-written digits, each 28x28 pixels in size. The dataset is split into 60,000 training images and 10,000 test images. There are 10 classes (one for each of the 10 digits). The task at hand is to train a model that can correctly classify the images into the digits they represent. The 60,000 training images are used to fit the model, and its performance in terms of classification accuracy is subsequently validated on the 10,000 test images.</p>
+<p><img alt="png" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/example/mnist.png"/></p>
+<p><strong>Figure 1:</strong> Sample images from the MNIST dataset.</p>
+<p>This tutorial uses MXNet’s high-level <em>Gluon</em> interface to implement neural networks in an imperative fashion. It is based on <a class="reference external" href="/versions/1.5.0/tutorials/python/mnist.html">the corresponding tutorial written with the symbolic approach</a>.</p>
+<div class="section" id="prerequisites">
+<span id="prerequisites"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>To complete this tutorial, you need:</p>
+<ul class="simple">
+<li>MXNet. See the instructions for your operating system in <a class="reference external" href="/install/index.html">Setup and Installation</a>.</li>
+<li>The Python <a class="reference external" href="http://docs.python-requests.org/en/master/"><code class="docutils literal"><span class="pre">requests</span></code></a> library.</li>
+<li>(Optional) The <a class="reference external" href="https://jupyter.org/index.html">Jupyter Notebook</a> software for interactively running the provided <code class="docutils literal"><span class="pre">.ipynb</span></code> file.</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install requests jupyter
+</pre></div>
+</div>
+</div>
+<div class="section" id="loading-data">
+<span id="loading-data"></span><h2>Loading Data<a class="headerlink" href="#loading-data" title="Permalink to this headline">¶</a></h2>
+<p>The following code downloads the MNIST dataset to the default location (<code class="docutils literal"><span class="pre">.mxnet/datasets/mnist/</span></code> in your home directory) and creates <code class="docutils literal"><span class="pre">Dataset</span></code> objects <code class="docutils literal"><span class="pre">train_data</span></code> and <code class="docutils literal"><span class="pre">val_data</span></code> for training and validation, respectively.
+These objects can later be used to get one image or a batch of images at a time, together with their corresponding labels.</p>
+<p>We also immediately apply the <code class="docutils literal"><span class="pre">transform_first()</span></code> method and supply a function that moves the channel axis of the images to the beginning (<code class="docutils literal"><span class="pre">(28,</span> <span class="pre">28,</span> <span class="pre">1)</span> <span class="pre">-></span> <span class="pre">(1,</span> <span class="pre">28,</span> <span class="pre">28)</span></code>), casts them to <code class="docutils literal"><span class="pre">float32</span></code> and rescales them from <code class="docutils literal"><span class="pre">[0,</span> <span class="pre">255]</span></code> to <code class="docutils literal"><span class="pre">[0,</span> <span class="pre">1]</span></code>.
+The name <code class="docutils literal"><span class="pre">transform_first</span></code> reflects the fact that these datasets contain images and labels, and that the transform should only be applied to the first of each <code class="docutils literal"><span class="pre">(image,</span> <span class="pre">label)</span></code> pair.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mxnet</span> <span class="kn">as</span> <span class="nn">mx</span>
+
+<span class="c1"># Select a fixed random seed for reproducibility</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">data_xform</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">"""Move channel axis to the beginning, cast to float32, and normalize to [0, 1]."""</span>
+    <span class="k">return</span> <span class="n">nd</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'float32'</span><span class="p">)</span> <span class="o">/</span> <span class="mi">255</span>
+
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">transform_first</span><span class="p">(</span><span class="n">data_xform</span><span class="p">)</span>
+<span class="n">val_data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">transform_first</span><span class="p">(</span><span class="n">data_xform</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since the MNIST dataset is relatively small, the <code class="docutils literal"><span class="pre">MNIST</span></code> class loads it into memory all at once, but for larger datasets like ImageNet, this would no longer be possible.
+The Gluon <code class="docutils literal"><span class="pre">Dataset</span></code> class from which <code class="docutils literal"><span class="pre">MNIST</span></code> derives supports both cases.
+In general, <code class="docutils literal"><span class="pre">Dataset</span></code> and <code class="docutils literal"><span class="pre">DataLoader</span></code> (which we will encounter next) are the machinery in MXNet that provides a stream of input data to be consumed by a training algorithm, typically in batches of multiple data entities at once for better efficiency.
+In this tutorial, we will configure the data loader to feed examples in batches of 100.</p>
+<p>An image batch is commonly represented as a 4-D array with shape <code class="docutils literal"><span class="pre">(batch_size,</span> <span class="pre">num_channels,</span> <span class="pre">height,</span> <span class="pre">width)</span></code>.
+This convention is denoted by “NCHW”, and it is the default in MXNet.
+For the MNIST dataset, each image has a size of 28x28 pixels and one color channel (grayscale), hence the shape of an input batch will be <code class="docutils literal"><span class="pre">(batch_size,</span> <span class="pre">1,</span> <span class="pre">28,</span> <span class="pre">28)</span></code>.</p>
+<p>Another important consideration is the order of input samples.
+When feeding training examples, it is critical not feed samples with the same label in succession since doing so can slow down training progress.
+Data iterators, i.e., instances of <a class="reference external" href="/api/python/gluon/data.html#mxnet.gluon.data.DataLoader"><code class="docutils literal"><span class="pre">DataLoader</span></code></a>, take care of this issue by randomly shuffling the inputs.
+Note that we only need to shuffle the training data – for validation data, the order does not matter.</p>
+<p>The following code initializes the data iterators for the MNIST dataset.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">val_data</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="approaches">
+<span id="approaches"></span><h2>Approaches<a class="headerlink" href="#approaches" title="Permalink to this headline">¶</a></h2>
+<p>We will cover two approaches for performing the hand-written digit recognition task.
+In our first attempt, we will make use of a traditional neural network architecture called <a class="reference external" href="https://en.wikipedia.org/wiki/Multilayer_perceptron">Multilayer Perceptron (MLP)</a>.
+Although this architecture lets us achieve over 95 % accuracy on the validation set, we will recognize and discuss some of its drawbacks and use them as a motivation for using a different network.
+In the subsequent second attempt, we introduce the more advanced and very widely used <a class="reference external" href="https://en.wikipedia.org/wiki/Convolutional_neural_network">Convolutional Neural Network (CNN)</a> architecture that has proven to work very well for image classification tasks.</p>
+<p>As a first step, we run some convenience imports of frequently used modules.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>  <span class="c1"># only relevant for Python 2</span>
+<span class="kn">import</span> <span class="nn">mxnet</span> <span class="kn">as</span> <span class="nn">mx</span>
+<span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">nd</span><span class="p">,</span> <span class="n">gluon</span><span class="p">,</span> <span class="n">autograd</span>
+<span class="kn">from</span> <span class="nn">mxnet.gluon</span> <span class="kn">import</span> <span class="n">nn</span>
+</pre></div>
+</div>
+<div class="section" id="defining-a-network-multilayer-perceptron-mlp">
+<span id="defining-a-network-multilayer-perceptron-mlp"></span><h3>Defining a network: Multilayer Perceptron (MLP)<a class="headerlink" href="#defining-a-network-multilayer-perceptron-mlp" title="Permalink to this headline">¶</a></h3>
+<p>MLPs consist of several fully connected layers.
+In a fully connected (short: FC) layer, each neuron is connected to every neuron in its preceding layer.
+From a linear algebra perspective, an FC layer applies an <a class="reference external" href="https://en.wikipedia.org/wiki/Affine_transformation">affine transform</a> <em>Y = X W + b</em> to an input matrix <em>X</em> of size (<em>n x m</em>) and outputs a matrix <em>Y</em> of size (<em>n x k</em>).
+The number <em>k</em>, also referred to as <em>hidden size</em>, corresponds to the number of neurons in the FC layer.
+An FC layer has two learnable parameters: the (<em>m x k</em>) weight matrix <em>W</em> and the (<em>1 x k</em>) bias vector <em>b</em>.</p>
+<p>In an MLP, the outputs of FC layers are typically fed into an activation function that applies an elementwise nonlinearity.
+This step is crucial since it gives neural networks the ability to classify inputs that are not linearly separable.
+Common choices for activation functions are <a class="reference external" href="https://en.wikipedia.org/wiki/Sigmoid_function">sigmoid</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/Hyperbolic_function#Definitions">hyperbolic tangent (“tanh”)</a>, and <a class="reference external" href="https://en.wikipedia.org/wiki/Rectifier_(neural_networks)">rectified linear unit (ReLU)</a>.
+In this example, we’ll use the ReLU activation function since it has several nice properties that make it a good default choice.</p>
+<p>The following code snippet declares three fully connected (or <em>dense</em>) layers with 128, 64 and 10 neurons each, where the last number of neurons matches the number of output classes in our dataset.
+Note that the last layer uses no activation function since the <a class="reference external" href="/api/python/ndarray/ndarray.html#mxnet.ndarray.softmax">softmax</a> activation will be implicitly applied by the loss function later on.
+To build the neural network, we use a <a class="reference external" href="/api/python/gluon/gluon.html#mxnet.gluon.nn.HybridSequential"><code class="docutils literal"><span class="pre">HybridSequential</span></code></a> layer, which is a convenience class to build a linear stack of layers, often called a <em>feed-forward neural net</em>.</p>
+<p>The “Hybrid” part of name <code class="docutils literal"><span class="pre">HybridSequential</span></code> refers to the fact that such a layer can be used with both the Gluon API and the Symbol API.
+Using hybrid blocks over dynamic-only blocks (e.g. <a class="reference external" href="/api/python/gluon/gluon.html#mxnet.gluon.nn.Sequential"><code class="docutils literal"><span class="pre">Sequential</span></code></a>) has several advantages apart from being compatible with a wider range of existing code: for instance, the computation graph of the network can be visualized with <code class="docutils literal"><span class="pre">mxnet.viz.plot_network()</span></code> and inspected for errors.
+Unless a network requires non-static runtime elements like loops, conditionals or random layer selection in its forward pass, it is generally a good idea to err on the side of hybrid blocks.
+For details on the differences, see the documentation on <a class="reference external" href="/api/python/gluon/gluon.html#mxnet.gluon.Block"><code class="docutils literal"><span class="pre">Block</span></code></a> and <a class="reference external" href="/api/python/gluon/gluon.html#mxnet.gluon.HybridBlock"><code class="docutils literal"><span class="pre">HybridBlock</span></code></a>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">'MLP_'</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">net</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'relu'</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'relu'</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>  <span class="c1"># loss function includes softmax already, see below</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Note</strong>: using the <code class="docutils literal"><span class="pre">name_scope()</span></code> context manager is optional.
+It is, however, good practice since it uses a common prefix for the names of all layers generated in that scope, which can be very helpful during debugging.</p>
+<div class="section" id="initializing-parameters-and-optimizer">
+<span id="initializing-parameters-and-optimizer"></span><h4>Initializing parameters and optimizer<a class="headerlink" href="#initializing-parameters-and-optimizer" title="Permalink to this headline">¶</a></h4>
+<p>Before the network can be used, its parameters (weights and biases) need to be set to initial values that are sufficiently random while keeping the magnitude of gradients limited.
+The <a class="reference external" href="/api/python/optimization/optimization.html#mxnet.initializer.Xavier">Xavier</a> initializer is usually a good default choice.</p>
+<p>Since the <code class="docutils literal"><span class="pre">net.initialize()</span></code> method creates arrays for its parameters, it needs to know where to store the values: in CPU or GPU memory.
+Like many other functions and classes that deal with memory management in one way or another, the <code class="docutils literal"><span class="pre">initialize()</span></code> method takes an optional <code class="docutils literal"><span class="pre">ctx</span></code> (short for <em>context</em>) argument, where the return value of either <code class="docutils literal"><span class="pre">mx.cpu()</span></code> or <code class="docutils literal"><span class="pre">mx.gpu()</span></code> can be provided.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">ctx</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">mx</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">num_gpus</span><span class="p">()</span> <span class="o">></span> <span class="mi">0</span> <span class="k">else</span> <span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">net</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Xavier</span><span class="p">(),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To train the network parameters, we will make use of the <a class="reference external" href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent">stochastic gradient descent (SGD)</a> optimizer.
+More specifically, we use mini-batch SGD in contrast to the classical SGD that processes one example at a time, which is very slow in practice.
+(Recall that we set the batch size to 100 in the <a class="reference external" href="#loading-data">“Loading Data”</a> part.)</p>
+<p>Besides the batch size, the SGD algorithm has one important <em>hyperparameter</em>: the <em>learning rate</em>.
+It determines the size of steps that the algorithm takes in search of parameters that allow the network to optimally fit the training data.
+Therefore, this value has great influence on both the course of the training process and its final outcome.
+In general, hyperparameters refer to <em>non-learnable</em> values that need to be chosen before training and that have a potential effect on the outcome.
+In this example, further hyperparameters are the number of layers in the network, the number of neurons of the first two layers, the activation function and (later) the loss function.</p>
+<p>The SGD optimization method can be accessed in MXNet Gluon through the <a class="reference external" href="/api/python/gluon/gluon.html#trainer"><code class="docutils literal"><span class="pre">Trainer</span></code></a> class.
+Internally, it makes use of the <a class="reference external" href="/api/python/optimization/optimization.html#mxnet.optimizer.SGD"><code class="docutils literal"><span class="pre">SGD</span></code></a> optimizer class.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+    <span class="n">params</span><span class="o">=</span><span class="n">net</span><span class="o">.</span><span class="n">collect_params</span><span class="p">(),</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="s1">'sgd'</span><span class="p">,</span>
+    <span class="n">optimizer_params</span><span class="o">=</span><span class="p">{</span><span class="s1">'learning_rate'</span><span class="p">:</span> <span class="mf">0.04</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="training">
+<span id="training"></span><h4>Training<a class="headerlink" href="#training" title="Permalink to this headline">¶</a></h4>
+<p>Training the network requires a way to tell how well the network currently fits the training data.
+Following common practice in optimization, this quality of fit is expressed through a <em>loss value</em> (also referred to as badness-of-fit or data discrepancy), which the algorithm then tries to minimize by adjusting the weights of the model.</p>
+<p>Ideally, in a classification task, we would like to use the prediction inaccuracy, i.e., the fraction of incorrectly classified samples, to guide the training to a lower value.
+Unfortunately, inaccuracy is a poor choice for training since it contains almost no information that can be used to update the network parameters (its gradient is zero almost everywhere).
+As a better behaved proxy for inaccuracy, the <a class="reference external" href="/api/python/gluon/loss.html#mxnet.gluon.loss.SoftmaxCrossEntropyLoss">softmax cross-entropy loss</a> is a popular choice.
+It has the essential property of being minimal for the correct prediction, but at the same time, it is everywhere differentiable with nonzero gradient.
+The <a class="reference external" href="/api/python/metric/metric.html#mxnet.metric.Accuracy">accuracy</a> metric is still useful for monitoring the training progress, since it is more intuitively interpretable than a loss value.</p>
+<p><strong>Note:</strong> <code class="docutils literal"><span class="pre">SoftmaxCrossEntropyLoss</span></code> combines the softmax activation and the cross entropy loss function in one layer, therefore the last layer in our network has no activation function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">metric</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">Accuracy</span><span class="p">()</span>
+<span class="n">loss_function</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">SoftmaxCrossEntropyLoss</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Typically, the training is run until convergence, which means that further iterations will no longer lead to improvements of the loss function, and that the network has probably learned a good set of model parameters from the train data.
+For the purpose of this tutorial, we only loop 10 times over the entire dataset.
+One such pass over the data is usually called an <em>epoch</em>.</p>
+<p>The following steps are taken in each <code class="docutils literal"><span class="pre">epoch</span></code>:</p>
+<ul class="simple">
+<li>Get a minibatch of <code class="docutils literal"><span class="pre">inputs</span></code> and <code class="docutils literal"><span class="pre">labels</span></code> from the <code class="docutils literal"><span class="pre">train_loader</span></code>.</li>
+<li>Feed the <code class="docutils literal"><span class="pre">inputs</span></code> to the network, producing <code class="docutils literal"><span class="pre">outputs</span></code>.</li>
+<li>Compute the minibatch <code class="docutils literal"><span class="pre">loss</span></code> value by comparing <code class="docutils literal"><span class="pre">outputs</span></code> to <code class="docutils literal"><span class="pre">labels</span></code>.</li>
+<li>Use backpropagation to compute the gradients of the loss with respect to each of the network parameters by calling <code class="docutils literal"><span class="pre">loss.backward()</span></code>.</li>
+<li>Update the parameters of the network according to the optimizer rule with <code class="docutils literal"><span class="pre">trainer.step(batch_size=inputs.shape[0])</span></code>.</li>
+<li>Print the current accuracy over the training data, i.e., the fraction of correctly classified training examples.</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+        <span class="c1"># Possibly copy inputs and labels to the GPU</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+        <span class="c1"># The forward pass and the loss computation need to be wrapped</span>
+        <span class="c1"># in a `record()` scope to make sure the computational graph is</span>
+        <span class="c1"># recorded in order to automatically compute the gradients</span>
+        <span class="c1"># during the backward pass.</span>
+        <span class="k">with</span> <span class="n">autograd</span><span class="o">.</span><span class="n">record</span><span class="p">():</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_function</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+        <span class="c1"># Compute gradients by backpropagation and update the evaluation</span>
+        <span class="c1"># metric</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+        <span class="c1"># Update the parameters by stepping the trainer; the batch size</span>
+        <span class="c1"># is required to normalize the gradients by `1 / batch_size`.</span>
+        <span class="n">trainer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Print the evaluation metric and reset it for the next epoch</span>
+    <span class="n">name</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'After epoch {}: {} = {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">acc</span><span class="p">))</span>
+    <span class="n">metric</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="validation">
+<span id="validation"></span><h4>Validation<a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h4>
+<p>When the above training has completed, we can evaluate the trained model by comparing predictions from the validation dataset with their respective correct labels.
+It is important to notice that the validation data was not used during training, i.e., the network has not seen the images and their true labels yet.
+Keeping a part of the data aside for validation is crucial for detecting <em>overfitting</em> of a network: If a neural network has enough parameters, it can simply memorize the training data and look up the true label for a given training image.
+While this results in 100 % training accuracy, such an overfit model would perform very poorly on new data.
+In other words, an overfit model does not generalize to a broader class of inputs than the training set, and such an outcome is almost always undesirable.
+Therefore, having a subset of “unseen” data for validation is an important part of good practice in machine learning.</p>
+<p>To validate our model on the validation data, we can run the following snippet of code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">metric</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">Accuracy</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">val_loader</span><span class="p">:</span>
+    <span class="c1"># Possibly copy inputs and labels to the GPU</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">net</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">'Validaton: {} = {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()))</span>
+<span class="k">assert</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">></span> <span class="mf">0.96</span>
+</pre></div>
+</div>
+<p>If everything went well, we should see an accuracy value that is around 0.968, which means that we are able to accurately predict the digit in 97 % of test images.
+This is a pretty good result, but as we will see in the next part of this tutorial, we can do a lot better than that.</p>
+<p>That said, a single number only conveys very limited information on the performance of our neural network.
+It is always a good idea to actually look at the images on which the network performed poorly, and check for clues on how to improve the performance.
+We do that with the help of a small function that produces a list of the images which the network got wrong, together with the predicted and true labels.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_mislabeled</span><span class="p">(</span><span class="n">loader</span><span class="p">):</span>
+    <span class="sd">"""Return list of ``(input, pred_lbl, true_lbl)`` for mislabeled samples."""</span>
+    <span class="n">mislabeled</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">loader</span><span class="p">:</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="c1"># Predicted label is the index is where the output is maximal</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+            <span class="n">p</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">asscalar</span><span class="p">()),</span> <span class="nb">int</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">asscalar</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="o">!=</span> <span class="n">l</span><span class="p">:</span>
+                <span class="n">mislabeled</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">(),</span> <span class="n">p</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">mislabeled</span>
+</pre></div>
+</div>
+<p>We can now get the mislabeled images in the training and validation sets and plot a selection of them:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">sample_size</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">wrong_train</span> <span class="o">=</span> <span class="n">get_mislabeled</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span>
+<span class="n">wrong_val</span> <span class="o">=</span> <span class="n">get_mislabeled</span><span class="p">(</span><span class="n">val_loader</span><span class="p">)</span>
+<span class="n">wrong_train_sample</span> <span class="o">=</span> <span class="p">[</span><span class="n">wrong_train</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrong_train</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">)]</span>
+<span class="n">wrong_val_sample</span> <span class="o">=</span> <span class="p">[</span><span class="n">wrong_val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrong_val</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">sample_size</span><span class="p">)]</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="n">sample_size</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">lbl</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">wrong_train_sample</span><span class="p">):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Sample of wrong predictions in the training set"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Predicted: {}</span><span class="se">\n</span><span class="s2">Actual: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">lbl</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="n">sample_size</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">lbl</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">wrong_val_sample</span><span class="p">):</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"Sample of wrong predictions in the validation set"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Predicted: {}</span><span class="se">\n</span><span class="s2">Actual: {}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">lbl</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="png" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/doc/tutorials/gluon/mnist_wrong_preds_train.png"/> <!--notebook-skip-line-->
+<img alt="png" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/doc/tutorials/gluon/mnist_wrong_preds_val.png"/> <!--notebook-skip-line--></p>
+<p>In this case, it is rather obvious that our MLP network is either too simple or has not been trained long enough to perform really great on this dataset, as can be seen from the fact that some of the mislabeled examples are rather “easy” and should not be a challenge for our neural net.
+As it turns out, moving to the CNN architecture presented in the following section will give a big performance boost.</p>
+</div>
+</div>
+<div class="section" id="convolutional-neural-network-cnn">
+<span id="convolutional-neural-network-cnn"></span><h3>Convolutional Neural Network (CNN)<a class="headerlink" href="#convolutional-neural-network-cnn" title="Permalink to this headline">¶</a></h3>
+<p>A fundamental issue with the MLP network is that it requires the inputs to be flattened (in the non-batch axes) before they can be processed by the dense layers.
+This means in particular that the spatial structure of an image is largely discarded, and that the values describing it are just treated as a long vector.
+The network then has to figure out the neighborhood relations of pixels from scratch by adjusting its weights accordingly, which seems very wasteful.</p>
+<p>A CNN aims to address this problem by using a more structured weight representation.
+Instead of connecting all inputs to all outputs, the characteristic <a class="reference external" href="/api/python/gluon/nn.html#mxnet.gluon.nn.Conv2D">convolution layer</a> only considers a small neighborhood of a pixel to compute the value of the corresponding output pixel.
+In particular, the spatial structure of the image is preserved, i.e., one can speak of input and output pixels in the first place.
+Only the size of the image may change through convolutions.
+<a class="reference external" href="http://deeplearning.net/software/theano/tutorial/conv_arithmetic.html">This article</a> gives a good and intuitive explanation of convolutions in the context of deep learning.</p>
+<p>The size of the neighborhood that a convolution layer considers for each pixel is usually referred to as <em>filter size</em> or <em>kernel size</em>.
+The array of weights – which does not depend on the output pixel location, only on the position within such a neighborhood – is called <em>filter</em> or <em>kernel</em>.
+Typical filter sizes range from <em>3 x 3</em> to <em>13 x 13</em>, which implies that a convolution layer has <em>far</em> fewer parameters than a dense layer.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">conv_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'relu'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">conv_layer</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">Parameter</span> <span class="pre">conv0_weight</span> <span class="pre">(shape=(32,</span> <span class="pre">16,</span> <span class="pre">3,</span> <span class="pre">3),</span> <span class="pre">dtype=<class</span> <span class="pre">'numpy.float32'>)</span></code> <!--notebook-skip-line--></p>
+<p><code class="docutils literal"><span class="pre">Parameter</span> <span class="pre">conv0_bias</span> <span class="pre">(shape=(32,),</span> <span class="pre">dtype=<class</span> <span class="pre">'numpy.float32'>)</span></code> <!--notebook-skip-line--></p>
+<p>Filters can be thought of as little feature detectors: in early layers, they learn to detect small local structures like edges, whereas later layers become sensitive to more and more global structures.
+Since images often contain a rich set of such features, it is customary to have each convolution layer employ and learn many different filters in parallel, so as to detect many different image features on their respective scales.
+This stacking of filters, which directly translates to a stacking of output images, is referred to as output <em>channels</em> of the convolution layer.
+Likewise, the input can already have multiple channels.
+In the above example, the convolution layer takes an input image with 16 channels and maps it to an image with 32 channels by convolving each of the input channels with a different set of 32 filters and then summing over the 16 input channels.
+Therefore, the total number of filter parameters in the convolution layer is <code class="docutils literal"><span class="pre">channels</span> <span class="pre">*</span> <span class="pre">in_channels</span> <span class="pre">*</span> <span class="pre">prod(kernel_size)</span></code>, which amounts to 4608 in the above example.</p>
+<p>Another characteristic feature of CNNs is the usage of <em>pooling</em>, i.e., summarizing patches to a single number, to shrink the size of an image as it travels through the layers.
+This step lowers the computational burden of training the network, but the main motivation for pooling is the assumption that it makes the network less sensitive to small translations, rotations or deformations of the image.
+Popular pooling strategies are max-pooling and average-pooling, and they are usually performed after convolution.</p>
+<p>The following code defines a CNN architecture called <em>LeNet</em>.
+The LeNet architecture is a popular network known to work well on digit classification tasks.
+We will use a version that differs slightly from the original in the usage of <code class="docutils literal"><span class="pre">tanh</span></code> activations instead of <code class="docutils literal"><span class="pre">sigmoid</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">lenet</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">'LeNet_'</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">lenet</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+    <span class="n">lenet</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'tanh'</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'tanh'</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'tanh'</span><span class="p">),</span>
+        <span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="bp">None</span><span class="p">),</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>To get an overview of all intermediate sizes of arrays and the number of parameters in each layer, the <code class="docutils literal"><span class="pre">summary()</span></code> method can be a great help.
+It requires the network parameters to be initialized, and an input array to infer the sizes.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">lenet</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Xavier</span><span class="p">(),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
+<span class="n">lenet</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Output</span><span class="p">:</span>
+
+<span class="o">--------------------------------------------------------------------------------</span>
+        <span class="n">Layer</span> <span class="p">(</span><span class="nb">type</span><span class="p">)</span>                                <span class="n">Output</span> <span class="n">Shape</span>         <span class="n">Param</span> <span class="c1">#</span>
+<span class="o">================================================================================</span>
+               <span class="n">Input</span>                              <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>               <span class="mi">0</span>
+        <span class="n">Activation</span><span class="o">-</span><span class="mi">1</span>                <span class="o"><</span><span class="n">Symbol</span> <span class="n">eNet_conv0_tanh_fwd</span><span class="o">></span>               <span class="mi">0</span>
+        <span class="n">Activation</span><span class="o">-</span><span class="mi">2</span>                             <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>               <span class="mi">0</span>
+            <span class="n">Conv2D</span><span class="o">-</span><span class="mi">3</span>                             <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>             <span class="mi">520</span>
+         <span class="n">MaxPool2D</span><span class="o">-</span><span class="mi">4</span>                             <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>               <span class="mi">0</span>
+        <span class="n">Activation</span><span class="o">-</span><span class="mi">5</span>                <span class="o"><</span><span class="n">Symbol</span> <span class="n">eNet_conv1_tanh_fwd</span><span class="o">></span>               <span class="mi">0</span>
+        <span class="n">Activation</span><span class="o">-</span><span class="mi">6</span>                               <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>               <span class="mi">0</span>
+            <span class="n">Conv2D</span><span class="o">-</span><span class="mi">7</span>                               <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>           <span class="mi">25050</span>
+         <span class="n">MaxPool2D</span><span class="o">-</span><span class="mi">8</span>                               <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>               <span class="mi">0</span>
+           <span class="n">Flatten</span><span class="o">-</span><span class="mi">9</span>                                    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span>               <span class="mi">0</span>
+       <span class="n">Activation</span><span class="o">-</span><span class="mi">10</span>               <span class="o"><</span><span class="n">Symbol</span> <span class="n">eNet_dense0_tanh_fwd</span><span class="o">></span>               <span class="mi">0</span>
+       <span class="n">Activation</span><span class="o">-</span><span class="mi">11</span>                                    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>               <span class="mi">0</span>
+            <span class="n">Dense</span><span class="o">-</span><span class="mi">12</span>                                    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>          <span class="mi">400500</span>
+            <span class="n">Dense</span><span class="o">-</span><span class="mi">13</span>                                     <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>            <span class="mi">5010</span>
+<span class="o">================================================================================</span>
+<span class="n">Parameters</span> <span class="ow">in</span> <span class="n">forward</span> <span class="n">computation</span> <span class="n">graph</span><span class="p">,</span> <span class="n">duplicate</span> <span class="n">included</span>
+   <span class="n">Total</span> <span class="n">params</span><span class="p">:</span> <span class="mi">431080</span>
+   <span class="n">Trainable</span> <span class="n">params</span><span class="p">:</span> <span class="mi">431080</span>
+   <span class="n">Non</span><span class="o">-</span><span class="n">trainable</span> <span class="n">params</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">Shared</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">forward</span> <span class="n">computation</span> <span class="n">graph</span><span class="p">:</span> <span class="mi">0</span>
+<span class="n">Unique</span> <span class="n">parameters</span> <span class="ow">in</span> <span class="n">model</span><span class="p">:</span> <span class="mi">431080</span>
+<span class="o">--------------------------------------------------------------------------------</span>
+</pre></div>
+</div>
+<p><img alt="png" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/conv_mnist.png"/></p>
+<p><strong>Figure 3:</strong> First conv + pooling layer in LeNet.</p>
+<p>Now we train LeNet with similar hyperparameters and procedure as before.
+Note that it is advisable to use a GPU if possible, since this model is significantly more computationally demanding to evaluate and train than the previous MLP.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+    <span class="n">params</span><span class="o">=</span><span class="n">lenet</span><span class="o">.</span><span class="n">collect_params</span><span class="p">(),</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="s1">'sgd'</span><span class="p">,</span>
+    <span class="n">optimizer_params</span><span class="o">=</span><span class="p">{</span><span class="s1">'learning_rate'</span><span class="p">:</span> <span class="mf">0.04</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">metric</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">metric</span><span class="o">.</span><span class="n">Accuracy</span><span class="p">()</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">train_loader</span><span class="p">:</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">autograd</span><span class="o">.</span><span class="n">record</span><span class="p">():</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">lenet</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_function</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+        <span class="n">trainer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">name</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'After epoch {}: {} = {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">acc</span><span class="p">))</span>
+    <span class="n">metric</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="n">val_loader</span><span class="p">:</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">metric</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">lenet</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">'Validaton: {} = {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()))</span>
+<span class="k">assert</span> <span class="n">metric</span><span class="o">.</span><span class="n">get</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">></span> <span class="mf">0.985</span>
+</pre></div>
+</div>
+<p>If all went well, we should see a higher accuracy metric for predictions made using LeNet.
+With this CNN we should be able to correctly predict around 99% of all validation images.</p>
+</div>
+</div>
+<div class="section" id="summary">
+<span id="summary"></span><h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial, we demonstrated how to use MXNet to solve a standard computer vision problem: classifying images of hand-written digits.
+We showed how to quickly build, train and evaluate models such as MLPs and CNNs with the MXNet Gluon package.</p>
+<div class="btn-group" role="group">
+<div class="download-btn"><a download="mnist.ipynb" href="mnist.ipynb"><span class="glyphicon glyphicon-download-alt"></span> mnist.ipynb</a></div></div></div>
+</div>
+</div>
+</div>
+<div aria-label="main navigation" class="sphinxsidebar rightsidebar" role="navigation">
+<div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table Of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">Hand-written Digit Recognition</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#loading-data">Loading Data</a></li>
+<li><a class="reference internal" href="#approaches">Approaches</a><ul>
+<li><a class="reference internal" href="#defining-a-network-multilayer-perceptron-mlp">Defining a network: Multilayer Perceptron (MLP)</a><ul>
+<li><a class="reference internal" href="#initializing-parameters-and-optimizer">Initializing parameters and optimizer</a></li>
+<li><a class="reference internal" href="#training">Training</a></li>
+<li><a class="reference internal" href="#validation">Validation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#convolutional-neural-network-cnn">Convolutional Neural Network (CNN)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div><div class="footer">
+<div class="section-disclaimer">
+<div class="container">
+<div>
+<img height="60" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/apache_incubator_logo.png"/>
+<p>
+            Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <strong>sponsored by the <i>Apache Incubator</i></strong>. Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects. While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+        </p>
+<p>
+            "Copyright © 2017-2018, The Apache Software Foundation
+            Apache MXNet, MXNet, Apache, the Apache feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the Apache Software Foundation."
+        </p>
+</div>
+</div>
+</div>
+</div> <!-- pagename != index -->
+</div>
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../../_static/js/sidebar.js" type="text/javascript"></script>
+<script src="../../_static/js/search.js" type="text/javascript"></script>
+<script src="../../_static/js/navbar.js" type="text/javascript"></script>
+<script src="../../_static/js/clipboard.min.js" type="text/javascript"></script>
+<script src="../../_static/js/copycode.js" type="text/javascript"></script>
+<script src="../../_static/js/page.js" type="text/javascript"></script>
+<script src="../../_static/js/docversion.js" type="text/javascript"></script>
+<script type="text/javascript">
+        $('body').ready(function () {
+            $('body').css('visibility', 'visible');
+        });
+    </script>
+</body>
+</html>

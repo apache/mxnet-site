@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['sample_5fexponentialdtype',['Sample_exponentialDtype',['../namespacemxnet_1_1cpp.html#a56dc4ed19f0922d305d4aa29fd7a295a',1,'mxnet::cpp']]],
+  ['sample_5fgammadtype',['Sample_gammaDtype',['../namespacemxnet_1_1cpp.html#ac8a5a3ee1d87d90a9e82b961e359a76d',1,'mxnet::cpp']]],
+  ['sample_5fgeneralized_5fnegative_5fbinomialdtype',['Sample_generalized_negative_binomialDtype',['../namespacemxnet_1_1cpp.html#a867fc28570a464ed4bb859e53204078b',1,'mxnet::cpp']]],
+  ['sample_5fmultinomialdtype',['Sample_multinomialDtype',['../namespacemxnet_1_1cpp.html#aefe8d93975e3eeb2079cef941e50b6af',1,'mxnet::cpp']]],
+  ['sample_5fnegative_5fbinomialdtype',['Sample_negative_binomialDtype',['../namespacemxnet_1_1cpp.html#a38166fad52bd90e34f1e654be418d7cc',1,'mxnet::cpp']]],
+  ['sample_5fnormaldtype',['Sample_normalDtype',['../namespacemxnet_1_1cpp.html#ab067243b98add77e4441b2ae239f118d',1,'mxnet::cpp']]],
+  ['sample_5fpoissondtype',['Sample_poissonDtype',['../namespacemxnet_1_1cpp.html#ad1c5554d5ab85cf293d080bf5fb21d87',1,'mxnet::cpp']]],
+  ['sample_5funiformdtype',['Sample_uniformDtype',['../namespacemxnet_1_1cpp.html#a359d3f94a6e81bf98618f2afce8cfa6e',1,'mxnet::cpp']]],
+  ['simpleopinplaceoption',['SimpleOpInplaceOption',['../namespacemxnet_1_1op.html#a3c3b8c77865c7c715cfe05ee2b2fa8da',1,'mxnet::op']]],
+  ['simpleopregoption',['SimpleOpRegOption',['../namespacemxnet_1_1op.html#a01bb0bb658bedb4d58bf7d11e4b17268',1,'mxnet::op']]],
+  ['simpleopscalaroption',['SimpleOpScalarOption',['../namespacemxnet_1_1op.html#ae7310844fa858f1ec6b6428dd6977a13',1,'mxnet::op']]],
+  ['softmaxactivationmode',['SoftmaxActivationMode',['../namespacemxnet_1_1cpp.html#a08bbd5633680ffa58dae3cab685e2ebf',1,'mxnet::cpp']]],
+  ['softmaxnormalization',['SoftmaxNormalization',['../namespacemxnet_1_1cpp.html#abac2e8c934c7bd4416728b351fcbae5b',1,'mxnet::cpp']]],
+  ['softmaxoutputnormalization',['SoftmaxOutputNormalization',['../namespacemxnet_1_1cpp.html#ae708904c6ad7046fcecfc6c6b7e0ac73',1,'mxnet::cpp']]],
+  ['spatialtransformersamplertype',['SpatialTransformerSamplerType',['../namespacemxnet_1_1cpp.html#a20ce4a2b1581ec74fc957d816d1e19ce',1,'mxnet::cpp']]],
+  ['spatialtransformertransformtype',['SpatialTransformerTransformType',['../namespacemxnet_1_1cpp.html#a0ff49861ba295abeac5d545bfa16b0aa',1,'mxnet::cpp']]]
+];
