@@ -108,6 +108,7 @@
           </span>
           <div class="dropdown-content">
             <a class="dropdown-option-active" href="/">master</a><br>
+            <a class="dropdown-option" href="/versions/1.7/">1.7</a><br>
             <a class="dropdown-option" href="/versions/1.6/">1.6</a><br>
             <a class="dropdown-option" href="/versions/1.5.0/">1.5.0</a><br>
             <a class="dropdown-option" href="/versions/1.4.1/">1.4.1</a><br>
@@ -149,6 +150,13 @@
       </div>
 </form>
         
+<a id="button-show-github"
+    href="https://github.com/apache/mxnet/edit/master/docs/python_docs/python/_modules/mxnet/gluon/block" class="mdl-button mdl-js-button mdl-button--icon">
+<i class="material-icons">edit</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-github">
+Edit on Github
+</div>
         </nav>
     </div>
     <div class="mdl-layout__header-row header-links">
@@ -1207,6 +1215,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Block&#39;</span><span class="p">,</span> <span class="s1">&#39;HybridBlock&#39;</span><span class="p">,</span> <span class="s1">&#39;SymbolBlock&#39;</span><span class="p">]</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">defaultdict</span>
@@ -2133,8 +2142,8 @@
                     <span class="n">flatten_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
             <span class="n">grouped_inputs</span> <span class="o">=</span> <span class="n">_regroup</span><span class="p">(</span><span class="n">flatten_inputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_format</span><span class="p">)</span>
 
-            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">j</span><span class="o">.</span><span class="n">var</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reg_params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
             <span class="k">with</span> <span class="n">_block_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">j</span><span class="o">.</span><span class="n">var</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reg_params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
                 <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="o">*</span><span class="n">grouped_inputs</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>  <span class="c1"># pylint: disable=no-value-for-parameter</span>
             <span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_out_format</span> <span class="o">=</span> <span class="n">_flatten</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
 
@@ -2170,7 +2179,7 @@
 
     <span class="k">def</span> <span class="nf">_get_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cached_graph</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="o">.</span><span class="vm">__func__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">HybridBlock</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">:</span>  <span class="c1"># Gluon 1</span>
+            <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="o">.</span><span class="vm">__func__</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">HybridBlock</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_graph_v1</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># Gluon 2 based on deferred compute mode</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_graph_v2</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
@@ -2463,7 +2472,7 @@
 
 <div class="viewcode-block" id="HybridBlock.infer_shape"><a class="viewcode-back" href="../../../api/gluon/nn/index.html#mxnet.gluon.nn.HybridBlock.infer_shape">[docs]</a>    <span class="k">def</span> <span class="nf">infer_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Infers shape of Parameters from inputs.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="o">.</span><span class="vm">__func__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">HybridBlock</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="o">.</span><span class="vm">__func__</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">HybridBlock</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">:</span>
             <span class="c1"># Gluon 1 based on F:  hybrid_forward is defined by user</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_infer_attrs</span><span class="p">(</span><span class="s1">&#39;infer_shape&#39;</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -2574,7 +2583,7 @@
             <span class="n">cld</span><span class="p">()</span><span class="o">.</span><span class="n">_monitor_all</span> <span class="o">=</span> <span class="n">monitor_all</span></div>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="o">.</span><span class="vm">__func__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">HybridBlock</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="o">.</span><span class="vm">__func__</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">HybridBlock</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">:</span>
             <span class="c1"># Gluon 1 based on F:  hybrid_forward is defined by user</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Gluon 2 based on deferred compute mode</span>
@@ -2597,7 +2606,8 @@
                 <span class="c1"># HybridBlock is a child block of a HybridBlock that has been hybridized.</span>
                 <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_cached_op</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">x</span><span class="o">.</span><span class="n">ctx</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_cached_op</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
 
 <div class="viewcode-block" id="HybridBlock.forward"><a class="viewcode-back" href="../../../api/gluon/nn/index.html#mxnet.gluon.nn.HybridBlock.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Defines the forward computation. Arguments can be either</span>
@@ -2633,8 +2643,8 @@
 
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
 
-        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">j</span><span class="o">.</span><span class="n">var</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reg_params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="k">with</span> <span class="n">_block_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">j</span><span class="o">.</span><span class="n">var</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reg_params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hybrid_forward</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HybridBlock.hybrid_forward"><a class="viewcode-back" href="../../../api/gluon/nn/index.html#mxnet.gluon.nn.HybridBlock.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -2700,7 +2710,8 @@
 <span class="sd">    &gt;&gt;&gt; print(feat_model(x))</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="SymbolBlock.imports"><a class="viewcode-back" href="../../../api/gluon/nn/index.html#mxnet.gluon.nn.SymbolBlock.imports">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">imports</span><span class="p">(</span><span class="n">symbol_file</span><span class="p">,</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">param_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">imports</span><span class="p">(</span><span class="n">symbol_file</span><span class="p">,</span> <span class="n">input_names</span><span class="p">,</span> <span class="n">param_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">allow_missing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">ignore_extra</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Import model previously saved by `gluon.HybridBlock.export`</span>
 <span class="sd">        as a `gluon.SymbolBlock` for use in Gluon.</span>
 
@@ -2714,6 +2725,11 @@
 <span class="sd">            Path to parameter file.</span>
 <span class="sd">        ctx : Context, default None</span>
 <span class="sd">            The context to initialize `gluon.SymbolBlock` on.</span>
+<span class="sd">        allow_missing : bool, default False</span>
+<span class="sd">            Whether to silently skip loading parameters not represents in the file.</span>
+<span class="sd">        ignore_extra : bool, default False</span>
+<span class="sd">            Whether to silently ignore parameters from the file that are not</span>
+<span class="sd">            present in this Block.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -2746,7 +2762,7 @@
             <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">symbol</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">symbol</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">input_names</span><span class="p">]</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">SymbolBlock</span><span class="p">(</span><span class="n">sym</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">param_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ret</span><span class="o">.</span><span class="n">load_parameters</span><span class="p">(</span><span class="n">param_file</span><span class="p">,</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span> <span class="n">cast_dtype</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dtype_source</span><span class="o">=</span><span class="s1">&#39;saved&#39;</span><span class="p">)</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">load_parameters</span><span class="p">(</span><span class="n">param_file</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">allow_missing</span><span class="p">,</span> <span class="n">ignore_extra</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;saved&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ret</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

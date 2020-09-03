@@ -108,6 +108,7 @@
           </span>
           <div class="dropdown-content">
             <a class="dropdown-option-active" href="/">master</a><br>
+            <a class="dropdown-option" href="/versions/1.7/">1.7</a><br>
             <a class="dropdown-option" href="/versions/1.6/">1.6</a><br>
             <a class="dropdown-option" href="/versions/1.5.0/">1.5.0</a><br>
             <a class="dropdown-option" href="/versions/1.4.1/">1.4.1</a><br>
@@ -149,6 +150,13 @@
       </div>
 </form>
         
+<a id="button-show-github"
+    href="https://github.com/apache/mxnet/edit/master/docs/python_docs/python/_modules/mxnet/symbol/symbol" class="mdl-button mdl-js-button mdl-button--icon">
+<i class="material-icons">edit</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-github">
+Edit on Github
+</div>
         </nav>
     </div>
     <div class="mdl-layout__header-row header-links">
@@ -1229,7 +1237,8 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">op</span>
 <span class="kn">from</span> <span class="nn">._internal</span> <span class="kn">import</span> <span class="n">SymbolBase</span><span class="p">,</span> <span class="n">_set_symbol_class</span>
 <span class="kn">from</span> <span class="nn">..util</span> <span class="kn">import</span> <span class="n">is_np_shape</span>
-<span class="kn">from</span> <span class="nn">..profiler</span> <span class="kn">import</span> <span class="n">_current_scope</span> <span class="k">as</span> <span class="n">_profiler_scope</span>
+<span class="kn">from</span> <span class="nn">..profiler</span> <span class="kn">import</span> <span class="n">scope</span> <span class="k">as</span> <span class="n">_profiler_scope</span>
+<span class="kn">from</span> <span class="nn">..profiler</span> <span class="kn">import</span> <span class="n">_current_scope</span> <span class="k">as</span> <span class="n">_current_profiler_scope</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Symbol&quot;</span><span class="p">,</span> <span class="s2">&quot;var&quot;</span><span class="p">,</span> <span class="s2">&quot;Variable&quot;</span><span class="p">,</span> <span class="s2">&quot;Group&quot;</span><span class="p">,</span> <span class="s2">&quot;load&quot;</span><span class="p">,</span> <span class="s2">&quot;load_json&quot;</span><span class="p">,</span>
            <span class="s2">&quot;pow&quot;</span><span class="p">,</span> <span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="s2">&quot;maximum&quot;</span><span class="p">,</span> <span class="s2">&quot;minimum&quot;</span><span class="p">,</span> <span class="s2">&quot;hypot&quot;</span><span class="p">,</span> <span class="s2">&quot;eye&quot;</span><span class="p">,</span> <span class="s2">&quot;zeros&quot;</span><span class="p">,</span>
@@ -2968,15 +2977,16 @@
                     <span class="n">index</span> <span class="o">=</span> <span class="n">aux_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
                     <span class="n">aux_states</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">aux_states</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">totype</span><span class="p">(</span><span class="n">stype</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">grad_req</span> <span class="o">==</span> <span class="s1">&#39;null&#39;</span><span class="p">:</span>
-            <span class="n">args_grad</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grad_req</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">args_grad</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">arg_names</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">grad_req</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;null&#39;</span><span class="p">:</span>
-                    <span class="n">args_grad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">args_grad</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+        <span class="k">with</span> <span class="n">_profiler_scope</span><span class="p">(</span><span class="s2">&quot;symbol:arg_grad:&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">grad_req</span> <span class="o">==</span> <span class="s1">&#39;null&#39;</span><span class="p">:</span>
+                <span class="n">args_grad</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grad_req</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">args_grad</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">arg_names</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">grad_req</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;null&#39;</span><span class="p">:</span>
+                        <span class="n">args_grad</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">args_grad</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">Executor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">args_grad</span><span class="p">,</span> <span class="n">grad_req</span><span class="p">,</span> <span class="n">aux_states</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">args_grad</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grad_req</span><span class="o">=</span><span class="s1">&#39;write&#39;</span><span class="p">,</span>
@@ -3914,7 +3924,7 @@
     <span class="k">if</span> <span class="n">profiler_scope</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;__profiler_scope__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">profiler_scope</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;__profiler_scope__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_profiler_scope</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;__profiler_scope__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_current_profiler_scope</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">):</span>
             <span class="n">attr</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>

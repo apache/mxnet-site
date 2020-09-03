@@ -108,6 +108,7 @@
           </span>
           <div class="dropdown-content">
             <a class="dropdown-option-active" href="/">master</a><br>
+            <a class="dropdown-option" href="/versions/1.7/">1.7</a><br>
             <a class="dropdown-option" href="/versions/1.6/">1.6</a><br>
             <a class="dropdown-option" href="/versions/1.5.0/">1.5.0</a><br>
             <a class="dropdown-option" href="/versions/1.4.1/">1.4.1</a><br>
@@ -149,6 +150,13 @@
       </div>
 </form>
         
+<a id="button-show-github"
+    href="https://github.com/apache/mxnet/edit/master/docs/python_docs/python/_modules/mxnet/gluon/nn/conv_layers" class="mdl-button mdl-js-button mdl-button--icon">
+<i class="material-icons">edit</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-github">
+Edit on Github
+</div>
         </nav>
     </div>
     <div class="mdl-layout__header-row header-links">
@@ -1210,14 +1218,15 @@
            <span class="s1">&#39;AvgPool1D&#39;</span><span class="p">,</span> <span class="s1">&#39;AvgPool2D&#39;</span><span class="p">,</span> <span class="s1">&#39;AvgPool3D&#39;</span><span class="p">,</span>
            <span class="s1">&#39;GlobalMaxPool1D&#39;</span><span class="p">,</span> <span class="s1">&#39;GlobalMaxPool2D&#39;</span><span class="p">,</span> <span class="s1">&#39;GlobalMaxPool3D&#39;</span><span class="p">,</span>
            <span class="s1">&#39;GlobalAvgPool1D&#39;</span><span class="p">,</span> <span class="s1">&#39;GlobalAvgPool2D&#39;</span><span class="p">,</span> <span class="s1">&#39;GlobalAvgPool3D&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;ReflectionPad2D&#39;</span><span class="p">]</span>
+           <span class="s1">&#39;ReflectionPad2D&#39;</span><span class="p">,</span> <span class="s1">&#39;DeformableConvolution&#39;</span><span class="p">,</span> <span class="s1">&#39;ModulatedDeformableConvolution&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;PixelShuffle1D&#39;</span><span class="p">,</span> <span class="s1">&#39;PixelShuffle2D&#39;</span><span class="p">,</span> <span class="s1">&#39;PixelShuffle3D&#39;</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">..block</span> <span class="kn">import</span> <span class="n">HybridBlock</span>
 <span class="kn">from</span> <span class="nn">..parameter</span> <span class="kn">import</span> <span class="n">Parameter</span>
 <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">symbol</span>
 <span class="kn">from</span> <span class="nn">...base</span> <span class="kn">import</span> <span class="n">numeric_types</span>
 <span class="kn">from</span> <span class="nn">.activations</span> <span class="kn">import</span> <span class="n">Activation</span>
-<span class="kn">from</span> <span class="nn">...util</span> <span class="kn">import</span> <span class="n">is_np_array</span>
+<span class="kn">from</span> <span class="nn">...util</span> <span class="kn">import</span> <span class="n">is_np_array</span><span class="p">,</span> <span class="n">np_array</span>
 
 
 <span class="k">def</span> <span class="nf">_infer_weight_shape</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">data_shape</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
@@ -1270,7 +1279,7 @@
 <span class="sd">        initialization will be deferred to the first time `forward` is called</span>
 <span class="sd">        and `in_channels` will be inferred from the shape of input data.</span>
 <span class="sd">    activation : str</span>
-<span class="sd">        Activation function to use. See :func:`~mxnet.ndarray.Activation`.</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.npx.activation`.</span>
 <span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
 <span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
 <span class="sd">    use_bias: bool</span>
@@ -1404,7 +1413,7 @@
 <span class="sd">        initialization will be deferred to the first time `forward` is called</span>
 <span class="sd">        and `in_channels` will be inferred from the shape of input data.</span>
 <span class="sd">    activation : str</span>
-<span class="sd">        Activation function to use. See :func:`~mxnet.ndarray.Activation`.</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.npx.activation`.</span>
 <span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
 <span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
 <span class="sd">    use_bias : bool</span>
@@ -1485,7 +1494,7 @@
 <span class="sd">        initialization will be deferred to the first time `forward` is called</span>
 <span class="sd">        and `in_channels` will be inferred from the shape of input data.</span>
 <span class="sd">    activation : str</span>
-<span class="sd">        Activation function to use. See :func:`~mxnet.ndarray.Activation`.</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.npx.activation`.</span>
 <span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
 <span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
 <span class="sd">    use_bias : bool</span>
@@ -1569,7 +1578,7 @@
 <span class="sd">        initialization will be deferred to the first time `forward` is called</span>
 <span class="sd">        and `in_channels` will be inferred from the shape of input data.</span>
 <span class="sd">    activation : str</span>
-<span class="sd">        Activation function to use. See :func:`~mxnet.ndarray.Activation`.</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.npx.activation`.</span>
 <span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
 <span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
 <span class="sd">    use_bias : bool</span>
@@ -1658,7 +1667,7 @@
 <span class="sd">        initialization will be deferred to the first time `forward` is called</span>
 <span class="sd">        and `in_channels` will be inferred from the shape of input data.</span>
 <span class="sd">    activation : str</span>
-<span class="sd">        Activation function to use. See :func:`~mxnet.ndarray.Activation`.</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.npx.activation`.</span>
 <span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
 <span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
 <span class="sd">    use_bias : bool</span>
@@ -1749,7 +1758,7 @@
 <span class="sd">        initialization will be deferred to the first time `forward` is called</span>
 <span class="sd">        and `in_channels` will be inferred from the shape of input data.</span>
 <span class="sd">    activation : str</span>
-<span class="sd">        Activation function to use. See :func:`~mxnet.ndarray.Activation`.</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.npx.activation`.</span>
 <span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
 <span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
 <span class="sd">    use_bias : bool</span>
@@ -1843,7 +1852,7 @@
 <span class="sd">        initialization will be deferred to the first time `forward` is called</span>
 <span class="sd">        and `in_channels` will be inferred from the shape of input data.</span>
 <span class="sd">    activation : str</span>
-<span class="sd">        Activation function to use. See :func:`~mxnet.ndarray.Activation`.</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.npx.activation`.</span>
 <span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
 <span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
 <span class="sd">    use_bias : bool</span>
@@ -2422,6 +2431,578 @@
 
 <div class="viewcode-block" id="ReflectionPad2D.hybrid_forward"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.ReflectionPad2D.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_padding</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DeformableConvolution"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.DeformableConvolution">[docs]</a><span class="k">class</span> <span class="nc">DeformableConvolution</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;2-D Deformable Convolution v_1 (Dai, 2017).</span>
+<span class="sd">    Normal Convolution uses sampling points in a regular grid, while the sampling</span>
+<span class="sd">    points of Deformablem Convolution can be offset. The offset is learned with a</span>
+<span class="sd">    separate convolution layer during the training. Both the convolution layer for</span>
+<span class="sd">    generating the output features and the offsets are included in this gluon layer.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    channels : int,</span>
+<span class="sd">        The dimensionality of the output space</span>
+<span class="sd">        i.e. the number of output channels in the convolution.</span>
+<span class="sd">    kernel_size : int or tuple/list of 2 ints, (Default value = (1,1))</span>
+<span class="sd">        Specifies the dimensions of the convolution window.</span>
+<span class="sd">    strides : int or tuple/list of 2 ints, (Default value = (1,1))</span>
+<span class="sd">        Specifies the strides of the convolution.</span>
+<span class="sd">    padding : int or tuple/list of 2 ints, (Default value = (0,0))</span>
+<span class="sd">        If padding is non-zero, then the input is implicitly zero-padded</span>
+<span class="sd">        on both sides for padding number of points.</span>
+<span class="sd">    dilation : int or tuple/list of 2 ints, (Default value = (1,1))</span>
+<span class="sd">        Specifies the dilation rate to use for dilated convolution.</span>
+<span class="sd">    groups : int, (Default value = 1)</span>
+<span class="sd">        Controls the connections between inputs and outputs.</span>
+<span class="sd">        At groups=1, all inputs are convolved to all outputs.</span>
+<span class="sd">        At groups=2, the operation becomes equivalent to having two convolution</span>
+<span class="sd">        layers side by side, each seeing half the input channels, and producing</span>
+<span class="sd">        half the output channels, and both subsequently concatenated.</span>
+<span class="sd">    num_deformable_group : int, (Default value = 1)</span>
+<span class="sd">        Number of deformable group partitions.</span>
+<span class="sd">    layout : str, (Default value = NCHW)</span>
+<span class="sd">        Dimension ordering of data and weight. Can be &#39;NCW&#39;, &#39;NWC&#39;, &#39;NCHW&#39;,</span>
+<span class="sd">        &#39;NHWC&#39;, &#39;NCDHW&#39;, &#39;NDHWC&#39;, etc. &#39;N&#39;, &#39;C&#39;, &#39;H&#39;, &#39;W&#39;, &#39;D&#39; stands for</span>
+<span class="sd">        batch, channel, height, width and depth dimensions respectively.</span>
+<span class="sd">        Convolution is performed over &#39;D&#39;, &#39;H&#39;, and &#39;W&#39; dimensions.</span>
+<span class="sd">    use_bias : bool, (Default value = True)</span>
+<span class="sd">        Whether the layer for generating the output features uses a bias vector.</span>
+<span class="sd">    in_channels : int, (Default value = 0)</span>
+<span class="sd">        The number of input channels to this layer. If not specified,</span>
+<span class="sd">        initialization will be deferred to the first time `forward` is called</span>
+<span class="sd">        and input channels will be inferred from the shape of input data.</span>
+<span class="sd">    activation : str, (Default value = None)</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.npx.activation`.</span>
+<span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
+<span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
+<span class="sd">    weight_initializer : str or `Initializer`, (Default value = None)</span>
+<span class="sd">        Initializer for the `weight` weights matrix for the convolution layer</span>
+<span class="sd">        for generating the output features.</span>
+<span class="sd">    bias_initializer : str or `Initializer`, (Default value = zeros)</span>
+<span class="sd">        Initializer for the bias vector for the convolution layer</span>
+<span class="sd">        for generating the output features.</span>
+<span class="sd">    offset_weight_initializer : str or `Initializer`, (Default value = zeros)</span>
+<span class="sd">        Initializer for the `weight` weights matrix for the convolution layer</span>
+<span class="sd">        for generating the offset.</span>
+<span class="sd">    offset_bias_initializer : str or `Initializer`, (Default value = zeros),</span>
+<span class="sd">        Initializer for the bias vector for the convolution layer</span>
+<span class="sd">        for generating the offset.</span>
+<span class="sd">    offset_use_bias: bool, (Default value = True)</span>
+<span class="sd">        Whether the layer for generating the offset uses a bias vector.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">        - **data**: 4D input tensor with shape</span>
+<span class="sd">          `(batch_size, in_channels, height, width)` when `layout` is `NCHW`.</span>
+<span class="sd">          For other layouts shape is permuted accordingly.</span>
+
+<span class="sd">    Outputs:</span>
+<span class="sd">        - **out**: 4D output tensor with shape</span>
+<span class="sd">          `(batch_size, channels, out_height, out_width)` when `layout` is `NCHW`.</span>
+<span class="sd">          out_height and out_width are calculated as::</span>
+
+<span class="sd">              out_height = floor((height+2*padding[0]-dilation[0]*(kernel_size[0]-1)-1)/stride[0])+1</span>
+<span class="sd">              out_width = floor((width+2*padding[1]-dilation[1]*(kernel_size[1]-1)-1)/stride[1])+1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dilation</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">num_deformable_group</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;NCHW&#39;</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bias_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span>
+                 <span class="n">offset_weight_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span> <span class="n">offset_bias_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span> <span class="n">offset_use_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">op_name</span><span class="o">=</span><span class="s1">&#39;DeformableConvolution&#39;</span><span class="p">,</span> <span class="n">adj</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DeformableConvolution</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="o">=</span> <span class="n">channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>
+
+        <span class="k">assert</span> <span class="n">layout</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;NCHW&#39;</span><span class="p">,</span> <span class="s1">&#39;NHWC&#39;</span><span class="p">),</span> <span class="s2">&quot;Only supports &#39;NCHW&#39; and &#39;NHWC&#39; layout for now&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+            <span class="n">kernel_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel_size</span><span class="p">,)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">strides</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+            <span class="n">strides</span> <span class="o">=</span> <span class="p">(</span><span class="n">strides</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">padding</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+            <span class="n">padding</span> <span class="o">=</span> <span class="p">(</span><span class="n">padding</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dilation</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+            <span class="n">dilation</span> <span class="o">=</span> <span class="p">(</span><span class="n">dilation</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_op_name</span> <span class="o">=</span> <span class="n">op_name</span>
+
+        <span class="n">offset_channels</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_deformable_group</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="s1">&#39;stride&#39;</span><span class="p">:</span> <span class="n">strides</span><span class="p">,</span> <span class="s1">&#39;dilate&#39;</span><span class="p">:</span> <span class="n">dilation</span><span class="p">,</span>
+            <span class="s1">&#39;pad&#39;</span><span class="p">:</span> <span class="n">padding</span><span class="p">,</span> <span class="s1">&#39;num_filter&#39;</span><span class="p">:</span> <span class="n">offset_channels</span><span class="p">,</span> <span class="s1">&#39;num_group&#39;</span><span class="p">:</span> <span class="n">groups</span><span class="p">,</span>
+            <span class="s1">&#39;no_bias&#39;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">offset_use_bias</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="n">layout</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="s1">&#39;stride&#39;</span><span class="p">:</span> <span class="n">strides</span><span class="p">,</span> <span class="s1">&#39;dilate&#39;</span><span class="p">:</span> <span class="n">dilation</span><span class="p">,</span>
+            <span class="s1">&#39;pad&#39;</span><span class="p">:</span> <span class="n">padding</span><span class="p">,</span> <span class="s1">&#39;num_filter&#39;</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span> <span class="s1">&#39;num_group&#39;</span><span class="p">:</span> <span class="n">groups</span><span class="p">,</span>
+            <span class="s1">&#39;num_deformable_group&#39;</span><span class="p">:</span> <span class="n">num_deformable_group</span><span class="p">,</span>
+            <span class="s1">&#39;no_bias&#39;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">use_bias</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="n">layout</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">adj</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span><span class="p">[</span><span class="s1">&#39;adj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adj</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">[</span><span class="s1">&#39;adj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adj</span>
+
+        <span class="n">dshape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">dshape</span><span class="p">[</span><span class="n">layout</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">dshape</span><span class="p">[</span><span class="n">layout</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">in_channels</span>
+
+        <span class="n">op_name</span> <span class="o">=</span> <span class="s1">&#39;convolution&#39;</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;Convolution&#39;</span>
+        <span class="n">offsetshapes</span> <span class="o">=</span> <span class="n">_infer_weight_shape</span><span class="p">(</span><span class="n">op_name</span><span class="p">,</span> <span class="n">dshape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset_weight</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;offset_weight&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">offsetshapes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                       <span class="n">init</span><span class="o">=</span><span class="n">offset_weight_initializer</span><span class="p">,</span>
+                                       <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">offset_use_bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">offset_bias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;offset_bias&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">offsetshapes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                         <span class="n">init</span><span class="o">=</span><span class="n">offset_bias_initializer</span><span class="p">,</span>
+                                         <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">offset_bias</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">deformable_conv_weight_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">deformable_conv_weight_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">channels</span>
+        <span class="n">deformable_conv_weight_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">deformable_conv_weight_shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">deformable_conv_weight</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;deformable_conv_weight&#39;</span><span class="p">,</span>
+                                                <span class="n">shape</span><span class="o">=</span><span class="n">deformable_conv_weight_shape</span><span class="p">,</span>
+                                                <span class="n">init</span><span class="o">=</span><span class="n">weight_initializer</span><span class="p">,</span>
+                                                <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deformable_conv_bias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;deformable_conv_bias&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">channels</span><span class="p">,),</span>
+                                                  <span class="n">init</span><span class="o">=</span><span class="n">bias_initializer</span><span class="p">,</span>
+                                                  <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deformable_conv_bias</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">activation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="n">activation</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="DeformableConvolution.hybrid_forward"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.DeformableConvolution.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">offset_weight</span><span class="p">,</span> <span class="n">deformable_conv_weight</span><span class="p">,</span> <span class="n">offset_bias</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deformable_conv_bias</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_np_array</span><span class="p">():</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+            <span class="n">offset_weight</span> <span class="o">=</span> <span class="n">offset_weight</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+            <span class="n">deformable_conv_weight</span> <span class="o">=</span> <span class="n">deformable_conv_weight</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">offset_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">offset_bias</span> <span class="o">=</span> <span class="n">offset_bias</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">deformable_conv_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">deformable_conv_bias</span> <span class="o">=</span> <span class="n">deformable_conv_bias</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">offset_bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">convolution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">offset_weight</span><span class="p">,</span> <span class="n">cudnn_off</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">convolution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">offset_weight</span><span class="p">,</span> <span class="n">offset_bias</span><span class="p">,</span> <span class="n">cudnn_off</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">deformable_conv_bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">deformable_convolution</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">deformable_conv_weight</span><span class="p">,</span>
+                                               <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">deformable_convolution</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">deformable_conv_weight</span><span class="p">,</span>
+                                               <span class="n">bias</span><span class="o">=</span><span class="n">deformable_conv_bias</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">,</span>
+                                               <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">np_array</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+                <span class="n">act</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">act</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">act</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">act</span><span class="o">.</span><span class="n">as_nd_ndarray</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;deformable_conv&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">(</span><span class="si">{mapping}</span><span class="s1">, kernel_size=</span><span class="si">{kernel}</span><span class="s1">, stride=</span><span class="si">{stride}</span><span class="s1">&#39;</span>
+        <span class="n">len_kernel_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">[</span><span class="s1">&#39;kernel&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">[</span><span class="s1">&#39;pad&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">*</span> <span class="n">len_kernel_size</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;, padding=</span><span class="si">{pad}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">[</span><span class="s1">&#39;dilate&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">*</span> <span class="n">len_kernel_size</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;, dilation=</span><span class="si">{dilate}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;out_pad&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_pad</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">*</span> <span class="n">len_kernel_size</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;, output_padding=</span><span class="si">{out_pad}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out_pad</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">out_pad</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">[</span><span class="s1">&#39;num_group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;, groups=</span><span class="si">{num_group}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deformable_conv_bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;, bias=False&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;, </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;)&#39;</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deformable_conv_weight</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">mapping</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -&gt; </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ModulatedDeformableConvolution"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.ModulatedDeformableConvolution">[docs]</a><span class="k">class</span> <span class="nc">ModulatedDeformableConvolution</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;2-D Deformable Convolution v2 (Dai, 2018).</span>
+
+<span class="sd">    The modulated deformable convolution operation is described in https://arxiv.org/abs/1811.11168</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    channels : int,</span>
+<span class="sd">        The dimensionality of the output space</span>
+<span class="sd">        i.e. the number of output channels in the convolution.</span>
+<span class="sd">    kernel_size : int or tuple/list of 2 ints, (Default value = (1,1))</span>
+<span class="sd">        Specifies the dimensions of the convolution window.</span>
+<span class="sd">    strides : int or tuple/list of 2 ints, (Default value = (1,1))</span>
+<span class="sd">        Specifies the strides of the convolution.</span>
+<span class="sd">    padding : int or tuple/list of 2 ints, (Default value = (0,0))</span>
+<span class="sd">        If padding is non-zero, then the input is implicitly zero-padded</span>
+<span class="sd">        on both sides for padding number of points.</span>
+<span class="sd">    dilation : int or tuple/list of 2 ints, (Default value = (1,1))</span>
+<span class="sd">        Specifies the dilation rate to use for dilated convolution.</span>
+<span class="sd">    groups : int, (Default value = 1)</span>
+<span class="sd">        Controls the connections between inputs and outputs.</span>
+<span class="sd">        At groups=1, all inputs are convolved to all outputs.</span>
+<span class="sd">        At groups=2, the operation becomes equivalent to having two convolution</span>
+<span class="sd">        layers side by side, each seeing half the input channels, and producing</span>
+<span class="sd">        half the output channels, and both subsequently concatenated.</span>
+<span class="sd">    num_deformable_group : int, (Default value = 1)</span>
+<span class="sd">        Number of deformable group partitions.</span>
+<span class="sd">    layout : str, (Default value = NCHW)</span>
+<span class="sd">        Dimension ordering of data and weight. Can be &#39;NCW&#39;, &#39;NWC&#39;, &#39;NCHW&#39;,</span>
+<span class="sd">        &#39;NHWC&#39;, &#39;NCDHW&#39;, &#39;NDHWC&#39;, etc. &#39;N&#39;, &#39;C&#39;, &#39;H&#39;, &#39;W&#39;, &#39;D&#39; stands for</span>
+<span class="sd">        batch, channel, height, width and depth dimensions respectively.</span>
+<span class="sd">        Convolution is performed over &#39;D&#39;, &#39;H&#39;, and &#39;W&#39; dimensions.</span>
+<span class="sd">    use_bias : bool, (Default value = True)</span>
+<span class="sd">        Whether the layer for generating the output features uses a bias vector.</span>
+<span class="sd">    in_channels : int, (Default value = 0)</span>
+<span class="sd">        The number of input channels to this layer. If not specified,</span>
+<span class="sd">        initialization will be deferred to the first time `forward` is called</span>
+<span class="sd">        and input channels will be inferred from the shape of input data.</span>
+<span class="sd">    activation : str, (Default value = None)</span>
+<span class="sd">        Activation function to use. See :func:`~mxnet.ndarray.Activation`.</span>
+<span class="sd">        If you don&#39;t specify anything, no activation is applied</span>
+<span class="sd">        (ie. &quot;linear&quot; activation: `a(x) = x`).</span>
+<span class="sd">    weight_initializer : str or `Initializer`, (Default value = None)</span>
+<span class="sd">        Initializer for the `weight` weights matrix for the convolution layer</span>
+<span class="sd">        for generating the output features.</span>
+<span class="sd">    bias_initializer : str or `Initializer`, (Default value = zeros)</span>
+<span class="sd">        Initializer for the bias vector for the convolution layer</span>
+<span class="sd">        for generating the output features.</span>
+<span class="sd">    offset_weight_initializer : str or `Initializer`, (Default value = zeros)</span>
+<span class="sd">        Initializer for the `weight` weights matrix for the convolution layer</span>
+<span class="sd">        for generating the offset.</span>
+<span class="sd">    offset_bias_initializer : str or `Initializer`, (Default value = zeros),</span>
+<span class="sd">        Initializer for the bias vector for the convolution layer</span>
+<span class="sd">        for generating the offset.</span>
+<span class="sd">    offset_use_bias: bool, (Default value = True)</span>
+<span class="sd">        Whether the layer for generating the offset uses a bias vector.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">        - **data**: 4D input tensor with shape</span>
+<span class="sd">          `(batch_size, in_channels, height, width)` when `layout` is `NCHW`.</span>
+<span class="sd">          For other layouts shape is permuted accordingly.</span>
+
+<span class="sd">    Outputs:</span>
+<span class="sd">        - **out**: 4D output tensor with shape</span>
+<span class="sd">          `(batch_size, channels, out_height, out_width)` when `layout` is `NCHW`.</span>
+<span class="sd">          out_height and out_width are calculated as::</span>
+
+<span class="sd">              out_height = floor((height+2*padding[0]-dilation[0]*(kernel_size[0]-1)-1)/stride[0])+1</span>
+<span class="sd">              out_width = floor((width+2*padding[1]-dilation[1]*(kernel_size[1]-1)-1)/stride[1])+1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dilation</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">num_deformable_group</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;NCHW&#39;</span><span class="p">,</span> <span class="n">use_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">in_channels</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bias_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span>
+                 <span class="n">offset_weight_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span> <span class="n">offset_bias_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span> <span class="n">offset_use_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">op_name</span><span class="o">=</span><span class="s1">&#39;ModulatedDeformableConvolution&#39;</span><span class="p">,</span> <span class="n">adj</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ModulatedDeformableConvolution</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="o">=</span> <span class="n">channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_in_channels</span> <span class="o">=</span> <span class="n">in_channels</span>
+
+        <span class="k">assert</span> <span class="n">layout</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;NCHW&#39;</span><span class="p">,</span> <span class="s1">&#39;NHWC&#39;</span><span class="p">),</span> <span class="s2">&quot;Only supports &#39;NCHW&#39; and &#39;NHWC&#39; layout for now&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+            <span class="n">kernel_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel_size</span><span class="p">,)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">strides</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+            <span class="n">strides</span> <span class="o">=</span> <span class="p">(</span><span class="n">strides</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">padding</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+            <span class="n">padding</span> <span class="o">=</span> <span class="p">(</span><span class="n">padding</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dilation</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">):</span>
+            <span class="n">dilation</span> <span class="o">=</span> <span class="p">(</span><span class="n">dilation</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_op_name</span> <span class="o">=</span> <span class="n">op_name</span>
+
+        <span class="n">offset_channels</span> <span class="o">=</span> <span class="n">num_deformable_group</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset_split_index</span> <span class="o">=</span> <span class="n">num_deformable_group</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="s1">&#39;stride&#39;</span><span class="p">:</span> <span class="n">strides</span><span class="p">,</span> <span class="s1">&#39;dilate&#39;</span><span class="p">:</span> <span class="n">dilation</span><span class="p">,</span>
+            <span class="s1">&#39;pad&#39;</span><span class="p">:</span> <span class="n">padding</span><span class="p">,</span> <span class="s1">&#39;num_filter&#39;</span><span class="p">:</span> <span class="n">offset_channels</span><span class="p">,</span> <span class="s1">&#39;num_group&#39;</span><span class="p">:</span> <span class="n">groups</span><span class="p">,</span>
+            <span class="s1">&#39;no_bias&#39;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">offset_use_bias</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="n">layout</span><span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;kernel&#39;</span><span class="p">:</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="s1">&#39;stride&#39;</span><span class="p">:</span> <span class="n">strides</span><span class="p">,</span> <span class="s1">&#39;dilate&#39;</span><span class="p">:</span> <span class="n">dilation</span><span class="p">,</span>
+            <span class="s1">&#39;pad&#39;</span><span class="p">:</span> <span class="n">padding</span><span class="p">,</span> <span class="s1">&#39;num_filter&#39;</span><span class="p">:</span> <span class="n">channels</span><span class="p">,</span> <span class="s1">&#39;num_group&#39;</span><span class="p">:</span> <span class="n">groups</span><span class="p">,</span>
+            <span class="s1">&#39;num_deformable_group&#39;</span><span class="p">:</span> <span class="n">num_deformable_group</span><span class="p">,</span>
+            <span class="s1">&#39;no_bias&#39;</span><span class="p">:</span> <span class="ow">not</span> <span class="n">use_bias</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="n">layout</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">adj</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span><span class="p">[</span><span class="s1">&#39;adj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adj</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">[</span><span class="s1">&#39;adj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adj</span>
+
+        <span class="n">deformable_conv_weight_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">deformable_conv_weight_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">channels</span>
+        <span class="n">deformable_conv_weight_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">deformable_conv_weight_shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">deformable_conv_weight</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;deformable_conv_weight&#39;</span><span class="p">,</span>
+                                                <span class="n">shape</span><span class="o">=</span><span class="n">deformable_conv_weight_shape</span><span class="p">,</span>
+                                                <span class="n">init</span><span class="o">=</span><span class="n">weight_initializer</span><span class="p">,</span>
+                                                <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deformable_conv_bias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;deformable_conv_bias&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">channels</span><span class="p">,),</span>
+                                                  <span class="n">init</span><span class="o">=</span><span class="n">bias_initializer</span><span class="p">,</span>
+                                                  <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deformable_conv_bias</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">dshape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">dshape</span><span class="p">[</span><span class="n">layout</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">dshape</span><span class="p">[</span><span class="n">layout</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">in_channels</span>
+
+        <span class="n">op</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">symbol</span><span class="p">,</span> <span class="s1">&#39;Convolution&#39;</span><span class="p">)</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">op</span><span class="p">(</span><span class="n">symbol</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">dshape</span><span class="p">),</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span><span class="p">)</span>
+
+        <span class="n">offsetshapes</span> <span class="o">=</span> <span class="n">offset</span><span class="o">.</span><span class="n">infer_shape_partial</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset_weight</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;offset_weight&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">offsetshapes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                       <span class="n">init</span><span class="o">=</span><span class="n">offset_weight_initializer</span><span class="p">,</span>
+                                       <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">offset_use_bias</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">offset_bias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;offset_bias&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">offsetshapes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                                         <span class="n">init</span><span class="o">=</span><span class="n">offset_bias_initializer</span><span class="p">,</span>
+                                         <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">offset_bias</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">activation</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="n">activation</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="ModulatedDeformableConvolution.hybrid_forward"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.ModulatedDeformableConvolution.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">offset_weight</span><span class="p">,</span> <span class="n">deformable_conv_weight</span><span class="p">,</span> <span class="n">offset_bias</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deformable_conv_bias</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_np_array</span><span class="p">():</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+            <span class="n">offset_weight</span> <span class="o">=</span> <span class="n">offset_weight</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+            <span class="n">deformable_conv_weight</span> <span class="o">=</span> <span class="n">deformable_conv_weight</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">offset_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">offset_bias</span> <span class="o">=</span> <span class="n">offset_bias</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">deformable_conv_bias</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">deformable_conv_bias</span> <span class="o">=</span> <span class="n">deformable_conv_bias</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">offset_bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">convolution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">offset_weight</span><span class="p">,</span> <span class="n">cudnn_off</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">convolution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">offset_weight</span><span class="p">,</span> <span class="n">offset_bias</span><span class="p">,</span> <span class="n">cudnn_off</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_offset</span><span class="p">)</span>
+
+        <span class="n">offset_t</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">slice_axis</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_split_index</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">slice_axis</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_split_index</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+
+        <span class="k">if</span> <span class="n">deformable_conv_bias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">modulated_deformable_convolution</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset_t</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+                                                         <span class="n">weight</span><span class="o">=</span><span class="n">deformable_conv_weight</span><span class="p">,</span>
+                                                         <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">act</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">modulated_deformable_convolution</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset_t</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+                                                         <span class="n">weight</span><span class="o">=</span><span class="n">deformable_conv_weight</span><span class="p">,</span>
+                                                         <span class="n">bias</span><span class="o">=</span><span class="n">deformable_conv_bias</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;fwd&#39;</span><span class="p">,</span>
+                                                         <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_kwargs_deformable_conv</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">np_array</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+                <span class="n">act</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">act</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">act</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">act</span><span class="o">.</span><span class="n">as_nd_ndarray</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;modulated_deformable_conv&#39;</span></div>
+
+
+<div class="viewcode-block" id="PixelShuffle1D"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.PixelShuffle1D">[docs]</a><span class="k">class</span> <span class="nc">PixelShuffle1D</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Pixel-shuffle layer for upsampling in 1 dimension.</span>
+
+<span class="sd">    Pixel-shuffling is the operation of taking groups of values along</span>
+<span class="sd">    the *channel* dimension and regrouping them into blocks of pixels</span>
+<span class="sd">    along the ``W`` dimension, thereby effectively multiplying that dimension</span>
+<span class="sd">    by a constant factor in size.</span>
+
+<span class="sd">    For example, a feature map of shape :math:`(fC, W)` is reshaped</span>
+<span class="sd">    into :math:`(C, fW)` by forming little value groups of size :math:`f`</span>
+<span class="sd">    and arranging them in a grid of size :math:`W`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    factor : int or 1-tuple of int</span>
+<span class="sd">        Upsampling factor, applied to the ``W`` dimension.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">        - **data**: Tensor of shape ``(N, f*C, W)``.</span>
+<span class="sd">    Outputs:</span>
+<span class="sd">        - **out**: Tensor of shape ``(N, C, W*f)``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; pxshuf = PixelShuffle1D(2)</span>
+<span class="sd">    &gt;&gt;&gt; x = mx.nd.zeros((1, 8, 3))</span>
+<span class="sd">    &gt;&gt;&gt; pxshuf(x).shape</span>
+<span class="sd">    (1, 4, 6)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PixelShuffle1D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_factor</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PixelShuffle1D.hybrid_forward"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.PixelShuffle1D.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform pixel-shuffling on the input.&quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factor</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_np_array</span><span class="p">():</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+                                             <span class="c1"># (N, C*f, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># (N, C, f, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>     <span class="c1"># (N, C, W, f)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">))</span>         <span class="c1"># (N, C, W*f)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">as_nd_ndarray</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factor</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PixelShuffle2D"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.PixelShuffle2D">[docs]</a><span class="k">class</span> <span class="nc">PixelShuffle2D</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Pixel-shuffle layer for upsampling in 2 dimensions.</span>
+
+<span class="sd">    Pixel-shuffling is the operation of taking groups of values along</span>
+<span class="sd">    the *channel* dimension and regrouping them into blocks of pixels</span>
+<span class="sd">    along the ``H`` and ``W`` dimensions, thereby effectively multiplying</span>
+<span class="sd">    those dimensions by a constant factor in size.</span>
+
+<span class="sd">    For example, a feature map of shape :math:`(f^2 C, H, W)` is reshaped</span>
+<span class="sd">    into :math:`(C, fH, fW)` by forming little :math:`f \times f` blocks</span>
+<span class="sd">    of pixels and arranging them in an :math:`H \times W` grid.</span>
+
+<span class="sd">    Pixel-shuffling together with regular convolution is an alternative,</span>
+<span class="sd">    learnable way of upsampling an image by arbitrary factors. It is reported</span>
+<span class="sd">    to help overcome checkerboard artifacts that are common in upsampling with</span>
+<span class="sd">    transposed convolutions (also called deconvolutions). See the paper</span>
+<span class="sd">    `Real-Time Single Image and Video Super-Resolution Using an Efficient</span>
+<span class="sd">    Sub-Pixel Convolutional Neural Network &lt;https://arxiv.org/abs/1609.05158&gt;`_</span>
+<span class="sd">    for further details.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    factor : int or 2-tuple of int</span>
+<span class="sd">        Upsampling factors, applied to the ``H`` and ``W`` dimensions,</span>
+<span class="sd">        in that order.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">        - **data**: Tensor of shape ``(N, f1*f2*C, H, W)``.</span>
+<span class="sd">    Outputs:</span>
+<span class="sd">        - **out**: Tensor of shape ``(N, C, H*f1, W*f2)``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; pxshuf = PixelShuffle2D((2, 3))</span>
+<span class="sd">    &gt;&gt;&gt; x = mx.nd.zeros((1, 12, 3, 5))</span>
+<span class="sd">    &gt;&gt;&gt; pxshuf(x).shape</span>
+<span class="sd">    (1, 2, 6, 15)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PixelShuffle2D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_factors</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">factor</span><span class="p">),)</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_factors</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">fac</span><span class="p">)</span> <span class="k">for</span> <span class="n">fac</span> <span class="ow">in</span> <span class="n">factor</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_factors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;wrong length </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_factors</span><span class="p">))</span>
+
+<div class="viewcode-block" id="PixelShuffle2D.hybrid_forward"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.PixelShuffle2D.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform pixel-shuffling on the input.&quot;&quot;&quot;</span>
+        <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factors</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_np_array</span><span class="p">():</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+                                                      <span class="c1"># (N, f1*f2*C, H, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">f1</span> <span class="o">*</span> <span class="n">f2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># (N, C, f1*f2, H, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>    <span class="c1"># (N, C, f1, f2, H, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>        <span class="c1"># (N, C, H, f1, W, f2)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">))</span>              <span class="c1"># (N, C, H*f1, W*f2)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">as_nd_ndarray</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factors</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PixelShuffle3D"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.PixelShuffle3D">[docs]</a><span class="k">class</span> <span class="nc">PixelShuffle3D</span><span class="p">(</span><span class="n">HybridBlock</span><span class="p">):</span>
+
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Pixel-shuffle layer for upsampling in 3 dimensions.</span>
+
+<span class="sd">    Pixel-shuffling (or voxel-shuffling in 3D) is the operation of taking</span>
+<span class="sd">    groups of values along the *channel* dimension and regrouping them into</span>
+<span class="sd">    blocks of voxels along the ``D``, ``H`` and ``W`` dimensions, thereby</span>
+<span class="sd">    effectively multiplying those dimensions by a constant factor in size.</span>
+
+<span class="sd">    For example, a feature map of shape :math:`(f^3 C, D, H, W)` is reshaped</span>
+<span class="sd">    into :math:`(C, fD, fH, fW)` by forming little :math:`f \times f \times f`</span>
+<span class="sd">    blocks of voxels and arranging them in a :math:`D \times H \times W` grid.</span>
+
+<span class="sd">    Pixel-shuffling together with regular convolution is an alternative,</span>
+<span class="sd">    learnable way of upsampling an image by arbitrary factors. It is reported</span>
+<span class="sd">    to help overcome checkerboard artifacts that are common in upsampling with</span>
+<span class="sd">    transposed convolutions (also called deconvolutions). See the paper</span>
+<span class="sd">    `Real-Time Single Image and Video Super-Resolution Using an Efficient</span>
+<span class="sd">    Sub-Pixel Convolutional Neural Network &lt;https://arxiv.org/abs/1609.05158&gt;`_</span>
+<span class="sd">    for further details.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    factor : int or 3-tuple of int</span>
+<span class="sd">        Upsampling factors, applied to the ``D``, ``H`` and ``W``</span>
+<span class="sd">        dimensions, in that order.</span>
+
+<span class="sd">    Inputs:</span>
+<span class="sd">        - **data**: Tensor of shape ``(N, f1*f2*f3*C, D, H, W)``.</span>
+<span class="sd">    Outputs:</span>
+<span class="sd">        - **out**: Tensor of shape ``(N, C, D*f1, H*f2, W*f3)``.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; pxshuf = PixelShuffle3D((2, 3, 4))</span>
+<span class="sd">    &gt;&gt;&gt; x = mx.nd.zeros((1, 48, 3, 5, 7))</span>
+<span class="sd">    &gt;&gt;&gt; pxshuf(x).shape</span>
+<span class="sd">    (1, 2, 6, 15, 28)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PixelShuffle3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_factors</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">factor</span><span class="p">),)</span> <span class="o">*</span> <span class="mi">3</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_factors</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">fac</span><span class="p">)</span> <span class="k">for</span> <span class="n">fac</span> <span class="ow">in</span> <span class="n">factor</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_factors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;wrong length </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_factors</span><span class="p">))</span>
+
+<div class="viewcode-block" id="PixelShuffle3D.hybrid_forward"><a class="viewcode-back" href="../../../../api/gluon/nn/index.html#mxnet.gluon.nn.PixelShuffle3D.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform pixel-shuffling on the input.&quot;&quot;&quot;</span>
+        <span class="c1"># `transpose` doesn&#39;t support 8D, need other implementation</span>
+        <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factors</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_np_array</span><span class="p">():</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">as_np_ndarray</span><span class="p">()</span>
+                                                              <span class="c1"># (N, C*f1*f2*f3, D, H, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">f1</span> <span class="o">*</span> <span class="n">f2</span> <span class="o">*</span> <span class="n">f3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># (N, C, f1*f2*f3, D, H, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>                               <span class="c1"># (N, C, D, f1*f2*f3, H, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="o">*</span><span class="n">f3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>      <span class="c1"># (N, C, D, f1, f2*f3, H, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>                 <span class="c1"># (N, C, D*f1, f2*f3, H, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>                               <span class="c1"># (N, C, D*f1, H, f2*f3, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>         <span class="c1"># (N, C, D*f1, H, f2, f3, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>                 <span class="c1"># (N, C, D*f1, H*f2, f3, W)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>                               <span class="c1"># (N, C, D*f1, H*f2, W, f3)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">npx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">))</span>                    <span class="c1"># (N, C, D*f1, H*f2, W*f3)</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="k">if</span> <span class="n">is_np_array</span><span class="p">()</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">as_nd_ndarray</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factors</span><span class="p">)</span></div>
 </pre></div>
 
         <hr class="feedback-hr-top" />

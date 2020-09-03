@@ -108,6 +108,7 @@
           </span>
           <div class="dropdown-content">
             <a class="dropdown-option-active" href="/">master</a><br>
+            <a class="dropdown-option" href="/versions/1.7/">1.7</a><br>
             <a class="dropdown-option" href="/versions/1.6/">1.6</a><br>
             <a class="dropdown-option" href="/versions/1.5.0/">1.5.0</a><br>
             <a class="dropdown-option" href="/versions/1.4.1/">1.4.1</a><br>
@@ -149,6 +150,13 @@
       </div>
 </form>
         
+<a id="button-show-github"
+    href="https://github.com/apache/mxnet/edit/master/docs/python_docs/python/_modules/mxnet/gluon/rnn/rnn_cell" class="mdl-button mdl-js-button mdl-button--icon">
+<i class="material-icons">edit</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-github">
+Edit on Github
+</div>
         </nav>
     </div>
     <div class="mdl-layout__header-row header-links">
@@ -1210,7 +1218,7 @@
            <span class="s1">&#39;RNNCell&#39;</span><span class="p">,</span> <span class="s1">&#39;LSTMCell&#39;</span><span class="p">,</span> <span class="s1">&#39;GRUCell&#39;</span><span class="p">,</span>
            <span class="s1">&#39;SequentialRNNCell&#39;</span><span class="p">,</span> <span class="s1">&#39;HybridSequentialRNNCell&#39;</span><span class="p">,</span> <span class="s1">&#39;DropoutCell&#39;</span><span class="p">,</span>
            <span class="s1">&#39;ModifierCell&#39;</span><span class="p">,</span> <span class="s1">&#39;ZoneoutCell&#39;</span><span class="p">,</span> <span class="s1">&#39;ResidualCell&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;BidirectionalCell&#39;</span><span class="p">]</span>
+           <span class="s1">&#39;BidirectionalCell&#39;</span><span class="p">,</span> <span class="s1">&#39;VariationalDropoutCell&#39;</span><span class="p">,</span> <span class="s1">&#39;LSTMPCell&#39;</span><span class="p">]</span>
 
 <span class="kn">from</span> <span class="nn">...</span> <span class="kn">import</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">ndarray</span>
 <span class="kn">from</span> <span class="nn">...base</span> <span class="kn">import</span> <span class="n">string_types</span><span class="p">,</span> <span class="n">numeric_types</span><span class="p">,</span> <span class="n">_as_list</span>
@@ -2271,6 +2279,412 @@
                                                      <span class="n">merge_outputs</span><span class="p">)</span>
         <span class="n">states</span> <span class="o">=</span> <span class="n">l_states</span> <span class="o">+</span> <span class="n">r_states</span>
         <span class="k">return</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">states</span></div></div>
+
+
+<div class="viewcode-block" id="VariationalDropoutCell"><a class="viewcode-back" href="../../../../api/gluon/rnn/index.html#mxnet.gluon.rnn.VariationalDropoutCell">[docs]</a><span class="k">class</span> <span class="nc">VariationalDropoutCell</span><span class="p">(</span><span class="n">ModifierCell</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies Variational Dropout on base cell.</span>
+<span class="sd">    https://arxiv.org/pdf/1512.05287.pdf</span>
+
+<span class="sd">    Variational dropout uses the same dropout mask across time-steps. It can be applied to RNN</span>
+<span class="sd">    inputs, outputs, and states. The masks for them are not shared.</span>
+
+<span class="sd">    The dropout mask is initialized when stepping forward for the first time and will remain</span>
+<span class="sd">    the same until .reset() is called. Thus, if using the cell and stepping manually without calling</span>
+<span class="sd">    .unroll(), the .reset() should be called after each sequence.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    base_cell : RecurrentCell</span>
+<span class="sd">        The cell on which to perform variational dropout.</span>
+<span class="sd">    drop_inputs : float, default 0.</span>
+<span class="sd">        The dropout rate for inputs. Won&#39;t apply dropout if it equals 0.</span>
+<span class="sd">    drop_states : float, default 0.</span>
+<span class="sd">        The dropout rate for state inputs on the first state channel.</span>
+<span class="sd">        Won&#39;t apply dropout if it equals 0.</span>
+<span class="sd">    drop_outputs : float, default 0.</span>
+<span class="sd">        The dropout rate for outputs. Won&#39;t apply dropout if it equals 0.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_cell</span><span class="p">,</span> <span class="n">drop_inputs</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">drop_states</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">drop_outputs</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">drop_states</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_cell</span><span class="p">,</span> <span class="n">BidirectionalCell</span><span class="p">),</span> \
+            <span class="s2">&quot;BidirectionalCell doesn&#39;t support variational state dropout. &quot;</span> \
+            <span class="s2">&quot;Please add VariationalDropoutCell to the cells underneath instead.&quot;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">drop_states</span> \
+               <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_cell</span><span class="p">,</span> <span class="n">SequentialRNNCell</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">base_cell</span><span class="o">.</span><span class="n">_bidirectional</span><span class="p">,</span> \
+            <span class="s2">&quot;Bidirectional SequentialRNNCell doesn&#39;t support variational state dropout. &quot;</span> \
+            <span class="s2">&quot;Please add VariationalDropoutCell to the cells underneath instead.&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VariationalDropoutCell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">base_cell</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs</span> <span class="o">=</span> <span class="n">drop_inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_states</span> <span class="o">=</span> <span class="n">drop_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs</span> <span class="o">=</span> <span class="n">drop_outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_states_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs_mask</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;vardrop&#39;</span>
+
+<div class="viewcode-block" id="VariationalDropoutCell.reset"><a class="viewcode-back" href="../../../../api/gluon/rnn/index.html#mxnet.gluon.rnn.VariationalDropoutCell.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VariationalDropoutCell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_states_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs_mask</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">_initialize_input_masks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_states</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_states_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">drop_states_mask</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                                              <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">drop_states</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs_mask</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span>
+                                              <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_output_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs_mask</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">output</span><span class="p">),</span>
+                                               <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="VariationalDropoutCell.hybrid_forward"><a class="viewcode-back" href="../../../../api/gluon/rnn/index.html#mxnet.gluon.rnn.VariationalDropoutCell.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_cell</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_input_masks</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_states</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+            <span class="c1"># state dropout only needs to be applied on h, which is always the first state.</span>
+            <span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_states_mask</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">inputs</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs_mask</span>
+
+        <span class="n">next_output</span><span class="p">,</span> <span class="n">next_states</span> <span class="o">=</span> <span class="n">cell</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_output_mask</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">next_output</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs</span><span class="p">:</span>
+            <span class="n">next_output</span> <span class="o">=</span> <span class="n">next_output</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs_mask</span>
+
+        <span class="k">return</span> <span class="n">next_output</span><span class="p">,</span> <span class="n">next_states</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">(p_out = </span><span class="si">{drop_outputs}</span><span class="s1">, p_state = </span><span class="si">{drop_states}</span><span class="s1">)&#39;</span>
+        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="VariationalDropoutCell.unroll"><a class="viewcode-back" href="../../../../api/gluon/rnn/index.html#mxnet.gluon.rnn.VariationalDropoutCell.unroll">[docs]</a>    <span class="k">def</span> <span class="nf">unroll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">begin_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;NTC&#39;</span><span class="p">,</span> <span class="n">merge_outputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">valid_length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unrolls an RNN cell across time steps.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        length : int</span>
+<span class="sd">            Number of steps to unroll.</span>
+<span class="sd">        inputs : Symbol, list of Symbol, or None</span>
+<span class="sd">            If `inputs` is a single Symbol (usually the output</span>
+<span class="sd">            of Embedding symbol), it should have shape</span>
+<span class="sd">            (batch_size, length, ...) if `layout` is &#39;NTC&#39;,</span>
+<span class="sd">            or (length, batch_size, ...) if `layout` is &#39;TNC&#39;.</span>
+
+<span class="sd">            If `inputs` is a list of symbols (usually output of</span>
+<span class="sd">            previous unroll), they should all have shape</span>
+<span class="sd">            (batch_size, ...).</span>
+<span class="sd">        begin_state : nested list of Symbol, optional</span>
+<span class="sd">            Input states created by `begin_state()`</span>
+<span class="sd">            or output state of another cell.</span>
+<span class="sd">            Created from `begin_state()` if `None`.</span>
+<span class="sd">        layout : str, optional</span>
+<span class="sd">            `layout` of input symbol. Only used if inputs</span>
+<span class="sd">            is a single Symbol.</span>
+<span class="sd">        merge_outputs : bool, optional</span>
+<span class="sd">            If `False`, returns outputs as a list of Symbols.</span>
+<span class="sd">            If `True`, concatenates output across time steps</span>
+<span class="sd">            and returns a single symbol with shape</span>
+<span class="sd">            (batch_size, length, ...) if layout is &#39;NTC&#39;,</span>
+<span class="sd">            or (length, batch_size, ...) if layout is &#39;TNC&#39;.</span>
+<span class="sd">            If `None`, output whatever is faster.</span>
+<span class="sd">        valid_length : Symbol, NDArray or None</span>
+<span class="sd">            `valid_length` specifies the length of the sequences in the batch without padding.</span>
+<span class="sd">            This option is especially useful for building sequence-to-sequence models where</span>
+<span class="sd">            the input and output sequences would potentially be padded.</span>
+<span class="sd">            If `valid_length` is None, all sequences are assumed to have the same length.</span>
+<span class="sd">            If `valid_length` is a Symbol or NDArray, it should have shape (batch_size,).</span>
+<span class="sd">            The ith element will be the length of the ith sequence in the batch.</span>
+<span class="sd">            The last valid state will be return and the padded outputs will be masked with 0.</span>
+<span class="sd">            Note that `valid_length` must be smaller or equal to `length`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        outputs : list of Symbol or Symbol</span>
+<span class="sd">            Symbol (if `merge_outputs` is True) or list of Symbols</span>
+<span class="sd">            (if `merge_outputs` is False) corresponding to the output from</span>
+<span class="sd">            the RNN from this unrolling.</span>
+
+<span class="sd">        states : list of Symbol</span>
+<span class="sd">            The new state of this RNN after this unrolling.</span>
+<span class="sd">            The type of this symbol is same as the output of `begin_state()`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Dropout on inputs and outputs can be performed on the whole sequence</span>
+        <span class="c1"># only when state dropout is not present.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_states</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">VariationalDropoutCell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">unroll</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">begin_state</span><span class="p">,</span>
+                                                              <span class="n">layout</span><span class="p">,</span> <span class="n">merge_outputs</span><span class="p">,</span>
+                                                              <span class="n">valid_length</span><span class="o">=</span><span class="n">valid_length</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="n">inputs</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">batch_size</span> <span class="o">=</span> <span class="n">_format_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="n">_get_begin_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">begin_state</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs</span><span class="p">:</span>
+            <span class="n">inputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">drop_inputs</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="n">axis</span><span class="p">,))</span>
+
+        <span class="n">outputs</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_cell</span><span class="o">.</span><span class="n">unroll</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">merge_outputs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                <span class="n">valid_length</span><span class="o">=</span><span class="n">valid_length</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs</span><span class="p">:</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">drop_outputs</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="n">axis</span><span class="p">,))</span>
+        <span class="n">merge_outputs</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">tensor_types</span><span class="p">)</span> <span class="k">if</span> <span class="n">merge_outputs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> \
+            <span class="n">merge_outputs</span>
+        <span class="n">outputs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_format_sequence</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">merge_outputs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">valid_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">_mask_sequence_variable_length</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">valid_length</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span>
+                                                     <span class="n">merge_outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">states</span></div></div>
+
+
+<div class="viewcode-block" id="LSTMPCell"><a class="viewcode-back" href="../../../../api/gluon/rnn/index.html#mxnet.gluon.rnn.LSTMPCell">[docs]</a><span class="k">class</span> <span class="nc">LSTMPCell</span><span class="p">(</span><span class="n">HybridRecurrentCell</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Long-Short Term Memory Projected (LSTMP) network cell.</span>
+<span class="sd">    (https://arxiv.org/abs/1402.1128)</span>
+
+<span class="sd">    Each call computes the following function:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \begin{array}{ll}</span>
+<span class="sd">        i_t = sigmoid(W_{ii} x_t + b_{ii} + W_{ri} r_{(t-1)} + b_{ri}) \\</span>
+<span class="sd">        f_t = sigmoid(W_{if} x_t + b_{if} + W_{rf} r_{(t-1)} + b_{rf}) \\</span>
+<span class="sd">        g_t = \tanh(W_{ig} x_t + b_{ig} + W_{rc} r_{(t-1)} + b_{rg}) \\</span>
+<span class="sd">        o_t = sigmoid(W_{io} x_t + b_{io} + W_{ro} r_{(t-1)} + b_{ro}) \\</span>
+<span class="sd">        c_t = f_t * c_{(t-1)} + i_t * g_t \\</span>
+<span class="sd">        h_t = o_t * \tanh(c_t) \\</span>
+<span class="sd">        r_t = W_{hr} h_t</span>
+<span class="sd">        \end{array}</span>
+
+<span class="sd">    where :math:`r_t` is the projected recurrent activation at time `t`,</span>
+<span class="sd">    :math:`h_t` is the hidden state at time `t`, :math:`c_t` is the</span>
+<span class="sd">    cell state at time `t`, :math:`x_t` is the input at time `t`, and :math:`i_t`,</span>
+<span class="sd">    :math:`f_t`, :math:`g_t`, :math:`o_t` are the input, forget, cell, and</span>
+<span class="sd">    out gates, respectively.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    hidden_size : int</span>
+<span class="sd">        Number of units in cell state symbol.</span>
+<span class="sd">    projection_size : int</span>
+<span class="sd">        Number of units in output symbol.</span>
+<span class="sd">    i2h_weight_initializer : str or Initializer</span>
+<span class="sd">        Initializer for the input weights matrix, used for the linear</span>
+<span class="sd">        transformation of the inputs.</span>
+<span class="sd">    h2h_weight_initializer : str or Initializer</span>
+<span class="sd">        Initializer for the recurrent weights matrix, used for the linear</span>
+<span class="sd">        transformation of the hidden state.</span>
+<span class="sd">    h2r_weight_initializer : str or Initializer</span>
+<span class="sd">        Initializer for the projection weights matrix, used for the linear</span>
+<span class="sd">        transformation of the recurrent state.</span>
+<span class="sd">    i2h_bias_initializer : str or Initializer, default &#39;lstmbias&#39;</span>
+<span class="sd">        Initializer for the bias vector. By default, bias for the forget</span>
+<span class="sd">        gate is initialized to 1 while all other biases are initialized</span>
+<span class="sd">        to zero.</span>
+<span class="sd">    h2h_bias_initializer : str or Initializer</span>
+<span class="sd">        Initializer for the bias vector.</span>
+<span class="sd">    Inputs:</span>
+<span class="sd">        - **data**: input tensor with shape `(batch_size, input_size)`.</span>
+<span class="sd">        - **states**: a list of two initial recurrent state tensors, with shape</span>
+<span class="sd">          `(batch_size, projection_size)` and `(batch_size, hidden_size)` respectively.</span>
+<span class="sd">    Outputs:</span>
+<span class="sd">        - **out**: output tensor with shape `(batch_size, num_hidden)`.</span>
+<span class="sd">        - **next_states**: a list of two output recurrent state tensors. Each has</span>
+<span class="sd">          the same shape as `states`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">projection_size</span><span class="p">,</span>
+                 <span class="n">i2h_weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">h2h_weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">h2r_weight_initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">i2h_bias_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span> <span class="n">h2h_bias_initializer</span><span class="o">=</span><span class="s1">&#39;zeros&#39;</span><span class="p">,</span>
+                 <span class="n">input_size</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LSTMPCell</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input_size</span> <span class="o">=</span> <span class="n">input_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_projection_size</span> <span class="o">=</span> <span class="n">projection_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2h_weight</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;i2h_weight&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">input_size</span><span class="p">),</span>
+                                    <span class="n">init</span><span class="o">=</span><span class="n">i2h_weight_initializer</span><span class="p">,</span>
+                                    <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h2h_weight</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;h2h_weight&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">projection_size</span><span class="p">),</span>
+                                    <span class="n">init</span><span class="o">=</span><span class="n">h2h_weight_initializer</span><span class="p">,</span>
+                                    <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h2r_weight</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;h2r_weight&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">projection_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">),</span>
+                                    <span class="n">init</span><span class="o">=</span><span class="n">h2r_weight_initializer</span><span class="p">,</span>
+                                    <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i2h_bias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;i2h_bias&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">hidden_size</span><span class="p">,),</span>
+                                  <span class="n">init</span><span class="o">=</span><span class="n">i2h_bias_initializer</span><span class="p">,</span>
+                                  <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h2h_bias</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;h2h_bias&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">hidden_size</span><span class="p">,),</span>
+                                  <span class="n">init</span><span class="o">=</span><span class="n">h2h_bias_initializer</span><span class="p">,</span>
+                                  <span class="n">allow_deferred_init</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LSTMPCell.state_info"><a class="viewcode-back" href="../../../../api/gluon/rnn/index.html#mxnet.gluon.rnn.LSTMPCell.state_info">[docs]</a>    <span class="k">def</span> <span class="nf">state_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_projection_size</span><span class="p">),</span> <span class="s1">&#39;__layout__&#39;</span><span class="p">:</span> <span class="s1">&#39;NC&#39;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hidden_size</span><span class="p">),</span> <span class="s1">&#39;__layout__&#39;</span><span class="p">:</span> <span class="s1">&#39;NC&#39;</span><span class="p">}]</span></div>
+
+    <span class="k">def</span> <span class="nf">_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;lstmp&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{name}</span><span class="s1">(</span><span class="si">{mapping}</span><span class="s1">)&#39;</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i2h_weight</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">proj_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h2r_weight</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1"> -&gt; </span><span class="si">{1}</span><span class="s1"> -&gt; </span><span class="si">{2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">proj_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span>
+                        <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+
+    <span class="c1"># pylint: disable= arguments-differ</span>
+<div class="viewcode-block" id="LSTMPCell.hybrid_forward"><a class="viewcode-back" href="../../../../api/gluon/rnn/index.html#mxnet.gluon.rnn.LSTMPCell.hybrid_forward">[docs]</a>    <span class="k">def</span> <span class="nf">hybrid_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">i2h_weight</span><span class="p">,</span>
+                       <span class="n">h2h_weight</span><span class="p">,</span> <span class="n">h2r_weight</span><span class="p">,</span> <span class="n">i2h_bias</span><span class="p">,</span> <span class="n">h2h_bias</span><span class="p">):</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;t</span><span class="si">%d</span><span class="s1">_&#39;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_counter</span>
+        <span class="n">i2h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">i2h_weight</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">i2h_bias</span><span class="p">,</span>
+                               <span class="n">num_hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hidden_size</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;i2h&#39;</span><span class="p">)</span>
+        <span class="n">h2h</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">weight</span><span class="o">=</span><span class="n">h2h_weight</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">h2h_bias</span><span class="p">,</span>
+                               <span class="n">num_hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_hidden_size</span><span class="o">*</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;h2h&#39;</span><span class="p">)</span>
+        <span class="n">gates</span> <span class="o">=</span> <span class="n">i2h</span> <span class="o">+</span> <span class="n">h2h</span>
+        <span class="n">slice_gates</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">SliceChannel</span><span class="p">(</span><span class="n">gates</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;slice&#39;</span><span class="p">)</span>
+        <span class="n">in_gate</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">slice_gates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+        <span class="n">forget_gate</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">slice_gates</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;f&#39;</span><span class="p">)</span>
+        <span class="n">in_transform</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">slice_gates</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">&quot;tanh&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+        <span class="n">out_gate</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">slice_gates</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">next_c</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elemwise_add</span><span class="p">(</span><span class="n">forget_gate</span> <span class="o">*</span> <span class="n">states</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">in_gate</span> <span class="o">*</span> <span class="n">in_transform</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;state&#39;</span><span class="p">)</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">elemwise_mul</span><span class="p">(</span><span class="n">out_gate</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">next_c</span><span class="p">,</span> <span class="n">act_type</span><span class="o">=</span><span class="s2">&quot;tanh&quot;</span><span class="p">),</span>
+                                <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;hidden&#39;</span><span class="p">)</span>
+        <span class="n">next_r</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">hidden</span><span class="p">,</span> <span class="n">num_hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_projection_size</span><span class="p">,</span>
+                                  <span class="n">weight</span><span class="o">=</span><span class="n">h2r_weight</span><span class="p">,</span> <span class="n">no_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">prefix</span><span class="o">+</span><span class="s1">&#39;out&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">next_r</span><span class="p">,</span> <span class="p">[</span><span class="n">next_r</span><span class="p">,</span> <span class="n">next_c</span><span class="p">]</span></div></div>
+    <span class="c1"># pylint: enable= arguments-differ</span>
+
+
+<span class="k">def</span> <span class="nf">dynamic_unroll</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">begin_state</span><span class="p">,</span> <span class="n">drop_inputs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">drop_outputs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                   <span class="n">layout</span><span class="o">=</span><span class="s1">&#39;TNC&#39;</span><span class="p">,</span> <span class="n">valid_length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Unrolls an RNN cell across time steps.</span>
+
+<span class="sd">    Currently, &#39;TNC&#39; is a preferred layout. unroll on the input of this layout</span>
+<span class="sd">    runs much faster.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cell : an object whose base class is RNNCell.</span>
+<span class="sd">        The RNN cell to run on the input sequence.</span>
+<span class="sd">    inputs : Symbol</span>
+<span class="sd">        It should have shape (batch_size, length, ...) if `layout` is &#39;NTC&#39;,</span>
+<span class="sd">        or (length, batch_size, ...) if `layout` is &#39;TNC&#39;.</span>
+<span class="sd">    begin_state : nested list of Symbol</span>
+<span class="sd">        The initial states of the RNN sequence.</span>
+<span class="sd">    drop_inputs : float, default 0.</span>
+<span class="sd">        The dropout rate for inputs. Won&#39;t apply dropout if it equals 0.</span>
+<span class="sd">    drop_outputs : float, default 0.</span>
+<span class="sd">        The dropout rate for outputs. Won&#39;t apply dropout if it equals 0.</span>
+<span class="sd">    layout : str, optional</span>
+<span class="sd">        `layout` of input symbol. Only used if inputs</span>
+<span class="sd">        is a single Symbol.</span>
+<span class="sd">    valid_length : Symbol, NDArray or None</span>
+<span class="sd">        `valid_length` specifies the length of the sequences in the batch without padding.</span>
+<span class="sd">        This option is especially useful for building sequence-to-sequence models where</span>
+<span class="sd">        the input and output sequences would potentially be padded.</span>
+<span class="sd">        If `valid_length` is None, all sequences are assumed to have the same length.</span>
+<span class="sd">        If `valid_length` is a Symbol or NDArray, it should have shape (batch_size,).</span>
+<span class="sd">        The ith element will be the length of the ith sequence in the batch.</span>
+<span class="sd">        The last valid state will be return and the padded outputs will be masked with 0.</span>
+<span class="sd">        Note that `valid_length` must be smaller or equal to `length`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    outputs : Symbol</span>
+<span class="sd">        the output of the RNN from this unrolling.</span>
+
+<span class="sd">    states : list of Symbol</span>
+<span class="sd">        The new state of this RNN after this unrolling.</span>
+<span class="sd">        The type of this symbol is same as the output of `begin_state`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; seq_len = 3</span>
+<span class="sd">    &gt;&gt;&gt; batch_size = 2</span>
+<span class="sd">    &gt;&gt;&gt; input_size = 5</span>
+<span class="sd">    &gt;&gt;&gt; cell = mx.gluon.rnn.LSTMCell(input_size)</span>
+<span class="sd">    &gt;&gt;&gt; cell.initialize(ctx=mx.cpu())</span>
+<span class="sd">    &gt;&gt;&gt; rnn_data = mx.nd.normal(loc=0, scale=1, shape=(seq_len, batch_size, input_size))</span>
+<span class="sd">    &gt;&gt;&gt; state_shape = (batch_size, input_size)</span>
+<span class="sd">    &gt;&gt;&gt; states = [mx.nd.normal(loc=0, scale=1, shape=state_shape) for i in range(2)]</span>
+<span class="sd">    &gt;&gt;&gt; valid_length = mx.nd.array([2, 3])</span>
+<span class="sd">    &gt;&gt;&gt; output, states = mx.gluon.contrib.rnn.rnn_cell.dynamic_unroll(cell, rnn_data, states,</span>
+<span class="sd">                                                                      valid_length=valid_length,</span>
+<span class="sd">                                                                      layout=&#39;TNC&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(output)</span>
+<span class="sd">    [[[ 0.00767238  0.00023103  0.03973929 -0.00925503 -0.05660512]</span>
+<span class="sd">      [ 0.00881535  0.05428379 -0.02493718 -0.01834097  0.02189514]]</span>
+<span class="sd">     [[-0.00676967  0.01447039  0.01287002 -0.00574152 -0.05734247]</span>
+<span class="sd">      [ 0.01568508  0.02650866 -0.04270559 -0.04328435  0.00904011]]</span>
+<span class="sd">     [[ 0.          0.          0.          0.          0.        ]</span>
+<span class="sd">      [ 0.01055336  0.02734251 -0.03153727 -0.03742751 -0.01378113]]]</span>
+<span class="sd">     &lt;NDArray 3x2x5 @cpu(0)&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Merge is always True, so we don&#39;t need length.</span>
+    <span class="n">inputs</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_format_sequence</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">axis</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layout</span><span class="p">)))</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+        <span class="n">axes</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
+    <span class="n">states</span> <span class="o">=</span> <span class="n">begin_state</span>
+
+    <span class="k">if</span> <span class="n">drop_inputs</span><span class="p">:</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">drop_inputs</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="n">axis</span><span class="p">,))</span>
+
+    <span class="k">if</span> <span class="n">valid_length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">loop_body</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">cell</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="n">zeros</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">_as_list</span><span class="p">(</span><span class="n">states</span><span class="p">))</span>
+        <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="k">def</span> <span class="nf">loop_body</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+            <span class="n">cell_states</span> <span class="o">=</span> <span class="n">states</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">iter_no</span> <span class="o">=</span> <span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">out</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">cell</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">cell_states</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cell_states</span><span class="p">):</span>
+                <span class="n">new_states</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">broadcast_greater</span><span class="p">(</span><span class="n">valid_length</span><span class="p">,</span> <span class="n">iter_no</span><span class="p">),</span>
+                                        <span class="n">new_states</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">state</span><span class="p">)</span>
+            <span class="n">new_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">iter_no</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="n">new_states</span>
+
+    <span class="n">outputs</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="n">loop_body</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">drop_outputs</span><span class="p">:</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">drop_outputs</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="n">axis</span><span class="p">,))</span>
+    <span class="k">if</span> <span class="n">valid_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">axes</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">SequenceMask</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">sequence_length</span><span class="o">=</span><span class="n">valid_length</span><span class="p">,</span>
+                                 <span class="n">use_sequence_length</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+        <span class="c1"># the last state is the iteration number. We don&#39;t need it.</span>
+        <span class="k">return</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">states</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">axes</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">states</span>
 </pre></div>
 
         <hr class="feedback-hr-top" />

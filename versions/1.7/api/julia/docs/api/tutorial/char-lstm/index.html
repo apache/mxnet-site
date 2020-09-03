@@ -1,0 +1,904 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.6.0">
+    
+    
+      
+        <title>Generating Random Sentence with LSTM RNN - MXNet.jl</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application.1b62728e.css">
+      
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr.268332fc.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../../assets/Documenter.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#generating-random-sentence-with-lstm-rnn" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="../.." title="MXNet.jl" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              MXNet.jl
+            </span>
+            <span class="md-header-nav__topic">
+              
+                Generating Random Sentence with LSTM RNN
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            
+
+
+  
+
+<a href="https://github.com/apache/incubator-mxnet/tree/master/julia#mxnet/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+          </div>
+        </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main" role="main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="../.." title="MXNet.jl" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    MXNet.jl
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+<a href="https://github.com/apache/incubator-mxnet/tree/master/julia#mxnet/" title="Go to repository" class="md-source" data-md-source="github">
+  
+    <div class="md-source__icon">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+    
+    <label class="md-nav__link" for="nav-2">
+      Tutorial
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Tutorial
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../mnist/" title="Digit Recognition on MNIST" class="md-nav__link">
+      Digit Recognition on MNIST
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Generating Random Sentence with LSTM RNN
+      </label>
+    
+    <a href="./" title="Generating Random Sentence with LSTM RNN" class="md-nav__link md-nav__link--active">
+      Generating Random Sentence with LSTM RNN
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lstm-cells" class="md-nav__link">
+    LSTM Cells
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unfolding-lstm" class="md-nav__link">
+    Unfolding LSTM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-provider-for-text-sequences" class="md-nav__link">
+    Data Provider for Text Sequences
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#training-the-lstm" class="md-nav__link">
+    Training the LSTM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sampling-random-sentences" class="md-nav__link">
+    Sampling Random Sentences
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualizing-the-lstm" class="md-nav__link">
+    Visualizing the LSTM
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      User Guide
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        User Guide
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/install/" title="Installation Guide" class="md-nav__link">
+      Installation Guide
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/overview/" title="Overview" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/faq/" title="FAQ" class="md-nav__link">
+      FAQ
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      API Documentation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        API Documentation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/context/" title="Context" class="md-nav__link">
+      Context
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/model/" title="Models" class="md-nav__link">
+      Models
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/initializer/" title="Initializers" class="md-nav__link">
+      Initializers
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/optimizer/" title="Optimizers" class="md-nav__link">
+      Optimizers
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/callback/" title="Callbacks in training" class="md-nav__link">
+      Callbacks in training
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/metric/" title="Evaluation Metrics" class="md-nav__link">
+      Evaluation Metrics
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/io/" title="Data Providers" class="md-nav__link">
+      Data Providers
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/ndarray/" title="NDArray API" class="md-nav__link">
+      NDArray API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/symbolic-node/" title="Symbolic API" class="md-nav__link">
+      Symbolic API
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/nn-factory/" title="Neural Networks Factory" class="md-nav__link">
+      Neural Networks Factory
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/executor/" title="Executor" class="md-nav__link">
+      Executor
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/kvstore/" title="Key-Value Store" class="md-nav__link">
+      Key-Value Store
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../api/visualize/" title="Network Visualization" class="md-nav__link">
+      Network Visualization
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#lstm-cells" class="md-nav__link">
+    LSTM Cells
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unfolding-lstm" class="md-nav__link">
+    Unfolding LSTM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-provider-for-text-sequences" class="md-nav__link">
+    Data Provider for Text Sequences
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#training-the-lstm" class="md-nav__link">
+    Training the LSTM
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sampling-random-sentences" class="md-nav__link">
+    Sampling Random Sentences
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visualizing-the-lstm" class="md-nav__link">
+    Visualizing the LSTM
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/apache/incubator-mxnet/tree/master/edit/master/docs/tutorial/char-lstm.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                
+                
+                <!–- Licensed to the Apache Software Foundation (ASF) under one –> <!–- or more contributor license agreements.  See the NOTICE file –> <!–- distributed with this work for additional information –> <!–- regarding copyright ownership.  The ASF licenses this file –> <!–- to you under the Apache License, Version 2.0 (the –> <!–- "License"); you may not use this file except in compliance –> <!–- with the License.  You may obtain a copy of the License at –>
+
+<!–-   http://www.apache.org/licenses/LICENSE-2.0 –>
+
+<!–- Unless required by applicable law or agreed to in writing, –> <!–- software distributed under the License is distributed on an –> <!–- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY –> <!–- KIND, either express or implied.  See the License for the –> <!–- specific language governing permissions and limitations –> <!–- under the License. –>
+
+<p><a id='Generating-Random-Sentence-with-LSTM-RNN-1'></a></p>
+<h1 id="generating-random-sentence-with-lstm-rnn">Generating Random Sentence with LSTM RNN</h1>
+<p>This tutorial shows how to train a LSTM (Long short-term memory) RNN (recurrent neural network) to perform character-level sequence training and prediction. The original model, usually called <code>char-rnn</code> is described in <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/">Andrej Karpathy's blog</a>, with a reference implementation in Torch available <a href="https://github.com/karpathy/char-rnn">here</a>.</p>
+<p>Because MXNet.jl does not have a specialized model for recurrent neural networks yet, the example shown here is an implementation of LSTM by using the default FeedForward model via explicitly unfolding over time. We will be using fixed-length input sequence for training. The code is adapted from the <a href="https://github.com/apache/incubator-mxnet/blob/8004a027ad6a73f8f6eae102de8d249fbdfb9a2d/example/rnn/old/char-rnn.ipynb">char-rnn example for MXNet's Python binding</a>, which demonstrates how to use low-level <a href="../../api/symbolic-node/#Symbolic-API-1">Symbolic API</a> to build customized neural network models directly.</p>
+<p>The most important code snippets of this example is shown and explained here. To see and run the complete code, please refer to the <a href="https://github.com/apache/incubator-mxnet/blob/master/julia/docs/src/tutorial/char-lstm.md">examples/char-lstm</a> directory. You will need to install <a href="https://github.com/JuliaLang/Iterators.jl">Iterators.jl</a> and <a href="https://github.com/JuliaStats/StatsBase.jl">StatsBase.jl</a> to run this example.</p>
+<p><a id='LSTM-Cells-1'></a></p>
+<h2 id="lstm-cells">LSTM Cells</h2>
+<p>Christopher Olah has a <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">great blog post about LSTM</a> with beautiful and clear illustrations. So we will not repeat the definition and explanation of what an LSTM cell is here. Basically, an LSTM cell takes input <code>x</code>, as well as previous states (including <code>c</code> and <code>h</code>), and produce the next states. We define a helper type to bundle the two state variables together:</p>
+<p>Because LSTM weights are shared at every time when we do explicit unfolding, so we also define a helper type to hold all the weights (and bias) for an LSTM cell for convenience.</p>
+<p>Note all the variables are of type SymbolicNode. We will construct the LSTM network as a symbolic computation graph, which is then instantiated with NDArray for actual computation.</p>
+<p>The following figure is stolen (permission requested) from <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">Christopher Olah's blog</a>, which illustrate exactly what the code snippet above is doing.</p>
+<p><img alt="image" src="../images/LSTM3-chain.png" /></p>
+<p>In particular, instead of defining the four gates independently, we do the computation together and then use SliceChannel to split them into four outputs. The computation of gates are all done with the symbolic API. The return value is a LSTM state containing the output of a LSTM cell.</p>
+<p><a id='Unfolding-LSTM-1'></a></p>
+<h2 id="unfolding-lstm">Unfolding LSTM</h2>
+<p>Using the LSTM cell defined above, we are now ready to define a function to unfold a LSTM network with L layers and T time steps. The first part of the function is just defining all the symbolic variables for the shared weights and states.</p>
+<p>The <code>embed_W</code> is the weights used for character embedding –- i.e. mapping the one-hot encoded characters into real vectors. The <code>pred_W</code> and <code>pred_b</code> are weights and bias for the final prediction at each time step.</p>
+<p>Then we define the weights for each LSTM cell. Note there is one cell for each layer, and it will be replicated (unrolled) over time. The states are, however, <em>not</em> shared over time. Instead, here we define the initial states here at the beginning of a sequence, and we will update them with the output states at each time step as we explicitly unroll the LSTM.</p>
+<p>Unrolling over time is a straightforward procedure of stacking the embedding layer, and then LSTM cells, on top of which the prediction layer. During unrolling, we update the states and collect all the outputs. Note each time step takes data and label as inputs. If the LSTM is named as <code>:ptb</code>, the data and label at step <code>t</code> will be named <code>:ptb_data_$t</code> and <code>:ptb_label_$t</code>. Late on when we prepare the data, we will define the data provider to match those names.</p>
+<p>Note at each time step, the prediction is connected to a SoftmaxOutput operator, which could back propagate when corresponding labels are provided. The states are then connected to the next time step, which allows back propagate through time. However, at the end of the sequence, the final states are not connected to anything. This dangling outputs is problematic, so we explicitly connect each of them to a BlockGrad operator, which simply back propagates 0-gradient and closes the computation graph.</p>
+<p>In the end, we just group all the prediction outputs at each time step as a single SymbolicNode and return. Optionally we will also group the final states, this is used when we use the trained LSTM to sample sentences.</p>
+<p><a id='Data-Provider-for-Text-Sequences-1'></a></p>
+<h2 id="data-provider-for-text-sequences">Data Provider for Text Sequences</h2>
+<p>Now we need to construct a data provider that takes a text file, divide the text into mini-batches of fixed-length character-sequences, and provide them as one-hot encoded vectors.</p>
+<p>Note the is no fancy feature extraction at all. Each character is simply encoded as a one-hot vector: a 0-1 vector of the size given by the vocabulary. Here we just construct the vocabulary by collecting all the unique characters in the training text – there are not too many of them (including punctuations and whitespace) for English text. Each input character is then encoded as a vector of 0s on all coordinates, and 1 on the coordinate corresponding to that character. The character-to-coordinate mapping is giving by the vocabulary.</p>
+<p>The text sequence data provider implements the <a href="../../api/io/#Data-Providers-1">Data Providers</a> api. We define the <code>CharSeqProvider</code> as below:</p>
+<p>The provided data and labels follow the naming convention of inputs used when unrolling the LSTM. Note in the code below, apart from <code>$name_data_$t</code> and <code>$name_label_$t</code>, we also provides the initial <code>c</code> and <code>h</code> states for each layer. This is because we are using the high-level FeedForward API, which has no idea about time and states. So we will feed the initial states for each sequence from the data provider. Since the initial states is always zero, we just need to always provide constant zero blobs.</p>
+<p>Next we implement the <code>eachbatch</code> method from the <a href="../../api/io/#MXNet.mx.AbstractDataProvider"><code>mx.AbstractDataProvider</code></a> interface for the provider. We start by defining the data and label arrays, and the <code>DataBatch</code> object we will provide in each iteration.</p>
+<p>The actual data providing iteration is implemented as a Julia <strong>coroutine</strong>. In this way, we can write the data loading logic as a simple coherent <code>for</code> loop, and do not need to implement the interface functions like Base.start, Base.next, etc.</p>
+<p>Basically, we partition the text into batches, each batch containing several contiguous text sequences. Note at each time step, the LSTM is trained to predict the next character, so the label is the same as the data, but shifted ahead by one index.</p>
+<p><a id='Training-the-LSTM-1'></a></p>
+<h2 id="training-the-lstm">Training the LSTM</h2>
+<p>Now we have implemented all the supporting infrastructures for our char-lstm. To train the model, we just follow the standard high-level API. Firstly, we construct a LSTM symbolic architecture:</p>
+<p>Note all the parameters are defined in <a href="https://github.com/apache/incubator-mxnet/blob/master/julia/examples/char-lstm/config.jl">examples/char-lstm/config.jl</a>. Now we load the text file and define the data provider. The data <code>input.txt</code> we used in this example is <a href="https://github.com/dmlc/web-data/tree/master/mxnet/tinyshakespeare">a tiny Shakespeare dataset</a>. But you can try with other text files.</p>
+<p>The last step is to construct a model, an optimizer and fit the mode to the data. We are using the ADAM optimizer [Adam]_ in this example.</p>
+<p>Note we are also using a customized <code>NLL</code> evaluation metric, which calculate the negative log-likelihood during training. Here is an output sample at the end of the training process.</p>
+<pre><code>...
+INFO: Speed: 357.72 samples/sec
+INFO: == Epoch 020 ==========
+INFO: ## Training summary
+INFO:                NLL = 1.4672
+INFO:         perplexity = 4.3373
+INFO:               time = 87.2631 seconds
+INFO: ## Validation summary
+INFO:                NLL = 1.6374
+INFO:         perplexity = 5.1418
+INFO: Saved checkpoint to 'char-lstm/checkpoints/ptb-0020.params'
+INFO: Speed: 368.74 samples/sec
+INFO: Speed: 361.04 samples/sec
+INFO: Speed: 360.02 samples/sec
+INFO: Speed: 362.34 samples/sec
+INFO: Speed: 360.80 samples/sec
+INFO: Speed: 362.77 samples/sec
+INFO: Speed: 357.18 samples/sec
+INFO: Speed: 355.30 samples/sec
+INFO: Speed: 362.33 samples/sec
+INFO: Speed: 359.23 samples/sec
+INFO: Speed: 358.09 samples/sec
+INFO: Speed: 356.89 samples/sec
+INFO: Speed: 371.91 samples/sec
+INFO: Speed: 372.24 samples/sec
+INFO: Speed: 356.59 samples/sec
+INFO: Speed: 356.64 samples/sec
+INFO: Speed: 360.24 samples/sec
+INFO: Speed: 360.32 samples/sec
+INFO: Speed: 362.38 samples/sec
+INFO: == Epoch 021 ==========
+INFO: ## Training summary
+INFO:                NLL = 1.4655
+INFO:         perplexity = 4.3297
+INFO:               time = 86.9243 seconds
+INFO: ## Validation summary
+INFO:                NLL = 1.6366
+INFO:         perplexity = 5.1378
+INFO: Saved checkpoint to 'examples/char-lstm/checkpoints/ptb-0021.params'
+</code></pre>
+
+<p><a id='Sampling-Random-Sentences-1'></a></p>
+<h2 id="sampling-random-sentences">Sampling Random Sentences</h2>
+<p>After training the LSTM, we can now sample random sentences from the trained model. The sampler works in the following way:</p>
+<ul>
+<li>Starting from some fixed character, take <code>a</code> for example, and feed   it as input to the LSTM.</li>
+<li>The LSTM will produce an output distribution over the vocabulary and   a state in the first time step. We sample a character from the   output distribution, fix it as the second character.</li>
+<li>In the next time step, we feed the previously sampled character as   input and continue running the LSTM by also taking the previous   states (instead of the 0 initial states).</li>
+<li>Continue running until we sampled enough characters.</li>
+</ul>
+<p>Note we are running with mini-batches, so several sentences could be sampled simultaneously. Here are some sampled outputs from a network I trained for around half an hour on the Shakespeare dataset. Note all the line-breaks, punctuations and upper-lower case letters are produced by the sampler itself. I did not do any post-processing.</p>
+<pre><code>## Sample 1
+all have sir,
+Away will fill'd in His time, I'll keep her, do not madam, if they here? Some more ha?
+
+## Sample 2
+am.
+
+CLAUDIO:
+Hone here, let her, the remedge, and I know not slept a likely, thou some soully free?
+
+## Sample 3
+arrel which noble thing
+The exchnachsureding worns: I ne'er drunken Biancas, fairer, than the lawfu?
+
+## Sample 4
+augh assalu, you'ld tell me corn;
+Farew. First, for me of a loved. Has thereat I knock you presents?
+
+## Sample 5
+ame the first answer.
+
+MARIZARINIO:
+Door of Angelo as her lord, shrield liken Here fellow the fool ?
+
+## Sample 6
+ad well.
+
+CLAUDIO:
+Soon him a fellows here; for her fine edge in a bogms' lord's wife.
+
+LUCENTIO:
+I?
+
+## Sample 7
+adrezilian measure.
+
+LUCENTIO:
+So, help'd you hath nes have a than dream's corn, beautio, I perchas?
+
+## Sample 8
+as eatter me;
+The girlly: and no other conciolation!
+
+BISTRUMIO:
+I have be rest girl. O, that I a h?
+
+## Sample 9
+and is intend you sort:
+What held her all 'clama's for maffice. Some servant.' what I say me the cu?
+
+## Sample 10
+an thoughts will said in our pleasue,
+Not scanin on him that you live; believaries she.
+
+ISABELLLLL?
+</code></pre>
+
+<p>See <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/">Andrej Karpathy's blog post</a> on more examples and links including Linux source codes, Algebraic Geometry Theorems, and even cooking recipes. The code for sampling can be found in <a href="https://github.com/apache/incubator-mxnet/tree/master/julia/examples/char-lstm/sampler.jl">examples/char-lstm/sampler.jl</a>.</p>
+<p><a id='Visualizing-the-LSTM-1'></a></p>
+<h2 id="visualizing-the-lstm">Visualizing the LSTM</h2>
+<p>Finally, you could visualize the LSTM by calling to_graphviz on the constructed LSTM symbolic architecture. We only show an example of 1-layer and 2-time-step LSTM below. The automatic layout produced by GraphViz is definitely much less clear than <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">Christopher Olah's illustrations</a>, but could otherwise be very useful for debugging. As we can see, the LSTM unfolded over time is just a (very) deep neural network. The complete code for producing this visualization can be found in <a href="https://github.com/apache/incubator-mxnet/blob/master/julia/examples/char-lstm/visualize.jl">examples/char-lstm/visualize.jl</a>.</p>
+<p><img alt="image" src="../images/char-lstm-vis.svg" /></p>
+                
+                  
+                
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../mnist/" title="Digit Recognition on MNIST" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Digit Recognition on MNIST
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../user-guide/install/" title="Installation Guide" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Installation Guide
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application.808e90bb.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+        <script src="../../assets/mathjaxhelper.js"></script>
+      
+    
+  </body>
+</html>

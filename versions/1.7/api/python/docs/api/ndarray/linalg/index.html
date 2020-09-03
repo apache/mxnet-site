@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 1;
+        text-align: left;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-option:hover {
+        color: #FF4500;
+    }
+
+    .dropdown-option-active {
+        color: #FF4500;
+        font-weight: lighter;
+    }
+
+    .dropdown-option {
+        color: #000000;
+        font-weight: lighter;
+    }
+
+    .dropdown-header {
+        color: #FFFFFF;
+        display: inline-flex;
+    }
+
+    .dropdown-caret {
+        width: 18px;
+    }
+
+    .dropdown-caret-path {
+        fill: #FFFFFF;
+    }
+    </style>
+    
+    <title>ndarray.linalg &#8212; Apache MXNet  documentation</title>
+
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mxnet.css" />
+    <link rel="stylesheet" href="../../../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/feedback.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/google_analytics.js"></script>
+    <script src="../../../_static/autodoc.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="shortcut icon" href="../../../_static/mxnet-icon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="ndarray.op" href="../op/index.html" />
+    <link rel="prev" title="ndarray.image" href="../image/index.html" /> 
+  </head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper">
+      <a class="site-title" rel="author" href="/versions/1.7/"><img
+            src="../../../_static/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/versions/1.7/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.7/blog">Blog</a>
+        <a class="page-link" href="/versions/1.7/features">Features</a>
+        <a class="page-link" href="/versions/1.7/ecosystem">Ecosystem</a>
+        <a class="page-link page-current" href="/versions/1.7/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.7
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a class="dropdown-option" href="/">master</a><br>
+            <a class="dropdown-option-active" href="/versions/1.7/">1.7</a><br>
+            <a class="dropdown-option" href="/versions/1.6/">1.6</a><br>
+            <a class="dropdown-option" href="/versions/1.5.0/">1.5.0</a><br>
+            <a class="dropdown-option" href="/versions/1.4.1/">1.4.1</a><br>
+            <a class="dropdown-option" href="/versions/1.3.1/">1.3.1</a><br>
+            <a class="dropdown-option" href="/versions/1.2.1/">1.2.1</a><br>
+            <a class="dropdown-option" href="/versions/1.1.0/">1.1.0</a><br>
+            <a class="dropdown-option" href="/versions/1.0.0/">1.0.0</a><br>
+            <a class="dropdown-option" href="/versions/0.12.1/">0.12.1</a><br>
+            <a class="dropdown-option" href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="../../index.html">Python API</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link" href="../index.html">mxnet.ndarray</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active">ndarray.linalg</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../../../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../../../_sources/api/ndarray/linalg/index.rst" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">      
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Python Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/index.html">Crash Course</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/1-ndarray.html">Manipulate data with <code class="docutils literal notranslate"><span class="pre">ndarray</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/2-nn.html">Create a neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/3-autograd.html">Automatic differentiation with <code class="docutils literal notranslate"><span class="pre">autograd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/4-train.html">Train the neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/5-predict.html">Predict with a pre-trained model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/6-use_gpus.html">Use GPUs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/getting-started/to-mxnet/index.html">Moving to MXNet from Other Frameworks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/to-mxnet/pytorch.html">PyTorch vs Apache MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/getting-started/gluon_from_experiment_to_deployment.html">Gluon: from experiment to deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/getting-started/logistic_regression_explained.html">Logistic regression explained</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html">MNIST</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/packages/index.html">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/autograd/index.html">Automatic Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/gluon/index.html">Gluon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/index.html">Blocks</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/custom-layer.html">Custom Layers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/custom_layer_beginners.html">Customer Layers (Beginners)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/hybridize.html">Hybridize</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/init.html">Initialization</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/naming.html">Parameter and Block Naming</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/nn.html">Layers and Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/parameters.html">Parameter Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/save_load_params.html">Saving and Loading Gluon Models</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/activations/activations.html">Activation Blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/data/index.html">Data Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/data_augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/data_augmentation.html#Spatial-Augmentation">Spatial Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/data_augmentation.html#Color-Augmentation">Color Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/data_augmentation.html#Composed-Augmentations">Composed Augmentations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/datasets.html">Gluon <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/datasets.html#Using-own-data-with-included-Datasets">Using own data with included <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/datasets.html#Using-own-data-with-custom-Datasets">Using own data with custom <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/datasets.html#Appendix:-Upgrading-from-Module-DataIter-to-Gluon-DataLoader">Appendix: Upgrading from Module <code class="docutils literal notranslate"><span class="pre">DataIter</span></code> to Gluon <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/image/index.html">Image Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/image/image-augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/image/info_gan.html">Image similarity search with InfoGAN</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/image/mnist.html">Handwritten Digit Recognition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/image/pretrained_models.html">Using pre-trained models in MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/loss/index.html">Losses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/loss/custom-loss.html">Custom Loss Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/loss/kl_divergence.html">Kullback-Leibler (KL) Divergence</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/loss/loss.html">Loss functions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/text/index.html">Text Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/text/gnmt.html">Google Neural Machine Translation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/text/transformer.html">Machine Translation with Transformer</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/training/index.html">Training</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/training/fit_api_tutorial.html">MXNet Gluon Fit API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/training/trainer.html">Trainer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/training/learning_rates/index.html">Learning Rates</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../tutorials/packages/gluon/training/learning_rates/learning_rate_finder.html">Learning Rate Finder</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../tutorials/packages/gluon/training/learning_rates/learning_rate_schedules.html">Learning Rate Schedules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../tutorials/packages/gluon/training/learning_rates/learning_rate_schedules_advanced.html">Advanced Learning Rate Schedules</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/training/normalization/index.html">Normalization Blocks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/kvstore/index.html">KVStore</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/kvstore/kvstore.html">Distributed Key-Value Store</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/ndarray/index.html">NDArray</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/01-ndarray-intro.html">An Intro: Manipulate Data the MXNet Way with NDArray</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/02-ndarray-operations.html">NDArray Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/03-ndarray-contexts.html">NDArray Contexts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/gotchas_numpy_in_mxnet.html">Gotchas using NumPy in Apache MXNet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/index.html">Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/csr.html">CSRNDArray - NDArray in Compressed Sparse Row Storage Format</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/row_sparse.html">RowSparseNDArray - NDArray for Sparse Gradient Updates</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/train.html">Train a Linear Regression Model with Sparse Symbols</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/train_gluon.html">Sparse NDArrays with Gluon</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/onnx/index.html">ONNX</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/onnx/fine_tuning_gluon.html">Fine-tuning an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/onnx/inference_on_onnx_model.html">Running inference on MXNet/Gluon from an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/onnx/super_resolution.html">Importing an ONNX model into MXNet</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/deploy/export/onnx.html">Export ONNX Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/optimizer/index.html">Optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/viz/index.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/visualize_graph">Visualize networks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/performance/index.html">Performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/performance/compression/index.html">Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/compression/int8.html">Deploy with int-8</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/float16">Float16</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/gradient_compression">Gradient Compression</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/int8_inference.html">GluonCV with Quantized Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/performance/backend/index.html">Accelerated Backend Tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/mkldnn/index.html">Intel MKL-DNN</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/performance/backend/mkldnn/mkldnn_quantization.html">Quantize with MKL-DNN backend</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/performance/backend/mkldnn/mkldnn_readme.html">Install MXNet with MKL-DNN</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/tensorrt/index.html">TensorRT</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/performance/backend/tensorrt/tensorrt.html">Optimizing Deep Learning Computation Graphs with TensorRT</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/tvm.html">Use TVM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/profiler.html">Profiling MXNet Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/amp.html">Using AMP: Automatic Mixed Precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/deploy/index.html">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/deploy/export/index.html">Export</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/export/onnx.html">Exporting to ONNX format</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/export_network.html">Export Gluon CV Models</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/blocks/save_load_params.html">Save / Load Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/deploy/inference/index.html">Inference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/inference/cpp.html">Deploy into C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/inference/image_classification_jetson.html">Image Classication using pretrained ResNet-50 model on Jetson module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/inference/scala.html">Deploy into a Java or Scala Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/inference/wine_detector.html">Real-time Object Detection with MXNet On The Raspberry Pi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/deploy/run-on-aws/index.html">Run on AWS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/run-on-aws/use_ec2.html">Run on an EC2 Instance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/run-on-aws/use_sagemaker.html">Run on Amazon SageMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/run-on-aws/cloud.html">MXNet on the Cloud</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/extend/index.html">Extend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/extend/custom_layer.html">Custom Layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/extend/customop.html">Custom Numpy Operators</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/new_op">New Operator Creation</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/add_op_in_backend">New Operator in MXNet Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Python API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">mxnet.ndarray</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../ndarray.html">ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contrib/index.html">ndarray.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../image/index.html">ndarray.image</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ndarray.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../op/index.html">ndarray.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../random/index.html">ndarray.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../register/index.html">ndarray.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sparse/index.html">ndarray.sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utils/index.html">ndarray.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../gluon/index.html">mxnet.gluon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/block.html">gluon.Block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/hybrid_block.html">gluon.HybridBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/symbol_block.html">gluon.SymbolBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/constant.html">gluon.Constant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/parameter.html">gluon.Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/parameter_dict.html">gluon.ParameterDict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/trainer.html">gluon.Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/contrib/index.html">gluon.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/data/index.html">gluon.data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gluon/data/vision/index.html">data.vision</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../gluon/data/vision/datasets/index.html">vision.datasets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../gluon/data/vision/transforms/index.html">vision.transforms</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/loss/index.html">gluon.loss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/model_zoo/index.html">gluon.model_zoo.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/nn/index.html">gluon.nn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/rnn/index.html">gluon.rnn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/utils/index.html">gluon.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../autograd/index.html">mxnet.autograd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../initializer/index.html">mxnet.initializer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimizer/index.html">mxnet.optimizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../lr_scheduler/index.html">mxnet.lr_scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metric/index.html">mxnet.metric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kvstore/index.html">mxnet.kvstore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../symbol/index.html">mxnet.symbol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/symbol.html">symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/contrib/index.html">symbol.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/image/index.html">symbol.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/linalg/index.html">symbol.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/op/index.html">symbol.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/random/index.html">symbol.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/register/index.html">symbol.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/sparse/index.html">symbol.sparse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../module/index.html">mxnet.module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contrib/index.html">mxnet.contrib</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/autograd/index.html">contrib.autograd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/io/index.html">contrib.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/ndarray/index.html">contrib.ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/onnx/index.html">contrib.onnx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/quantization/index.html">contrib.quantization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/symbol/index.html">contrib.symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/tensorboard/index.html">contrib.tensorboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/tensorrt/index.html">contrib.tensorrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/text/index.html">contrib.text</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../mxnet/index.html">mxnet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/attribute/index.html">mxnet.attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/base/index.html">mxnet.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/callback/index.html">mxnet.callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/context/index.html">mxnet.context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/engine/index.html">mxnet.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/executor/index.html">mxnet.executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/executor_manager/index.html">mxnet.executor_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/image/index.html">mxnet.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/io/index.html">mxnet.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/kvstore_server/index.html">mxnet.kvstore_server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/libinfo/index.html">mxnet.libinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/log/index.html">mxnet.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/model/index.html">mxnet.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/monitor/index.html">mxnet.monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/name/index.html">mxnet.name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/notebook/index.html">mxnet.notebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/operator/index.html">mxnet.operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/profiler/index.html">mxnet.profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/random/index.html">mxnet.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/recordio/index.html">mxnet.recordio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/registry/index.html">mxnet.registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/rtc/index.html">mxnet.rtc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/runtime/index.html">mxnet.runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/test_utils/index.html">mxnet.test_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/torch/index.html">mxnet.torch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/util/index.html">mxnet.util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/visualization/index.html">mxnet.visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+        <script type="text/javascript" src="../../../_static/sphinx_materialdesign_theme.js "></script>
+        <script type="text/javascript" src="../../../_static/feedback.js"></script>
+    <header class="mdl-layout__drawer">      
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Python Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/index.html">Crash Course</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/1-ndarray.html">Manipulate data with <code class="docutils literal notranslate"><span class="pre">ndarray</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/2-nn.html">Create a neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/3-autograd.html">Automatic differentiation with <code class="docutils literal notranslate"><span class="pre">autograd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/4-train.html">Train the neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/5-predict.html">Predict with a pre-trained model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/crash-course/6-use_gpus.html">Use GPUs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/getting-started/to-mxnet/index.html">Moving to MXNet from Other Frameworks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/getting-started/to-mxnet/pytorch.html">PyTorch vs Apache MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/getting-started/gluon_from_experiment_to_deployment.html">Gluon: from experiment to deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/getting-started/logistic_regression_explained.html">Logistic regression explained</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html">MNIST</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/packages/index.html">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/autograd/index.html">Automatic Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/gluon/index.html">Gluon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/index.html">Blocks</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/custom-layer.html">Custom Layers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/custom_layer_beginners.html">Customer Layers (Beginners)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/hybridize.html">Hybridize</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/init.html">Initialization</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/naming.html">Parameter and Block Naming</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/nn.html">Layers and Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/parameters.html">Parameter Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/save_load_params.html">Saving and Loading Gluon Models</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/blocks/activations/activations.html">Activation Blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/data/index.html">Data Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/data_augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/data_augmentation.html#Spatial-Augmentation">Spatial Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/data_augmentation.html#Color-Augmentation">Color Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/data_augmentation.html#Composed-Augmentations">Composed Augmentations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/datasets.html">Gluon <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/datasets.html#Using-own-data-with-included-Datasets">Using own data with included <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/datasets.html#Using-own-data-with-custom-Datasets">Using own data with custom <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/data/datasets.html#Appendix:-Upgrading-from-Module-DataIter-to-Gluon-DataLoader">Appendix: Upgrading from Module <code class="docutils literal notranslate"><span class="pre">DataIter</span></code> to Gluon <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/image/index.html">Image Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/image/image-augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/image/info_gan.html">Image similarity search with InfoGAN</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/image/mnist.html">Handwritten Digit Recognition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/image/pretrained_models.html">Using pre-trained models in MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/loss/index.html">Losses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/loss/custom-loss.html">Custom Loss Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/loss/kl_divergence.html">Kullback-Leibler (KL) Divergence</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/loss/loss.html">Loss functions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/text/index.html">Text Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/text/gnmt.html">Google Neural Machine Translation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/text/transformer.html">Machine Translation with Transformer</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/gluon/training/index.html">Training</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/training/fit_api_tutorial.html">MXNet Gluon Fit API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/training/trainer.html">Trainer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/training/learning_rates/index.html">Learning Rates</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../tutorials/packages/gluon/training/learning_rates/learning_rate_finder.html">Learning Rate Finder</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../tutorials/packages/gluon/training/learning_rates/learning_rate_schedules.html">Learning Rate Schedules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../tutorials/packages/gluon/training/learning_rates/learning_rate_schedules_advanced.html">Advanced Learning Rate Schedules</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/gluon/training/normalization/index.html">Normalization Blocks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/kvstore/index.html">KVStore</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/kvstore/kvstore.html">Distributed Key-Value Store</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/ndarray/index.html">NDArray</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/01-ndarray-intro.html">An Intro: Manipulate Data the MXNet Way with NDArray</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/02-ndarray-operations.html">NDArray Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/03-ndarray-contexts.html">NDArray Contexts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/gotchas_numpy_in_mxnet.html">Gotchas using NumPy in Apache MXNet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/index.html">Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/csr.html">CSRNDArray - NDArray in Compressed Sparse Row Storage Format</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/row_sparse.html">RowSparseNDArray - NDArray for Sparse Gradient Updates</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/train.html">Train a Linear Regression Model with Sparse Symbols</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/packages/ndarray/sparse/train_gluon.html">Sparse NDArrays with Gluon</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/onnx/index.html">ONNX</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/onnx/fine_tuning_gluon.html">Fine-tuning an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/onnx/inference_on_onnx_model.html">Running inference on MXNet/Gluon from an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/packages/onnx/super_resolution.html">Importing an ONNX model into MXNet</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/deploy/export/onnx.html">Export ONNX Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/optimizer/index.html">Optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/packages/viz/index.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/visualize_graph">Visualize networks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/performance/index.html">Performance</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/performance/compression/index.html">Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/compression/int8.html">Deploy with int-8</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/float16">Float16</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/gradient_compression">Gradient Compression</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/int8_inference.html">GluonCV with Quantized Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/performance/backend/index.html">Accelerated Backend Tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/mkldnn/index.html">Intel MKL-DNN</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/performance/backend/mkldnn/mkldnn_quantization.html">Quantize with MKL-DNN backend</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/performance/backend/mkldnn/mkldnn_readme.html">Install MXNet with MKL-DNN</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/tensorrt/index.html">TensorRT</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../tutorials/performance/backend/tensorrt/tensorrt.html">Optimizing Deep Learning Computation Graphs with TensorRT</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/tvm.html">Use TVM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/profiler.html">Profiling MXNet Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/performance/backend/amp.html">Using AMP: Automatic Mixed Precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/deploy/index.html">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/deploy/export/index.html">Export</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/export/onnx.html">Exporting to ONNX format</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/export_network.html">Export Gluon CV Models</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/blocks/save_load_params.html">Save / Load Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/deploy/inference/index.html">Inference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/inference/cpp.html">Deploy into C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/inference/image_classification_jetson.html">Image Classication using pretrained ResNet-50 model on Jetson module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/inference/scala.html">Deploy into a Java or Scala Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/inference/wine_detector.html">Real-time Object Detection with MXNet On The Raspberry Pi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/deploy/run-on-aws/index.html">Run on AWS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/run-on-aws/use_ec2.html">Run on an EC2 Instance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/run-on-aws/use_sagemaker.html">Run on Amazon SageMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../tutorials/deploy/run-on-aws/cloud.html">MXNet on the Cloud</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/extend/index.html">Extend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/extend/custom_layer.html">Custom Layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/extend/customop.html">Custom Numpy Operators</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/new_op">New Operator Creation</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/add_op_in_backend">New Operator in MXNet Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Python API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">mxnet.ndarray</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../ndarray.html">ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contrib/index.html">ndarray.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../image/index.html">ndarray.image</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ndarray.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../op/index.html">ndarray.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../random/index.html">ndarray.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../register/index.html">ndarray.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sparse/index.html">ndarray.sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utils/index.html">ndarray.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../gluon/index.html">mxnet.gluon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/block.html">gluon.Block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/hybrid_block.html">gluon.HybridBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/symbol_block.html">gluon.SymbolBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/constant.html">gluon.Constant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/parameter.html">gluon.Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/parameter_dict.html">gluon.ParameterDict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/trainer.html">gluon.Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/contrib/index.html">gluon.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/data/index.html">gluon.data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../gluon/data/vision/index.html">data.vision</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../gluon/data/vision/datasets/index.html">vision.datasets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../gluon/data/vision/transforms/index.html">vision.transforms</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/loss/index.html">gluon.loss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/model_zoo/index.html">gluon.model_zoo.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/nn/index.html">gluon.nn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/rnn/index.html">gluon.rnn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../gluon/utils/index.html">gluon.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../autograd/index.html">mxnet.autograd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../initializer/index.html">mxnet.initializer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimizer/index.html">mxnet.optimizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../lr_scheduler/index.html">mxnet.lr_scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../metric/index.html">mxnet.metric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kvstore/index.html">mxnet.kvstore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../symbol/index.html">mxnet.symbol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/symbol.html">symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/contrib/index.html">symbol.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/image/index.html">symbol.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/linalg/index.html">symbol.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/op/index.html">symbol.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/random/index.html">symbol.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/register/index.html">symbol.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../symbol/sparse/index.html">symbol.sparse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../module/index.html">mxnet.module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contrib/index.html">mxnet.contrib</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/autograd/index.html">contrib.autograd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/io/index.html">contrib.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/ndarray/index.html">contrib.ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/onnx/index.html">contrib.onnx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/quantization/index.html">contrib.quantization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/symbol/index.html">contrib.symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/tensorboard/index.html">contrib.tensorboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/tensorrt/index.html">contrib.tensorrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contrib/text/index.html">contrib.text</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../mxnet/index.html">mxnet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/attribute/index.html">mxnet.attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/base/index.html">mxnet.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/callback/index.html">mxnet.callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/context/index.html">mxnet.context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/engine/index.html">mxnet.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/executor/index.html">mxnet.executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/executor_manager/index.html">mxnet.executor_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/image/index.html">mxnet.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/io/index.html">mxnet.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/kvstore_server/index.html">mxnet.kvstore_server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/libinfo/index.html">mxnet.libinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/log/index.html">mxnet.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/model/index.html">mxnet.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/monitor/index.html">mxnet.monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/name/index.html">mxnet.name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/notebook/index.html">mxnet.notebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/operator/index.html">mxnet.operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/profiler/index.html">mxnet.profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/random/index.html">mxnet.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/recordio/index.html">mxnet.recordio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/registry/index.html">mxnet.registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/rtc/index.html">mxnet.rtc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/runtime/index.html">mxnet.runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/test_utils/index.html">mxnet.test_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/torch/index.html">mxnet.torch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/util/index.html">mxnet.util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../mxnet/visualization/index.html">mxnet.visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <div class="section" id="module-mxnet.ndarray.linalg">
+<span id="ndarray-linalg"></span><h1>ndarray.linalg<a class="headerlink" href="#module-mxnet.ndarray.linalg" title="Permalink to this headline">¶</a></h1>
+<p>Linear Algebra NDArray API of MXNet.</p>
+<p><strong>Functions</strong></p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.det" title="mxnet.ndarray.linalg.det"><code class="xref py py-obj docutils literal notranslate"><span class="pre">det</span></code></a>([A, out, name])</p></td>
+<td><p>Compute the determinant of a matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.extractdiag" title="mxnet.ndarray.linalg.extractdiag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extractdiag</span></code></a>([A, offset, out, name])</p></td>
+<td><p>Extracts the diagonal entries of a square matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.extracttrian" title="mxnet.ndarray.linalg.extracttrian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extracttrian</span></code></a>([A, offset, lower, out, name])</p></td>
+<td><p>Extracts a triangular sub-matrix from a square matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.gelqf" title="mxnet.ndarray.linalg.gelqf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gelqf</span></code></a>([A, out, name])</p></td>
+<td><p>LQ factorization for general matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.gemm" title="mxnet.ndarray.linalg.gemm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gemm</span></code></a>([A, B, C, transpose_a, transpose_b, …])</p></td>
+<td><p>Performs general matrix multiplication and accumulation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.gemm2" title="mxnet.ndarray.linalg.gemm2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gemm2</span></code></a>([A, B, transpose_a, transpose_b, …])</p></td>
+<td><p>Performs general matrix multiplication.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.inverse" title="mxnet.ndarray.linalg.inverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inverse</span></code></a>([A, out, name])</p></td>
+<td><p>Compute the inverse of a matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.makediag" title="mxnet.ndarray.linalg.makediag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makediag</span></code></a>([A, offset, out, name])</p></td>
+<td><p>Constructs a square matrix with the input as diagonal.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.maketrian" title="mxnet.ndarray.linalg.maketrian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maketrian</span></code></a>([A, offset, lower, out, name])</p></td>
+<td><p>Constructs a square matrix with the input representing a specific triangular sub-matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.potrf" title="mxnet.ndarray.linalg.potrf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">potrf</span></code></a>([A, out, name])</p></td>
+<td><p>Performs Cholesky factorization of a symmetric positive-definite matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.potri" title="mxnet.ndarray.linalg.potri"><code class="xref py py-obj docutils literal notranslate"><span class="pre">potri</span></code></a>([A, out, name])</p></td>
+<td><p>Performs matrix inversion from a Cholesky factorization.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.slogdet" title="mxnet.ndarray.linalg.slogdet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slogdet</span></code></a>([A, out, name])</p></td>
+<td><p>Compute the sign and log of the determinant of a matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.sumlogdiag" title="mxnet.ndarray.linalg.sumlogdiag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sumlogdiag</span></code></a>([A, out, name])</p></td>
+<td><p>Computes the sum of the logarithms of the diagonal elements of a square matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.syevd" title="mxnet.ndarray.linalg.syevd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">syevd</span></code></a>([A, out, name])</p></td>
+<td><p>Eigendecomposition for symmetric matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.syrk" title="mxnet.ndarray.linalg.syrk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">syrk</span></code></a>([A, transpose, alpha, out, name])</p></td>
+<td><p>Multiplication of matrix with its transpose.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.trmm" title="mxnet.ndarray.linalg.trmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trmm</span></code></a>([A, B, transpose, rightside, lower, …])</p></td>
+<td><p>Performs multiplication with a lower triangular matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.ndarray.linalg.trsm" title="mxnet.ndarray.linalg.trsm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trsm</span></code></a>([A, B, transpose, rightside, lower, …])</p></td>
+<td><p>Solves matrix equation involving a lower triangular matrix.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.det">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">det</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.det" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the determinant of a matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, <em>A</em> is a square matrix. We compute:</p>
+<blockquote>
+<div><p><em>out</em> = <em>det(A)</em></p>
+</div></blockquote>
+<p>If <em>n&gt;2</em>, <em>det</em> is performed separately on the trailing two dimensions
+for all inputs (batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There is no gradient backwarded when A is non-invertible (which is
+equivalent to det(A) = 0) because zero is rarely hit upon in float
+point computation and the Jacobi’s formula on determinant gradient
+is not computationally efficient when A is non-invertible.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">determinant</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]]</span>
+<span class="n">det</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.</span><span class="p">]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">determinant</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]]]</span>
+<span class="n">det</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L975</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of square matrix</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.extractdiag">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">extractdiag</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">offset=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.extractdiag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the diagonal entries of a square matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, then <em>A</em> represents a single square matrix which diagonal elements get extracted as a 1-dimensional tensor.</p>
+<p>If <em>n&gt;2</em>, then <em>A</em> represents a batch of square matrices on the trailing two dimensions. The extracted diagonals are returned as an <em>n-1</em>-dimensional tensor.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">diagonal</span> <span class="n">extraction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]</span>
+
+<span class="n">extractdiag</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
+
+<span class="n">extractdiag</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">diagonal</span> <span class="n">extraction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">]]]</span>
+
+<span class="n">extractdiag</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L495</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of square matrices</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='0'</em>) – Offset of the diagonal versus the main diagonal. 0 corresponds to the main diagonal, a negative/positive value to diagonals below/above the main diagonal.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.extracttrian">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">extracttrian</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">offset=_Null</em>, <em class="sig-param">lower=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.extracttrian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts a triangular sub-matrix from a square matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, then <em>A</em> represents a single square matrix from which a triangular sub-matrix is extracted as a 1-dimensional tensor.</p>
+<p>If <em>n&gt;2</em>, then <em>A</em> represents a batch of square matrices on the trailing two dimensions. The extracted triangular sub-matrices are returned as an <em>n-1</em>-dimensional tensor.</p>
+<p>The <em>offset</em> and <em>lower</em> parameters determine the triangle to be extracted:</p>
+<ul class="simple">
+<li><p>When <em>offset = 0</em> either the lower or upper triangle with respect to the main diagonal is extracted depending on the value of parameter <em>lower</em>.</p></li>
+<li><p>When <em>offset = k &gt; 0</em> the upper triangle with respect to the k-th diagonal above the main diagonal is extracted.</p></li>
+<li><p>When <em>offset = k &lt; 0</em> the lower triangle with respect to the k-th diagonal below the main diagonal is extracted.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">triagonal</span> <span class="n">extraction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]</span>
+
+<span class="n">extracttrian</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
+<span class="n">extracttrian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]</span>
+<span class="n">extracttrian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">]</span>
+<span class="n">extracttrian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">]</span>
+
+<span class="n">Batch</span> <span class="n">triagonal</span> <span class="n">extraction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">]]]</span>
+
+<span class="n">extracttrian</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span>
+                   <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L605</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of square matrices</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='0'</em>) – Offset of the diagonal versus the main diagonal. 0 corresponds to the main diagonal, a negative/positive value to diagonals below/above the main diagonal.</p></li>
+<li><p><strong>lower</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Refer to the lower triangular matrix if lower=true, refer to the upper otherwise. Only relevant when offset=0</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.gelqf">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">gelqf</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.gelqf" title="Permalink to this definition">¶</a></dt>
+<dd><p>LQ factorization for general matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, we compute the LQ factorization (LAPACK <em>gelqf</em>, followed by <em>orglq</em>). <em>A</em>
+must have shape <em>(x, y)</em> with <em>x &lt;= y</em>, and must have full rank <em>=x</em>. The LQ
+factorization consists of <em>L</em> with shape <em>(x, x)</em> and <em>Q</em> with shape <em>(x, y)</em>, so
+that:</p>
+<blockquote>
+<div><p><em>A</em> = <em>L</em> * <em>Q</em></p>
+</div></blockquote>
+<p>Here, <em>L</em> is lower triangular (upper triangle equal to zero) with nonzero diagonal,
+and <em>Q</em> is row-orthonormal, meaning that</p>
+<blockquote>
+<div><p><em>Q</em> * <em>Q</em><sup>T</sup></p>
+</div></blockquote>
+<p>is equal to the identity matrix of shape <em>(x, x)</em>.</p>
+<p>If <em>n&gt;2</em>, <em>gelqf</em> is performed separately on the trailing two dimensions for all
+inputs (batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">LQ</span> <span class="n">factorization</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">]]</span>
+<span class="n">Q</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">gelqf</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mf">0.26726124</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.53452248</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.80178373</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.87287156</span><span class="p">,</span> <span class="mf">0.21821789</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.43643578</span><span class="p">]]</span>
+<span class="n">L</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mf">3.74165739</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+     <span class="p">[</span><span class="o">-</span><span class="mf">8.55235974</span><span class="p">,</span> <span class="mf">1.96396101</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">LQ</span> <span class="n">factorization</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">7.</span><span class="p">,</span> <span class="mf">8.</span><span class="p">,</span> <span class="mf">9.</span><span class="p">],</span> <span class="p">[</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">11.</span><span class="p">,</span> <span class="mf">12.</span><span class="p">]]]</span>
+<span class="n">Q</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">gelqf</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">Q</span> <span class="o">=</span> <span class="p">[[[</span><span class="o">-</span><span class="mf">0.26726124</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.53452248</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.80178373</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.87287156</span><span class="p">,</span> <span class="mf">0.21821789</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.43643578</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="o">-</span><span class="mf">0.50257071</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.57436653</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.64616234</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.7620735</span><span class="p">,</span> <span class="mf">0.05862104</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.64483142</span><span class="p">]]]</span>
+<span class="n">L</span> <span class="o">=</span> <span class="p">[[[</span><span class="o">-</span><span class="mf">3.74165739</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+      <span class="p">[</span><span class="o">-</span><span class="mf">8.55235974</span><span class="p">,</span> <span class="mf">1.96396101</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="o">-</span><span class="mf">13.92838828</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span>
+      <span class="p">[</span><span class="o">-</span><span class="mf">19.09768702</span><span class="p">,</span> <span class="mf">0.52758934</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L798</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices to be factorized</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.gemm">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">gemm</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">B=None</em>, <em class="sig-param">C=None</em>, <em class="sig-param">transpose_a=_Null</em>, <em class="sig-param">transpose_b=_Null</em>, <em class="sig-param">alpha=_Null</em>, <em class="sig-param">beta=_Null</em>, <em class="sig-param">axis=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.gemm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs general matrix multiplication and accumulation.
+Input are tensors <em>A</em>, <em>B</em>, <em>C</em>, each of dimension <em>n &gt;= 2</em> and having the same shape
+on the leading <em>n-2</em> dimensions.</p>
+<p>If <em>n=2</em>, the BLAS3 function <em>gemm</em> is performed:</p>
+<blockquote>
+<div><p><em>out</em> = <em>alpha</em> * <em>op</em>(<em>A</em>) * <em>op</em>(<em>B</em>) + <em>beta</em> * <em>C</em></p>
+</div></blockquote>
+<p>Here, <em>alpha</em> and <em>beta</em> are scalar parameters, and <em>op()</em> is either the identity or
+matrix transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).</p>
+<p>If <em>n&gt;2</em>, <em>gemm</em> is performed separately for a batch of matrices. The column indices of the matrices
+are given by the last dimensions of the tensors, the row indices by the axis specified with the <em>axis</em>
+parameter. By default, the trailing two dimensions will be used for matrix encoding.</p>
+<p>For a non-default axis parameter, the operation performed is equivalent to a series of swapaxes/gemm/swapaxes
+calls. For example let <em>A</em>, <em>B</em>, <em>C</em> be 5 dimensional tensors. Then gemm(<em>A</em>, <em>B</em>, <em>C</em>, axis=1) is equivalent
+to the following without the overhead of the additional swapaxis operations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A1</span> <span class="o">=</span> <span class="n">swapaxes</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">dim1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">B1</span> <span class="o">=</span> <span class="n">swapaxes</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">dim1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">swapaxes</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">dim1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">gemm</span><span class="p">(</span><span class="n">A1</span><span class="p">,</span> <span class="n">B1</span><span class="p">,</span> <span class="n">C</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">swapaxis</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">dim1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When the input data is of type float32 and the environment variables MXNET_CUDA_ALLOW_TENSOR_CORE
+and MXNET_CUDA_TENSOR_OP_MATH_ALLOW_CONVERSION are set to 1, this operator will try to use
+pseudo-float16 precision (float32 math with float16 I/O) precision in order to use
+Tensor Cores on suitable NVIDIA GPUs. This can sometimes give significant speedups.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">multiply</span><span class="o">-</span><span class="n">add</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">gemm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">transpose_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+        <span class="o">=</span> <span class="p">[[</span><span class="mf">14.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">14.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">multiply</span><span class="o">-</span><span class="n">add</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]]]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]]]</span>
+<span class="n">C</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">10.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.01</span><span class="p">]]]</span>
+<span class="n">gemm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">transpose_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.0</span> <span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+        <span class="o">=</span> <span class="p">[[[</span><span class="mf">104.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.14</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L89</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices</p></li>
+<li><p><strong>B</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices</p></li>
+<li><p><strong>C</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices</p></li>
+<li><p><strong>transpose_a</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply with transposed of first input (A).</p></li>
+<li><p><strong>transpose_b</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply with transposed of second input (B).</p></li>
+<li><p><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor multiplied with A*B.</p></li>
+<li><p><strong>beta</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor multiplied with C.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='-2'</em>) – Axis corresponding to the matrix rows.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.gemm2">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">gemm2</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">B=None</em>, <em class="sig-param">transpose_a=_Null</em>, <em class="sig-param">transpose_b=_Null</em>, <em class="sig-param">alpha=_Null</em>, <em class="sig-param">axis=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.gemm2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs general matrix multiplication.
+Input are tensors <em>A</em>, <em>B</em>, each of dimension <em>n &gt;= 2</em> and having the same shape
+on the leading <em>n-2</em> dimensions.</p>
+<p>If <em>n=2</em>, the BLAS3 function <em>gemm</em> is performed:</p>
+<blockquote>
+<div><p><em>out</em> = <em>alpha</em> * <em>op</em>(<em>A</em>) * <em>op</em>(<em>B</em>)</p>
+</div></blockquote>
+<p>Here <em>alpha</em> is a scalar parameter and <em>op()</em> is either the identity or the matrix
+transposition (depending on <em>transpose_a</em>, <em>transpose_b</em>).</p>
+<p>If <em>n&gt;2</em>, <em>gemm</em> is performed separately for a batch of matrices. The column indices of the matrices
+are given by the last dimensions of the tensors, the row indices by the axis specified with the <em>axis</em>
+parameter. By default, the trailing two dimensions will be used for matrix encoding.</p>
+<p>For a non-default axis parameter, the operation performed is equivalent to a series of swapaxes/gemm/swapaxes
+calls. For example let <em>A</em>, <em>B</em> be 5 dimensional tensors. Then gemm(<em>A</em>, <em>B</em>, axis=1) is equivalent to
+the following without the overhead of the additional swapaxis operations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A1</span> <span class="o">=</span> <span class="n">swapaxes</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">dim1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">B1</span> <span class="o">=</span> <span class="n">swapaxes</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">dim1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">gemm2</span><span class="p">(</span><span class="n">A1</span><span class="p">,</span> <span class="n">B1</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">swapaxis</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">dim1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When the input data is of type float32 and the environment variables MXNET_CUDA_ALLOW_TENSOR_CORE
+and MXNET_CUDA_TENSOR_OP_MATH_ALLOW_CONVERSION are set to 1, this operator will try to use
+pseudo-float16 precision (float32 math with float16 I/O) precision in order to use
+Tensor Cores on suitable NVIDIA GPUs. This can sometimes give significant speedups.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">multiply</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">gemm2</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">transpose_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+         <span class="o">=</span> <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">multiply</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]]]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]]]</span>
+<span class="n">gemm2</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">transpose_b</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="o">=</span> <span class="p">[[[</span><span class="mf">4.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.04</span> <span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L163</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices</p></li>
+<li><p><strong>B</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices</p></li>
+<li><p><strong>transpose_a</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply with transposed of first input (A).</p></li>
+<li><p><strong>transpose_b</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply with transposed of second input (B).</p></li>
+<li><p><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor multiplied with A*B.</p></li>
+<li><p><strong>axis</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='-2'</em>) – Axis corresponding to the matrix row indices.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.inverse">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">inverse</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.inverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the inverse of a matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, <em>A</em> is a square matrix. We compute:</p>
+<blockquote>
+<div><p><em>out</em> = <em>A</em><sup>-1</sup></p>
+</div></blockquote>
+<p>If <em>n&gt;2</em>, <em>inverse</em> is performed separately on the trailing two dimensions
+for all inputs (batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">inverse</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]]</span>
+<span class="n">inverse</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">inverse</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]]]</span>
+<span class="n">inverse</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="o">-</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">]],</span>
+              <span class="p">[[</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L920</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of square matrix</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.makediag">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">makediag</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">offset=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.makediag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a square matrix with the input as diagonal.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 1</em>.</p>
+<p>If <em>n=1</em>, then <em>A</em> represents the diagonal entries of a single square matrix. This matrix will be returned as a 2-dimensional tensor.
+If <em>n&gt;1</em>, then <em>A</em> represents a batch of diagonals of square matrices. The batch of diagonal matrices will be returned as an <em>n+1</em>-dimensional tensor.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">diagonal</span> <span class="n">matrix</span> <span class="n">construction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
+
+<span class="n">makediag</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>    <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]]</span>
+
+<span class="n">makediag</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">diagonal</span> <span class="n">matrix</span> <span class="n">construction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]</span>
+
+<span class="n">makediag</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]],</span>
+               <span class="p">[[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L547</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of diagonal entries</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='0'</em>) – Offset of the diagonal versus the main diagonal. 0 corresponds to the main diagonal, a negative/positive value to diagonals below/above the main diagonal.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.maketrian">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">maketrian</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">offset=_Null</em>, <em class="sig-param">lower=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.maketrian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a square matrix with the input representing a specific triangular sub-matrix.
+This is basically the inverse of <em>linalg.extracttrian</em>. Input is a tensor <em>A</em> of dimension <em>n &gt;= 1</em>.</p>
+<p>If <em>n=1</em>, then <em>A</em> represents the entries of a triangular matrix which is lower triangular if <em>offset&lt;0</em> or <em>offset=0</em>, <em>lower=true</em>. The resulting matrix is derived by first constructing the square
+matrix with the entries outside the triangle set to zero and then adding <em>offset</em>-times an additional
+diagonal with zero entries to the square matrix.</p>
+<p>If <em>n&gt;1</em>, then <em>A</em> represents a batch of triangular sub-matrices. The batch of corresponding square matrices is returned as an <em>n+1</em>-dimensional tensor.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span>  <span class="n">matrix</span> <span class="n">construction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span>
+
+<span class="n">maketrian</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>              <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]]</span>
+
+<span class="n">maketrian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="n">false</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]]</span>
+
+<span class="n">maketrian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>    <span class="o">=</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>
+<span class="n">maketrian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>   <span class="o">=</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                             <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">construction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]]</span>
+
+<span class="n">maketrian</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>           <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]],</span>
+                          <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]]]</span>
+
+<span class="n">maketrian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]],</span>
+                          <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span>
+                           <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L673</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of triangular matrices stored as vectors</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>default='0'</em>) – Offset of the diagonal versus the main diagonal. 0 corresponds to the main diagonal, a negative/positive value to diagonals below/above the main diagonal.</p></li>
+<li><p><strong>lower</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Refer to the lower triangular matrix if lower=true, refer to the upper otherwise. Only relevant when offset=0</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.potrf">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">potrf</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.potrf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs Cholesky factorization of a symmetric positive-definite matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, the Cholesky factor <em>B</em> of the symmetric, positive definite matrix <em>A</em> is
+computed. <em>B</em> is triangular (entries of upper or lower triangle are all zero), has
+positive diagonal entries, and:</p>
+<blockquote>
+<div><p><em>A</em> = <em>B</em> * <em>B</em><sup>T</sup>  if <em>lower</em> = <em>true</em>
+<em>A</em> = <em>B</em><sup>T</sup> * <em>B</em>  if <em>lower</em> = <em>false</em></p>
+</div></blockquote>
+<p>If <em>n&gt;2</em>, <em>potrf</em> is performed separately on the trailing two dimensions for all inputs
+(batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">factorization</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.25</span><span class="p">]]</span>
+<span class="n">potrf</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">factorization</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.25</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">16.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">]]]</span>
+<span class="n">potrf</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L214</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices to be decomposed</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.potri">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">potri</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.potri" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs matrix inversion from a Cholesky factorization.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, <em>A</em> is a triangular matrix (entries of upper or lower triangle are all zero)
+with positive diagonal. We compute:</p>
+<blockquote>
+<div><p><em>out</em> = <em>A</em><sup>-T</sup> * <em>A</em><sup>-1</sup> if <em>lower</em> = <em>true</em>
+<em>out</em> = <em>A</em><sup>-1</sup> * <em>A</em><sup>-T</sup> if <em>lower</em> = <em>false</em></p>
+</div></blockquote>
+<p>In other words, if <em>A</em> is the Cholesky factor of a symmetric positive definite matrix
+<em>B</em> (obtained by <em>potrf</em>), then</p>
+<blockquote>
+<div><p><em>out</em> = <em>B</em><sup>-1</sup></p>
+</div></blockquote>
+<p>If <em>n&gt;2</em>, <em>potri</em> is performed separately on the trailing two dimensions for all inputs
+(batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Use this operator only if you are certain you need the inverse of <em>B</em>, and
+cannot use the Cholesky factor <em>A</em> (<em>potrf</em>), together with backsubstitution
+(<em>trsm</em>). The latter is numerically much safer, and also cheaper.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">inverse</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]]</span>
+<span class="n">potri</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.26563</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0625</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.0625</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">inverse</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]]</span>
+<span class="n">potri</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">0.26563</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0625</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.0625</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]],</span>
+            <span class="p">[[</span><span class="mf">0.06641</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.01562</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.01562</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0625</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L275</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of lower triangular matrices</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.slogdet">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">slogdet</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.slogdet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the sign and log of the determinant of a matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, <em>A</em> is a square matrix. We compute:</p>
+<blockquote>
+<div><p><em>sign</em> = <em>sign(det(A))</em>
+<em>logabsdet</em> = <em>log(abs(det(A)))</em></p>
+</div></blockquote>
+<p>If <em>n&gt;2</em>, <em>slogdet</em> is performed separately on the trailing two dimensions
+for all inputs (batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The gradient is not properly defined on sign, so the gradient of
+it is not backwarded.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>No gradient is backwarded when A is non-invertible. Please see
+the docs of operator det for detail.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">signed</span> <span class="n">log</span> <span class="n">determinant</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]]</span>
+<span class="n">sign</span><span class="p">,</span> <span class="n">logabsdet</span> <span class="o">=</span> <span class="n">slogdet</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">sign</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]</span>
+<span class="n">logabsdet</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.609438</span><span class="p">]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">signed</span> <span class="n">log</span> <span class="n">determinant</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]]]</span>
+<span class="n">sign</span><span class="p">,</span> <span class="n">logabsdet</span> <span class="o">=</span> <span class="n">slogdet</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">sign</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">]</span>
+<span class="n">logabsdet</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.609438</span><span class="p">,</span> <span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="mf">1.609438</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L1034</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of square matrix</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.sumlogdiag">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">sumlogdiag</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.sumlogdiag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the sum of the logarithms of the diagonal elements of a square matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, <em>A</em> must be square with positive diagonal entries. We sum the natural
+logarithms of the diagonal elements, the result has shape (1,).</p>
+<p>If <em>n&gt;2</em>, <em>sumlogdiag</em> is performed separately on the trailing two dimensions for all
+inputs (batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">reduction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">]]</span>
+<span class="n">sumlogdiag</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.9459</span><span class="p">]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">reduction</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">17.0</span><span class="p">]]]</span>
+<span class="n">sumlogdiag</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.9459</span><span class="p">,</span> <span class="mf">3.9318</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L445</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of square matrices</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.syevd">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">syevd</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.syevd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eigendecomposition for symmetric matrix.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, <em>A</em> must be symmetric, of shape <em>(x, x)</em>. We compute the eigendecomposition,
+resulting in the orthonormal matrix <em>U</em> of eigenvectors, shape <em>(x, x)</em>, and the
+vector <em>L</em> of eigenvalues, shape <em>(x,)</em>, so that:</p>
+<blockquote>
+<div><p><em>U</em> * <em>A</em> = <em>diag(L)</em> * <em>U</em></p>
+</div></blockquote>
+<p>Here:</p>
+<blockquote>
+<div><p><em>U</em> * <em>U</em><sup>T</sup> = <em>U</em><sup>T</sup> * <em>U</em> = <em>I</em></p>
+</div></blockquote>
+<p>where <em>I</em> is the identity matrix. Also, <em>L(0) &lt;= L(1) &lt;= L(2) &lt;= …</em> (ascending order).</p>
+<p>If <em>n&gt;2</em>, <em>syevd</em> is performed separately on the trailing two dimensions of <em>A</em> (batch
+mode). In this case, <em>U</em> has <em>n</em> dimensions like <em>A</em>, and <em>L</em> has <em>n-1</em> dimensions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Derivatives for this operator are defined only if <em>A</em> is such that all its
+eigenvalues are distinct, and the eigengaps are not too small. If you need
+gradients, do not apply this operator to matrices with multiple eigenvalues.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">symmetric</span> <span class="n">eigendecomposition</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]]</span>
+<span class="n">U</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">syevd</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">U</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.89442719</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4472136</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.4472136</span><span class="p">,</span> <span class="mf">0.89442719</span><span class="p">]]</span>
+<span class="n">L</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]</span>
+
+<span class="n">Batch</span> <span class="n">symmetric</span> <span class="n">eigendecomposition</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]]]</span>
+<span class="n">U</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">syevd</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="n">U</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">0.89442719</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4472136</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.4472136</span><span class="p">,</span> <span class="mf">0.89442719</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">0.92387953</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.38268343</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.38268343</span><span class="p">,</span> <span class="mf">0.92387953</span><span class="p">]]]</span>
+<span class="n">L</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.17157288</span><span class="p">,</span> <span class="mf">5.82842712</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L868</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices to be factorized</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.syrk">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">syrk</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">transpose=_Null</em>, <em class="sig-param">alpha=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.syrk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplication of matrix with its transpose.
+Input is a tensor <em>A</em> of dimension <em>n &gt;= 2</em>.</p>
+<p>If <em>n=2</em>, the operator performs the BLAS3 function <em>syrk</em>:</p>
+<blockquote>
+<div><p><em>out</em> = <em>alpha</em> * <em>A</em> * <em>A</em><sup>T</sup></p>
+</div></blockquote>
+<p>if <em>transpose=False</em>, or</p>
+<blockquote>
+<div><p><em>out</em> = <em>alpha</em> * <em>A</em><sup>T</sup> * <em>A</em></p>
+</div></blockquote>
+<p>if <em>transpose=True</em>.</p>
+<p>If <em>n&gt;2</em>, <em>syrk</em> is performed separately on the trailing two dimensions for all
+inputs (batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">multiply</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">]]</span>
+<span class="n">syrk</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+         <span class="o">=</span> <span class="p">[[</span><span class="mf">14.</span><span class="p">,</span> <span class="mf">32.</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">32.</span><span class="p">,</span> <span class="mf">77.</span><span class="p">]]</span>
+<span class="n">syrk</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+         <span class="o">=</span> <span class="p">[[</span><span class="mf">17.</span><span class="p">,</span> <span class="mf">22.</span><span class="p">,</span> <span class="mf">27.</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">22.</span><span class="p">,</span> <span class="mf">29.</span><span class="p">,</span> <span class="mf">36.</span><span class="p">],</span>
+            <span class="p">[</span><span class="mf">27.</span><span class="p">,</span> <span class="mf">36.</span><span class="p">,</span> <span class="mf">45.</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">multiply</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]]]</span>
+<span class="n">syrk</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">transpose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">4.</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.04</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L730</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of input matrices</p></li>
+<li><p><strong>transpose</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Use transpose of input matrix.</p></li>
+<li><p><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor to be applied to the result.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.trmm">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">trmm</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">B=None</em>, <em class="sig-param">transpose=_Null</em>, <em class="sig-param">rightside=_Null</em>, <em class="sig-param">lower=_Null</em>, <em class="sig-param">alpha=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.trmm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs multiplication with a lower triangular matrix.
+Input are tensors <em>A</em>, <em>B</em>, each of dimension <em>n &gt;= 2</em> and having the same shape
+on the leading <em>n-2</em> dimensions.</p>
+<p>If <em>n=2</em>, <em>A</em> must be triangular. The operator performs the BLAS3 function
+<em>trmm</em>:</p>
+<blockquote>
+<div><p><em>out</em> = <em>alpha</em> * <em>op</em>(<em>A</em>) * <em>B</em></p>
+</div></blockquote>
+<p>if <em>rightside=False</em>, or</p>
+<blockquote>
+<div><p><em>out</em> = <em>alpha</em> * <em>B</em> * <em>op</em>(<em>A</em>)</p>
+</div></blockquote>
+<p>if <em>rightside=True</em>. Here, <em>alpha</em> is a scalar parameter, and <em>op()</em> is either the
+identity or the matrix transposition (depending on <em>transpose</em>).</p>
+<p>If <em>n&gt;2</em>, <em>trmm</em> is performed separately on the trailing two dimensions for all inputs
+(batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">triangular</span> <span class="n">matrix</span> <span class="n">multiply</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">trmm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">triangular</span> <span class="n">matrix</span> <span class="n">multiply</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]]]</span>
+<span class="n">trmm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]],</span>
+                         <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L333</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of lower triangular matrices</p></li>
+<li><p><strong>B</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of matrices</p></li>
+<li><p><strong>transpose</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Use transposed of the triangular matrix</p></li>
+<li><p><strong>rightside</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply triangular matrix from the right to non-triangular one.</p></li>
+<li><p><strong>lower</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – True if the triangular matrix is lower triangular, false if it is upper triangular.</p></li>
+<li><p><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor to be applied to the result.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="mxnet.ndarray.linalg.trsm">
+<code class="sig-prename descclassname">mxnet.ndarray.linalg.</code><code class="sig-name descname">trsm</code><span class="sig-paren">(</span><em class="sig-param">A=None</em>, <em class="sig-param">B=None</em>, <em class="sig-param">transpose=_Null</em>, <em class="sig-param">rightside=_Null</em>, <em class="sig-param">lower=_Null</em>, <em class="sig-param">alpha=_Null</em>, <em class="sig-param">out=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.ndarray.linalg.trsm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves matrix equation involving a lower triangular matrix.
+Input are tensors <em>A</em>, <em>B</em>, each of dimension <em>n &gt;= 2</em> and having the same shape
+on the leading <em>n-2</em> dimensions.</p>
+<p>If <em>n=2</em>, <em>A</em> must be triangular. The operator performs the BLAS3 function
+<em>trsm</em>, solving for <em>out</em> in:</p>
+<blockquote>
+<div><p><em>op</em>(<em>A</em>) * <em>out</em> = <em>alpha</em> * <em>B</em></p>
+</div></blockquote>
+<p>if <em>rightside=False</em>, or</p>
+<blockquote>
+<div><p><em>out</em> * <em>op</em>(<em>A</em>) = <em>alpha</em> * <em>B</em></p>
+</div></blockquote>
+<p>if <em>rightside=True</em>. Here, <em>alpha</em> is a scalar parameter, and <em>op()</em> is either the
+identity or the matrix transposition (depending on <em>transpose</em>).</p>
+<p>If <em>n&gt;2</em>, <em>trsm</em> is performed separately on the trailing two dimensions for all inputs
+(batch mode).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The operator supports float32 and float64 data types only.</p>
+</div>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Single</span> <span class="n">matrix</span> <span class="n">solve</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]</span>
+<span class="n">trsm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]</span>
+
+<span class="n">Batch</span> <span class="n">matrix</span> <span class="n">solve</span>
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]]]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]],</span>
+     <span class="p">[[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">]]]</span>
+<span class="n">trsm</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">=</span> <span class="p">[[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span>
+                         <span class="p">[[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>Defined in src/operator/tensor/la_op.cc:L396</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of lower triangular matrices</p></li>
+<li><p><strong>B</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – Tensor of matrices</p></li>
+<li><p><strong>transpose</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Use transposed of the triangular matrix</p></li>
+<li><p><strong>rightside</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=0</em>) – Multiply triangular matrix from the right to non-triangular one.</p></li>
+<li><p><strong>lower</strong> (<em>boolean</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – True if the triangular matrix is lower triangular, false if it is upper triangular.</p></li>
+<li><p><strong>alpha</strong> (<em>double</em><em>, </em><em>optional</em><em>, </em><em>default=1</em>) – Scalar factor to be applied to the result.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em>, </em><em>optional</em>) – The output NDArray to hold the result.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>out</strong> – The output of this function.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or list of NDArrays</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+        <hr class="feedback-hr-top" />
+<div class="feedback-container">
+    <div class="feedback-question">Did this page help you?</div>
+    <div class="feedback-answer-container">
+        <div class="feedback-answer yes-link" data-response="yes">Yes</div>
+        <div class="feedback-answer no-link" data-response="no">No</div>
+    </div>
+    <div class="feedback-thank-you">Thanks for your feedback!</div>
+</div>
+<hr class="feedback-hr-bottom" />
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+            </div>
+        </div>                    
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="../image/index.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>ndarray.image</div>
+         </div>
+     </a>
+     <a id="button-next" href="../op/index.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>ndarray.op</div>
+        </div>
+     </a>
+  </div>
+            <footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a class="u-email" href="mailto:dev@mxnet.apache.org">Dev list</a></li>
+                    <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="../../../_static/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+  </body>
+</html>

@@ -108,6 +108,7 @@
           </span>
           <div class="dropdown-content">
             <a class="dropdown-option-active" href="/">master</a><br>
+            <a class="dropdown-option" href="/versions/1.7/">1.7</a><br>
             <a class="dropdown-option" href="/versions/1.6/">1.6</a><br>
             <a class="dropdown-option" href="/versions/1.5.0/">1.5.0</a><br>
             <a class="dropdown-option" href="/versions/1.4.1/">1.4.1</a><br>
@@ -149,6 +150,13 @@
       </div>
 </form>
         
+<a id="button-show-github"
+    href="https://github.com/apache/mxnet/edit/master/docs/python_docs/python/_modules/mxnet/gluon/data/sampler" class="mdl-button mdl-js-button mdl-button--icon">
+<i class="material-icons">edit</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-github">
+Edit on Github
+</div>
         </nav>
     </div>
     <div class="mdl-layout__header-row header-links">
@@ -1204,7 +1212,8 @@
 <span class="c1"># coding: utf-8</span>
 <span class="c1"># pylint: disable=</span>
 <span class="sd">&quot;&quot;&quot;Dataset sampler.&quot;&quot;&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Sampler&#39;</span><span class="p">,</span> <span class="s1">&#39;SequentialSampler&#39;</span><span class="p">,</span> <span class="s1">&#39;RandomSampler&#39;</span><span class="p">,</span> <span class="s1">&#39;FilterSampler&#39;</span><span class="p">,</span> <span class="s1">&#39;BatchSampler&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Sampler&#39;</span><span class="p">,</span> <span class="s1">&#39;SequentialSampler&#39;</span><span class="p">,</span> <span class="s1">&#39;RandomSampler&#39;</span><span class="p">,</span> <span class="s1">&#39;FilterSampler&#39;</span><span class="p">,</span> <span class="s1">&#39;BatchSampler&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;IntervalSampler&#39;</span><span class="p">]</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -1345,6 +1354,46 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;last_batch must be one of &#39;keep&#39;, &#39;discard&#39;, or &#39;rollover&#39;, &quot;</span> \
             <span class="s2">&quot;but got </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_batch</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IntervalSampler"><a class="viewcode-back" href="../../../../api/gluon/data/index.html#mxnet.gluon.data.IntervalSampler">[docs]</a><span class="k">class</span> <span class="nc">IntervalSampler</span><span class="p">(</span><span class="n">Sampler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Samples elements from [0, length) at fixed intervals.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    length : int</span>
+<span class="sd">        Length of the sequence.</span>
+<span class="sd">    interval : int</span>
+<span class="sd">        The number of items to skip between two samples.</span>
+<span class="sd">    rollover : bool, default True</span>
+<span class="sd">        Whether to start again from the first skipped item after reaching the end.</span>
+<span class="sd">        If true, this sampler would start again from the first skipped item until all items</span>
+<span class="sd">        are visited.</span>
+<span class="sd">        Otherwise, iteration stops when end is reached and skipped items are ignored.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; sampler = contrib.data.IntervalSampler(13, interval=3)</span>
+<span class="sd">    &gt;&gt;&gt; list(sampler)</span>
+<span class="sd">    [0, 3, 6, 9, 12, 1, 4, 7, 10, 2, 5, 8, 11]</span>
+<span class="sd">    &gt;&gt;&gt; sampler = contrib.data.IntervalSampler(13, interval=3, rollover=False)</span>
+<span class="sd">    &gt;&gt;&gt; list(sampler)</span>
+<span class="sd">    [0, 3, 6, 9, 12]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">rollover</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">interval</span> <span class="o">&lt;=</span> <span class="n">length</span><span class="p">,</span> \
+            <span class="s2">&quot;Interval </span><span class="si">{}</span><span class="s2"> must be smaller than or equal to length </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_length</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_interval</span> <span class="o">=</span> <span class="n">interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rollover</span> <span class="o">=</span> <span class="n">rollover</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_interval</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rollover</span> <span class="k">else</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_interval</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">j</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length</span></div>
 </pre></div>
 
         <hr class="feedback-hr-top" />
