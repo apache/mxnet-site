@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Basics | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Basics" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/api/cpp/docs/tutorials/basics" />
+<meta property="og:url" content="https://mxnet.apache.org/api/cpp/docs/tutorials/basics" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"description":"A flexible and efficient library for deep learning.","headline":"Basics","@type":"WebPage","url":"https://mxnet.apache.org/api/cpp/docs/tutorials/basics","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<script src="https://medium-widget.pixelpoint.io/widget.js"></script>
+  <link rel="stylesheet" href="/versions/1.6/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+  <script src="/versions/1.6/assets/js/clipboard.js"></script>
+  <script src="/versions/1.6/assets/js/copycode.js"></script>
+  <script src="/versions/1.6/assets/js/globalSearch.js"></script>
+  <style>
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+  
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      padding: 12px 16px;
+      z-index: 1;
+      text-align: left;
+    }
+  
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  </style>
+</head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.6/"><img
+            src="/versions/1.6/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/versions/1.6/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.6/blog">Blog</a>
+        <a class="page-link" href="/versions/1.6/features">Features</a>
+        <a class="page-link" href="/versions/1.6/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.6/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span style="display:inline-flex;">1.6
+            <svg viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true" style="width: 18px;"><path d="M24 11.305l-7.997 11.39L8 11.305z" style="fill: white;"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a href="/versions/1.7/">1.7</a>
+            <a style="color:#FF4500;" href="/versions/1.6/">1.6</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Basics</h1>
+        <h3></h3><a style="float:left; margin-top:20px" href="/versions/1.6/get_started" class="btn btn-action">Get Started
+            <span class="span-accented">›</span></a></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="docs-card docs-side">
+            <ul>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.6/api/cpp"> <img src="/versions/1.6/assets/img/compass.svg"
+                                                                      class="docs-logo-docs">C/C++ Guide <span
+                            class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.6/api/cpp/docs/tutorials"> <img
+                            src="/versions/1.6/assets/img/video-tutorial.svg" class="docs-logo-docs">C/C++
+                        Tutorials <span class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.6/api/cpp/docs/api"> <img src="/versions/1.6/assets/img/api.svg"
+                                                                    class="docs-logo-docs">C/C++ API Reference
+                        <span class="span-accented">›</span></a>
+                </div>
+
+                <!-- Let's show the list of tutorials -->
+                <br>
+                
+                <h3>Tutorials</h3>
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.6/api/cpp/docs/tutorials/basics">Basics</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.6/api/cpp/docs/tutorials/cpp_inference">C++ API inference tutorial</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.6/api/cpp/docs/tutorials/subgraph_api">Subgraph API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                  <!-- page -->
+                
+            </ul>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+          <!-- page -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="basics">Basics</h1>
+
+<p>This tutorial provides basic usages of the C++ package through the classical handwritten digits
+identification database--<a href="http://yann.lecun.com/exdb/mnist/">MNIST</a>.</p>
+
+<p>The following contents assume that the working directory is <code>/path/to/mxnet/cpp-package/example</code>.</p>
+
+<h2 id="load-data">Load Data</h2>
+
+<p>Before going into codes, we need to fetch MNIST data. You can either use the script <code>/path/to/mxnet/cpp-package/example/get_data.sh</code>,
+or download mnist data by yourself from Lecun&#39;s <a href="http://yann.lecun.com/exdb/mnist/">website</a>
+and decompress them into <code>data/mnist_data</code> folder.</p>
+
+<p>Except linking the MXNet shared library, the C++ package itself is a header-only package,
+which means all you need to do is to include the header files. Among the header files,
+<code>op.h</code> is special since it is generated dynamically. The generation should be done when
+<a href="/versions/1.6/api/cpp/">building the C++ package</a>.
+It is important to note that you need to <strong>copy the shared library</strong> (<code>libmxnet.so</code> in Linux and MacOS,
+<code>libmxnet.dll</code> in Windows) from <code>/path/to/mxnet/lib</code> to the working directory.
+We do not recommend you to use pre-built binaries because MXNet is under heavy development,
+the operator definitions in <code>op.h</code> may be incompatible with the pre-built version.</p>
+
+<p>In order to use functionalities provides by the C++ package, first we include the general
+header file <code>MxNetCpp.h</code> and specify the namespaces.</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="cp">#include "mxnet-cpp/MxNetCpp.h"
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">mxnet</span><span class="o">::</span><span class="n">cpp</span><span class="p">;</span>
+</code></pre></div>
+<p>Next we can use the data iter to load MNIST data (separated to training sets and validation sets).
+The digits in MNIST are 2-dimension arrays, so we should set <code>flat</code> to true to flatten the data.</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="k">auto</span> <span class="n">train_iter</span> <span class="o">=</span> <span class="n">MXDataIter</span><span class="p">(</span><span class="s">"MNISTIter"</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">SetParam</span><span class="p">(</span><span class="s">"image"</span><span class="p">,</span> <span class="s">"./data/mnist_data/train-images-idx3-ubyte"</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">SetParam</span><span class="p">(</span><span class="s">"label"</span><span class="p">,</span> <span class="s">"./data/mnist_data/train-labels-idx1-ubyte"</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">SetParam</span><span class="p">(</span><span class="s">"batch_size"</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">SetParam</span><span class="p">(</span><span class="s">"flat"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">CreateDataIter</span><span class="p">();</span>
+<span class="k">auto</span> <span class="n">val_iter</span> <span class="o">=</span> <span class="n">MXDataIter</span><span class="p">(</span><span class="s">"MNISTIter"</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">SetParam</span><span class="p">(</span><span class="s">"image"</span><span class="p">,</span> <span class="s">"./data/mnist_data/t10k-images-idx3-ubyte"</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">SetParam</span><span class="p">(</span><span class="s">"label"</span><span class="p">,</span> <span class="s">"./data/mnist_data/t10k-labels-idx1-ubyte"</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">SetParam</span><span class="p">(</span><span class="s">"batch_size"</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">SetParam</span><span class="p">(</span><span class="s">"flat"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">CreateDataIter</span><span class="p">();</span>
+</code></pre></div>
+<p>The data have been successfully loaded. We can now easily construct various models to identify
+the digits with the help of C++ package.</p>
+
+<h2 id="multilayer-perceptron">Multilayer Perceptron</h2>
+
+<p>If you are not familiar with multilayer perceptron, you can get some basic information
+<a href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html">here</a>. We only focus on
+the implementation in this tutorial.</p>
+
+<p>Constructing multilayer perceptron model is straightforward, assume we store the hidden size
+for each layer in <code>layers</code>, and each layer uses
+<a href="https://en.wikipedia.org/wiki/Rectifier_(neural_networks)">ReLu</a> function as activation.</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="n">Symbol</span> <span class="nf">mlp</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">layers</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">Variable</span><span class="p">(</span><span class="s">"X"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">label</span> <span class="o">=</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">Variable</span><span class="p">(</span><span class="s">"label"</span><span class="p">);</span>
+
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span> <span class="n">weights</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span> <span class="n">biases</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="n">Symbol</span><span class="o">&gt;</span> <span class="n">outputs</span><span class="p">(</span><span class="n">layers</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">layers</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">Variable</span><span class="p">(</span><span class="s">"w"</span> <span class="o">+</span> <span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="n">biases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">Symbol</span><span class="o">::</span><span class="n">Variable</span><span class="p">(</span><span class="s">"b"</span> <span class="o">+</span> <span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+    <span class="n">Symbol</span> <span class="n">fc</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span>
+      <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">outputs</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+      <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+      <span class="n">biases</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+      <span class="n">layers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="p">);</span>
+    <span class="n">outputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">==</span> <span class="n">layers</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span> <span class="o">?</span> <span class="n">fc</span> <span class="o">:</span> <span class="n">Activation</span><span class="p">(</span><span class="n">fc</span><span class="p">,</span> <span class="n">ActivationActType</span><span class="o">::</span><span class="n">relu</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span> <span class="n">SoftmaxOutput</span><span class="p">(</span><span class="n">outputs</span><span class="p">.</span><span class="n">back</span><span class="p">(),</span> <span class="n">label</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The above function defines a multilayer perceptron model where hidden sizes are specified
+by <code>layers</code>.</p>
+
+<p>We now create and initialize the parameters after the model is constructed. MXNet can help
+ you to infer shapes of most of the parameters. Basically only the shape of data and label
+ is needed.</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">string</span><span class="p">,</span> <span class="n">NDArray</span><span class="o">&gt;</span> <span class="n">args</span><span class="p">;</span>
+<span class="n">args</span><span class="p">[</span><span class="s">"X"</span><span class="p">]</span> <span class="o">=</span> <span class="n">NDArray</span><span class="p">(</span><span class="n">Shape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">image_size</span><span class="o">*</span><span class="n">image_size</span><span class="p">),</span> <span class="n">ctx</span><span class="p">);</span>
+<span class="n">args</span><span class="p">[</span><span class="s">"label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">NDArray</span><span class="p">(</span><span class="n">Shape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">ctx</span><span class="p">);</span>
+<span class="c1">// Let MXNet infer shapes other parameters such as weights</span>
+<span class="n">net</span><span class="p">.</span><span class="n">InferArgsMap</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">args</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
+
+<span class="c1">// Initialize all parameters with uniform distribution U(-0.01, 0.01)</span>
+<span class="k">auto</span> <span class="n">initializer</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="mf">0.01</span><span class="p">);</span>
+<span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">arg</span> <span class="o">:</span> <span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// arg.first is parameter name, and arg.second is the value</span>
+  <span class="n">initializer</span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">arg</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The rest is to train the model with an optimizer.
+```c++
+// Create sgd optimizer
+Optimizer* opt = OptimizerRegistry::Find(&quot;sgd&quot;);
+opt-&gt;SetParam(&quot;rescale_grad&quot;, 1.0/batch_size);</p>
+
+<p>// Start training
+for (int iter = 0; iter &lt; max_epoch; ++iter) {
+  train_iter.Reset();</p>
+
+<p>while (train_iter.Next()) {
+    auto data_batch = train_iter.GetDataBatch();
+    // Set data and label
+    args[&quot;X&quot;] = data_batch.data;
+    args[&quot;label&quot;] = data_batch.label;</p>
+<div class="highlight"><pre><code class="language-" data-lang="">// Create executor by binding parameters to the model
+auto *exec = net.SimpleBind(ctx, args);
+// Compute gradients
+exec-&gt;Forward(true);
+exec-&gt;Backward();
+// Update parameters
+exec-&gt;UpdateAll(opt, learning_rate, weight_decay);
+// Remember to free the memory
+delete exec;
+</code></pre></div>
+<p>}
+}
+```</p>
+
+<p>We also want to see how our model performs. The C++ package provides convenient APIs for
+evaluating. Here we use accuracy as metric. The inference is almost the same as training,
+ except that we don&#39;t need gradients.</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="n">Accuracy</span> <span class="n">acc</span><span class="p">;</span>
+<span class="n">val_iter</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">val_iter</span><span class="p">.</span><span class="n">Next</span><span class="p">())</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">data_batch</span> <span class="o">=</span> <span class="n">val_iter</span><span class="p">.</span><span class="n">GetDataBatch</span><span class="p">();</span>
+  <span class="n">args</span><span class="p">[</span><span class="s">"X"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_batch</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+  <span class="n">args</span><span class="p">[</span><span class="s">"label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_batch</span><span class="p">.</span><span class="n">label</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="o">*</span><span class="n">exec</span> <span class="o">=</span> <span class="n">net</span><span class="p">.</span><span class="n">SimpleBind</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">);</span>
+  <span class="c1">// Forward pass is enough as no gradient is needed when evaluating</span>
+  <span class="n">exec</span><span class="o">-&gt;</span><span class="n">Forward</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+  <span class="n">acc</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">data_batch</span><span class="p">.</span><span class="n">label</span><span class="p">,</span> <span class="n">exec</span><span class="o">-&gt;</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="k">delete</span> <span class="n">exec</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>You can find the complete code in <code>mlp_cpu.cpp</code>. Use <code>make mlp_cpu</code> to compile it,
+ and <code>./mlp_cpu</code> to run it. If it complains that the shared library <code>libmxnet.so</code> is not found
+ after typing <code>./mlp_cpu</code>, you will need to specify the path to the shared library in
+ the environment variable <code>LD_LIBRARY_PATH</code> in Linux and <code>DYLD_LIBRARY_PATH</code>
+ in MacOS. For example, if you are using MacOS, typing
+ <code>DYLD_LIBRARY_PATH+=. ./mlp_cpu</code> would solve the problem. It basically tells the system
+ to find the shared library under the current directory since we have just copied it here.</p>
+
+<h2 id="gpu-support">GPU Support</h2>
+
+<p>It&#39;s worth noting that changing context from <code>Context::cpu()</code> to <code>Context::gpu()</code> is not enough,
+because the data read by data iter are stored in memory, we cannot assign it directly to the
+parameters. To bridge this gap, NDArray provides data synchronization functionalities between
+GPU and CPU. We will illustrate it by making the mlp code run on GPU.</p>
+
+<p>In the previous code, data are used like</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="n">args</span><span class="p">[</span><span class="s">"X"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_batch</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+<span class="n">args</span><span class="p">[</span><span class="s">"label"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_batch</span><span class="p">.</span><span class="n">label</span><span class="p">;</span>
+</code></pre></div>
+<p>It will be problematic if other parameters are created in the context of GPU. We can use
+<code>NDArray::CopyTo</code> to solve this problem.</p>
+<div class="highlight"><pre><code class="language-c++" data-lang="c++"><span class="c1">// Data provided by DataIter are stored in memory, should be copied to GPU first.</span>
+<span class="n">data_batch</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">CopyTo</span><span class="p">(</span><span class="o">&amp;</span><span class="n">args</span><span class="p">[</span><span class="s">"X"</span><span class="p">]);</span>
+<span class="n">data_batch</span><span class="p">.</span><span class="n">label</span><span class="p">.</span><span class="n">CopyTo</span><span class="p">(</span><span class="o">&amp;</span><span class="n">args</span><span class="p">[</span><span class="s">"label"</span><span class="p">]);</span>
+<span class="c1">// CopyTo is imperative, need to wait for it to complete.</span>
+<span class="n">NDArray</span><span class="o">::</span><span class="n">WaitAll</span><span class="p">();</span>
+</code></pre></div>
+<p>By replacing the former code to the latter one, we successfully port the code to GPU.
+You can find the complete code in <code>mlp_gpu.cpp</code>. Compilation is similar to the cpu version.
+Note that the shared library must be built with GPU support enabled.</p>
+
+    </div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.6/community/contribute.html#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/versions/1.6/community/contribute.html">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.6/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.6/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.6/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.6/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

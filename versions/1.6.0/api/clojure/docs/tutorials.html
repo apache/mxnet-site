@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Clojure Tutorials | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Clojure Tutorials" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/api/clojure/docs/tutorials" />
+<meta property="og:url" content="https://mxnet.apache.org/api/clojure/docs/tutorials" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"description":"A flexible and efficient library for deep learning.","headline":"Clojure Tutorials","@type":"WebPage","url":"https://mxnet.apache.org/api/clojure/docs/tutorials","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<script src="https://medium-widget.pixelpoint.io/widget.js"></script>
+  <link rel="stylesheet" href="/versions/1.6/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+  <script src="/versions/1.6/assets/js/clipboard.js"></script>
+  <script src="/versions/1.6/assets/js/copycode.js"></script>
+  <script src="/versions/1.6/assets/js/globalSearch.js"></script>
+  <style>
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+  
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      padding: 12px 16px;
+      z-index: 1;
+      text-align: left;
+    }
+  
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  </style>
+</head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.6/"><img
+            src="/versions/1.6/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/versions/1.6/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.6/blog">Blog</a>
+        <a class="page-link" href="/versions/1.6/features">Features</a>
+        <a class="page-link" href="/versions/1.6/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.6/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span style="display:inline-flex;">1.6
+            <svg viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true" style="width: 18px;"><path d="M24 11.305l-7.997 11.39L8 11.305z" style="fill: white;"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a href="/versions/1.7/">1.7</a>
+            <a style="color:#FF4500;" href="/versions/1.6/">1.6</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Clojure Tutorials</h1>
+        <h3></h3><a style="float:left; margin-top:20px" href="" class="btn btn-action">Get Started
+            <span class="span-accented">›</span></a></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="docs-card docs-side">
+            <ul>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.6/api/clojure"> <img src="/versions/1.6/assets/img/compass.svg"
+                                                                      class="docs-logo-docs">Clojure Guide <span
+                            class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.6/api/clojure/docs/tutorials"> <img
+                            src="/versions/1.6/assets/img/video-tutorial.svg" class="docs-logo-docs">Clojure
+                        Tutorials <span class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.6/api/clojure/docs/api"> <img src="/versions/1.6/assets/img/api.svg"
+                                                                    class="docs-logo-docs">Clojure API Reference
+                        <span class="span-accented">›</span></a>
+                </div>
+
+                <!-- Let's show the list of tutorials -->
+                <br>
+                
+            </ul>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+          <!-- page -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <h2>List of available tutorials</h2>
+<ul>
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+    
+    <li><a href="/versions/1.6/api/clojure/docs/tutorials/kvstore">KVStore API</a></li>
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+    
+    <li><a href="/versions/1.6/api/clojure/docs/tutorials/module">Module API</a></li>
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+    
+    <li><a href="/versions/1.6/api/clojure/docs/tutorials/ndarray">NDArray</a></li>
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+    
+    <li><a href="/versions/1.6/api/clojure/docs/tutorials/symbol">Symbolic API</a></li>
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+    
+    <li><a href="/versions/1.6/api/clojure/docs/tutorials/symbol_in_pictures">Symbolic API with Pictures</a></li>
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+    
+      <!-- page-category -->
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+    
+       <!-- resource-p -->
+      <!-- page -->
+</ul>
+
+    </div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.6/community/contribute.html#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/versions/1.6/community/contribute.html">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.6/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.6/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.6/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.6/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>
