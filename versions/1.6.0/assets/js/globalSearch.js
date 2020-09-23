@@ -10,14 +10,14 @@ $(document).ready(function () {
             <input id="global-search" type="text" title="Search" placeholder="Search" />
             <div id="global-search-dropdown-container">
                 <button class="gs-current-version btn" type="button" data-toggle="dropdown">
-                    <span id="gs-current-version-label">1.6</span>
+                    <span id="gs-current-version-label">1.6.0</span>
                     <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
                         <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
                     </svg>
                 </button>
                 <ul class="gs-opt-group gs-version-dropdown">
                     <li class="gs-opt gs-versions">master</li>
-                    <li class="gs-opt active gs-versions">1.6</li>
+                    <li class="gs-opt active gs-versions">1.6.0</li>
                     <li class="gs-opt gs-versions">1.5.0</li>
                     <li class="gs-opt gs-versions">1.4.1</li>
                     <li class="gs-opt gs-versions">1.3.1</li>
@@ -45,7 +45,7 @@ $(document).ready(function () {
             </button>
             <ul class="gs-opt-group gs-version-dropdown-mobile">
                 <li class="gs-opt gs-versions">master</li>
-                <li class="gs-opt active gs-versions">1.6</li>
+                <li class="gs-opt active gs-versions">1.6.0</li>
                 <li class="gs-opt gs-versions">1.5.0</li>
                 <li class="gs-opt gs-versions">1.4.1</li>
                 <li class="gs-opt gs-versions">1.3.1</li>
