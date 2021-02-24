@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Dependency Engine | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Dependency Engine" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.8.0/api/architecture/note_engine" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.8.0/api/architecture/note_engine" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"url":"https://mxnet.apache.org/versions/1.8.0/api/architecture/note_engine","@type":"WebPage","description":"A flexible and efficient library for deep learning.","headline":"Dependency Engine","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<script src="https://medium-widget.pixelpoint.io/widget.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <link rel="stylesheet" href="/versions/1.8.0/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.8.0/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="/versions/1.8.0/assets/js/jquery-3.3.1.min.js"></script><script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.8.0/"><img
+            src="/versions/1.8.0/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.8.0</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.8.0/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.8.0/blog">Blog</a>
+        <a class="page-link" href="/versions/1.8.0/features">Features</a>
+        <a class="page-link" href="/versions/1.8.0/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.8.0/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.8.0
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Dependency Engine</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+        <h3 style="text-transform: capitalize; padding-left:10px">architecture</h3>
+        <ul>
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.8.0/api/architecture/exception_handling">Exception Handling in MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.8.0/api/architecture/note_data_loading">Efficient Data Loaders</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.8.0/api/architecture/note_engine">Dependency Engine</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.8.0/api/architecture/note_memory">Memory Consumption</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.8.0/api/architecture/overview">MXNet System Architecture</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.8.0/api/architecture/program_model">Deep Learning Programming Paradigm</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+               <!-- resource-p -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="dependency-engine-for-deep-learning">Dependency Engine for Deep Learning</h1>
+
+<p>We always want deep learning libraries
+to run faster and scale to larger datasets.
+One natural approach is to see if we can benefit
+from throwing more hardware at the problem,
+as by using multiple GPUs simultaneously.</p>
+
+<p>Library designers then ask:
+How can we <em>parallelize</em> computation across devices?
+And, more importantly, how can we <em>synchronize</em> computation
+when we introduce multi-threading?
+A runtime dependency engine is a generic solution to these problems.</p>
+
+<p>In this document, we examine approaches for using
+runtime dependency scheduling to accelerate deep learning.
+We aim to explain how runtime dependency scheduling
+can both speed up and simplify multi-device deep learning.
+We also explore potential designs for a generic dependency engine
+that could be both library- and operation-independent.</p>
+
+<p>Most of the discussion of on this page draws inspiration
+from the MXNet dependency engine.
+The dependency tracking algorithm we discuss
+was primarily developed by <a href="https://github.com/hotpxl">Yutian Li</a>
+and <a href="https://github.com/jermainewang">Mingjie Wang</a>.</p>
+
+<h2 id="dependency-scheduling">Dependency Scheduling</h2>
+
+<p>Although most users want to take advantage of parallel computation,
+most of us are more familiar with serial programs.
+So one natural question is: how can we write serial programs
+and build a library to automatically parallelize our programs
+in an asynchronous way?</p>
+
+<p>For example, in the following code, we can run <code>B = A + 1</code>
+and <code>C = A + 2</code> in any order, or in parallel:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python">    <span class="n">A</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">2</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">B</span> <span class="o">*</span> <span class="n">C</span>
+</code></pre></div>
+<p>However, it&#39;s quite hard to code the sequence manually
+because the last operation, <code>D = B * C</code>, needs to wait
+for both of the preceding operations to complete before it starts.
+The following dependency graph/data flow graph illustrates this.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/dep_simple.png" alt="Dep Simple"></p>
+
+<p>A dependency engine is a library that takes a sequence of operations
+and schedules them according to the dependency pattern,  potentially in parallel.
+So in this example, a dependency library
+could run <code>B = A + 1</code> and <code>C = A + 2</code> in parallel,
+and run <code>D = B * C</code> after those operations complete.</p>
+
+<h2 id="problems-in-dependency-scheduling">Problems in Dependency Scheduling</h2>
+
+<p>A dependency engine relieves the burden of writing concurrent programs.
+However, as operations become parallelized,
+new dependency tracking problems arise.
+In this section, we discuss those problems.</p>
+
+<h3 id="data-flow-dependency">Data Flow Dependency</h3>
+
+<p>Data flow dependency describes how the outcome of one computation
+can be used in other computations.
+Every dependency engine has to solve the data flow dependency problem.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/dep_simple.png" alt="Dep Simple"></p>
+
+<p>Because we discussed this issue in the preceding section,
+we include the same figure here. Libraries that have
+data flow tracking engines include Minerva and Purine2.</p>
+
+<h3 id="memory-recycling">Memory Recycling</h3>
+
+<p>When should we recycle the memory that we allocated to the arrays?
+In serial processing, this is easy to determine.
+We simply recycle the memory after the variable goes out of scope.
+However, as the following figure shows, this is a bit harder in parallel processing.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/dep_del.png" alt="Dep Del"></p>
+
+<p>In this example, because both computations need to use values from A,
+we can&#39;t recycle the memory until both complete.
+The engine must schedule the memory recycling operations according to the dependencies,
+and ensure that they are executed after both <code>B = A + 1</code> and <code>C = A + 2</code> complete.</p>
+
+<h3 id="random-number-generation">Random Number Generation</h3>
+
+<p>Random number generators, which are commonly used in machine learning,
+pose interesting challenges for dependency engines.
+Consider the following example:</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/dep_rand.png" alt="Dep Rand"></p>
+
+<p>In this example, we are generating random numbers in a sequence.
+Although it seems that the two random number generations can be parallelized,
+this is usually not the case. A pseudo-random number generator (PRNG)
+is not thread-safe because it might cause some internal state
+to mutate when generating a new number.
+Even if the PRNG is thread-safe,
+it is preferable to serialize number generation,
+so we can get reproducible random numbers.</p>
+
+<h2 id="case-study-a-dependency-engine-for-a-multi-gpu-neural-network">Case Study: A Dependency Engine for a Multi-GPU Neural Network</h2>
+
+<p>In the last section, we discussed the problems
+we might face in designing a dependency engine.
+Before thinking about how to design a generic engine to solve those problems,
+let&#39;s consider how a dependency engine can help in multi-GPU training of a neural network.
+The following pseudocode Python program illustrates
+training one batch on a  two-layer neural network.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python">    <span class="c1"># Example of one iteration Two GPU neural Net
+</span>    <span class="n">data</span> <span class="o">=</span> <span class="n">next_batch</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span><span class="o">.</span><span class="n">copyfrom</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">50</span><span class="p">])</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span><span class="o">.</span><span class="n">copyfrom</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">50</span><span class="p">:</span><span class="mi">100</span><span class="p">])</span>
+    <span class="c1"># forward, backprop on GPU 0
+</span>    <span class="n">fc1</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="o">=</span> <span class="n">FullcForward</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">gpu0</span><span class="p">],</span> <span class="n">fc1_weight</span><span class="p">[</span><span class="n">gpu0</span><span class="p">])</span>
+    <span class="n">fc2</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="o">=</span> <span class="n">FullcForward</span><span class="p">(</span><span class="n">fc1</span><span class="p">[</span><span class="n">gpu0</span><span class="p">],</span> <span class="n">fc2_weight</span><span class="p">[</span><span class="n">gpu0</span><span class="p">])</span>
+    <span class="n">fc2_ograd</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="o">=</span> <span class="n">LossGrad</span><span class="p">(</span><span class="n">fc2</span><span class="p">[</span><span class="n">gpu0</span><span class="p">],</span> <span class="n">label</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">50</span><span class="p">])</span>
+    <span class="n">fc1_ograd</span><span class="p">[</span><span class="n">gpu0</span><span class="p">],</span> <span class="n">fc2_wgrad</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="o">=</span>
+      <span class="n">FullcBackward</span><span class="p">(</span><span class="n">fc2_ograd</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="p">,</span> <span class="n">fc2_weight</span><span class="p">[</span><span class="n">gpu0</span><span class="p">])</span>
+      <span class="n">_</span><span class="p">,</span> <span class="n">fc1_wgrad</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="o">=</span> <span class="n">FullcBackward</span><span class="p">(</span><span class="n">fc1_ograd</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="p">,</span> <span class="n">fc1_weight</span><span class="p">[</span><span class="n">gpu0</span><span class="p">])</span>
+    <span class="c1"># forward, backprop on GPU 1
+</span>    <span class="n">fc1</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span> <span class="o">=</span> <span class="n">FullcForward</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">gpu1</span><span class="p">],</span> <span class="n">fc1_weight</span><span class="p">[</span><span class="n">gpu1</span><span class="p">])</span>
+    <span class="n">fc2</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span> <span class="o">=</span> <span class="n">FullcForward</span><span class="p">(</span><span class="n">fc1</span><span class="p">[</span><span class="n">gpu1</span><span class="p">],</span> <span class="n">fc2_weight</span><span class="p">[</span><span class="n">gpu1</span><span class="p">])</span>
+    <span class="n">fc2_ograd</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span> <span class="o">=</span> <span class="n">LossGrad</span><span class="p">(</span><span class="n">fc2</span><span class="p">[</span><span class="n">gpu1</span><span class="p">],</span> <span class="n">label</span><span class="p">[</span><span class="mi">50</span><span class="p">:</span><span class="mi">100</span><span class="p">])</span>
+    <span class="n">fc1_ograd</span><span class="p">[</span><span class="n">gpu1</span><span class="p">],</span> <span class="n">fc2_wgrad</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span> <span class="o">=</span>
+         <span class="n">FullcBackward</span><span class="p">(</span><span class="n">fc2_ograd</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span> <span class="p">,</span> <span class="n">fc2_weight</span><span class="p">[</span><span class="n">gpu1</span><span class="p">])</span>
+         <span class="n">_</span><span class="p">,</span> <span class="n">fc1_wgrad</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span> <span class="o">=</span> <span class="n">FullcBackward</span><span class="p">(</span><span class="n">fc1_ograd</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span> <span class="p">,</span> <span class="n">fc1_weight</span><span class="p">[</span><span class="n">gpu1</span><span class="p">])</span>
+    <span class="c1"># aggregate gradient and update
+</span>    <span class="n">fc1_wgrad</span><span class="p">[</span><span class="n">cpu</span><span class="p">]</span>  <span class="o">=</span> <span class="n">fc1_wgrad</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="o">+</span> <span class="n">fc1_wgrad</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span>
+    <span class="n">fc2_wgrad</span><span class="p">[</span><span class="n">cpu</span><span class="p">]</span>  <span class="o">=</span> <span class="n">fc2_wgrad</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="o">+</span> <span class="n">fc2_wgrad</span><span class="p">[</span><span class="n">gpu1</span><span class="p">]</span>
+    <span class="n">fc1_weight</span><span class="p">[</span><span class="n">cpu</span><span class="p">]</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span>  <span class="n">fc1_wgrad</span><span class="p">[</span><span class="n">cpu</span><span class="p">]</span>
+    <span class="n">fc2_weight</span><span class="p">[</span><span class="n">cpu</span><span class="p">]</span> <span class="o">-=</span> <span class="n">lr</span> <span class="o">*</span>  <span class="n">fc2_wgrad</span><span class="p">[</span><span class="n">cpu</span><span class="p">]</span>
+    <span class="n">fc1_weight</span><span class="p">[</span><span class="n">cpu</span><span class="p">]</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">fc1_weight</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="p">,</span> <span class="n">fc1_weight</span><span class="p">[</span><span class="n">gpu1</span><span class="p">])</span>
+    <span class="n">fc2_weight</span><span class="p">[</span><span class="n">cpu</span><span class="p">]</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="n">fc2_weight</span><span class="p">[</span><span class="n">gpu0</span><span class="p">]</span> <span class="p">,</span> <span class="n">fc2_weight</span><span class="p">[</span><span class="n">gpu1</span><span class="p">])</span>
+</code></pre></div>
+<p>In this program, the data 0 to 50  is copied to GPU 0,
+and the data 50 to 100 is copied to GPU 1.
+The calculated gradients are aggregated in the CPU,
+which then performs a simple SGD update,
+and copies the updated weight back to each GPU.
+This is a common way to write a parallel program in a serial manner.
+The following dependency graph shows how it can be parallelized:</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/dep_net.png" alt="Dep Net"></p>
+
+<p><strong><em>Notes:</em></strong></p>
+
+<ul>
+<li>The gradient can be copied to the CPU as soon as we get the gradient of a layer.</li>
+<li>The weight can be copied back soon as the weight is updated.</li>
+<li>In the forward pass, we have a dependency on <code>fc1_weight[cpu].copyto(fc1_weight[gpu0] , fc1_weight[gpu1])</code>
+from the previous iteration.</li>
+<li>There is a delay in computation between the last backward pass to layer k and the next forward call to layer k. We can synchronize the weight of layer k <em>in parallel</em> with other computation during this delay.</li>
+</ul>
+
+<p>This approach to optimization is used by multi-GPU deep learning libraries, such as CXXNet.
+The point is to overlap weight synchronization (communication) with computation.
+However, it&#39;s not easy to do that, because the copy operation needs to be triggered
+as soon as the backward pass of the layer completes,
+which then triggers the reduction, updates, etc.</p>
+
+<p>A dependency engine can schedule these operations and perform multi-threading
+and dependency tracking.</p>
+
+<h2 id="designing-a-generic-dependency-engine">Designing a Generic Dependency Engine</h2>
+
+<p>We hope that you&#39;re convinced that a dependency engine is useful
+for scaling deep learning programs to multiple devices.
+Now let&#39;s discuss how we can design and implement
+a generic interface for a dependency engine.
+This solution isn&#39;t the only possible design for a dependency engine.
+It&#39;s an example that we think is useful in most cases.</p>
+
+<p>Our goal is to create a dependency engine that is <em>generic</em> and <em>lightweight</em>.
+Ideally, we&#39;d like the engine that easily plugs into existing deep learning code,
+and that can scale up to multiple machines with minor modifications.
+To do that, we need to focus only on dependency tracking,
+not on assumptions about what users can or can&#39;t do.</p>
+
+<p>Here&#39;s a summary of goals for the engine:</p>
+
+<ul>
+<li>The engine should not be aware of what operations it performs, so that users can perform any operations they define.</li>
+<li>It should not be restricted in what type of objects it can schedule.
+
+<ul>
+<li>We should be able to schedule dependencies on GPU and CPU memory.</li>
+<li>We should be able to track dependencies on the random number generator, etc.</li>
+</ul></li>
+<li>The engine should not allocate resources. It should only track dependencies. Users can allocate their own memory, PRNG, etc.</li>
+</ul>
+
+<p>The following Python snippet provides an engine interface that might help us reach our goal. Note that a real implementation will be closer to the metal, typically in C++.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python">    <span class="k">class</span> <span class="nc">DepEngine</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">new_variable</span><span class="p">():</span>
+            <span class="s">"""Return a new variable tag
+            Returns
+            -------
+            vtag : Variable Tag
+                The token of the engine to represent dependencies.
+            """</span>
+            <span class="k">pass</span>
+
+        <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="n">exec_func</span><span class="p">,</span> <span class="n">read_vars</span><span class="p">,</span> <span class="n">mutate_vars</span><span class="p">):</span>
+            <span class="s">"""Push the operation to the engine.
+
+            Parameters
+            ----------
+            exec_func : callable
+                The real operation to be performed.
+
+            read_vars : list of Variable Tags
+                The list of variables this operation will read from.
+
+            mutate_vars : list of Variable Tags
+                The list of variables this operation will mutate.
+            """</span>
+            <span class="k">pass</span>
+</code></pre></div>
+<p>Because we can&#39;t make assumptions about what objects we are scheduling, we ask the user to allocate a
+<em>virtual tag</em> that is associated with each object to represent what we need to schedule.
+So, at the beginning, the user can allocate the variable tag,
+and attach it to each of the objects that we want to schedule.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/tag_var.png" alt="Dep Net"></p>
+
+<p>The user then calls <code>push</code> to tell the engine about the function to execute.
+The user also needs to specify the dependencies of the operation,
+using <code>read_vars</code> and <code>write_vars</code>:</p>
+
+<ul>
+<li><code>read_vars</code> are variable tags for objects that the operation will <em>read from</em>, without changing their internal state.</li>
+<li><code>mutate_vars</code> are variable tags for objects whose internal states the operation will mutate.</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/push_var.png" alt="Push Op"></p>
+
+<p>The preceding figure shows how to push operation <code>B = A + 1</code> to the dependency engine. <code>B.data</code> and
+<code>A.data</code> are the allocated space. Note that the engine is <em>only aware of variable tags</em>.
+Any execution function can be processed.
+This interface is generic for the operations and resources we want to schedule.</p>
+
+<p>For fun, let&#39;s look at how the engine internals work with the tags by considering the following code snippet:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">    B = A + 1
+    C = A + 2
+    A = C * 2
+    D = A + 3
+</code></pre></div>
+<p>The first line reads variable <code>A</code> and mutates variable <code>B</code>. The second line reads variable <code>A</code> and mutates variable <code>C</code>. And so on.</p>
+
+<p>The engine maintains a queue for each variable, as the following animation shows for each of the four lines. Green blocks represents a read action, while red blocks represent mutations.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/dep_queue.gif" alt="Dependency Queue"></p>
+
+<p>Upon building this queue, the engine sees that the first two green blocks at the beginning of <code>A</code>&#39;s queue could actually be run in parallel because they are both read actions and won&#39;t conflict with each other. The following graph illustrates this point.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/dep_parallel.png" alt="Dependency Parallelism"></p>
+
+<p>One cool thing about all this scheduling is that it&#39;s not confined to numerical calculations.
+Because everything that is scheduled is only a tag, the engine could schedule everything!</p>
+
+<p>The following figure gives a complete push sequence of the programs we mentioned in previous sections.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/push_seq.png" alt="Push Seq"></p>
+
+<h3 id="porting-existing-code-to-the-dependency-engine">Porting Existing Code to the Dependency Engine</h3>
+
+<p>Because the generic interface doesn&#39;t control things like memory allocation and which operation to execute,
+most existing code can be scheduled by the dependency engine in two steps:</p>
+
+<ol>
+<li>Allocate the variable tags associated with resources like memory blob, PRNGS.</li>
+<li>Call <code>push</code> with the execution function as the original code to execute, and put the variable tags of
+corresponding resources correctly in <code>read_vars</code> and <code>mutate_vars</code>.</li>
+</ol>
+
+<h2 id="implementing-the-generic-dependency-engine">Implementing the Generic Dependency Engine</h2>
+
+<p>We have described the generic engine interface and
+how it can be used to schedule various operations.
+In this section, we provide a high-level discussion
+of how to implement such an engine.</p>
+
+<p>The general idea is as follows:</p>
+
+<ul>
+<li>Use a queue to track all of the pending dependencies on each variable tag.</li>
+<li>Use a counter on each operation to track how many dependencies are yet to be fulfilled.</li>
+<li>When operations are completed, update the state of the queue and dependency counters to schedule new operations.</li>
+</ul>
+
+<p>The following figure illustrates the scheduling algorithm
+and might give you a better sense of what is going on in the engine.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/engine_queue_step.png" alt="Dep Tracking"></p>
+
+<p>Below, we show another example involving random number generators.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/engine/engine_queue_rand.png" alt="Dep Rand"></p>
+
+<p>As you can see, the purpose of the algorithm is to update pending queues
+of operations and to make the right state transition when an operation has completed.
+More care should be taken to make sure the state transitions
+are done in a way that&#39;s safe for threads.</p>
+
+<h3 id="separate-dependency-tracking-with-running-policy">Separate Dependency Tracking with Running Policy</h3>
+
+<p>If you&#39;re reading carefully, you might have noticed
+that the preceding section shows only the algorithm
+for deciding when an operation can be executed.
+We didn&#39;t show how to actually run an operation.
+In practice, there can be many different policies.
+For example, we can either use a global thread-pool to run all operations,
+or use a specific thread to run operations on each device.</p>
+
+<p>This running policy is usually independent of dependency tracking,
+and can be separated out as either an independent module
+or a virtual interface of base-dependency tracking modules.
+Developing an elegant runtime policy that is fair
+to all operations and schedules is an interesting systems problem itself.</p>
+
+<h2 id="discussion">Discussion</h2>
+
+<p>The design that we discussed in this article
+isn&#39;t the only solution to the dependency tracking problem.
+It&#39;s just one example of how we might approach this.
+To be sure, some of these design choices are debatable.
+We&#39;ll discuss some of them in this section.</p>
+
+<h3 id="dynamic-vs-static">Dynamic vs. Static</h3>
+
+<p>The dependency engine interface discussed in this topic is somewhat dynamic
+in the sense that the user can push operations one by one,
+instead of declaring the entire dependency graph (static).
+Dynamic scheduling can require more overhead
+than static declarations, in terms of data structure.
+However, it also enables more flexibility, such as supporting auto parallelism
+for imperative programs or a mixture of imperative and symbolic programs.
+You can also add some level of predeclared operations
+to the interface to enable data structure reuse.</p>
+
+<h3 id="mutation-vs-immutable">Mutation vs. Immutable</h3>
+
+<p>The generic engine interface presented in this page
+supports explicit scheduling for mutation.
+In a typical data flow engine, the data are usually immutable.
+Working with immutable data has a lot of benefits.
+For example, immutable data is generally more suitable for parallelization,
+and facilitates better fault tolerance in a distributed setting (by way of re-computation).</p>
+
+<p>However, immutability presents several challenges:</p>
+
+<ul>
+<li>It&#39;s harder to schedule resource contention problems, as arise when dealing with random numbers and deletion.</li>
+<li>The engine usually needs to manage resources (memory, random number) to avoid conflicts. It&#39;s harder to plug in user-allocated space, etc.</li>
+<li>Preallocated static memory isn&#39;t available, again because the usual pattern is to write to a preallocated layer space, which is not supported if data is immutable.</li>
+</ul>
+
+<p>Allowing mutation mitigates these issues.</p>
+
+<h2 id="source-code-of-the-generic-dependency-engine">Source Code of the Generic Dependency Engine</h2>
+
+<p><a href="https://github.com/apache/incubator-mxnet">MXNet</a> provides an implementation
+of the generic dependency engine described in this page.
+We welcome your contributions.</p>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+<li><a href="note_memory">Squeeze the Memory Consumption of Deep Learning</a></li>
+<li><a href="note_data_loading">Efficient Data Loading Module for Deep Learning</a></li>
+</ul>
+
+    </div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.8.0/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/versions/1.8.0/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.8.0/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

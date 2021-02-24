@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Gradient Compression | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Gradient Compression" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.8.0/api/faq/gradient_compression" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.8.0/api/faq/gradient_compression" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"url":"https://mxnet.apache.org/versions/1.8.0/api/faq/gradient_compression","@type":"WebPage","description":"A flexible and efficient library for deep learning.","headline":"Gradient Compression","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<script src="https://medium-widget.pixelpoint.io/widget.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <link rel="stylesheet" href="/versions/1.8.0/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.8.0/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="/versions/1.8.0/assets/js/jquery-3.3.1.min.js"></script><script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.8.0/"><img
+            src="/versions/1.8.0/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.8.0</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.8.0/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.8.0/blog">Blog</a>
+        <a class="page-link" href="/versions/1.8.0/features">Features</a>
+        <a class="page-link" href="/versions/1.8.0/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.8.0/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.8.0
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Gradient Compression</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+        <h3 style="text-transform: capitalize; padding-left:10px">Speed</h3>
+        <ul>
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.8.0/api/faq/gradient_compression">Gradient Compression</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+               <!-- resource-p -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="gradient-compression">Gradient Compression</h1>
+
+<p>Gradient Compression reduces communication bandwidth, and in some scenarios, it can make training more scalable and efficient without significant loss in convergence rate or accuracy. Example implementations with GPUs, CPUs, and distributed training are provided in this document.</p>
+
+<h2 id="benefits">Benefits</h2>
+
+<p><strong>Increased Speed</strong></p>
+
+<p>For architectures with fully connected layers, the gradient compression capability is observed to speedup training by about 2x, depending on the size of the model and the network bandwidth of the instance. Bigger models see larger speedup with gradient compression.</p>
+
+<p><strong>Minimal Accuracy Loss</strong></p>
+
+<p>Gradient compression uses the approach of delaying the synchronization of weight updates which are small. Although small weight updates might not be sent for that batch, this information is not discarded. Once the weight updates for this location accumulate to become a larger value, they will be propagated. Since there is no information loss, but only delayed updates, it does not lead to a significant loss in accuracy or convergence rate. In distributed training experiments[1], the accuracy loss observed due to gradient compression was as low as 1%</p>
+
+<h2 id="when-to-use-gradient-compression">When to Use Gradient Compression</h2>
+
+<p>When training models whose architectures include large fully connected components, it can be helpful to use gradient compression. For larger models, as well as recurrent neural networks, the communication cost becomes a major factor. Such models stand to benefit greatly with gradient compression.</p>
+
+<h3 id="gpu-versus-cpu">GPU versus CPU</h3>
+
+<p>The greatest benefits from gradient compression are realized when using multi-node (single or multi-GPU) distributed training. Training on CPU would provide a lower compute density per compute node as compared to the massive compute density per compute node on a GPU. Due to this, the required communication bandwidth for CPU-based nodes during training is not as high as for GPU-based nodes. Hence, the benefits of gradient compression are lower for CPU-based nodes as compared to GPU-based nodes.</p>
+
+<h3 id="network-latency">Network Latency</h3>
+
+<p>Benefits of gradient compression can be found when using distributed training with network connected nodes. Depending on the network latency between nodes and the model&#39;s size, these can contribute to slow performance such that gradient compression may provide speed improvements.</p>
+
+<p>You may not want to use gradient compression if you have low latency network communication.</p>
+
+<h3 id="model-size">Model Size</h3>
+
+<p>Distributed training involves synchronization of weights after each batch. Larger models have much higher communication costs during training, hence such models stand to benefit much more from gradient compression.
+When running distributed training with gradient compression, the quantize and dequantize operations happen on CPU parallelized with OpenMP. For smaller models, when training on GPUs, it helps to set <code>OMP_NUM_THREADS=1</code> on each node, so that the overhead of launching OMP threads doesn&#39;t cause the compression and decompression to be slow.</p>
+
+<h3 id="model-architecture">Model Architecture</h3>
+
+<p>The communication bandwidth requirements during training vary across various neural network architectures and hence the benefits of gradient compression vary accordingly.</p>
+
+<p>In networks which have significant fully connected components, since such layers have low compute cost on GPUs, communication becomes a bottleneck limiting the speed of distributed training. Gradient compression can help reduce the communication cost, and thus speed up training in such cases. We have observed speedup of about 2x on large fully connected neural networks. Models like AlexNet and VGG have large fully connected components as part of the network, hence stand to benefit from gradient compression. As with these models, Long Short-Term Memory architectures require more communication bandwidth, so they also exhibit speed improvements with gradient compression.</p>
+
+<p>Architectures like Convolutional Neural Networks on the other hand have a higher compute cost, in which case some communication can be parallelized with computation. Since communication is not the bottleneck in such networks, gradient compression doesn&#39;t help much.</p>
+
+<h3 id="single-node-gradient-compression">Single Node Gradient Compression</h3>
+
+<p>When the training is configured to use device to device communication on a single node with multiple GPUs, gradient compression can be used to reduce the cost of communication. This can provide about 20% speedup for large models using older generation architectures. However, speed benefits may be negligible on a machine with a newer generation architecture where GPUs can communicate at low latency.</p>
+
+<h2 id="approach">Approach</h2>
+
+<p>The idea behind gradient compression comes from two observations:</p>
+
+<p>First, when training large neural networks, the gradients of weights computed for a small mini-batch of training data are typically sparse. Only a small fraction of the weights have significant updates after each mini-batch. The synchronization of updates that are near zero can be safely delayed longer than the typical mini-batch size. This essentially means that the rate of weight-update can vary depending on the value of an individual weight.</p>
+
+<p>Secondly, gradients can be compressed significantly by considering only those gradient elements whose absolute values exceed a threshold, and then quantizing them to use lower bits per gradient value. By compressing the gradients, we can reduce communication bandwidth. The delayed gradient values, in the form of quantization error and values that don&#39;t meet the threshold, are aggregated into a gradient residual which is communicated when it reaches the threshold.</p>
+
+<h2 id="technical-implementation">Technical Implementation</h2>
+
+<h3 id="two-bit-quantization">Two Bit Quantization</h3>
+
+<p>Currently the supported type of quantization uses two bits for each gradient value. Any positive value greater than or equal to the threshold sets two bits as <code>11</code>, any negative value whose absolute value is greater or equal to the threshold sets two bits as <code>10</code>, and others are set to <code>00</code>. This enables us to store 16 quantized gradients as one float. The error in quantization, which is <code>original_value - quantized_value</code> is stored in the form of a gradient residual.</p>
+
+<h3 id="types-of-kvstore">Types of Kvstore</h3>
+
+<p>Supported types of <code>kvstore</code> are <code>device</code> and all distributed kvstores such as <code>dist_sync</code>, <code>dist_async</code>, and <code>dist_sync_device</code>. When <code>kvstore</code> is <code>device</code>, the communication between GPUs is compressed. Please note that this increases the memory usage of GPUs because of the additional residual stored. When using a distributed kvstore, worker-to-server communication is compressed. In this case, compression and decompression happen on the CPU, and gradient residuals will be stored on the CPU. Server-to-worker communication and device-to-device communication are not compressed to avoid multiple levels of compression.</p>
+
+<h2 id="enabling-the-gradient-compression-in-mxnet">Enabling the Gradient Compression in MXNet</h2>
+
+<p>Gradient compression is a run-time configuration parameter to be enabled during training. Here are the MXNet APIs to enable gradient compression:</p>
+
+<p><strong>Gluon API</strong>:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">trainer</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">compression_params</span><span class="o">=</span><span class="p">{</span><span class="s">'type’:'</span><span class="mi">2</span><span class="n">bit</span><span class="s">', '</span><span class="n">threshold</span><span class="s">':0.5})</span><span class="err">
+</span></code></pre></div>
+<p>A reference <code>gluon</code> implementation with a gradient compression option can be found in the <a href="https://github.com/apache/incubator-mxnet/blob/master/example/gluon/word_language_model/train.py">train.py script from a word-level language modeling RNN example</a>.</p>
+
+<p><strong>Module API</strong>:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">mod</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">mod</span><span class="o">.</span><span class="n">Module</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">compression_params</span><span class="o">=</span><span class="p">{</span><span class="s">'type’:'</span><span class="mi">2</span><span class="n">bit</span><span class="s">', '</span><span class="n">threshold</span><span class="s">':0.5})</span><span class="err">
+</span></code></pre></div>
+<p>A <code>module</code> example is provided with <a href="/api/faq/distributed_training">this guide for setting up MXNet with distributed training</a>. It comes with the option of turning on gradient compression as an argument to the <a href="https://github.com/apache/incubator-mxnet/blob/master/example/image-classification/train_mnist.py">train_mnist.py script</a>.</p>
+
+<h3 id="configuration-details">Configuration Details</h3>
+
+<p><strong>Threshold</strong></p>
+
+<p>A default <code>threshold</code> value of <code>0.5</code> is good for most use cases, but to get the most benefit from gradient compression for a particular scenario, it can be beneficial to experiment. If the threshold is set to a very large value, say <code>10.0</code>, then the updates become too infrequent and the training will converge slower. Setting the threshold automatically is expected in a future release.</p>
+
+<p><strong>Quantization</strong></p>
+
+<p>This release supports 2-bit quantization for encoding of gradients to reduce the communication bandwidth during training. Future releases will support 1-bit quantization and other approaches for encoding of gradients based on experimental evidence of benefits and user demand.</p>
+
+<p><strong>Sparse Format</strong></p>
+
+<p>We believe that the density of data will need to be really low (i.e. around &gt; 90% zeros) to reap benefits of the sparse format. However, this is an area of experimentation that will be explored in a future release.</p>
+
+<h2 id="references">References</h2>
+
+<ol>
+<li><a href="https://s3-us-west-2.amazonaws.com/amazon.jobs-public-documents/strom_interspeech2015.pdf">Nikko Storm, Amazon.com, Scalable Distributed Training using commodity GPU cloud computing.</a></li>
+</ol>
+
+    </div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.8.0/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/versions/1.8.0/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.8.0/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

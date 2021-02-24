@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/image/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Jetson Setup | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Jetson Setup" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.8.0/get_started/jetson_setup" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.8.0/get_started/jetson_setup" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"url":"https://mxnet.apache.org/versions/1.8.0/get_started/jetson_setup","@type":"WebPage","description":"A flexible and efficient library for deep learning.","headline":"Jetson Setup","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<script src="https://medium-widget.pixelpoint.io/widget.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+  <link rel="stylesheet" href="/versions/1.8.0/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.8.0/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="/versions/1.8.0/assets/js/jquery-3.3.1.min.js"></script><script src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.8.0/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.8.0/"><img
+            src="/versions/1.8.0/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.8.0</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.8.0/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.8.0/blog">Blog</a>
+        <a class="page-link" href="/versions/1.8.0/features">Features</a>
+        <a class="page-link" href="/versions/1.8.0/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.8.0/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.8.0
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Jetson Setup</h1>
+        <h3></h3><a style="float:left; margin-top:20px" href="/versions/1.8.0/get_started" class="btn btn-action">Get Started
+            <span class="span-accented">›</span></a></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="install-mxnet-on-a-jetson">Install MXNet on a Jetson</h1>
+
+<p>MXNet supports Ubuntu AArch64 based operating system so you can run MXNet on all <a href="https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/">NVIDIA Jetson modules</a>, such as Jetson Nano, TX1, TX2, Xavier NX and AGX Xavier.</p>
+
+<p>These instructions will walk through how to build MXNet and install MXNet&#39;s Python language binding.</p>
+
+<p>For the purposes of this install guide we will assume that CUDA is already installed on your Jetson device. NVIDIA Jetpack comes with the latest OS image for Jetson mdoule, and developer tools for both host computer and developer kit, and this also includes CUDA. You should double check what versions are installed and which version you plan to use.</p>
+
+<p>After installing the prerequisites, you have several options for installing MXNet:
+1. Build MXNet from source
+   * On a faster Linux computer using cross-compilation
+   * On the Jetson itself (very slow and not recommended)
+2. Use a Jetson MXNet pip wheel for Python development and use a precompiled Jetson MXNet binary (not provided on this page as CUDA enabled wheels are not in accordance with ASF policy, users can download them from other 3rd party sources)</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>To build from source or to use the Python wheel, you must install the following dependencies on your Jetson.
+Cross-compiling will require dependencies installed on that machine as well.</p>
+
+<h3 id="python-dependencies">Python Dependencies</h3>
+
+<p>To use the Python API you need the following dependencies:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> <span class="se">\</span>
+                        build-essential <span class="se">\</span>
+                        git <span class="se">\</span>
+                        libopenblas-dev <span class="se">\</span>
+                        libopencv-dev <span class="se">\</span>
+                        python3-pip <span class="se">\</span>
+                        python-numpy
+
+<span class="nb">sudo </span>pip3 <span class="nb">install</span> <span class="nt">--upgrade</span> <span class="se">\</span>
+                        pip <span class="se">\</span>
+                        setuptools <span class="se">\</span>
+                        numpy
+</code></pre></div>
+<p>If you plan to cross-compile you will need to install these dependencies on that computer as well.</p>
+
+<h3 id="download-the-source-setup-some-environment-variables">Download the source &amp; setup some environment variables:</h3>
+
+<p>These steps are optional, but some of the following instructions expect MXNet source files and the <code>MXNET_HOME</code> environment variable. Also, CUDA commands will not work out of the box without updating your path.</p>
+
+<p>Clone the MXNet source code repository using the following <code>git</code> command in your home directory:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">git clone <span class="nt">--recursive</span> https://github.com/apache/incubator-mxnet.git mxnet
+</code></pre></div>
+<p>You can also checkout a particular branch of MXNet. For example, to install MXNet v1.6:
+<code>bash
+git clone --recursive -b v1.6.x https://github.com/apache/incubator-mxnet.git mxnet
+</code></p>
+
+<p>Setup your environment variables for MXNet and CUDA in your <code>.profile</code> file in your home directory.
+Add the following to the file.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/cuda/bin:<span class="nv">$PATH</span>
+<span class="nb">export </span><span class="nv">MXNET_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/mxnet/
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$MXNET_HOME</span>/python:<span class="nv">$PYTHONPATH</span>
+</code></pre></div>
+<p>You can then apply this change immediately with the following:
+<code>bash
+source .profile
+</code></p>
+
+<p><strong>Note:</strong> Change the <code>~/.profile</code> steps according to how you prefer to use your shell. Otherwise, your environment variables will be gone after you logout.</p>
+
+<h3 id="configure-cuda">Configure CUDA</h3>
+
+<p>You can check to see what version of CUDA is running with <code>nvcc</code>.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">nvcc <span class="nt">--version</span>
+</code></pre></div>
+<p>To switch CUDA versions on a device or computer that has more than one version installed, use the following and replace the symbolic link to the version you want. This one uses CUDA 10.2, which comes with Jetpack 4.4.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo rm</span> /usr/local/cuda
+<span class="nb">sudo ln</span> <span class="nt">-s</span> /usr/local/cuda-10.2 /usr/local/cuda
+</code></pre></div>
+<p><strong>Note:</strong> When cross-compiling, change the CUDA version on the host computer you&#39;re using to match the version you&#39;re running on your Jetson device.</p>
+
+<h2 id="build-mxnet-from-source">Build MXNet from Source</h2>
+
+<p>Installing MXNet from source is a two-step process:</p>
+
+<ol>
+<li>Build the shared library from the MXNet C++ source code.</li>
+<li>Install the supported language-specific packages for MXNet.</li>
+</ol>
+
+<p>You can use a Docker method or you can build from source manually.</p>
+
+<h3 id="docker">Docker</h3>
+
+<p>You must have installed Docker and be able to run <code>docker</code> without <code>sudo</code>.
+Follow these <a href="https://docs.docker.com/install/linux/#manage-docker-as-a-non-root-user">setup instructions to get to this point</a>.
+Then run the following to execute cross-compilation via Docker.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$MXNET_HOME</span>/ci/build.py <span class="nt">-p</span> jetson
+</code></pre></div>
+<h3 id="manually-on-the-jetson-module-slow">Manually on the Jetson module (Slow)</h3>
+
+<p><strong>Step 1</strong> Build the Shared Library</p>
+
+<p>Use the config_jetson.mk Makefile to install MXNet with CUDA bindings to leverage the GPU on the Jetson module.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cp</span> <span class="nv">$MXNET_HOME</span>/make/config_jetson.mk config.mk
+</code></pre></div>
+<p>The pre-existing Makefile builds for all Jetson architectures. Edit <code>config.mk</code> if you want to specifically build for a particular architecture or if you want to build without CUDA bindings (CPU only). You can make the following changes:</p>
+
+<ol>
+<li><p>Modify <code>CUDA_ARCH</code> to build for specific architectures. Currently, we have <code>CUDA_ARCH = -gencode arch=compute_53,code=sm_53 -gencode arch=compute_62,code=sm_62 -gencode arch=compute_72,code=sm_72</code>. Keep <code>-gencode arch=compute_53,code=sm_53</code> for Nano and TX1, <code>-gencode arch=compute_62,code=sm_62</code> for TX2, <code>-gencode arch=compute_72,code=sm_72</code> for Xavier NX and AGX Xavier.</p></li>
+<li><p>For CPU only builds, remove <code>USE_CUDA_PATH</code>, <code>CUDA_ARCH</code>, <code>USE_CUDNN</code> flags.</p></li>
+</ol>
+
+<p>Now you can build the complete MXNet library with the following command:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> <span class="nv">$MXNET_HOME</span>
+make <span class="nt">-j</span> <span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span>
+</code></pre></div>
+<p>Executing this command creates a file called <code>libmxnet.so</code> in the <code>mxnet/lib</code> directory.</p>
+
+<p><strong>Step 2</strong> Install MXNet Python Bindings (optional)</p>
+
+<p>To install Python bindings run the following commands in the MXNet directory:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> <span class="nv">$MXNET_HOME</span>/python
+<span class="nb">sudo </span>pip3 <span class="nb">install</span> <span class="nt">-e</span> <span class="nb">.</span>
+</code></pre></div>
+<p>Note that the <code>-e</code> flag is optional. It is equivalent to <code>--editable</code> and means that if you edit the source files, these changes will be reflected in the package installed.</p>
+
+<p><strong>Step 3</strong> Install the MXNet Java &amp; Scala Bindings (optional)</p>
+
+<p>Change directories to <code>scala-package</code> and run <code>mvn install</code>.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd</span> <span class="nv">$MXNET_HOME</span>/scala-package
+mvn <span class="nb">install</span>
+</code></pre></div>
+<p>This creates the required <code>.jar</code> file to use in your Java or Scala projects.</p>
+
+<h2 id="conclusion-and-next-steps">Conclusion and Next Steps</h2>
+
+<p>You are now ready to run MXNet on your NVIDIA module.
+You can verify your MXNet Python installation with the following:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">mxnet</span>
+<span class="n">mxnet</span><span class="o">.</span><span class="n">__version__</span>
+</code></pre></div>
+<p>You can also verify MXNet can use your GPU with the following test:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">mxnet</span> <span class="k">as</span> <span class="n">mx</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">())</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">b</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+</code></pre></div>
+<p>If everything is working, it will report the version number.
+For assistance, head over to the <a href="https://discuss.mxnet.io/">MXNet Forum</a>.</p>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.8.0/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/versions/1.8.0/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.8.0/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.8.0/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

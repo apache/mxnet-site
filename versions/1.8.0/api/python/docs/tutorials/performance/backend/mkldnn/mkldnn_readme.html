@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 1;
+        text-align: left;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-option:hover {
+        color: #FF4500;
+    }
+
+    .dropdown-option-active {
+        color: #FF4500;
+        font-weight: lighter;
+    }
+
+    .dropdown-option {
+        color: #000000;
+        font-weight: lighter;
+    }
+
+    .dropdown-header {
+        color: #FFFFFF;
+        display: inline-flex;
+    }
+
+    .dropdown-caret {
+        width: 18px;
+    }
+
+    .dropdown-caret-path {
+        fill: #FFFFFF;
+    }
+    </style>
+    
+    <title>Install MXNet with MKL-DNN &#8212; Apache MXNet  documentation</title>
+
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mxnet.css" />
+    <link rel="stylesheet" href="../../../../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/feedback.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../_static/google_analytics.js"></script>
+    <script src="../../../../_static/autodoc.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="shortcut icon" href="../../../../_static/mxnet-icon.png"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="TensorRT" href="../tensorrt/index.html" />
+    <link rel="prev" title="Quantize with MKL-DNN backend" href="mkldnn_quantization.html" /> 
+  </head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper">
+      <a class="site-title" rel="author" href="/versions/1.8.0/"><img
+            src="../../../../_static/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/versions/1.8.0/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.8.0/blog">Blog</a>
+        <a class="page-link" href="/versions/1.8.0/features">Features</a>
+        <a class="page-link" href="/versions/1.8.0/ecosystem">Ecosystem</a>
+        <a class="page-link page-current" href="/versions/1.8.0/api">Docs & Tutorials</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.8.0
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a class="dropdown-option" href="/">master</a><br>
+            <a class="dropdown-option-active" href="/versions/1.8.0/">1.8.0</a><br>
+            <a class="dropdown-option" href="/versions/1.7.0/">1.7.0</a><br>
+            <a class="dropdown-option" href="/versions/1.6.0/">1.6.0</a><br>
+            <a class="dropdown-option" href="/versions/1.5.0/">1.5.0</a><br>
+            <a class="dropdown-option" href="/versions/1.4.1/">1.4.1</a><br>
+            <a class="dropdown-option" href="/versions/1.3.1/">1.3.1</a><br>
+            <a class="dropdown-option" href="/versions/1.2.1/">1.2.1</a><br>
+            <a class="dropdown-option" href="/versions/1.1.0/">1.1.0</a><br>
+            <a class="dropdown-option" href="/versions/1.0.0/">1.0.0</a><br>
+            <a class="dropdown-option" href="/versions/0.12.1/">0.12.1</a><br>
+            <a class="dropdown-option" href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="../../../index.html">Python Tutorials</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link" href="../../index.html">Performance</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link" href="../index.html">Accelerated Backend Tools</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link" href="index.html">Intel MKL-DNN</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active">Install MXNet with MKL-DNN</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../../../../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../../../../_sources/tutorials/performance/backend/mkldnn/mkldnn_readme.ipynb" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">      
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Python Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/crash-course/index.html">Crash Course</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/1-ndarray.html">Manipulate data with <code class="docutils literal notranslate"><span class="pre">ndarray</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/2-nn.html">Create a neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/3-autograd.html">Automatic differentiation with <code class="docutils literal notranslate"><span class="pre">autograd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/4-train.html">Train the neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/5-predict.html">Predict with a pre-trained model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/6-use_gpus.html">Use GPUs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/to-mxnet/index.html">Moving to MXNet from Other Frameworks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/to-mxnet/pytorch.html">PyTorch vs Apache MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/gluon_from_experiment_to_deployment.html">Gluon: from experiment to deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/logistic_regression_explained.html">Logistic regression explained</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html">MNIST</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../packages/index.html">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/autograd/index.html">Automatic Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/gluon/index.html">Gluon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/blocks/index.html">Blocks</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/custom-layer.html">Custom Layers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/custom_layer_beginners.html">Customer Layers (Beginners)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/hybridize.html">Hybridize</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/init.html">Initialization</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/naming.html">Parameter and Block Naming</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/nn.html">Layers and Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/parameters.html">Parameter Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/save_load_params.html">Saving and Loading Gluon Models</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/activations/activations.html">Activation Blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/data/index.html">Data Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/data_augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/data_augmentation.html#Spatial-Augmentation">Spatial Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/data_augmentation.html#Color-Augmentation">Color Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/data_augmentation.html#Composed-Augmentations">Composed Augmentations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/datasets.html">Gluon <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/datasets.html#Using-own-data-with-included-Datasets">Using own data with included <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/datasets.html#Using-own-data-with-custom-Datasets">Using own data with custom <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/datasets.html#Appendix:-Upgrading-from-Module-DataIter-to-Gluon-DataLoader">Appendix: Upgrading from Module <code class="docutils literal notranslate"><span class="pre">DataIter</span></code> to Gluon <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/image/index.html">Image Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/image/image-augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/image/info_gan.html">Image similarity search with InfoGAN</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/image/mnist.html">Handwritten Digit Recognition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/image/pretrained_models.html">Using pre-trained models in MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/loss/index.html">Losses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/loss/custom-loss.html">Custom Loss Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/loss/kl_divergence.html">Kullback-Leibler (KL) Divergence</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/loss/loss.html">Loss functions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/text/index.html">Text Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/text/gnmt.html">Google Neural Machine Translation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/text/transformer.html">Machine Translation with Transformer</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/training/index.html">Training</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/training/fit_api_tutorial.html">MXNet Gluon Fit API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/training/trainer.html">Trainer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/training/learning_rates/index.html">Learning Rates</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../packages/gluon/training/learning_rates/learning_rate_finder.html">Learning Rate Finder</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../packages/gluon/training/learning_rates/learning_rate_schedules.html">Learning Rate Schedules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../packages/gluon/training/learning_rates/learning_rate_schedules_advanced.html">Advanced Learning Rate Schedules</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/training/normalization/index.html">Normalization Blocks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/kvstore/index.html">KVStore</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/kvstore/kvstore.html">Distributed Key-Value Store</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/ndarray/index.html">NDArray</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/01-ndarray-intro.html">An Intro: Manipulate Data the MXNet Way with NDArray</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/02-ndarray-operations.html">NDArray Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/03-ndarray-contexts.html">NDArray Contexts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/gotchas_numpy_in_mxnet.html">Gotchas using NumPy in Apache MXNet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/sparse/index.html">Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/ndarray/sparse/csr.html">CSRNDArray - NDArray in Compressed Sparse Row Storage Format</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/ndarray/sparse/row_sparse.html">RowSparseNDArray - NDArray for Sparse Gradient Updates</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/ndarray/sparse/train.html">Train a Linear Regression Model with Sparse Symbols</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/ndarray/sparse/train_gluon.html">Sparse NDArrays with Gluon</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/onnx/index.html">ONNX</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/onnx/fine_tuning_gluon.html">Fine-tuning an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/onnx/inference_on_onnx_model.html">Running inference on MXNet/Gluon from an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/onnx/super_resolution.html">Importing an ONNX model into MXNet</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/deploy/export/onnx.html">Export ONNX Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/optimizer/index.html">Optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/viz/index.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/visualize_graph">Visualize networks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../compression/index.html">Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../compression/int8.html">Deploy with int-8</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/float16">Float16</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/gradient_compression">Gradient Compression</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/int8_inference.html">GluonCV with Quantized Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">Accelerated Backend Tools</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Intel MKL-DNN</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="mkldnn_quantization.html">Quantize with MKL-DNN backend</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Install MXNet with MKL-DNN</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../tensorrt/index.html">TensorRT</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../tensorrt/tensorrt.html">Optimizing Deep Learning Computation Graphs with TensorRT</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../tvm.html">Use TVM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../profiler.html">Profiling MXNet Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../amp.html">Using AMP: Automatic Mixed Precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../deploy/index.html">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../deploy/export/index.html">Export</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/export/onnx.html">Exporting to ONNX format</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/export_network.html">Export Gluon CV Models</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/blocks/save_load_params.html">Save / Load Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../deploy/inference/index.html">Inference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/inference/cpp.html">Deploy into C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/inference/image_classification_jetson.html">Image Classication using pretrained ResNet-50 model on Jetson module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/inference/scala.html">Deploy into a Java or Scala Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/inference/wine_detector.html">Real-time Object Detection with MXNet On The Raspberry Pi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../deploy/run-on-aws/index.html">Run on AWS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/run-on-aws/use_ec2.html">Run on an EC2 Instance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/run-on-aws/use_sagemaker.html">Run on Amazon SageMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/run-on-aws/cloud.html">MXNet on the Cloud</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extend/index.html">Extend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../extend/custom_layer.html">Custom Layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../extend/customop.html">Custom Numpy Operators</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/new_op">New Operator Creation</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/add_op_in_backend">New Operator in MXNet Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/ndarray/index.html">mxnet.ndarray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/ndarray.html">ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/contrib/index.html">ndarray.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/image/index.html">ndarray.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/linalg/index.html">ndarray.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/op/index.html">ndarray.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/random/index.html">ndarray.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/register/index.html">ndarray.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/sparse/index.html">ndarray.sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/utils/index.html">ndarray.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/gluon/index.html">mxnet.gluon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/block.html">gluon.Block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/hybrid_block.html">gluon.HybridBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/symbol_block.html">gluon.SymbolBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/constant.html">gluon.Constant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/parameter.html">gluon.Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/parameter_dict.html">gluon.ParameterDict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/trainer.html">gluon.Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/contrib/index.html">gluon.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/data/index.html">gluon.data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/gluon/data/vision/index.html">data.vision</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/gluon/data/vision/datasets/index.html">vision.datasets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/gluon/data/vision/transforms/index.html">vision.transforms</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/loss/index.html">gluon.loss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/model_zoo/index.html">gluon.model_zoo.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/nn/index.html">gluon.nn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/rnn/index.html">gluon.rnn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/utils/index.html">gluon.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/autograd/index.html">mxnet.autograd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/initializer/index.html">mxnet.initializer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/optimizer/index.html">mxnet.optimizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/lr_scheduler/index.html">mxnet.lr_scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/metric/index.html">mxnet.metric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/kvstore/index.html">mxnet.kvstore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/symbol/index.html">mxnet.symbol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/symbol.html">symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/contrib/index.html">symbol.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/image/index.html">symbol.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/linalg/index.html">symbol.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/op/index.html">symbol.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/random/index.html">symbol.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/register/index.html">symbol.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/sparse/index.html">symbol.sparse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/module/index.html">mxnet.module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/contrib/index.html">mxnet.contrib</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/autograd/index.html">contrib.autograd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/io/index.html">contrib.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/ndarray/index.html">contrib.ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/onnx/index.html">contrib.onnx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/quantization/index.html">contrib.quantization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/symbol/index.html">contrib.symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/tensorboard/index.html">contrib.tensorboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/tensorrt/index.html">contrib.tensorrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/text/index.html">contrib.text</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/mxnet/index.html">mxnet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/attribute/index.html">mxnet.attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/base/index.html">mxnet.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/callback/index.html">mxnet.callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/context/index.html">mxnet.context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/engine/index.html">mxnet.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/executor/index.html">mxnet.executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/executor_manager/index.html">mxnet.executor_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/image/index.html">mxnet.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/io/index.html">mxnet.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/kvstore_server/index.html">mxnet.kvstore_server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/libinfo/index.html">mxnet.libinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/log/index.html">mxnet.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/model/index.html">mxnet.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/monitor/index.html">mxnet.monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/name/index.html">mxnet.name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/notebook/index.html">mxnet.notebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/operator/index.html">mxnet.operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/profiler/index.html">mxnet.profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/random/index.html">mxnet.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/recordio/index.html">mxnet.recordio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/registry/index.html">mxnet.registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/rtc/index.html">mxnet.rtc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/runtime/index.html">mxnet.runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/test_utils/index.html">mxnet.test_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/torch/index.html">mxnet.torch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/util/index.html">mxnet.util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/visualization/index.html">mxnet.visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+        <script type="text/javascript" src="../../../../_static/sphinx_materialdesign_theme.js "></script>
+        <script type="text/javascript" src="../../../../_static/feedback.js"></script>
+    <header class="mdl-layout__drawer">      
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Python Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/crash-course/index.html">Crash Course</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/1-ndarray.html">Manipulate data with <code class="docutils literal notranslate"><span class="pre">ndarray</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/2-nn.html">Create a neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/3-autograd.html">Automatic differentiation with <code class="docutils literal notranslate"><span class="pre">autograd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/4-train.html">Train the neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/5-predict.html">Predict with a pre-trained model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/crash-course/6-use_gpus.html">Use GPUs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/to-mxnet/index.html">Moving to MXNet from Other Frameworks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../getting-started/to-mxnet/pytorch.html">PyTorch vs Apache MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/gluon_from_experiment_to_deployment.html">Gluon: from experiment to deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../getting-started/logistic_regression_explained.html">Logistic regression explained</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html">MNIST</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../packages/index.html">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/autograd/index.html">Automatic Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/gluon/index.html">Gluon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/blocks/index.html">Blocks</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/custom-layer.html">Custom Layers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/custom_layer_beginners.html">Customer Layers (Beginners)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/hybridize.html">Hybridize</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/init.html">Initialization</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/naming.html">Parameter and Block Naming</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/nn.html">Layers and Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/parameters.html">Parameter Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/save_load_params.html">Saving and Loading Gluon Models</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/blocks/activations/activations.html">Activation Blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/data/index.html">Data Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/data_augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/data_augmentation.html#Spatial-Augmentation">Spatial Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/data_augmentation.html#Color-Augmentation">Color Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/data_augmentation.html#Composed-Augmentations">Composed Augmentations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/datasets.html">Gluon <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/datasets.html#Using-own-data-with-included-Datasets">Using own data with included <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/datasets.html#Using-own-data-with-custom-Datasets">Using own data with custom <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/data/datasets.html#Appendix:-Upgrading-from-Module-DataIter-to-Gluon-DataLoader">Appendix: Upgrading from Module <code class="docutils literal notranslate"><span class="pre">DataIter</span></code> to Gluon <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/image/index.html">Image Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/image/image-augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/image/info_gan.html">Image similarity search with InfoGAN</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/image/mnist.html">Handwritten Digit Recognition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/image/pretrained_models.html">Using pre-trained models in MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/loss/index.html">Losses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/loss/custom-loss.html">Custom Loss Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/loss/kl_divergence.html">Kullback-Leibler (KL) Divergence</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/loss/loss.html">Loss functions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/text/index.html">Text Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/text/gnmt.html">Google Neural Machine Translation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/text/transformer.html">Machine Translation with Transformer</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/gluon/training/index.html">Training</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/training/fit_api_tutorial.html">MXNet Gluon Fit API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/training/trainer.html">Trainer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/training/learning_rates/index.html">Learning Rates</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../packages/gluon/training/learning_rates/learning_rate_finder.html">Learning Rate Finder</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../packages/gluon/training/learning_rates/learning_rate_schedules.html">Learning Rate Schedules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../packages/gluon/training/learning_rates/learning_rate_schedules_advanced.html">Advanced Learning Rate Schedules</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/gluon/training/normalization/index.html">Normalization Blocks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/kvstore/index.html">KVStore</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/kvstore/kvstore.html">Distributed Key-Value Store</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/ndarray/index.html">NDArray</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/01-ndarray-intro.html">An Intro: Manipulate Data the MXNet Way with NDArray</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/02-ndarray-operations.html">NDArray Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/03-ndarray-contexts.html">NDArray Contexts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/gotchas_numpy_in_mxnet.html">Gotchas using NumPy in Apache MXNet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/ndarray/sparse/index.html">Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/ndarray/sparse/csr.html">CSRNDArray - NDArray in Compressed Sparse Row Storage Format</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/ndarray/sparse/row_sparse.html">RowSparseNDArray - NDArray for Sparse Gradient Updates</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/ndarray/sparse/train.html">Train a Linear Regression Model with Sparse Symbols</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../packages/ndarray/sparse/train_gluon.html">Sparse NDArrays with Gluon</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/onnx/index.html">ONNX</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/onnx/fine_tuning_gluon.html">Fine-tuning an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/onnx/inference_on_onnx_model.html">Running inference on MXNet/Gluon from an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../packages/onnx/super_resolution.html">Importing an ONNX model into MXNet</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/deploy/export/onnx.html">Export ONNX Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/optimizer/index.html">Optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../packages/viz/index.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/visualize_graph">Visualize networks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../compression/index.html">Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../compression/int8.html">Deploy with int-8</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/float16">Float16</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/gradient_compression">Gradient Compression</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/int8_inference.html">GluonCV with Quantized Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">Accelerated Backend Tools</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Intel MKL-DNN</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="mkldnn_quantization.html">Quantize with MKL-DNN backend</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Install MXNet with MKL-DNN</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../tensorrt/index.html">TensorRT</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../tensorrt/tensorrt.html">Optimizing Deep Learning Computation Graphs with TensorRT</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../tvm.html">Use TVM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../profiler.html">Profiling MXNet Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../amp.html">Using AMP: Automatic Mixed Precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../deploy/index.html">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../deploy/export/index.html">Export</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/export/onnx.html">Exporting to ONNX format</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/export_network.html">Export Gluon CV Models</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/blocks/save_load_params.html">Save / Load Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../deploy/inference/index.html">Inference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/inference/cpp.html">Deploy into C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/inference/image_classification_jetson.html">Image Classication using pretrained ResNet-50 model on Jetson module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/inference/scala.html">Deploy into a Java or Scala Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/inference/wine_detector.html">Real-time Object Detection with MXNet On The Raspberry Pi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../deploy/run-on-aws/index.html">Run on AWS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/run-on-aws/use_ec2.html">Run on an EC2 Instance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/run-on-aws/use_sagemaker.html">Run on Amazon SageMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../deploy/run-on-aws/cloud.html">MXNet on the Cloud</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../extend/index.html">Extend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../extend/custom_layer.html">Custom Layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../extend/customop.html">Custom Numpy Operators</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/new_op">New Operator Creation</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/add_op_in_backend">New Operator in MXNet Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/ndarray/index.html">mxnet.ndarray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/ndarray.html">ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/contrib/index.html">ndarray.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/image/index.html">ndarray.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/linalg/index.html">ndarray.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/op/index.html">ndarray.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/random/index.html">ndarray.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/register/index.html">ndarray.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/sparse/index.html">ndarray.sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/ndarray/utils/index.html">ndarray.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/gluon/index.html">mxnet.gluon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/block.html">gluon.Block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/hybrid_block.html">gluon.HybridBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/symbol_block.html">gluon.SymbolBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/constant.html">gluon.Constant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/parameter.html">gluon.Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/parameter_dict.html">gluon.ParameterDict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/trainer.html">gluon.Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/contrib/index.html">gluon.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/data/index.html">gluon.data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../api/gluon/data/vision/index.html">data.vision</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/gluon/data/vision/datasets/index.html">vision.datasets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../api/gluon/data/vision/transforms/index.html">vision.transforms</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/loss/index.html">gluon.loss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/model_zoo/index.html">gluon.model_zoo.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/nn/index.html">gluon.nn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/rnn/index.html">gluon.rnn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/gluon/utils/index.html">gluon.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/autograd/index.html">mxnet.autograd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/initializer/index.html">mxnet.initializer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/optimizer/index.html">mxnet.optimizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/lr_scheduler/index.html">mxnet.lr_scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/metric/index.html">mxnet.metric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/kvstore/index.html">mxnet.kvstore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/symbol/index.html">mxnet.symbol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/symbol.html">symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/contrib/index.html">symbol.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/image/index.html">symbol.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/linalg/index.html">symbol.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/op/index.html">symbol.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/random/index.html">symbol.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/register/index.html">symbol.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/symbol/sparse/index.html">symbol.sparse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/module/index.html">mxnet.module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/contrib/index.html">mxnet.contrib</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/autograd/index.html">contrib.autograd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/io/index.html">contrib.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/ndarray/index.html">contrib.ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/onnx/index.html">contrib.onnx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/quantization/index.html">contrib.quantization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/symbol/index.html">contrib.symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/tensorboard/index.html">contrib.tensorboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/tensorrt/index.html">contrib.tensorrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/contrib/text/index.html">contrib.text</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/mxnet/index.html">mxnet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/attribute/index.html">mxnet.attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/base/index.html">mxnet.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/callback/index.html">mxnet.callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/context/index.html">mxnet.context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/engine/index.html">mxnet.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/executor/index.html">mxnet.executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/executor_manager/index.html">mxnet.executor_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/image/index.html">mxnet.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/io/index.html">mxnet.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/kvstore_server/index.html">mxnet.kvstore_server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/libinfo/index.html">mxnet.libinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/log/index.html">mxnet.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/model/index.html">mxnet.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/monitor/index.html">mxnet.monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/name/index.html">mxnet.name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/notebook/index.html">mxnet.notebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/operator/index.html">mxnet.operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/profiler/index.html">mxnet.profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/random/index.html">mxnet.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/recordio/index.html">mxnet.recordio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/registry/index.html">mxnet.registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/rtc/index.html">mxnet.rtc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/runtime/index.html">mxnet.runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/test_utils/index.html">mxnet.test_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/torch/index.html">mxnet.torch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/util/index.html">mxnet.util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../api/mxnet/visualization/index.html">mxnet.visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <!--- Licensed to the Apache Software Foundation (ASF) under one --><!--- or more contributor license agreements.  See the NOTICE file --><!--- distributed with this work for additional information --><!--- regarding copyright ownership.  The ASF licenses this file --><!--- to you under the Apache License, Version 2.0 (the --><!--- "License"); you may not use this file except in compliance --><!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, --><!--- software distributed under the License is distributed on an --><!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY --><!--- KIND, either express or implied.  See the License for the --><!--- specific language governing permissions and limitations --><!--- under the License. --><div class="section" id="Install-MXNet-with-MKL-DNN">
+<h1>Install MXNet with MKL-DNN<a class="headerlink" href="#Install-MXNet-with-MKL-DNN" title="Permalink to this headline">¶</a></h1>
+<p>A better training and inference performance is expected to be achieved on Intel-Architecture CPUs with MXNet built with <a class="reference external" href="https://github.com/intel/mkl-dnn">Intel MKL-DNN</a> on multiple operating system, including Linux, Windows and MacOS. In the following sections, you will find build instructions for MXNet with Intel MKL-DNN on Linux, MacOS and Windows.</p>
+<p>Please find MKL-DNN optimized operators and other features in the <a class="reference external" href="https://github.com/apache/incubator-mxnet/blob/v1.5.x/docs/tutorials/mkldnn/operator_list.md">MKL-DNN operator list</a>.</p>
+<p>The detailed performance data collected on Intel Xeon CPU with MXNet built with Intel MKL-DNN can be found <a class="reference external" href="https://mxnet.apache.org/api/faq/perf#intel-cpu">here</a>.</p>
+<h2 id="0"><p>Contents</p>
+</h2><ul class="simple">
+<li><p><a class="reference external" href="#1">1. Linux</a></p></li>
+<li><p><a class="reference external" href="#2">2. MacOS</a></p></li>
+<li><p><a class="reference external" href="#3">3. Windows</a></p></li>
+<li><p><a class="reference external" href="#4">4. Verify MXNet with python</a></p></li>
+<li><p><a class="reference external" href="#5">5. Enable MKL BLAS</a></p></li>
+<li><p><a class="reference external" href="#6">6. Enable graph optimization</a></p></li>
+<li><p><a class="reference external" href="#7">7. Quantization</a></p></li>
+<li><p><a class="reference external" href="#8">8. Support</a></p></li>
+</ul>
+<h2 id="1"><p>Linux</p>
+</h2><div class="section" id="Prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#Prerequisites" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">git</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">libopenblas</span><span class="o">-</span><span class="n">dev</span> <span class="n">liblapack</span><span class="o">-</span><span class="n">dev</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">libopencv</span><span class="o">-</span><span class="n">dev</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">graphviz</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Clone-MXNet-sources">
+<h2>Clone MXNet sources<a class="headerlink" href="#Clone-MXNet-sources" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">recursive</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">mxnet</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">incubator</span><span class="o">-</span><span class="n">mxnet</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Build-MXNet-with-MKL-DNN">
+<h2>Build MXNet with MKL-DNN<a class="headerlink" href="#Build-MXNet-with-MKL-DNN" title="Permalink to this headline">¶</a></h2>
+<p>To achieve better performance, the Intel OpenMP and llvm OpenMP are recommended as below instruction. Otherwise, default GNU OpenMP will be used and you may get the sub-optimal performance. If you don’t have the full <a class="reference external" href="https://software.intel.com/en-us/intel-mkl">MKL</a> library installation, you might use OpenBLAS as the blas library, by setting USE_BLAS=openblas.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># build with llvm OpenMP and Intel MKL/openblas
+mkdir build &amp;&amp; cd build
+cmake -DUSE_CUDA=OFF -DUSE_MKL_IF_AVAILABLE=ON -DUSE_MKLDNN=ON -DUSE_OPENMP=ON -DUSE_OPENCV=ON ..
+make -j $(nproc)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># build with Intel MKL and Intel OpenMP
+make -j $(nproc) USE_OPENCV=1 USE_MKLDNN=1 USE_BLAS=mkl USE_INTEL_PATH=/opt/intel
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span># build with openblas and GNU OpenMP(sub-optimal performance)
+make -j $(nproc) USE_OPENCV=1 USE_MKLDNN=1 USE_BLAS=openblas
+</pre></div>
+</div>
+<h2 id="2"><p>MacOS</p>
+</h2></div>
+<div class="section" id="Prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#Prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>Install the dependencies, required for MXNet, with the following commands:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://brew.sh/">Homebrew</a></p></li>
+<li><p>llvm (clang in macOS does not support OpenMP)</p></li>
+<li><p>OpenCV (for computer vision operations)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Paste this command in Mac terminal to install Homebrew</span>
+<span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">ruby</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</span>
+
+<span class="c1"># install dependency</span>
+<span class="n">brew</span> <span class="n">update</span>
+<span class="n">brew</span> <span class="n">install</span> <span class="n">pkg</span><span class="o">-</span><span class="n">config</span>
+<span class="n">brew</span> <span class="n">install</span> <span class="n">graphviz</span>
+<span class="n">brew</span> <span class="n">tap</span> <span class="n">homebrew</span><span class="o">/</span><span class="n">core</span>
+<span class="n">brew</span> <span class="n">install</span> <span class="n">opencv</span>
+<span class="n">brew</span> <span class="n">tap</span> <span class="n">homebrew</span><span class="o">/</span><span class="n">versions</span>
+<span class="n">brew</span> <span class="n">install</span> <span class="n">llvm</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Clone-MXNet-sources">
+<h2>Clone MXNet sources<a class="headerlink" href="#Clone-MXNet-sources" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">recursive</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">mxnet</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">incubator</span><span class="o">-</span><span class="n">mxnet</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Build-MXNet-with-MKL-DNN">
+<h2>Build MXNet with MKL-DNN<a class="headerlink" href="#Build-MXNet-with-MKL-DNN" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>LIBRARY_PATH=$(brew --prefix llvm)/lib/ make -j $(sysctl -n hw.ncpu) CC=$(brew --prefix llvm)/bin/clang CXX=$(brew --prefix llvm)/bin/clang++ USE_OPENCV=1 USE_OPENMP=1 USE_MKLDNN=1 USE_BLAS=apple
+</pre></div>
+</div>
+<h2 id="3"><p>Windows</p>
+</h2><p>On Windows, you can use <a class="reference external" href="https://www.visualstudio.com/vs/older-downloads/">Micrsoft Visual Studio 2015</a> and <a class="reference external" href="https://www.visualstudio.com/downloads/">Microsoft Visual Studio 2017</a> to compile MXNet with Intel MKL-DNN. <a class="reference external" href="https://www.visualstudio.com/vs/older-downloads/">Micrsoft Visual Studio 2015</a> is recommended.</p>
+<p><strong>Visual Studio 2015</strong></p>
+<p>To build and install MXNet yourself, you need the following dependencies. Install the required dependencies:</p>
+<ol class="arabic simple">
+<li><p>If <a class="reference external" href="https://www.visualstudio.com/vs/older-downloads/">Microsoft Visual Studio 2015</a> is not already installed, download and install it. You can download and install the free community edition.</p></li>
+<li><p>Download and Install <a class="reference external" href="https://cmake.org/files/v3.14/cmake-3.14.0-win64-x64.msi">CMake 3</a> if it is not already installed.</p></li>
+<li><p>Download <a class="reference external" href="https://sourceforge.net/projects/opencvlibrary/files/3.4.5/opencv-3.4.5-vc14_vc15.exe/download">OpenCV 3</a>, and unzip the OpenCV package, set the environment variable <code class="docutils literal notranslate"><span class="pre">OpenCV_DIR</span></code> to point to the <code class="docutils literal notranslate"><span class="pre">OpenCV</span> <span class="pre">build</span> <span class="pre">directory</span></code> (e.g.,<code class="docutils literal notranslate"><span class="pre">OpenCV_DIR</span> <span class="pre">=</span> <span class="pre">C:\opencv\build</span></code>). Also, add the OpenCV bin directory (<code class="docutils literal notranslate"><span class="pre">C:\opencv\build\x64\vc14\bin</span></code> for example) to the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> variable.</p></li>
+<li><p>If you have Intel Math Kernel Library (Intel MKL) installed, set <code class="docutils literal notranslate"><span class="pre">MKL_ROOT</span></code> to point to <code class="docutils literal notranslate"><span class="pre">MKL</span></code> directory that contains the <code class="docutils literal notranslate"><span class="pre">include</span></code> and <code class="docutils literal notranslate"><span class="pre">lib</span></code>. If you want to use MKL blas, you should set <code class="docutils literal notranslate"><span class="pre">-DUSE_BLAS=mkl</span></code> when cmake. Typically, you can find the directory in <code class="docutils literal notranslate"><span class="pre">C:\Program</span> <span class="pre">Files</span> <span class="pre">(x86)\IntelSWTools\compilers_and_libraries\windows\mkl</span></code>.</p></li>
+<li><p>If you don’t have the Intel Math Kernel Library (MKL) installed, download and install <a class="reference external" href="http://sourceforge.net/projects/openblas/files/v0.2.14/">OpenBLAS</a>, or build the latest version of OpenBLAS from source. Note that you should also download <code class="docutils literal notranslate"><span class="pre">mingw64.dll.zip</span></code> along with openBLAS and add them to PATH.</p></li>
+<li><p>Set the environment variable <code class="docutils literal notranslate"><span class="pre">OpenBLAS_HOME</span></code> to point to the <code class="docutils literal notranslate"><span class="pre">OpenBLAS</span></code> directory that contains the <code class="docutils literal notranslate"><span class="pre">include</span></code> and <code class="docutils literal notranslate"><span class="pre">lib</span></code> directories. Typically, you can find the directory in <code class="docutils literal notranslate"><span class="pre">C:\Downloads\OpenBLAS\</span></code>.</p></li>
+</ol>
+<p>After you have installed all of the required dependencies, build the MXNet source code:</p>
+<ol class="arabic simple">
+<li><p>Start a Visual Studio command prompt by click windows Start menu&gt;&gt;Visual Studio 2015&gt;&gt;VS2015 X64 Native Tools Command Prompt, and download the MXNet source code from <a class="reference external" href="https://github.com/apache/incubator-mxnet">GitHub</a> by the command:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="o">--</span><span class="n">recursive</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">incubator</span><span class="o">-</span><span class="n">mxnet</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">C</span><span class="p">:</span>\<span class="n">incubator</span><span class="o">-</span><span class="n">mxent</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Enable Intel MKL-DNN by -DUSE_MKLDNN=1. Use <a class="reference external" href="https://cmake.org/">CMake 3</a> to create a Visual Studio solution in <code class="docutils literal notranslate"><span class="pre">./build</span></code>. Make sure to specify the architecture in the command:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">mkdir</span> <span class="n">build</span>
+<span class="o">&gt;</span><span class="n">cd</span> <span class="n">build</span>
+<span class="o">&gt;</span><span class="n">cmake</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;Visual Studio 14 Win64&quot;</span> <span class="o">..</span> <span class="o">-</span><span class="n">DUSE_CUDA</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_CUDNN</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_NVRTC</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_OPENCV</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_OPENMP</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_PROFILER</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_BLAS</span><span class="o">=</span><span class="nb">open</span> <span class="o">-</span><span class="n">DUSE_LAPACK</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_DIST_KVSTORE</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DCUDA_ARCH_NAME</span><span class="o">=</span><span class="n">All</span> <span class="o">-</span><span class="n">DUSE_MKLDNN</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Enable Intel MKL-DNN and Intel MKL as BLAS library by the command:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="s2">&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries\windows\mkl</span><span class="se">\b</span><span class="s2">in\mklvars.bat&quot;</span> <span class="n">intel64</span>
+<span class="o">&gt;</span><span class="n">cmake</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;Visual Studio 14 Win64&quot;</span> <span class="o">..</span> <span class="o">-</span><span class="n">DUSE_CUDA</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_CUDNN</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_NVRTC</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_OPENCV</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_OPENMP</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_PROFILER</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_BLAS</span><span class="o">=</span><span class="n">mkl</span> <span class="o">-</span><span class="n">DUSE_LAPACK</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_DIST_KVSTORE</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DCUDA_ARCH_NAME</span><span class="o">=</span><span class="n">All</span> <span class="o">-</span><span class="n">DUSE_MKLDNN</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span> <span class="o">-</span><span class="n">DMKL_ROOT</span><span class="o">=</span><span class="s2">&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries\windows\mkl&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>After the CMake successfully completed, in Visual Studio, open the solution file <code class="docutils literal notranslate"><span class="pre">.sln</span></code> and compile it, or compile the MXNet source code by using following command:</p></li>
+</ol>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">msbuild</span> <span class="n">mxnet.sln</span> <span class="o">/</span><span class="n">p</span><span class="o">:</span><span class="n">Configuration</span><span class="o">=</span><span class="n">Release</span><span class="p">;</span><span class="n">Platform</span><span class="o">=</span><span class="n">x64</span> <span class="o">/</span><span class="n">maxcpucount</span>
+</pre></div>
+</div>
+<p>These commands produce mxnet library called <code class="docutils literal notranslate"><span class="pre">libmxnet.dll</span></code> in the <code class="docutils literal notranslate"><span class="pre">./build/Release/</span></code> or <code class="docutils literal notranslate"><span class="pre">./build/Debug</span></code> folder. Also <code class="docutils literal notranslate"><span class="pre">libmkldnn.dll</span></code> with be in the <code class="docutils literal notranslate"><span class="pre">./build/3rdparty/mkldnn/src/Release/</span></code></p>
+<ol class="arabic simple" start="5">
+<li><p>Make sure that all the dll files used above(such as <code class="docutils literal notranslate"><span class="pre">libmkldnn.dll</span></code>, <code class="docutils literal notranslate"><span class="pre">libmklml*.dll</span></code>, <code class="docutils literal notranslate"><span class="pre">libiomp5.dll</span></code>, <code class="docutils literal notranslate"><span class="pre">libopenblas*.dll</span></code>, etc) are added to the system PATH. For convinence, you can put all of them to <code class="docutils literal notranslate"><span class="pre">\windows\system32</span></code>. Or you will come across <code class="docutils literal notranslate"><span class="pre">Not</span> <span class="pre">Found</span> <span class="pre">Dependencies</span></code> when loading MXNet.</p></li>
+</ol>
+<p><strong>Visual Studio 2017</strong></p>
+<p>User can follow the same steps of Visual Studio 2015 to build MXNET with MKL-DNN, but change the version related command, for example,<code class="docutils literal notranslate"><span class="pre">C:\opencv\build\x64\vc15\bin</span></code> and build command is as below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">cmake</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;Visual Studio 15 Win64&quot;</span> <span class="o">..</span> <span class="o">-</span><span class="n">DUSE_CUDA</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_CUDNN</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_NVRTC</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DUSE_OPENCV</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_OPENMP</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_PROFILER</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_BLAS</span><span class="o">=</span><span class="n">mkl</span> <span class="o">-</span><span class="n">DUSE_LAPACK</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DUSE_DIST_KVSTORE</span><span class="o">=</span><span class="mi">0</span> <span class="o">-</span><span class="n">DCUDA_ARCH_NAME</span><span class="o">=</span><span class="n">All</span> <span class="o">-</span><span class="n">DUSE_MKLDNN</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span><span class="n">DCMAKE_BUILD_TYPE</span><span class="o">=</span><span class="n">Release</span> <span class="o">-</span><span class="n">DMKL_ROOT</span><span class="o">=</span><span class="s2">&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries\windows\mkl&quot;</span>
+</pre></div>
+</div>
+<h2 id="4"><p>Verify MXNet with python</p>
+</h2><p>Preinstall python and some dependent modules:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">numpy</span> <span class="n">graphviz</span>
+<span class="nb">set</span> <span class="n">PYTHONPATH</span><span class="o">=</span><span class="p">[</span><span class="n">workdir</span><span class="p">]</span>\<span class="n">incubator</span><span class="o">-</span><span class="n">mxnet</span>\<span class="n">python</span>
+</pre></div>
+</div>
+<p>or install mxnet</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">python</span>
+<span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;import mxnet as mx;print((mx.nd.ones((2, 3))*2).asnumpy());&quot;</span>
+</pre></div>
+</div>
+<p>Expected Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span> <span class="mf">2.</span>  <span class="mf">2.</span>  <span class="mf">2.</span><span class="p">]</span>
+ <span class="p">[</span> <span class="mf">2.</span>  <span class="mf">2.</span>  <span class="mf">2.</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Verify-whether-MKL-DNN-works">
+<h2>Verify whether MKL-DNN works<a class="headerlink" href="#Verify-whether-MKL-DNN-works" title="Permalink to this headline">¶</a></h2>
+<p>After MXNet is installed, you can verify if MKL-DNN backend works well with a single Convolution layer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mxnet</span> <span class="k">as</span> <span class="nn">mx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">num_filter</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">pad</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Convolution</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">num_filter</span><span class="o">=</span><span class="n">num_filter</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">no_bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">)</span>
+<span class="n">exe</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">simple_bind</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">x</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">exe</span><span class="o">.</span><span class="n">arg_arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">exe</span><span class="o">.</span><span class="n">arg_arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">exe</span><span class="o">.</span><span class="n">arg_arrays</span><span class="p">[</span><span class="mi">1</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">exe</span><span class="o">.</span><span class="n">arg_arrays</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">exe</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">is_train</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">o</span> <span class="o">=</span> <span class="n">exe</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>More detailed debugging and profiling information can be logged by setting the environment variable ‘MKLDNN_VERBOSE’:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">MKLDNN_VERBOSE</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>For example, by running above code snippet, the following debugging logs providing more insights on MKL-DNN primitives <code class="docutils literal notranslate"><span class="pre">convolution</span></code> and <code class="docutils literal notranslate"><span class="pre">reorder</span></code>. That includes: Memory layout, infer shape and the time cost of primitive execution.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">info</span><span class="p">,</span><span class="n">DNNL</span> <span class="n">v1</span><span class="o">.</span><span class="mf">1.2</span> <span class="p">(</span><span class="n">commit</span> <span class="n">cb2cc7ac17ff4e2ef50805c7048d33256d82be4d</span><span class="p">)</span>
+<span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">info</span><span class="p">,</span><span class="n">Detected</span> <span class="n">ISA</span> <span class="ow">is</span> <span class="n">Intel</span> <span class="n">AVX</span><span class="o">-</span><span class="mi">512</span> <span class="k">with</span> <span class="n">Intel</span> <span class="n">DL</span> <span class="n">Boost</span>
+<span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">exec</span><span class="p">,</span><span class="n">cpu</span><span class="p">,</span><span class="n">reorder</span><span class="p">,</span><span class="n">jit</span><span class="p">:</span><span class="n">uni</span><span class="p">,</span><span class="n">undef</span><span class="p">,</span><span class="n">src_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">abcd</span><span class="p">:</span><span class="n">f0</span> <span class="n">dst_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">aBcd16b</span><span class="p">:</span><span class="n">f0</span><span class="p">,,,</span><span class="mi">32</span><span class="n">x32x256x256</span><span class="p">,</span><span class="mf">7.43701</span>
+<span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">exec</span><span class="p">,</span><span class="n">cpu</span><span class="p">,</span><span class="n">reorder</span><span class="p">,</span><span class="n">jit</span><span class="p">:</span><span class="n">uni</span><span class="p">,</span><span class="n">undef</span><span class="p">,</span><span class="n">src_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">abcd</span><span class="p">:</span><span class="n">f0</span> <span class="n">dst_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">ABcd16b16a</span><span class="p">:</span><span class="n">f0</span><span class="p">,,,</span><span class="mi">32</span><span class="n">x32x3x3</span><span class="p">,</span><span class="mf">0.202148</span>
+<span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">exec</span><span class="p">,</span><span class="n">cpu</span><span class="p">,</span><span class="n">convolution</span><span class="p">,</span><span class="n">jit</span><span class="p">:</span><span class="n">avx512_common</span><span class="p">,</span><span class="n">forward_inference</span><span class="p">,</span><span class="n">src_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">aBcd16b</span><span class="p">:</span><span class="n">f0</span> <span class="n">wei_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">ABcd16b16a</span><span class="p">:</span><span class="n">f0</span> <span class="n">bia_undef</span><span class="p">::</span><span class="n">undef</span><span class="p">::</span><span class="n">f0</span> <span class="n">dst_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">aBcd16b</span><span class="p">:</span><span class="n">f0</span><span class="p">,,</span><span class="n">alg</span><span class="p">:</span><span class="n">convolution_direct</span><span class="p">,</span><span class="n">mb32_ic32oc32_ih256oh256kh3sh1dh0ph1_iw256ow256kw3sw1dw0pw1</span><span class="p">,</span><span class="mf">20.7539</span>
+<span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">exec</span><span class="p">,</span><span class="n">cpu</span><span class="p">,</span><span class="n">reorder</span><span class="p">,</span><span class="n">jit</span><span class="p">:</span><span class="n">uni</span><span class="p">,</span><span class="n">undef</span><span class="p">,</span><span class="n">src_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">abcd</span><span class="p">:</span><span class="n">f0</span> <span class="n">dst_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">ABcd16b16a</span><span class="p">:</span><span class="n">f0</span><span class="p">,,,</span><span class="mi">32</span><span class="n">x32x3x3</span><span class="p">,</span><span class="mf">1.86694</span>
+<span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">exec</span><span class="p">,</span><span class="n">cpu</span><span class="p">,</span><span class="n">reorder</span><span class="p">,</span><span class="n">jit</span><span class="p">:</span><span class="n">uni</span><span class="p">,</span><span class="n">undef</span><span class="p">,</span><span class="n">src_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">aBcd16b</span><span class="p">:</span><span class="n">f0</span> <span class="n">dst_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">abcd</span><span class="p">:</span><span class="n">f0</span><span class="p">,,,</span><span class="mi">32</span><span class="n">x32x256x256</span><span class="p">,</span><span class="mf">35.9771</span>
+</pre></div>
+</div>
+<p>You can find step-by-step guidance to do profiling for MKLDNN primitives in <a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/performance/backend/profiler.html#Profiling-MKLDNN-Operators">Profiling MKLDNN Operators</a>.</p>
+<h2 id="5"><p>Enable MKL BLAS</p>
+</h2><p>With MKL BLAS, the performace is expected to furtherly improved with variable range depending on the computation load of the models. You can redistribute not only dynamic libraries but also headers, examples and static libraries on accepting the license <a class="reference external" href="https://software.intel.com/en-us/license/intel-simplified-software-license">Intel Simplified license</a>. Installing the full MKL installation enables MKL support for all operators under the linalg namespace.</p>
+<ol class="arabic simple">
+<li><p>Download and install the latest full MKL version following instructions on the <a class="reference external" href="https://software.intel.com/en-us/mkl">intel website.</a> You can also install MKL through <a class="reference external" href="https://software.intel.com/en-us/articles/installing-intel-free-libs-and-python-yum-repo">YUM</a> or <a class="reference external" href="https://software.intel.com/en-us/articles/installing-intel-free-libs-and-python-apt-repo">APT</a> Repository.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-j</span> <span class="pre">${nproc}</span> <span class="pre">USE_BLAS=mkl</span></code></p></li>
+<li><p>Navigate into the python directory</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code></p></li>
+</ol>
+</div>
+<div class="section" id="Verify-whether-MKL-works">
+<h2>Verify whether MKL works<a class="headerlink" href="#Verify-whether-MKL-works" title="Permalink to this headline">¶</a></h2>
+<p>After MXNet is installed, you can verify if MKL BLAS works well with a single dot layer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mxnet</span> <span class="k">as</span> <span class="nn">mx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">shape_x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">shape_w</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+
+<span class="n">x_npy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape_x</span><span class="p">)</span>
+<span class="n">w_npy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">shape_w</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">sym</span><span class="o">.</span><span class="n">batch_dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">transpose_b</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">exe</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">simple_bind</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">x</span><span class="o">=</span><span class="n">x_npy</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w_npy</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">exe</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">is_train</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">o</span> <span class="o">=</span> <span class="n">exe</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can open the <code class="docutils literal notranslate"><span class="pre">MKL_VERBOSE</span></code> flag by setting environment variable:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">MKL_VERBOSE</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>Then by running above code snippet, you probably will get the following output message which means <code class="docutils literal notranslate"><span class="pre">SGEMM</span></code> primitive from MKL are called. Layout information and primitive execution performance are also demonstrated in the log message.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Numpy</span> <span class="o">+</span> <span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">MKL</span><span class="p">:</span> <span class="n">THREADING</span> <span class="n">LAYER</span><span class="p">:</span> <span class="p">(</span><span class="n">null</span><span class="p">)</span>
+<span class="n">Numpy</span> <span class="o">+</span> <span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">MKL</span><span class="p">:</span> <span class="n">setting</span> <span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">MKL</span> <span class="n">to</span> <span class="n">use</span> <span class="n">INTEL</span> <span class="n">OpenMP</span> <span class="n">runtime</span>
+<span class="n">Numpy</span> <span class="o">+</span> <span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">MKL</span><span class="p">:</span> <span class="n">preloading</span> <span class="n">libiomp5</span><span class="o">.</span><span class="n">so</span> <span class="n">runtime</span>
+<span class="n">MKL_VERBOSE</span> <span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">MKL</span> <span class="mf">2019.0</span> <span class="n">Update</span> <span class="mi">3</span> <span class="n">Product</span> <span class="n">build</span> <span class="mi">20190125</span> <span class="k">for</span> <span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="mi">64</span> <span class="n">architecture</span> <span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">Advanced</span> <span class="n">Vector</span> <span class="n">Extensions</span> <span class="mi">512</span> <span class="p">(</span><span class="n">Intel</span><span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="n">AVX</span><span class="o">-</span><span class="mi">512</span><span class="p">)</span> <span class="n">enabled</span> <span class="n">processors</span><span class="p">,</span> <span class="n">Lnx</span> <span class="mf">2.40</span><span class="n">GHz</span> <span class="n">lp64</span> <span class="n">intel_thread</span> <span class="n">NMICDev</span><span class="p">:</span><span class="mi">0</span>
+<span class="n">MKL_VERBOSE</span> <span class="n">SGEMM</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mh">0x7f7f927b1378</span><span class="p">,</span><span class="mh">0x1bc2140</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mh">0x1ba8040</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mh">0x7f7f927b1380</span><span class="p">,</span><span class="mh">0x7f7f7400a280</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span> <span class="mf">8.93</span><span class="n">ms</span> <span class="n">CNR</span><span class="p">:</span><span class="n">OFF</span> <span class="n">Dyn</span><span class="p">:</span><span class="mi">1</span> <span class="n">FastMM</span><span class="p">:</span><span class="mi">1</span> <span class="n">TID</span><span class="p">:</span><span class="mi">0</span>  <span class="n">NThr</span><span class="p">:</span><span class="mi">40</span> <span class="n">WDiv</span><span class="p">:</span><span class="n">HOST</span><span class="p">:</span><span class="o">+</span><span class="mf">0.000</span>
+</pre></div>
+</div>
+<h2 id="6"><p>Enable graph optimization</p>
+</h2><p>Graph optimization with subgraph is available and enabled by default in master branch. For MXNet release v1.5, you can manually enable it by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">MXNET_SUBGRAPH_BACKEND</span><span class="o">=</span><span class="n">MKLDNN</span>
+</pre></div>
+</div>
+<p>This limitations of this experimental feature are:</p>
+<ul class="simple">
+<li><p>Use this feature only for inference. When training, be sure to turn the feature off by unsetting the <code class="docutils literal notranslate"><span class="pre">MXNET_SUBGRAPH_BACKEND</span></code> environment variable.</p></li>
+<li><p>This feature will only run on the CPU, even if you’re using a GPU-enabled build of MXNet.</p></li>
+</ul>
+<h2 id="7"><p>Quantization and Inference with INT8</p>
+</h2><p>Benefiting from Intel MKL-DNN, MXNet built with Intel MKL-DNN brings outstanding performance improvement on quantization and inference with INT8 Intel CPU Platform on Intel Xeon Scalable Platform.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/example/quantization">CNN Quantization Examples</a>.</p></li>
+<li><p><a class="reference external" href="https://cwiki.apache.org/confluence/display/MXNET/MXNet+Graph+Optimization+and+Quantization+based+on+subgraph+and+MKL-DNN">Model Quantization for Production-Level Neural Network Inference</a>.</p></li>
+</ul>
+<h2 id="8"><p>Next Steps and Support</p>
+</h2><ul class="simple">
+<li><p>For questions or support specific to MKL, visit the <a class="reference external" href="https://software.intel.com/en-us/mkl">Intel MKL</a> website.</p></li>
+<li><p>For questions or support specific to MKL, visit the <a class="reference external" href="https://github.com/intel/mkl-dnn">Intel MKLDNN</a> website.</p></li>
+<li><p>If you find bugs, please open an issue on GitHub for <a class="reference external" href="https://github.com/apache/incubator-mxnet/labels/MKL">MXNet with MKL</a> or <a class="reference external" href="https://github.com/apache/incubator-mxnet/labels/MKLDNN">MXNet with MKLDNN</a>.</p></li>
+</ul>
+</div>
+</div>
+
+
+        <hr class="feedback-hr-top" />
+<div class="feedback-container">
+    <div class="feedback-question">Did this page help you?</div>
+    <div class="feedback-answer-container">
+        <div class="feedback-answer yes-link" data-response="yes">Yes</div>
+        <div class="feedback-answer no-link" data-response="no">No</div>
+    </div>
+    <div class="feedback-thank-you">Thanks for your feedback!</div>
+</div>
+<hr class="feedback-hr-bottom" />
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">Install MXNet with MKL-DNN</a><ul>
+<li><a class="reference internal" href="#Prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#Clone-MXNet-sources">Clone MXNet sources</a></li>
+<li><a class="reference internal" href="#Build-MXNet-with-MKL-DNN">Build MXNet with MKL-DNN</a></li>
+<li><a class="reference internal" href="#Prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#Clone-MXNet-sources">Clone MXNet sources</a></li>
+<li><a class="reference internal" href="#Build-MXNet-with-MKL-DNN">Build MXNet with MKL-DNN</a></li>
+<li><a class="reference internal" href="#Verify-whether-MKL-DNN-works">Verify whether MKL-DNN works</a></li>
+<li><a class="reference internal" href="#Verify-whether-MKL-works">Verify whether MKL works</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>                    
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="mkldnn_quantization.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>Quantize with MKL-DNN backend</div>
+         </div>
+     </a>
+     <a id="button-next" href="../tensorrt/index.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>TensorRT</div>
+        </div>
+     </a>
+  </div>
+            <footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a class="u-email" href="mailto:dev@mxnet.apache.org">Dev list</a></li>
+                    <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="../../../../_static/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at The Apache Software Foundation (ASF), <span style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+  </body>
+</html>
