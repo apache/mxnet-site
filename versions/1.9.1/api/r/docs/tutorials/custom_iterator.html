@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+
+<!---
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/versions/1.9.1/assets/img/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Custom Iterator Tutorial | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Custom Iterator Tutorial" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.9.1/api/r/docs/tutorials/custom_iterator" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.9.1/api/r/docs/tutorials/custom_iterator" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"headline":"Custom Iterator Tutorial","description":"A flexible and efficient library for deep learning.","url":"https://mxnet.apache.org/versions/1.9.1/api/r/docs/tutorials/custom_iterator","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/versions/1.9.1/assets/docsearch.min.css" /><link rel="stylesheet" href="/versions/1.9.1/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.9.1/feed.xml" title="Apache MXNet" /><!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  /* We explicitly disable cookie tracking to avoid privacy issues */
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.apache.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '23']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+<script src="/versions/1.9.1/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/versions/1.9.1/assets/js/docsearch.min.js"></script><script src="/versions/1.9.1/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.9.1/"><img
+            src="/versions/1.9.1/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.9.1</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.9.1/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.1/features">Features</a>
+        <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.9.1/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown" style="min-width:100px">
+          <span class="dropdown-header">Apache
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content" style="min-width:250px">
+            <a href="https://www.apache.org/foundation/">Apache Software Foundation</a>
+            <a href="https://incubator.apache.org/">Apache Incubator</a>
+            <a href="https://www.apache.org/licenses/">License</a>
+            <a href="/versions/1.9.1/api/faq/security.html">Security</a>
+            <a href="https://privacy.apache.org/policies/privacy-policy-public.html">Privacy</a>
+            <a href="https://www.apache.org/events/current-event">Events</a>
+            <a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
+            <a href="https://www.apache.org/foundation/thanks.html">Thanks</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.1
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.9.1/">1.9.1</a>
+            <a href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Custom Iterator Tutorial</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="docs-card docs-side">
+            <ul>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.1/api/r"> <img src="/versions/1.9.1/assets/img/compass.svg"
+                                                                      class="docs-logo-docs">R Guide <span
+                            class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.1/api/r/docs/tutorials"> <img
+                            src="/versions/1.9.1/assets/img/video-tutorial.svg" class="docs-logo-docs">R
+                        Tutorials <span class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.1/api/r/docs/api/R-package/build/mxnet-r-reference-manual.pdf"> <img src="/versions/1.9.1/assets/img/api.svg"
+                                                                    class="docs-logo-docs">R API Reference
+                        <span class="span-accented">›</span></a>
+                </div>
+
+                <!-- Let's show the list of tutorials -->
+                <br>
+                
+                <h3>Tutorials</h3>
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/callback_function">Callback Function</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/char_rnn_model">Char RNN Model</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/classify_real_image_with_pretrained_model">Classify Images with a PreTrained Model</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/custom_iterator">Custom Iterator Tutorial</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/custom_loss_function">Custom Loss Function</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/five_minutes_neural_network">Five Minutes Neural Network</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/mnist_competition">MNIST Competition</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/multi_dim_lstm">LSTM Time Series</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/ndarray">NDArray</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/symbol">NDArray</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                  <!-- page -->
+                
+            </ul>
+        </div>
+        
+        
+        
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+          <!-- page -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="custom-iterator-tutorial">Custom Iterator Tutorial</h1>
+
+<p>This tutorial provides a guideline on how to use and write custom iterators, which can very useful when having a dataset that does not fit into memory.</p>
+
+<h2 id="getting-the-data">Getting the data</h2>
+
+<p>The data we are going to use is the <a href="https://yann.lecun.com/exdb/mnist/">MNIST dataset</a> in CSV format, the data can be found in this <a href="https://pjreddie.com/projects/mnist-in-csv/">web</a>.</p>
+
+<p>To download the data:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">wget http://pjreddie.com/media/files/mnist_train.csv
+wget http://pjreddie.com/media/files/mnist_test.csv
+</code></pre></div>
+<p>You&#39;ll get two files, <code>mnist_train.csv</code> that contains 60.000 examples of hand written numbers and <code>mxnist_test.csv</code> that contains 10.000 examples. The first element of each line in the CSV is the label, which is a number between 0 and 9. The rest of the line are 784 numbers between 0 and 255, corresponding to the levels of grey of a matrix of 28x28. Therefore, each line contains an image of 28x28 pixels of a hand written number and its true label.</p>
+
+<h2 id="custom-csv-iterator">Custom CSV Iterator</h2>
+
+<p>Next we are going to create a custom CSV Iterator based on the <a href="https://github.com/apache/mxnet/blob/v1.x/src/io/iter_csv.cc">C++ CSVIterator class</a>.</p>
+
+<p>For that we are going to use the R function <code>mx.io.CSVIter</code> as a base class. This class has as parameters <code>data.csv, data.shape, batch.size</code> and two main functions, <code>iter.next()</code> that calls the iterator in the next batch of data and <code>value()</code> that returns the train data and the label.</p>
+
+<p>The R Custom Iterator needs to inherit from the C++ data iterator class, for that we used the class <code>Rcpp_MXArrayDataIter</code> extracted with RCPP. Also, it needs to have the same parameters: <code>data.csv, data.shape, batch.size</code>. Apart from that, we can also add the field <code>iter</code>, which is the CSV Iterator that we are going to expand.</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">CustomCSVIter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">setRefClass</span><span class="p">(</span><span class="s2">"CustomCSVIter"</span><span class="p">,</span><span class="w">
+                                </span><span class="n">fields</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s2">"iter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data.csv"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data.shape"</span><span class="p">,</span><span class="w"> </span><span class="s2">"batch.size"</span><span class="p">),</span><span class="w">
+                                </span><span class="n">contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Rcpp_MXArrayDataIter"</span><span class="p">,</span><span class="w">
+                                </span><span class="c1">#...</span><span class="w">
+                            </span><span class="p">)</span><span class="w">
+</span></code></pre></div>
+<p>The next step is to initialize the class. For that we call the base <code>mx.io.CSVIter</code> and fill the rest of the fields.</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">CustomCSVIter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">setRefClass</span><span class="p">(</span><span class="s2">"CustomCSVIter"</span><span class="p">,</span><span class="w">
+                                </span><span class="n">fields</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s2">"iter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data.csv"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data.shape"</span><span class="p">,</span><span class="w"> </span><span class="s2">"batch.size"</span><span class="p">),</span><span class="w">
+                                </span><span class="n">contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Rcpp_MXArrayDataIter"</span><span class="p">,</span><span class="w">
+                                </span><span class="n">methods</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="w">
+                                    </span><span class="n">initialize</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">iter</span><span class="p">,</span><span class="w"> </span><span class="n">data.csv</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="p">,</span><span class="w"> </span><span class="n">batch.size</span><span class="p">){</span><span class="w">
+                                        </span><span class="n">feature_len</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.shape</span><span class="o">*</span><span class="n">data.shape</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="w">
+                                        </span><span class="n">csv_iter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.io.CSVIter</span><span class="p">(</span><span class="n">data.csv</span><span class="o">=</span><span class="n">data.csv</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="n">feature_len</span><span class="p">),</span><span class="w"> </span><span class="n">batch.size</span><span class="o">=</span><span class="n">batch.size</span><span class="p">)</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">csv_iter</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">data.csv</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.csv</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">data.shape</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.shape</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">batch.size</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">batch.size</span><span class="w">
+                                        </span><span class="n">.self</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                </span><span class="c1">#...</span><span class="w">
+                                </span><span class="p">)</span><span class="w">
+                            </span><span class="p">)</span><span class="w">
+</span></code></pre></div>
+<p>So far there is no difference between the original class and the custom class. Let&#39;s implement the function <code>value()</code>. In this case what we are going to do is transform the data that comes from the original class as an array of 785 numbers into a matrix of 28x28 and a label. We will also normalize the training data to be between 0 and 1.</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">CustomCSVIter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">setRefClass</span><span class="p">(</span><span class="s2">"CustomCSVIter"</span><span class="p">,</span><span class="w">
+                                </span><span class="n">fields</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s2">"iter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data.csv"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data.shape"</span><span class="p">,</span><span class="w"> </span><span class="s2">"batch.size"</span><span class="p">),</span><span class="w">
+                                </span><span class="n">contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Rcpp_MXArrayDataIter"</span><span class="p">,</span><span class="w">
+                                </span><span class="n">methods</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="w">
+                                    </span><span class="n">initialize</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">iter</span><span class="p">,</span><span class="w"> </span><span class="n">data.csv</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="p">,</span><span class="w"> </span><span class="n">batch.size</span><span class="p">){</span><span class="w">
+                                        </span><span class="n">feature_len</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.shape</span><span class="o">*</span><span class="n">data.shape</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="w">
+                                        </span><span class="n">csv_iter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.io.CSVIter</span><span class="p">(</span><span class="n">data.csv</span><span class="o">=</span><span class="n">data.csv</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="n">feature_len</span><span class="p">),</span><span class="w"> </span><span class="n">batch.size</span><span class="o">=</span><span class="n">batch.size</span><span class="p">)</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">csv_iter</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">data.csv</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.csv</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">data.shape</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.shape</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">batch.size</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">batch.size</span><span class="w">
+                                        </span><span class="n">.self</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                    </span><span class="n">value</span><span class="o">=</span><span class="k">function</span><span class="p">(){</span><span class="w">
+                                        </span><span class="n">val</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.array</span><span class="p">(</span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="o">$</span><span class="n">value</span><span class="p">()</span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w">
+                                        </span><span class="n">val.x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">val</span><span class="p">[</span><span class="m">-1</span><span class="p">,]</span><span class="w">
+                                        </span><span class="n">val.y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">val</span><span class="p">[</span><span class="m">1</span><span class="p">,]</span><span class="w">
+                                        </span><span class="n">val.x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">val.x</span><span class="o">/</span><span class="m">255</span><span class="w">
+                                        </span><span class="nf">dim</span><span class="p">(</span><span class="n">val.x</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">data.shape</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="p">(</span><span class="n">val.x</span><span class="p">))</span><span class="w">
+                                        </span><span class="n">val.x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.nd.array</span><span class="p">(</span><span class="n">val.x</span><span class="p">)</span><span class="w">
+                                        </span><span class="n">val.y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.nd.array</span><span class="p">(</span><span class="n">val.y</span><span class="p">)</span><span class="w">
+                                        </span><span class="nf">list</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">val.x</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="o">=</span><span class="n">val.y</span><span class="p">)</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                </span><span class="c1">#...</span><span class="w">
+                                </span><span class="p">)</span><span class="w">
+                            </span><span class="p">)</span><span class="w">
+</span></code></pre></div>
+<p>Finally we are going to add the rest of the functions needed for the training to work correctly. The final <code>CustomCSVIter</code> looks like this:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">CustomCSVIter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">setRefClass</span><span class="p">(</span><span class="s2">"CustomCSVIter"</span><span class="p">,</span><span class="w">
+                                </span><span class="n">fields</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s2">"iter"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data.csv"</span><span class="p">,</span><span class="w"> </span><span class="s2">"data.shape"</span><span class="p">,</span><span class="w"> </span><span class="s2">"batch.size"</span><span class="p">),</span><span class="w">
+                                </span><span class="n">contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Rcpp_MXArrayDataIter"</span><span class="p">,</span><span class="w">
+                                </span><span class="n">methods</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="w">
+                                    </span><span class="n">initialize</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">iter</span><span class="p">,</span><span class="w"> </span><span class="n">data.csv</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="p">,</span><span class="w"> </span><span class="n">batch.size</span><span class="p">){</span><span class="w">
+                                        </span><span class="n">feature_len</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.shape</span><span class="o">*</span><span class="n">data.shape</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="w">
+                                        </span><span class="n">csv_iter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.io.CSVIter</span><span class="p">(</span><span class="n">data.csv</span><span class="o">=</span><span class="n">data.csv</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="n">feature_len</span><span class="p">),</span><span class="w"> </span><span class="n">batch.size</span><span class="o">=</span><span class="n">batch.size</span><span class="p">)</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">csv_iter</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">data.csv</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.csv</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">data.shape</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.shape</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">batch.size</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">batch.size</span><span class="w">
+                                        </span><span class="n">.self</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                    </span><span class="n">value</span><span class="o">=</span><span class="k">function</span><span class="p">(){</span><span class="w">
+                                        </span><span class="n">val</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.array</span><span class="p">(</span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="o">$</span><span class="n">value</span><span class="p">()</span><span class="o">$</span><span class="n">data</span><span class="p">)</span><span class="w">
+                                        </span><span class="n">val.x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">val</span><span class="p">[</span><span class="m">-1</span><span class="p">,]</span><span class="w">
+                                        </span><span class="n">val.y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">val</span><span class="p">[</span><span class="m">1</span><span class="p">,]</span><span class="w">
+                                        </span><span class="n">val.x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">val.x</span><span class="o">/</span><span class="m">255</span><span class="w">
+                                        </span><span class="nf">dim</span><span class="p">(</span><span class="n">val.x</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">data.shape</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">ncol</span><span class="p">(</span><span class="n">val.x</span><span class="p">))</span><span class="w">
+                                        </span><span class="n">val.x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.nd.array</span><span class="p">(</span><span class="n">val.x</span><span class="p">)</span><span class="w">
+                                        </span><span class="n">val.y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.nd.array</span><span class="p">(</span><span class="n">val.y</span><span class="p">)</span><span class="w">
+                                        </span><span class="nf">list</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">val.x</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="o">=</span><span class="n">val.y</span><span class="p">)</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                    </span><span class="n">iter.next</span><span class="o">=</span><span class="k">function</span><span class="p">(){</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="o">$</span><span class="n">iter.next</span><span class="p">()</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                    </span><span class="n">reset</span><span class="o">=</span><span class="k">function</span><span class="p">(){</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="o">$</span><span class="n">reset</span><span class="p">()</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                    </span><span class="n">num.pad</span><span class="o">=</span><span class="k">function</span><span class="p">(){</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="o">$</span><span class="n">num.pad</span><span class="p">()</span><span class="w">
+                                    </span><span class="p">},</span><span class="w">
+                                    </span><span class="n">finalize</span><span class="o">=</span><span class="k">function</span><span class="p">(){</span><span class="w">
+                                        </span><span class="n">.self</span><span class="o">$</span><span class="n">iter</span><span class="o">$</span><span class="n">finalize</span><span class="p">()</span><span class="w">
+                                    </span><span class="p">}</span><span class="w">
+                                </span><span class="p">)</span><span class="w">
+                            </span><span class="p">)</span><span class="w">
+</span></code></pre></div>
+<p>To call the class we can just do:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">batch.size</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">100</span><span class="w">
+</span><span class="n">train.iter</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">CustomCSVIter</span><span class="o">$</span><span class="n">new</span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">data.csv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"mnist_train.csv"</span><span class="p">,</span><span class="w"> </span><span class="n">data.shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">28</span><span class="p">,</span><span class="w"> </span><span class="n">batch.size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">batch.size</span><span class="p">)</span><span class="w">
+</span></code></pre></div>
+<h2 id="cnn-model">CNN Model</h2>
+
+<p>For this tutorial we are going to use the known LeNet architecture:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">lenet.model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(){</span><span class="w">
+  </span><span class="n">data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Variable</span><span class="p">(</span><span class="s1">'data'</span><span class="p">)</span><span class="w">
+  </span><span class="n">conv1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Convolution</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">),</span><span class="w"> </span><span class="n">num_filter</span><span class="o">=</span><span class="m">20</span><span class="p">)</span><span class="w"> </span><span class="c1">#first conv</span><span class="w">
+  </span><span class="n">tanh1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Activation</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">conv1</span><span class="p">,</span><span class="w"> </span><span class="n">act_type</span><span class="o">=</span><span class="s2">"tanh"</span><span class="p">)</span><span class="w">
+  </span><span class="n">pool1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Pooling</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">tanh1</span><span class="p">,</span><span class="w"> </span><span class="n">pool_type</span><span class="o">=</span><span class="s2">"max"</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">stride</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
+  </span><span class="n">conv2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Convolution</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pool1</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">5</span><span class="p">),</span><span class="w"> </span><span class="n">num_filter</span><span class="o">=</span><span class="m">50</span><span class="p">)</span><span class="c1"># second conv</span><span class="w">
+  </span><span class="n">tanh2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Activation</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">conv2</span><span class="p">,</span><span class="w"> </span><span class="n">act_type</span><span class="o">=</span><span class="s2">"tanh"</span><span class="p">)</span><span class="w">
+  </span><span class="n">pool2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Pooling</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">tanh2</span><span class="p">,</span><span class="w"> </span><span class="n">pool_type</span><span class="o">=</span><span class="s2">"max"</span><span class="p">,</span><span class="w"> </span><span class="n">kernel</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="n">stride</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
+  </span><span class="n">flatten</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Flatten</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pool2</span><span class="p">)</span><span class="w">
+  </span><span class="n">fc1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">flatten</span><span class="p">,</span><span class="w"> </span><span class="n">num_hidden</span><span class="o">=</span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="c1"># first fullc</span><span class="w">
+  </span><span class="n">tanh3</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Activation</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">fc1</span><span class="p">,</span><span class="w"> </span><span class="n">act_type</span><span class="o">=</span><span class="s2">"tanh"</span><span class="p">)</span><span class="w">
+  </span><span class="n">fc2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">tanh3</span><span class="p">,</span><span class="w"> </span><span class="n">num_hidden</span><span class="o">=</span><span class="m">10</span><span class="p">)</span><span class="w"> </span><span class="c1"># second fullc</span><span class="w">
+  </span><span class="n">network</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.SoftmaxOutput</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">fc2</span><span class="p">)</span><span class="w"> </span><span class="c1"># loss</span><span class="w">
+  </span><span class="n">network</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="n">network</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lenet.model</span><span class="p">()</span><span class="w">
+</span></code></pre></div>
+<h2 id="training-with-the-custom-iterator">Training with the Custom Iterator</h2>
+
+<p>Finally, we can directly add the custom iterator as the training data source.</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.model.FeedForward.create</span><span class="p">(</span><span class="n">symbol</span><span class="o">=</span><span class="n">network</span><span class="p">,</span><span class="w">
+                                     </span><span class="n">X</span><span class="o">=</span><span class="n">train.iter</span><span class="p">,</span><span class="w">
+                                     </span><span class="n">ctx</span><span class="o">=</span><span class="n">mx.gpu</span><span class="p">(</span><span class="m">0</span><span class="p">),</span><span class="w">
+                                     </span><span class="n">num.round</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w">
+                                     </span><span class="n">array.batch.size</span><span class="o">=</span><span class="n">batch.size</span><span class="p">,</span><span class="w">
+                                     </span><span class="n">learning.rate</span><span class="o">=</span><span class="m">0.1</span><span class="p">,</span><span class="w">
+                                     </span><span class="n">momentum</span><span class="o">=</span><span class="m">0.9</span><span class="p">,</span><span class="w">
+                                     </span><span class="n">eval.metric</span><span class="o">=</span><span class="n">mx.metric.accuracy</span><span class="p">,</span><span class="w">
+                                     </span><span class="n">wd</span><span class="o">=</span><span class="m">0.00001</span><span class="p">,</span><span class="w">
+                                     </span><span class="n">batch.end.callback</span><span class="o">=</span><span class="n">mx.callback.log.speedometer</span><span class="p">(</span><span class="n">batch.size</span><span class="p">,</span><span class="w"> </span><span class="n">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
+                                     </span><span class="p">)</span><span class="w">
+</span></code></pre></div>
+<p>The last 2 iterations with a K80 GPU looks like this:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>8] Train-accuracy<span class="o">=</span>0.998866666666667
+Batch <span class="o">[</span>100] Speed: 15413.0104454713 samples/sec Train-accuracy<span class="o">=</span>0.999
+Batch <span class="o">[</span>200] Speed: 16629.3412459049 samples/sec Train-accuracy<span class="o">=</span>0.99935
+Batch <span class="o">[</span>300] Speed: 18412.6900509319 samples/sec Train-accuracy<span class="o">=</span>0.9995
+Batch <span class="o">[</span>400] Speed: 16757.2882328335 samples/sec Train-accuracy<span class="o">=</span>0.999425
+Batch <span class="o">[</span>500] Speed: 17116.6529207406 samples/sec Train-accuracy<span class="o">=</span>0.99946
+Batch <span class="o">[</span>600] Speed: 19627.589505195 samples/sec Train-accuracy<span class="o">=</span>0.99945
+<span class="o">[</span>9] Train-accuracy<span class="o">=</span>0.9991
+Batch <span class="o">[</span>100] Speed: 18971.5745536982 samples/sec Train-accuracy<span class="o">=</span>0.9992
+Batch <span class="o">[</span>200] Speed: 15554.8822435383 samples/sec Train-accuracy<span class="o">=</span>0.99955
+Batch <span class="o">[</span>300] Speed: 18327.6950115053 samples/sec Train-accuracy<span class="o">=</span>0.9997
+Batch <span class="o">[</span>400] Speed: 17103.0705411788 samples/sec Train-accuracy<span class="o">=</span>0.9997
+Batch <span class="o">[</span>500] Speed: 15104.8656902394 samples/sec Train-accuracy<span class="o">=</span>0.99974
+Batch <span class="o">[</span>600] Speed: 13818.7899518255 samples/sec Train-accuracy<span class="o">=</span>0.99975
+<span class="o">[</span>10] Train-accuracy<span class="o">=</span>0.99975
+</code></pre></div>
+<h2 id="conclusion">Conclusion</h2>
+
+<p>We have shown how to create a custom CSV Iterator by extending the class <code>mx.io.CSVIter</code>. In our class, we iteratively read from a CSV file a batch of data that will be transformed and then processed in the stochastic gradient descent optimization. That way, we are able to manage CSV files that are bigger than the memory of the machine we are using.</p>
+
+<p>Based of this custom iterator, we can also create data loaders that internally transform or expand the data, allowing to manage files of any size.</p>
+</div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.9.1/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
+                    <li><a href="https://discuss.mxnet.io">Forum</a></li>
+                    <li><a href="/versions/1.9.1/community/contribute">Contribute</a></li>
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.9.1/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2022, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

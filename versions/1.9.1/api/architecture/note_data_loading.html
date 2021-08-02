@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+<!---
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/versions/1.9.1/assets/img/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Efficient Data Loaders | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Efficient Data Loaders" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.9.1/api/architecture/note_data_loading" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.9.1/api/architecture/note_data_loading" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"headline":"Efficient Data Loaders","description":"A flexible and efficient library for deep learning.","url":"https://mxnet.apache.org/versions/1.9.1/api/architecture/note_data_loading","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/versions/1.9.1/assets/docsearch.min.css" /><link rel="stylesheet" href="/versions/1.9.1/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.9.1/feed.xml" title="Apache MXNet" /><!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  /* We explicitly disable cookie tracking to avoid privacy issues */
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.apache.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '23']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+<script src="/versions/1.9.1/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/versions/1.9.1/assets/js/docsearch.min.js"></script><script src="/versions/1.9.1/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.9.1/"><img
+            src="/versions/1.9.1/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.9.1</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.9.1/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.1/features">Features</a>
+        <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.9.1/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown" style="min-width:100px">
+          <span class="dropdown-header">Apache
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content" style="min-width:250px">
+            <a href="https://www.apache.org/foundation/">Apache Software Foundation</a>
+            <a href="https://incubator.apache.org/">Apache Incubator</a>
+            <a href="https://www.apache.org/licenses/">License</a>
+            <a href="/versions/1.9.1/api/faq/security.html">Security</a>
+            <a href="https://privacy.apache.org/policies/privacy-policy-public.html">Privacy</a>
+            <a href="https://www.apache.org/events/current-event">Events</a>
+            <a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
+            <a href="https://www.apache.org/foundation/thanks.html">Thanks</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.1
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.9.1/">1.9.1</a>
+            <a href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Efficient Data Loaders</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+        <h3 style="text-transform: capitalize; padding-left:10px">architecture</h3>
+        <ul>
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/architecture/exception_handling">Exception Handling in Apache MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/architecture/note_data_loading">Efficient Data Loaders</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/architecture/note_engine">Dependency Engine</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/architecture/note_memory">Memory Consumption</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/architecture/overview">Apache MXNet System Architecture</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/architecture/program_model">Deep Learning Programming Paradigm</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+               <!-- resource-p -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="designing-efficient-data-loaders-for-deep-learning">Designing Efficient Data Loaders for Deep Learning</h1>
+
+<p>Data loading is an important component of any machine learning system.
+When we work with tiny datasets, we can get away with loading an entire dataset into GPU memory.
+With larger datasets, we must store examples in main memory.
+And when datasets grow too large to fit into main memory,
+data loading can become performance-critical.
+In designing a data loader,
+we aim to achieve more efficient data loading,
+to spend less effort on data preparation,
+and to present a clean and flexible interface.</p>
+
+<p>We organize this design note as follows:</p>
+
+<ul>
+<li><strong>IO Design Insight:</strong>  Guiding principles in data loading design.</li>
+<li><strong>Data Format:</strong> Our solution using dmlc-core&#39;s binary recordIO implementation.</li>
+<li><strong>Data Loading:</strong> Our method to reduce IO cost by utilizing the threaded iterator provided by dmlc-core.</li>
+<li><strong>Interface Design:</strong> Our approach to facilitate writing MXNet data iterators in just a few lines of Python.</li>
+<li><strong>Future Extension:</strong> Prospective ideas for making data loading more flexible.</li>
+</ul>
+
+<p>Our analysis will motivate several requirements that an effective IO system should fulfill.</p>
+
+<p><strong><em>List of Key Requirements</em></strong>
+- Small file size.
+- Parallel (distributed) packing of data.
+- Fast data loading and online augmentation.
+- Quick reads from arbitrary parts of the dataset in the distributed setting.</p>
+
+<h2 id="design-insight">Design Insight</h2>
+
+<p>To design an IO system, we must address two kinds of tasks:
+data preparation and data loading.
+Data preparation is usually performed offline,
+whereas data loading influences the online performance.
+In this section, we will introduce our insight of IO design involving the two phases.</p>
+
+<h3 id="data-preparation">Data Preparation</h3>
+
+<p>Data preparation describes the process of packing data
+into a desired format for later processing.
+When working with large datasets like ImageNet, this process can be time-consuming.
+In these cases, there are several heuristics we ought to follow:</p>
+
+<ul>
+<li>Pack the dataset into small numbers of files. A dataset may contain millions of data instances. Packed data distributes easily from machine to machine.</li>
+<li>Do the packing once. We don&#39;t want to repack data every time run-time settings, like the number of machines, are changed.</li>
+<li>Process the packing in parallel to save time.</li>
+<li>Be able to access arbitrary parts of the data easily. This is crucial for distributed machine learning when data parallelism is introduced. Things may get tricky when the data has been packed into several physical data files. The desired behavior could be: the packed data can be logically separated into arbitrary numbers of partitions, no matter how many physical data files there are. For example, if we pack 1000 images into 4 physical files, then each file contains 250 images. If we then use 10 machines to train a DNN, we should be able to load approximately 100 images per machine. Some machines may need images from different physical files.</li>
+</ul>
+
+<h3 id="data-loading">Data Loading</h3>
+
+<p>The next step to consider is how to load the packed data into RAM.
+Our goal is to load the data as quickly as possible.
+There are several heuristics we try to follow:
+- <strong>Read continuously:</strong> We can read faster when reading from contiguous locations on disk.
+- <strong>Reduce the bytes to be loaded:</strong> We can achieve this by storing data in a compact way, e.g. saving images in JPEG format.
+- <strong>Load and train in different threads:</strong> This avoids computational bottlenecks while loading data.
+- <strong>Save RAM:</strong> Judiciously decide whether to load entire files into RAM.</p>
+
+<h2 id="data-format">Data Format</h2>
+
+<p>Since the training of deep neural network often involves large amounts of data,
+the format we choose should be both efficient and convenient.
+To achieve our goals, we need to pack binary data into a splittable format.
+In MXNet, we rely on the binary recordIO format implemented in dmlc-core.</p>
+
+<h3 id="binary-record">Binary Record</h3>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/baserecordio.jpg" alt="baserecordio">
+In MXNet&#39;s binary RecordIO, we store each data instance as a record.
+<strong>kMagic</strong> is a <em>magic number</em> indicating the start of a record.
+<strong>Lrecord</strong> encodes length and a continue flag.
+In lrecord,
+- cflag == 0: this is a complete record
+- cflag == 1: start of a multiple-records
+- cflag == 2: middle of multiple-records
+- cflag == 3: end of multiple-records</p>
+
+<p><strong>Data</strong> is the space to save data content.
+<strong>Pad</strong> is simply a padding space to make record align to 4 bytes.</p>
+
+<p>After we pack the data, each file contains multiple records.
+Then, loading can be continuous.
+This avoids the low performance that can result
+from reading random locations on disk.</p>
+
+<p>One advantage of storing data via records
+is that each record can vary in length.
+This allows us to save data compactly
+when good compression algorithms are available for our data.
+For example, we can use JPEG format to save image data.
+The packed data will be much smaller
+compared with storing uncompressed RGB values for each pixel.</p>
+
+<p>Take ImageNet_1K dataset as an example.
+If we store the data as 3 * 256 * 256 array of raw RGB values,
+the dataset would occupy more than <strong>200G</strong>.
+But after compressing the images using JPEG,
+they only occupy about <strong>35G</strong> of disk space.
+This significantly reduces the cost owing to reading from disk.</p>
+
+<p>Here&#39;s an example of binary recordIO:
+<img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/ImageRecordIO.jpg" alt="baserecordio">
+We first resize the image into 256 * 256,
+then compress into JPEG format.
+After that, we save a header that indicates the index and label
+for that image to be used when constructing the <em>Data</em> field for that record.
+We then pack several images together into a file.
+You may want to also review the <a href="https://mxnet.apache.org/api/faq/recordio">example using im2rec.py to create a RecordIO dataset</a>.</p>
+
+<h3 id="access-arbitrary-parts-of-data">Access Arbitrary Parts Of Data</h3>
+
+<p>One desirable property for a data loader might be:
+The packed data can be logically sliced into an arbitrary number of partitions,
+no matter how many physical packed data files there are.
+Since binary recordIO can easily locate
+the start and end of a record using the Magic Number,
+we can achieve the above goal using the InputSplit
+functionality provided by dmlc-core.</p>
+
+<p>InputSplit takes the following parameters:
+- FileSystem <em>filesys</em>: dmlc-core wrapper around the IO operations for different file systems, like hdfs, s3, local. User shouldn&#39;t need to worry about the difference between file systems anymore.
+- Char <em>uri</em>: The URI of files. Note that it could be a list of files because we may pack the data into several physical parts. File URIs are separated by &#39;;&#39;.
+- Unsigned <em>nsplit</em>: The number of logical splits. <em>nsplit</em> could be different from the number of physical files.
+- Unsigned <em>rank</em>: Which split to load in this process.</p>
+
+<p>The splitting process is demonstrated below:
+- Determine the size of each partition.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/beforepartition.jpg" alt="beforepartition"></p>
+
+<ul>
+<li>Approximately partition the records according to file size. Note that the boundary of each part may be located in the middle of a record.</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/approximatepartition.jpg" alt="approxipartition"></p>
+
+<ul>
+<li> Set the beginning of partitions in such a way as to avoid splitting records across partitions.</li>
+</ul>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/afterpartition.jpg" alt="afterpartition"></p>
+
+<p>By conducting the above operations,
+we now identify the records belong to each part,
+and the physical data files needed by each logical part.
+InputSplit greatly simplifies data parallelism,
+where each process only reads part of the data.</p>
+
+<p>Since our partitioning scheme does not depend on the number of physical data files,
+we can process a huge dataset like ImageNet_22K in parallel fashion as illustrated below.
+We don&#39;t need to consider distributed loading issue at the preparation time,
+just select the most efficient physical file number
+according to the dataset size and computing resources available.
+<img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/parallelprepare.jpg" alt="parallelprepare"></p>
+
+<h2 id="data-loading-and-preprocessing">Data Loading and Preprocessing</h2>
+
+<p>When the speed of loading and preprocessing can&#39;t keep up
+with the speed of training or evaluation,
+IO can bottleneck the speed of the whole system.
+In this section, we will introduce a few tricks
+to achieve greater efficiency when loading
+and preprocessing data packed in binary recordIO format.
+When applied to the ImageNet dataset, our approach achieves
+the IO speed of <strong>3000</strong> images/sec <strong>with a normal HDD</strong>.</p>
+
+<h3 id="loading-and-preprocessing-on-the-fly">Loading and preprocessing on the fly</h3>
+
+<p>When training deep neural networks,
+we sometimes must load and preprocess the data
+while simultaneously training for the following reasons:
+- When the whole size of the dataset exceeds available RAM size, we can&#39;t load it in advance;
+- Sometimes, to make models robust to things like translations, rotations, and small amounts of color shift of noise, we introduce randomness into the training process. In these cases we must re-preprocess the data each time we revisit an example.</p>
+
+<p>In service of efficiency, we also address multi-threading techniques. Taking Imagenet training as an example, after loading a bunch of image records, we can start multiple threads to simultaneously perform image decoding and image augmentation. We depict this process in the following illustration:
+<img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/process.jpg" alt="process"></p>
+
+<h3 id="hide-io-cost-using-threadediter">Hide IO Cost Using Threadediter</h3>
+
+<p>One way to lower IO cost is to pre-fetch the data for next batch on one thread,
+while the main thread performs the forward and backward passes for training.
+To support more complicated training schemes,
+MXNet provides a more general IO processing pipeline
+using <em>threadediter</em> provided by dmlc-core.
+The key of <em>threadediter</em> is to start a stand-alone thread that acts as a data provider,
+while the main thread acts as a data consumer as illustrated below.</p>
+
+<p>The threadediter maintains a buffer of a certain size
+and automatically fills the buffer when it&#39;s not full.
+And after the consumer finishes consuming part of the data in the buffer,
+threadediter will reuse the space to save the next part of data.
+<img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/io/threadediter.png" alt="threadediter"></p>
+
+<h2 id="mxnet-io-python-interface">MXNet IO Python Interface</h2>
+
+<p>We make the IO object as an iterator in numpy.
+By achieving that, the user can easily access the data
+using a for-loop or calling next() function.
+Defining a data iterator is very similar to defining a symbolic operator in MXNet.</p>
+
+<p>The following example code demonstrates a Cifar data iterator.</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">dataiter</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ImageRecordIter</span><span class="p">(</span>
+    <span class="c1"># Dataset Parameter, indicating the data file, please check the data is already there
+</span>    <span class="n">path_imgrec</span><span class="o">=</span><span class="s">"data/cifar/train.rec"</span><span class="p">,</span>
+    <span class="c1"># Dataset Parameter, indicating the image size after preprocessing
+</span>    <span class="n">data_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">),</span>
+    <span class="c1"># Batch Parameter, tells how many images in a batch
+</span>    <span class="n">batch_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="c1"># Augmentation Parameter, when offers mean_img, each image will subtract the mean value at each pixel
+</span>    <span class="n">mean_img</span><span class="o">=</span><span class="s">"data/cifar/cifar10_mean.bin"</span><span class="p">,</span>
+    <span class="c1"># Augmentation Parameter, randomly crop a patch of the data_shape from the original image
+</span>    <span class="n">rand_crop</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="c1"># Augmentation Parameter, randomly mirror the image horizontally
+</span>    <span class="n">rand_mirror</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="c1"># Augmentation Parameter, randomly shuffle the data
+</span>    <span class="n">shuffle</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="c1"># Backend Parameter, preprocessing thread number
+</span>    <span class="n">preprocess_threads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="c1"># Backend Parameter, prefetch buffer size
+</span>    <span class="n">prefetch_buffer</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="c1"># Optional, the device context which data loader optimized for, could be 'gpu' or 'cpu'
+</span>    <span class="n">ctx</span><span class="o">=</span><span class="s">"gpu"</span><span class="p">,</span>
+    <span class="c1"># The out data type, could be 'float32' 'int8' or 'uint8'
+</span>    <span class="n">dtype</span><span class="o">=</span><span class="s">"float32"</span><span class="p">)</span>
+</code></pre></div>
+<p>Generally, to create a data iterator, you need to provide five kinds of parameters:</p>
+
+<ul>
+<li><strong>Dataset Param:</strong> Information needed to access the dataset, e.g. file path, input shape.</li>
+<li><strong>Batch Param:</strong> Specifies how to form a batch, e.g. batch size.</li>
+<li><strong>Augmentation Param:</strong> Which augmentation operations (e.g. crop, mirror) should be taken on an input image.</li>
+<li><strong>Backend Param:</strong> Controls the behavior of the backend threads to hide data loading cost.</li>
+<li><strong>Auxiliary Param:</strong> Provides options to help with debugging.</li>
+</ul>
+
+<p>Usually, <strong>Dataset Param</strong> and <strong>Batch Param</strong> MUST be given,
+otherwise the data batch can&#39;t be created.
+Other parameters can be given as needed.
+Ideally, we should separate the MX Data IO into modules,
+some of which might be useful to expose to users, for example:</p>
+
+<ul>
+<li><strong>Efficient prefetcher:</strong> allows the user to write a data loader that reads their customized binary format that automatically gets multi-threaded prefetcher support.</li>
+<li><strong>Data transformer:</strong> image random cropping, mirroring, etc. Allows the users to use those tools, or plug in their own customized transformers (maybe they want to add some specific kind of coherent random noise to data, etc.)</li>
+</ul>
+
+<h2 id="future-extensions">Future Extensions</h2>
+
+<p>In the future, there are some extensions to our data IO
+that we might consider adding.
+Specifically, we might add specialized support
+for applications including image segmentation, object localization, and speech recognition.
+More detail will be provided when such applications have been running on MXNet.</p>
+
+    </div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.9.1/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
+                    <li><a href="https://discuss.mxnet.io">Forum</a></li>
+                    <li><a href="/versions/1.9.1/community/contribute">Contribute</a></li>
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.9.1/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2022, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

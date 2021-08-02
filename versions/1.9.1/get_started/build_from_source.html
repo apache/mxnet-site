@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<!---
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/versions/1.9.1/assets/img/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Building From Source | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Building From Source" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.9.1/get_started/build_from_source" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.9.1/get_started/build_from_source" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"headline":"Building From Source","description":"A flexible and efficient library for deep learning.","url":"https://mxnet.apache.org/versions/1.9.1/get_started/build_from_source","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/versions/1.9.1/assets/docsearch.min.css" /><link rel="stylesheet" href="/versions/1.9.1/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.9.1/feed.xml" title="Apache MXNet" /><!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  /* We explicitly disable cookie tracking to avoid privacy issues */
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.apache.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '23']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+<script src="/versions/1.9.1/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/versions/1.9.1/assets/js/docsearch.min.js"></script><script src="/versions/1.9.1/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.9.1/"><img
+            src="/versions/1.9.1/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.9.1</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.9.1/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.1/features">Features</a>
+        <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.9.1/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown" style="min-width:100px">
+          <span class="dropdown-header">Apache
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content" style="min-width:250px">
+            <a href="https://www.apache.org/foundation/">Apache Software Foundation</a>
+            <a href="https://incubator.apache.org/">Apache Incubator</a>
+            <a href="https://www.apache.org/licenses/">License</a>
+            <a href="/versions/1.9.1/api/faq/security.html">Security</a>
+            <a href="https://privacy.apache.org/policies/privacy-policy-public.html">Privacy</a>
+            <a href="https://www.apache.org/events/current-event">Events</a>
+            <a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
+            <a href="https://www.apache.org/foundation/thanks.html">Thanks</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.1
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.9.1/">1.9.1</a>
+            <a href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Building From Source</h1>
+        <h3></h3><a style="float:left; margin-top:20px" href="/versions/1.9.1/get_started" class="btn btn-action">Get Started
+            <span class="span-accented">›</span></a></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="build-apache-mxnet-from-source">Build Apache MXNet from Source</h1>
+
+<p>Building and installing Apache MXNet from source is a three-step process. First, build
+the shared <code>libmxnet</code> which provides the MXNet backend, then install your
+preferred language binding and finally validate that MXNet was installed
+correctly by running a small example.</p>
+
+<ol>
+<li><a href="#obtaining-the-source-code">Obtaining the source</a></li>
+<li><a href="#installing-mxnet&#x27;s-recommended-dependencies">Installing MXNet&#39;s recommended dependencies</a></li>
+<li><a href="#overview-of-optional-dependencies-and-optional-features">Overview of optional dependencies and optional features</a></li>
+<li><a href="#building-mxnet">Building MXNet</a></li>
+<li><a href="#installing-mxnet-language-bindings">Install the language API binding(s)</a> you would like to use for MXNet.</li>
+</ol>
+
+<p>MXNet&#39;s newest and most popular API is Gluon. Gluon is built into the Python
+binding. If Python isn&#39;t your preference, you still have more options. MXNet
+supports several other language bindings. Please see the <a href="/api">API Documentation
+page</a> for an overview of all supported languages and their APIs.</p>
+
+<h2 id="obtaining-the-source-code">Obtaining the source code</h2>
+
+<p>To obtain the source code of the latest Apache MXNet (incubating) release,
+please access the <a href="/get_started/download">Download page</a> and download the
+<code>.tar.gz</code> source archive corresponding to the release you wish to build.</p>
+
+<p>Developers can also obtain the unreleased development code from the git
+repository via <code>git clone --recursive https://github.com/apache/incubator-mxnet mxnet</code></p>
+
+<p>Building a MXNet 1.x release from source requires a C++11 compliant compiler.</p>
+
+<p>Building the development version of MXNet or any 2.x release from source
+requires a C++17 compliant compiler. The oldest compiler versions tested during
+MXNet 2 development are GCC 7, Clang 6 and MSVC 2019.</p>
+
+<h2 id="installing-mxnets-recommended-dependencies">Installing MXNet&#39;s recommended dependencies</h2>
+
+<p>To install the build tools and recommended dependencies, please run the
+following commands respectively based on your Operating System. Please see the
+next section for further explanations on the set of required and optional
+dependencies of MXNet.</p>
+
+<h3 id="debian-linux-derivatives-debian-ubuntu">Debian Linux derivatives (Debian, Ubuntu, ...)</h3>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">git clone <span class="nt">--recursive</span> https://github.com/apache/incubator-mxnet mxnet
+<span class="nb">cd </span>mxnet
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> build-essential git ninja-build ccache libopenblas-dev libopencv-dev cmake
+</code></pre></div>
+<p><hr></p>
+
+<h3 id="red-hat-enterprise-linux-derivatives-rhel-centos-fedora">Red Hat Enterprise Linux derivatives (RHEL, CentOS, Fedora, ...)</h3>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>yum <span class="nb">install </span>epel-release centos-release-scl
+<span class="nb">sudo </span>yum <span class="nb">install </span>git make ninja-build automake autoconf libtool protobuf-compiler protobuf-devel <span class="se">\</span>
+    atlas-devel openblas-devel lapack-devel opencv-devel openssl-devel zeromq-devel python3 <span class="se">\ </span>
+    devtoolset-7
+<span class="nb">source</span> /opt/rh/devtoolset-7/enable
+</code></pre></div>
+<p>Here <code>devtoolset-7</code> refers to the <a href="https://www.softwarecollections.org/en/scls/rhscl/devtoolset-7/">Developer Toolset
+7</a> created by
+Red Hat for developers working on CentOS or Red Hat Enterprise Linux platform
+and providing the GNU Compiler Collection 7.</p>
+
+<h3 id="macos">macOS</h3>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Install OS X Developer Tools</span>
+xcode-select <span class="nt">--install</span>
+
+<span class="c"># Install Homebrew</span>
+/usr/bin/ruby <span class="nt">-e</span> <span class="s2">"</span><span class="si">$(</span>curl <span class="nt">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/master/install<span class="si">)</span><span class="s2">"</span>
+
+<span class="c"># Install dependencies</span>
+brew <span class="nb">install </span>cmake ninja ccache opencv
+</code></pre></div>
+<p>Note: the compiler provided by Apple on macOS does not support OpenMP. To use
+OpenMP on macOS you need to install for example the Clang compiler via <code>brew</code>:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">brew <span class="nb">install </span>llvm
+</code></pre></div>
+<h3 id="windows">Windows</h3>
+
+<p>You can use Chocolatey software management solution to install some dependencies
+on Windows.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">choco <span class="nb">install </span>python git 7zip cmake ninja opencv
+</code></pre></div>
+<p>Currently OpenBLAS is not available from Chocolatey. You may download it from
+from <a href="https://github.com/xianyi/OpenBLAS/releases">the OpenBLAS release page</a>
+and compile from source. Set the <code>OpenBLAS_HOME</code> environment variable to point
+to the OpenBLAS directory that contains the <code>include</code> and <code>lib</code> directories for
+example by typing <code>set OpenBLAS_HOME=C:\utils\OpenBLAS</code>.</p>
+
+<p>If you like to compile MXNet with Visual Studio compiler, please install at
+least <a href="https://www.visualstudio.com/downloads/">VS2019</a>.</p>
+
+<h2 id="overview-of-optional-dependencies-and-optional-features">Overview of optional dependencies and optional features</h2>
+
+<h3 id="math-library-selection">Math Library Selection</h3>
+
+<p>MXNet relies on the
+<a href="https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms">BLAS</a> (Basic
+Linear Algebra Subprograms) library for numerical computations. In addition to
+BLAS, some operators in MXNet rely on the <a href="https://github.com/Reference-LAPACK/lapack">LAPACK (Linear Algebra
+Package)</a>, an additional set of
+mathematical functions.</p>
+
+<p>Several BLAS and LAPACK implementations exist. Among them, MXNet is tested with:</p>
+
+<ul>
+<li><a href="https://developer.apple.com/documentation/accelerate">Apple Accelerate</a></li>
+<li><a href="http://math-atlas.sourceforge.net/">ATLAS</a></li>
+<li><a href="https://software.intel.com/en-us/intel-mkl">Intel MKL</a></li>
+<li><a href="https://www.openblas.net/">OpenBLAS</a></li>
+</ul>
+
+<p>Apple Accelerate and MKL are proprietary. ATLAS and OpenBLAS are Open Source. If
+you don&#39;t have any specific requirements, MXNet recommends OpenBLAS as it
+typically outperforms ATLAS, is portable across many platforms, provides a
+LAPACK implementation and has a permissive license.</p>
+
+<h3 id="optional-gpu-support">Optional GPU support</h3>
+
+<p>MXNet optionally supports <a href="https://developer.nvidia.com/cuda-downloads">NVDIA CUDA and
+cuDNN</a> for better performance on
+NVidia devices. MXNet releases in general are tested with the last two major
+CUDA versions available at the time of the release. For example, CUDA 9.2 and
+10.2.</p>
+
+<p>To compile MXNet with CUDA support, define the <code>USE_CUDA</code> option. If you compile
+MXNet on a system with NVidia GPUs, the build system will automatically detect
+the CUDA Architecture. If you are compiling on a system without NVidia GPUs,
+please specify the <code>MXNET_CUDA_ARCH</code> option to select the CUDA Architecture and
+avoid a lengthy build targeting all common CUDA Architectures. Please see the
+MXNet build configuration instructions in the next step.</p>
+
+<p>MXNet also supports <a href="https://developer.nvidia.com/nccl">NCCL</a> - NVIDIA&#39;s
+Collective Communications Library. NCCL is useful when using MXNet on multiple
+GPUs that require communication. Instructions for installing NCCL are found in
+the following <a href="#build-mxnet-with-nccl">Build MXNet with NCCL</a> section.</p>
+
+<p>To enable building MXNet with NCCL, install NCCL and define the <code>USE_NCCL</code>
+option in the MXNet build configuration in the next step.</p>
+
+<p>After building with NCCL, you may optionally use the tests in
+<code>tests/python/gpu/test_nccl.py</code> to ensure NCCL is enabled correctly. Please
+first delete the line containing <code>skip(reason=&quot;Test requires NCCL library
+installed and enabled during build&quot;)</code> before running the test. In MXNet 2.x
+versions, the test can be run via <code>pytest --verbose
+tests/python/gpu/test_nccl.py</code>. In MXNet 1.x it is run via <code>python
+tests/python/gpu/test_nccl.py</code>.</p>
+
+<p>To get the best performance out of NCCL it is recommended to set environment
+variable <code>NCCL_LAUNCH_MODE=PARALLEL</code> when using NCCL version 2.1 or newer.</p>
+
+<h3 id="optional-opencv-support">Optional OpenCV support</h3>
+
+<p>MXNet&#39;s Image Loading and Augmentation features rely on
+<a href="http://opencv.org/">OpenCV</a>. Image Loading and Augmentation</p>
+
+<h2 id="building-mxnet">Building MXNet</h2>
+
+<p>MXNet 1.x can be built either with a classic Makefile setup or with the <code>cmake</code>
+cross platform build system. Starting with MXNet 1.7, MXNet recommends using the
+<code>cmake</code> cross platform build tool.</p>
+
+<p>Note: The <code>cmake</code> build requires CMake 3.13 or higher. If you are running an
+older version of CMake, you will see an error message like <code>CMake 3.13 or higher
+is required. You are running version 3.10.2</code>. Please update CMake on your
+system. You can download and install latest CMake from <a href="https://cmake.org">https://cmake.org</a> or via
+the Python package manager <code>pip</code> with <code>python3 -m pip install --user --upgrade
+&quot;cmake&gt;=3.13.2&quot;</code>. After installing cmake with <code>pip3</code>, it is usually available at
+<code>~/.local/bin/cmake</code> or directly as <code>cmake</code>.</p>
+
+<p>Please see the <a href="https://github.com/apache/incubator-mxnet/tree/v1.x/config"><code>cmake configuration
+files</code></a> files for
+instructions on how to configure and build MXNet with cmake.</p>
+
+<p>Up to the MXNet 1.6 release, please follow the instructions in the
+<a href="https://github.com/apache/incubator-mxnet/blob/v1.x/make/config.mk"><code>make/config.mk</code></a>
+file on how to configure and compile MXNet. This method is supported on all 1.x
+releases.</p>
+
+<p>To enable the optional MXNet C++ package, please set the <code>USE_CPP_PACKAGE=1</code>
+option prior to compiling. See the <a href="cpp_setup">C++ guide</a> for more information.</p>
+
+<h2 id="installing-mxnet-language-bindings">Installing MXNet Language Bindings</h2>
+
+<p>After building MXNet&#39;s shared library, you can install other language bindings.</p>
+
+<p><strong>NOTE:</strong> The C++ API binding must be built when you build MXNet from source. See <a href="/versions/1.9.1/api/cpp.html">Build MXNet with C++</a>.</p>
+
+<h2 id="installing-language-packages-for-mxnet">Installing Language Packages for MXNet</h2>
+
+<p>After you have installed the MXNet core library. You may install MXNet interface
+packages for the programming language of your choice:
+- <a href="#install-mxnet-for-python">Python</a>
+- <a href="#install-the-mxnet-package-for-c&plus;&plus;">C++</a>
+- <a href="#install-the-mxnet-package-for-clojure">Clojure</a>
+- <a href="#install-the-mxnet-package-for-julia">Julia</a>
+- <a href="#install-the-mxnet-package-for-perl">Perl</a>
+- <a href="#install-the-mxnet-package-for-r">R</a>
+- <a href="#install-the-mxnet-package-for-scala">Scala</a>
+- <a href="#install-the-mxnet-package-for-java">Java</a></p>
+
+<h3 id="install-mxnet-for-python">Install MXNet for Python</h3>
+
+<p>To install the MXNet Python binding navigate to the root of the MXNet folder then run the following:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">python3 <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">--user</span> <span class="nt">-e</span> ./python
+</code></pre></div>
+<p>Note that the <code>-e</code> flag is optional. It is equivalent to <code>--editable</code> and means
+that if you edit the source files, these changes will be reflected in the
+package installed.</p>
+
+<p>You may optionally install <code>graphviz</code> library that is used for visualizing
+network graphs you build on MXNet. You may also install <a href="http://jupyter.readthedocs.io/">Jupyter
+Notebook</a> which is used for running MXNet
+tutorials and examples.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">python3 <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">--user</span> <span class="nv">graphviz</span><span class="o">==</span>0.8.4 jupyter
+</code></pre></div>
+<p>Please also see the <a href="/api/python">MXNet Python API</a> page.</p>
+
+<h3 id="install-the-mxnet-package-for-c">Install the MXNet Package for C++</h3>
+
+<p>To enable C++ package, just add <code>USE_CPP_PACKAGE=1</code> as build option when
+building the MXNet shared library following the instructions from the previous
+section.</p>
+
+<p>You can find C++ code examples in the <code>cpp-package/example</code> folder of the MXNet
+project. The folder contains a README explaining how to build the examples. The
+<code>predict-cpp</code> explains Image Classification using MXNet&#39;s C Predict API.</p>
+
+<p>Please also see the <a href="/api/cpp">MXNet C++ API</a> page.</p>
+
+<h3 id="install-the-mxnet-package-for-clojure">Install the MXNet Package for Clojure</h3>
+
+<p>Refer to the <a href="https://github.com/apache/incubator-mxnet/tree/master/contrib/clojure-package">Clojure setup
+guide</a>.</p>
+
+<p>Please also see the <a href="/api/clojure">MXNet Clojure API</a> page.</p>
+
+<h3 id="install-the-mxnet-package-for-julia">Install the MXNet Package for Julia</h3>
+
+<p>Make sure to install at least Julia 1.0.3.</p>
+
+<p>To use the Julia binding you need to set the <code>MXNET_HOME</code> and <code>LD_LIBRARY_PATH</code>
+environment variables. For example,</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">MXNET_HOME</span><span class="o">=</span><span class="nv">$HOME</span>/incubator-mxnet
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/incubator-mxnet/build:<span class="nv">$LD_LIBRARY_PATH</span>
+</code></pre></div>
+<p>Then install MXNet with Julia:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">julia <span class="nt">--color</span><span class="o">=</span><span class="nb">yes</span> <span class="nt">--project</span><span class="o">=</span>./ <span class="nt">-e</span> <span class="se">\</span>
+      <span class="s1">'using Pkg; \
+       Pkg.develop(PackageSpec(name="MXNet", path = joinpath(ENV["MXNET_HOME"], "julia")))'</span>
+</code></pre></div>
+<p>Please also see the <a href="/api/julia">MXNet Julia API</a> page.</p>
+
+<h3 id="install-the-mxnet-package-for-perl">Install the MXNet Package for Perl</h3>
+
+<h4 id="installing-perl-package-dependencies-on-debian-linux-derivatives-debian-ubuntu">Installing perl package dependencies on Debian Linux derivatives (Debian, Ubuntu, ...)</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">sudo apt-get install libmouse-perl pdl cpanminus swig libgraphviz-perl
+cpanm -q -L "${HOME}/perl5" Function::Parameters Hash::Ordered PDL::CCS
+</code></pre></div>
+<h4 id="installing-perl-package-dependencies-on-macos">Installing perl package dependencies on macOS</h4>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">brew <span class="nb">install </span>swig
+<span class="nb">sudo </span>sh <span class="nt">-c</span> <span class="s1">'curl -L https://cpanmin.us | perl - App::cpanminus'</span>
+<span class="nb">sudo </span>cpanm <span class="nt">-q</span> <span class="nt">-n</span> PDL Mouse Function::Parameters Hash::Ordered PDL::CCS
+</code></pre></div>
+<h4 id="install-the-mxnet-package-for-perl">Install the MXNet Package for Perl</h4>
+
+<p>After you build the shared library, run the following command from the MXNet
+source root directory to build the MXNet Perl package:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">MXNET_HOME</span><span class="o">=</span><span class="k">${</span><span class="nv">PWD</span><span class="k">}</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="k">${</span><span class="nv">MXNET_HOME</span><span class="k">}</span>/lib
+<span class="nb">export </span><span class="nv">PERL5LIB</span><span class="o">=</span><span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/perl5/lib/perl5
+
+<span class="nb">cd</span> <span class="k">${</span><span class="nv">MXNET_HOME</span><span class="k">}</span>/perl-package/AI-MXNetCAPI/
+perl Makefile.PL <span class="nv">INSTALL_BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/perl5
+make <span class="nb">install
+
+cd</span> <span class="k">${</span><span class="nv">MXNET_HOME</span><span class="k">}</span>/perl-package/AI-NNVMCAPI/
+perl Makefile.PL <span class="nv">INSTALL_BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/perl5
+make <span class="nb">install
+
+cd</span> <span class="k">${</span><span class="nv">MXNET_HOME</span><span class="k">}</span>/perl-package/AI-MXNet/
+perl Makefile.PL <span class="nv">INSTALL_BASE</span><span class="o">=</span><span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/perl5
+make <span class="nb">install</span>
+</code></pre></div>
+<p>Please also see the <a href="/api/perl">MXNet Perl API</a> page.</p>
+
+<h3 id="install-the-mxnet-package-for-r">Install the MXNet Package for R</h3>
+
+<p>To install R and the devtools, run</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> r-base-core r-cran-devtools libcairo2-dev libxml2-dev
+</code></pre></div>
+<p><code>libxml2-dev</code> is required for the <code>roxygen2</code> dependency and <code>libcairo2-dev</code> is
+required for the suggested <code>imager</code> dependency.</p>
+
+<p>To generate documentation, it is also required to install <code>roxygen2</code>.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">R
+<span class="o">&gt;</span> install.packages<span class="o">(</span><span class="s2">"roxygen2"</span><span class="o">)</span>
+<span class="o">&gt;</span> Would you like to use a personal library instead?  <span class="o">(</span>y/n<span class="o">)</span> y
+<span class="o">&gt;</span> Would you like to create a personal library ... to <span class="nb">install </span>packages into?  <span class="o">(</span>y/n<span class="o">)</span> y
+</code></pre></div>
+<p>Note: To successfully complete the next step, you need a personal R library. If
+you were able to run <code>install.packages(&quot;roxygen2&quot;)</code> above, you either had
+already, or you have successfully created a personal library just now.</p>
+
+<p>To build and install the MXNet-R bindings, run:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">make <span class="nt">-f</span> R-package/Makefile rpkg
+</code></pre></div>
+<p>Please also see the <a href="/api/r">MXNet R API</a> page.</p>
+
+<h3 id="install-the-mxnet-package-for-scala">Install the MXNet Package for Scala</h3>
+
+<p>After building the MXNet shared library, you may simply run the following from
+the MXNet scala-package folder:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">mvn <span class="nb">install</span>
+</code></pre></div>
+<p>This will install both the Java Inference API and the required MXNet-Scala package.<hr></p>
+
+<p>Please also see the <a href="/api/scala">MXNet Scala API</a> page.</p>
+
+<h3 id="install-the-mxnet-package-for-java">Install the MXNet Package for Java</h3>
+
+<p>After building the MXNet shared library, you may simply run the following from
+the MXNet scala-package folder:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">mvn <span class="nb">install</span>
+</code></pre></div>
+<p>This will install both the Java Inference API and the required MXNet-Scala package.<hr></p>
+
+<p>Please also see the <a href="/api/java">MXNet Java API</a> page.</p>
+
+<h2 id="contributions">Contributions</h2>
+
+<p>You are more than welcome to contribute easy installation scripts for other operating systems and programming languages.
+See the <a href="/versions/1.9.1/community/contribute">community contributions page</a> for further information.</p>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+<li><a href="/versions/1.9.1/api">Tutorials</a></li>
+<li><a href="/versions/1.9.1/api/faq/add_op_in_backend">How To</a></li>
+<li><a href="/versions/1.9.1/api/architecture/overview">Architecture</a></li>
+</ul>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.9.1/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
+                    <li><a href="https://discuss.mxnet.io">Forum</a></li>
+                    <li><a href="/versions/1.9.1/community/contribute">Contribute</a></li>
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.9.1/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2022, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

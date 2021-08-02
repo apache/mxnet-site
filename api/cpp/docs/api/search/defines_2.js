@@ -1,20 +1,11 @@
 var searchData=
 [
-  ['check_5fcuda_5ferror_10082',['CHECK_CUDA_ERROR',['../cuda_2utils_8h.html#afc69a418242c5b851993bc2307b1c897',1,'utils.h']]],
-  ['const_5fmkldnn_5fengine_5ft_10083',['const_mkldnn_engine_t',['../mkldnn__dnnl__mangling_8h.html#aad5a1e10b866732fa6e83f9ea308cfa7',1,'mkldnn_dnnl_mangling.h']]],
-  ['const_5fmkldnn_5fmemory_5ft_10084',['const_mkldnn_memory_t',['../mkldnn__dnnl__mangling_8h.html#a250ffe5adb7175b45a81a27589bd4b49',1,'mkldnn_dnnl_mangling.h']]],
-  ['const_5fmkldnn_5fop_5fdesc_5ft_10085',['const_mkldnn_op_desc_t',['../mkldnn__dnnl__mangling_8h.html#a1eb33adfeafa3d5abedc4f73afc194d4',1,'mkldnn_dnnl_mangling.h']]],
-  ['const_5fmkldnn_5fpost_5fops_5ft_10086',['const_mkldnn_post_ops_t',['../mkldnn__dnnl__mangling_8h.html#a9f2526c40c2b7227377cc43402b646c3',1,'mkldnn_dnnl_mangling.h']]],
-  ['const_5fmkldnn_5fprimitive_5fattr_5ft_10087',['const_mkldnn_primitive_attr_t',['../mkldnn__dnnl__mangling_8h.html#a017f240ed8119578779be37445f15d4f',1,'mkldnn_dnnl_mangling.h']]],
-  ['const_5fmkldnn_5fprimitive_5fdesc_5fiterator_5ft_10088',['const_mkldnn_primitive_desc_iterator_t',['../mkldnn__dnnl__mangling_8h.html#aae4d5a9a6cb9fece5f42412e36580d7f',1,'mkldnn_dnnl_mangling.h']]],
-  ['const_5fmkldnn_5fprimitive_5fdesc_5ft_10089',['const_mkldnn_primitive_desc_t',['../mkldnn__dnnl__mangling_8h.html#a0949d2c78716796081f09273783c31fc',1,'mkldnn_dnnl_mangling.h']]],
-  ['const_5fmkldnn_5fprimitive_5ft_10090',['const_mkldnn_primitive_t',['../mkldnn__dnnl__mangling_8h.html#a4493f2fb81b757174f9898ec23ebd15a',1,'mkldnn_dnnl_mangling.h']]],
-  ['const_5fmkldnn_5fstream_5ft_10091',['const_mkldnn_stream_t',['../mkldnn__dnnl__mangling_8h.html#a4ad6231369764bd81c36e81255876f8b',1,'mkldnn_dnnl_mangling.h']]],
-  ['cublas_5fcall_10092',['CUBLAS_CALL',['../cuda_2utils_8h.html#a685d7ca3c9370ff471665abcacdeb381',1,'utils.h']]],
-  ['cuda_5fcall_10093',['CUDA_CALL',['../cuda_2utils_8h.html#a06cc7d24ca66505e69f5ad40009f5e8d',1,'utils.h']]],
-  ['cuda_5fdriver_5fcall_10094',['CUDA_DRIVER_CALL',['../cuda_2utils_8h.html#a0d9b08b9ef45122c54bf5a121aeab5c3',1,'utils.h']]],
-  ['cuda_5fnounroll_10095',['CUDA_NOUNROLL',['../cuda_2utils_8h.html#addb314f15d765a2ba72ae37dab23c03b',1,'utils.h']]],
-  ['cuda_5funroll_10096',['CUDA_UNROLL',['../cuda_2utils_8h.html#a685e3713856baaafb1d4edea43725c83',1,'utils.h']]],
-  ['curand_5fcall_10097',['CURAND_CALL',['../cuda_2utils_8h.html#a82d7233550780a8c186e79c24aed8406',1,'utils.h']]],
-  ['cusolver_5fcall_10098',['CUSOLVER_CALL',['../cuda_2utils_8h.html#ab38940ff6950f84102baa4573675b670',1,'utils.h']]]
+  ['check_5fcuda_5ferror_10037',['CHECK_CUDA_ERROR',['../cuda_2utils_8h.html#afc69a418242c5b851993bc2307b1c897',1,'utils.h']]],
+  ['cublas_5fcall_10038',['CUBLAS_CALL',['../cuda_2utils_8h.html#a685d7ca3c9370ff471665abcacdeb381',1,'utils.h']]],
+  ['cuda_5fcall_10039',['CUDA_CALL',['../cuda_2utils_8h.html#a06cc7d24ca66505e69f5ad40009f5e8d',1,'utils.h']]],
+  ['cuda_5fdriver_5fcall_10040',['CUDA_DRIVER_CALL',['../cuda_2utils_8h.html#a0d9b08b9ef45122c54bf5a121aeab5c3',1,'utils.h']]],
+  ['cuda_5fnounroll_10041',['CUDA_NOUNROLL',['../cuda_2utils_8h.html#addb314f15d765a2ba72ae37dab23c03b',1,'utils.h']]],
+  ['cuda_5funroll_10042',['CUDA_UNROLL',['../cuda_2utils_8h.html#a685e3713856baaafb1d4edea43725c83',1,'utils.h']]],
+  ['curand_5fcall_10043',['CURAND_CALL',['../cuda_2utils_8h.html#a82d7233550780a8c186e79c24aed8406',1,'utils.h']]],
+  ['cusolver_5fcall_10044',['CUSOLVER_CALL',['../cuda_2utils_8h.html#ab38940ff6950f84102baa4573675b670',1,'utils.h']]]
 ];

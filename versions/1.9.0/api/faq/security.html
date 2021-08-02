@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+<!---
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/versions/1.9.0/assets/img/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>MXNet Security Best Practices | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="MXNet Security Best Practices" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.9.0/api/faq/security" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.9.0/api/faq/security" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"headline":"MXNet Security Best Practices","@type":"WebPage","description":"A flexible and efficient library for deep learning.","url":"https://mxnet.apache.org/versions/1.9.0/api/faq/security","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/versions/1.9.0/assets/docsearch.min.css" />
+    <link rel="stylesheet" href="/versions/1.9.0/assets/retainable.css" /><link rel="stylesheet" href="/versions/1.9.0/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.9.0/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="/versions/1.9.0/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/versions/1.9.0/assets/js/docsearch.min.js"></script><script src="/versions/1.9.0/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.9.0/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.9.0/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.9.0/"><img
+            src="/versions/1.9.0/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.9.0</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.9.0/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.0/blog">Blog</a>
+        <a class="page-link" href="/versions/1.9.0/features">Features</a>
+        <a class="page-link" href="/versions/1.9.0/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.9.0/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.0/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.0
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.9.0/">1.9.0</a>
+            <a href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">MXNet Security Best Practices</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+        <h3 style="text-transform: capitalize; padding-left:10px">faq</h3>
+        <ul>
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/add_op_in_backend">A Beginner's Guide to Implementing Operators in MXNet Backend</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/caffe">Convert from Caffe to MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/cloud">MXNet on the Cloud</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/distributed_training">Distributed Training in MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/env_var">Environment Variables</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/float16">Float16</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/large_tensor_support">Using MXNet with Large Tensor Support</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/model_parallel_lstm">Model Parallel</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/multi_device">Data Parallelism with Multiple CPU/GPUs on MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/new_op">Create New Operators</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/nnpack">NNPACK for Multi-Core CPU Support in MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/perf">Some Tips for Improving MXNet Performance</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/recordio">Create a Dataset Using RecordIO</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/s3_integration">Use data from S3 for training</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/security">MXNet Security Best Practices</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/smart_device">Deep Learning at the Edge</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/visualize_graph">Visualize Neural Networks</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.0/api/faq/why_mxnet">Why MXNet came to be?</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+               <!-- resource-p -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="reporting-a-security-vulnerability">Reporting a security vulnerability</h1>
+
+<p>The Apache Software Foundation takes a very active stance in eliminating security problems and denial of service attacks against its products.</p>
+
+<p>We strongly encourage folks to report such problems to our private security mailing list first, before disclosing them in a public forum.</p>
+
+<p>Please note that the security mailing list should only be used for reporting undisclosed security vulnerabilities and managing the process of fixing such vulnerabilities. We cannot accept regular bug reports or other queries at this address. All mail sent to this address that does not relate to an undisclosed security problem in our source code will be ignored.</p>
+
+<p>Questions about:</p>
+
+<ul>
+<li>if a vulnerability applies to your particular application</li>
+<li>obtaining further information on a published vulnerability</li>
+<li>availability of patches and/or new releases
+should be addressed to the users mailing list. Please see the <a href="/community/contribute#mxnet-dev-communications">mailing lists page</a> for details of how to subscribe.</li>
+</ul>
+
+<p>The private security mailing address is: <a href="mailto:security@apache.org"><a href="mailto:security@apache.org">security@apache.org</a></a> <i class="far fa-envelope">. Feel free to consult the general <a href="http://www.apache.org/security/">Apache Security guide</a> for further details about the reporting process.</p>
+
+<h1 id="mxnet-security-best-practices">MXNet Security Best Practices</h1>
+
+<p>MXNet framework has no built-in security protections. It assumes that the MXNet entities involved in model training and inferencing (hosting) are fully trusted. It also assumes that their communications cannot be eavesdropped or tampered with. MXNet consumers shall ensure that the above assumptions are met.</p>
+
+<p>In particular the following threat-vectors exist when training using MXNet:</p>
+
+<ul>
+<li>When running distributed training using MXNet there is no built-in support for authenticating cluster nodes participating in the training job.</li>
+<li>Data exchange between cluster nodes happens is in plain-text.</li>
+<li>Using <code>kvstore.set_optimizer</code> one can use a custom optimizer to combine gradients. This optimizer code is sent to the server nodes as a pickle file. A server does not perform any further validation of the pickle file and simply executes the code trusting the sender (worker).</li>
+<li>Since there is no authentication between nodes, a malicious actor running on the same network can launch a Denial of Service (DoS) attack by sending data that can overwhelm/crash a scheduler or other server nodes.</li>
+</ul>
+
+<p>It is highly recommended that the following best practices be followed when using MXNet:</p>
+
+<ul>
+<li>Run MXNet with least privilege, i.e. not as root.</li>
+<li>Run MXNet training jobs inside a secure and isolated environment. If you are using a cloud provider like Amazon AWS, running your training job inside a <a href="https://aws.amazon.com/vpc/">private VPC</a> is a good way to accomplish this. Additionally, configure your network security settings so as to only allow connections that the cluster nodes require.</li>
+<li>Make sure no unauthorized actors have physical or remote access to the nodes participating in MXNet training.</li>
+<li>During training, one can configure MXNet to periodically save model checkpoints. To protect these model checkpoints from unauthorized access, make sure the checkpoints are written out to an encrypted storage volume, and have a provision to delete checkpoints that are no longer needed.</li>
+<li>When sharing trained models, or when receiving trained models from other parties, ensure that model artifacts are authenticated and integrity protected using cryptographic signatures, thus ensuring that the data received comes from trusted sources and has not been maliciously (or accidentally) modified in transit.</li>
+<li>By default, mx.random uses a static and fixed seed value. The random utilities in MXNet should therefore never be used to implement any type of security critical functionality where cryptographically secure pseudorandom number generation is required.</li>
+</ul>
+
+<h1 id="deployment-considerations">Deployment Considerations</h1>
+
+<p>The following are not MXNet framework specific threats but are applicable to Machine Learning models in general.</p>
+
+<ul>
+<li>When deploying high-value, proprietary models for inference, care should be taken to prevent an adversary from stealing the model. The research paper <a href="https://arxiv.org/pdf/1609.02943.pdf">Stealing Machine Learning Models via Prediction APIs</a> outlines experiments performed to show how an attacker can use a prediction API to leak the ML model or construct a nearly identical replica. A simple way to thwart such an attack is to not expose the prediction probabilities to a high degree of precision in the API response.</li>
+</ul>
+
+    </div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.9.0/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/versions/1.9.0/community/contribute">Contribute To MXNet</a></li>
+                </ul>
+            </div>
+            <div class="col-3">
+                <h4 class="footer-category-title">Apache</h4>
+                <ul class="apache-list">
+                    <li><a href="https://www.apache.org/foundation/">Foundation</a></li>
+                    <li><a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                    <li><a href="/versions/1.9.0/api/faq/security.html">Security</a></li>
+                    <li><a href="https://www.apache.org/licenses/">License</a></li>
+                    <li><a href="https://www.apache.org/events/current-event">Events</a></li>
+                    <li><a href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                </ul>
+            </div>
+
+            <div class="col-3"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-3 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.9.0/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2022, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

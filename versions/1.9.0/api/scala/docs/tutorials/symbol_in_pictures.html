@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+
+<!---
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/versions/1.9.0/assets/img/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Symbol in Pictures | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Symbol in Pictures" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.9.0/api/scala/docs/tutorials/symbol_in_pictures" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.9.0/api/scala/docs/tutorials/symbol_in_pictures" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"headline":"Symbol in Pictures","@type":"WebPage","description":"A flexible and efficient library for deep learning.","url":"https://mxnet.apache.org/versions/1.9.0/api/scala/docs/tutorials/symbol_in_pictures","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/versions/1.9.0/assets/docsearch.min.css" />
+    <link rel="stylesheet" href="/versions/1.9.0/assets/retainable.css" /><link rel="stylesheet" href="/versions/1.9.0/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.9.0/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="/versions/1.9.0/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/versions/1.9.0/assets/js/docsearch.min.js"></script><script src="/versions/1.9.0/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.9.0/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.9.0/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.9.0/"><img
+            src="/versions/1.9.0/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.9.0</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.9.0/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.0/blog">Blog</a>
+        <a class="page-link" href="/versions/1.9.0/features">Features</a>
+        <a class="page-link" href="/versions/1.9.0/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.9.0/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.0/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.0
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.9.0/">1.9.0</a>
+            <a href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Symbol in Pictures</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+        
+        
+        
+        
+        
+        <div class="docs-card docs-side">
+            <ul>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.0/api/scala.html"> <img src="/versions/1.9.0/assets/img/compass.svg"
+                                                                      class="docs-logo-docs">Scala Guide <span
+                            class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.0/api/scala/docs/tutorials"> <img
+                            src="/versions/1.9.0/assets/img/video-tutorial.svg" class="docs-logo-docs">Scala
+                        Tutorials <span class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.0/api/scala/docs/api"> <img src="/versions/1.9.0/assets/img/api.svg"
+                                                                    class="docs-logo-docs">Scala API Reference
+                        <span class="span-accented">›</span></a>
+                </div>
+
+                <!-- Let's show the list of tutorials -->
+                <br>
+                
+                <h3>Tutorials</h3>
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/char_lstm">Char-LSTM</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/infer">Infer API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/io">Data Loading API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/kvstore">KVStore API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/mnist">MNIST Example</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/model">Model API *Deprecated*</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/module">Module API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/mxnet_scala_on_intellij">Scala on IntelliJ</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/ndarray">NDArray</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/symbol">Symbol API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/symbol_in_pictures">Symbol in Pictures</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                  <!-- page -->
+                
+            </ul>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+          <!-- page -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="symbolic-configuration-and-execution-in-pictures">Symbolic Configuration and Execution in Pictures</h1>
+
+<p>This topic explains symbolic construction and execution in pictures.
+We recommend that you also read <a href="symbol">Symbolic API</a>.</p>
+
+<h2 id="compose-symbols">Compose Symbols</h2>
+
+<p>Symbols are a description of the computation that you want to perform. The symbolic construction API generates the computation
+graph that describes the computation. The following picture shows how you compose symbols to describe basic computations.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/compose_basic.png" alt="Symbol Compose"></p>
+
+<ul>
+<li>The <code>mxnet.Symbol.Variable</code> function creates argument nodes that represent input to the computation.</li>
+<li>The symbol is overloaded with basic element-wise mathematical operations.</li>
+</ul>
+
+<h2 id="configure-neural-networks">Configure Neural Networks</h2>
+
+<p>In addition to supporting fine-grained operations, MXNet provides a way to perform big operations that are analogous to layers in neural networks.
+You can use operators to describe the configuration of a neural network.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/compose_net.png" alt="Net Compose"></p>
+
+<h2 id="example-of-a-multi-input-network">Example of a Multi-Input Network</h2>
+
+<p>The following example shows how to configure multiple input neural networks.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/compose_multi_in.png" alt="Multi Input"></p>
+
+<h2 id="bind-and-execute-symbol">Bind and Execute Symbol</h2>
+
+<p>When you need to execute a symbol graph, you call the bind function to bind <code>NDArrays</code> to the argument nodes
+in order to obtain an <code>Executor</code>.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/bind_basic.png" alt="Bind"></p>
+
+<p>To get the output results, given the bound NDArrays as input, you can call <code>Executor.Forward</code>.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/executor_forward.png" alt="Forward"></p>
+
+<h2 id="bind-multiple-outputs">Bind Multiple Outputs</h2>
+
+<p>To group symbols, then bind them to get outputs of both, use <code>mx.symbol.Group</code>.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/executor_multi_out.png" alt="MultiOut"></p>
+
+<p>Remember: Bind only what you need, so that the system can perform more optimizations.</p>
+
+<h2 id="calculate-the-gradient">Calculate the Gradient</h2>
+
+<p>In the bind function, you can specify NDArrays that will hold gradients. Calling <code>Executor.backward</code> after <code>Executor.forward</code> gives you the corresponding gradients.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/executor_backward.png" alt="Gradient"></p>
+
+<h2 id="simple-bind-interface-for-neural-networks">Simple Bind Interface for Neural Networks</h2>
+
+<p>It can be tedious to pass the argument NDArrays to the bind function, especially when you are binding a big
+graph. <code>Symbol.simple_bind</code> provides a way to simplify
+the procedure. You need to specify only input data shapes. The function allocates the arguments, and binds
+the Executor for you.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/executor_simple_bind.png" alt="SimpleBind"></p>
+
+<h2 id="auxiliary-states">Auxiliary States</h2>
+
+<p>Auxiliary states are just like arguments, except that you can&#39;t take the gradient of them. Although auxiliary states might not be part of the computation, they can be helpful for tracking. You can pass auxiliary states in the same way that you pass arguments.</p>
+
+<p><img src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/symbol/executor_aux_state.png" alt="SimpleBind"></p>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<p>See <a href="symbol">Symbolic API</a> and <a href="/versions/1.9.0/api/python">Python Documentation</a>.</p>
+</div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.9.0/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/versions/1.9.0/community/contribute">Contribute To MXNet</a></li>
+                </ul>
+            </div>
+            <div class="col-3">
+                <h4 class="footer-category-title">Apache</h4>
+                <ul class="apache-list">
+                    <li><a href="https://www.apache.org/foundation/">Foundation</a></li>
+                    <li><a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                    <li><a href="/versions/1.9.0/api/faq/security.html">Security</a></li>
+                    <li><a href="https://www.apache.org/licenses/">License</a></li>
+                    <li><a href="https://www.apache.org/events/current-event">Events</a></li>
+                    <li><a href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                </ul>
+            </div>
+
+            <div class="col-3"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-3 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.9.0/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2022, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

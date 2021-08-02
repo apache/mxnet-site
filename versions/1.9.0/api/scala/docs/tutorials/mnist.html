@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+
+<!---
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/versions/1.9.0/assets/img/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>MNIST Example | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="MNIST Example" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.9.0/api/scala/docs/tutorials/mnist" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.9.0/api/scala/docs/tutorials/mnist" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"headline":"MNIST Example","@type":"WebPage","description":"A flexible and efficient library for deep learning.","url":"https://mxnet.apache.org/versions/1.9.0/api/scala/docs/tutorials/mnist","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/versions/1.9.0/assets/docsearch.min.css" />
+    <link rel="stylesheet" href="/versions/1.9.0/assets/retainable.css" /><link rel="stylesheet" href="/versions/1.9.0/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.9.0/feed.xml" title="Apache MXNet" /><script>
+if(!(window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1")) {
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-96378503-1', 'auto');
+  ga('send', 'pageview');
+}
+</script>
+  
+<script src="/versions/1.9.0/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/versions/1.9.0/assets/js/docsearch.min.js"></script><script src="/versions/1.9.0/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.9.0/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.9.0/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.9.0/"><img
+            src="/versions/1.9.0/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.9.0</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.9.0/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.0/blog">Blog</a>
+        <a class="page-link" href="/versions/1.9.0/features">Features</a>
+        <a class="page-link" href="/versions/1.9.0/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.9.0/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.0/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.0
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.9.0/">1.9.0</a>
+            <a href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">MNIST Example</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+        
+        
+        
+        
+        
+        <div class="docs-card docs-side">
+            <ul>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.0/api/scala.html"> <img src="/versions/1.9.0/assets/img/compass.svg"
+                                                                      class="docs-logo-docs">Scala Guide <span
+                            class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.0/api/scala/docs/tutorials"> <img
+                            src="/versions/1.9.0/assets/img/video-tutorial.svg" class="docs-logo-docs">Scala
+                        Tutorials <span class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.0/api/scala/docs/api"> <img src="/versions/1.9.0/assets/img/api.svg"
+                                                                    class="docs-logo-docs">Scala API Reference
+                        <span class="span-accented">›</span></a>
+                </div>
+
+                <!-- Let's show the list of tutorials -->
+                <br>
+                
+                <h3>Tutorials</h3>
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/char_lstm">Char-LSTM</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/infer">Infer API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/io">Data Loading API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/kvstore">KVStore API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/mnist">MNIST Example</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/model">Model API *Deprecated*</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/module">Module API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/mxnet_scala_on_intellij">Scala on IntelliJ</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/ndarray">NDArray</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/symbol">Symbol API</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.0/api/scala/docs/tutorials/symbol_in_pictures">Symbol in Pictures</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                  <!-- page -->
+                
+            </ul>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+          <!-- page -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="handwritten-digit-recognition">Handwritten Digit Recognition</h1>
+
+<p>This Scala tutorial guides you through a classic computer vision application: identifying hand written digits.</p>
+
+<p>Let&#39;s train a 3-layer network (i.e multilayer perceptron network) on the MNIST dataset to classify handwritten digits.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>To complete this tutorial, we need:</p>
+
+<ul>
+<li>to compile the latest MXNet version. See the MXNet installation instructions for your operating system in <a href="/versions/1.9.0/get_started">Setup and Installation</a>.</li>
+<li>to compile the Scala API. See Scala API build instructions in <a href="https://github.com/apache/mxnet/tree/v1.x/scala-package">Build</a>.</li>
+</ul>
+
+<h2 id="define-the-network">Define the Network</h2>
+
+<p>First, define the neural network&#39;s architecture using the Symbol API:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">import</span> <span class="nn">org.apache.mxnet._</span>
+<span class="k">import</span> <span class="nn">org.apache.mxnet.optimizer.SGD</span>
+
+<span class="c1">// model definition
+</span><span class="k">val</span> <span class="nv">data</span> <span class="k">=</span> <span class="nv">Symbol</span><span class="o">.</span><span class="py">Variable</span><span class="o">(</span><span class="s">"data"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">fc1</span> <span class="k">=</span> <span class="nv">Symbol</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">FullyConnected</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">data</span><span class="o">),</span> <span class="n">num_hidden</span> <span class="k">=</span> <span class="mi">128</span><span class="o">,</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"fc1"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">act1</span> <span class="k">=</span> <span class="nv">Symbol</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">Activation</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">fc1</span><span class="o">),</span> <span class="s">"relu"</span><span class="o">,</span> <span class="s">"relu1"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">fc2</span> <span class="k">=</span> <span class="nv">Symbol</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">FullyConnected</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">act1</span><span class="o">),</span> <span class="n">num_hidden</span> <span class="k">=</span> <span class="mi">64</span><span class="o">,</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"fc2"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">act2</span> <span class="k">=</span> <span class="nv">Symbol</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">Activation</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">fc2</span><span class="o">),</span> <span class="s">"relu"</span><span class="o">,</span> <span class="s">"relu2"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">fc3</span> <span class="k">=</span> <span class="nv">Symbol</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">FullyConnected</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">act2</span><span class="o">),</span> <span class="n">num_hidden</span> <span class="k">=</span> <span class="mi">10</span><span class="o">,</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"fc3"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">mlp</span> <span class="k">=</span> <span class="nv">Symbol</span><span class="o">.</span><span class="py">api</span><span class="o">.</span><span class="py">SoftmaxOutput</span><span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="n">fc3</span><span class="o">),</span> <span class="n">name</span> <span class="k">=</span> <span class="s">"sm"</span><span class="o">)</span>
+</code></pre></div>
+<h2 id="load-the-data">Load the Data</h2>
+
+<p>Then, load the training and validation data using DataIterators.</p>
+
+<p>You can download the MNIST data using the <a href="https://github.com/apache/mxnet/blob/v1.x/scala-package/core/scripts/get_mnist_data.sh">get_mnist_data script</a>. We&#39;ve already written a DataIterator for the MNIST dataset:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// load MNIST dataset
+</span><span class="k">val</span> <span class="nv">trainDataIter</span> <span class="k">=</span> <span class="nv">IO</span><span class="o">.</span><span class="py">MNISTIter</span><span class="o">(</span><span class="nc">Map</span><span class="o">(</span>
+  <span class="s">"image"</span> <span class="o">-&gt;</span> <span class="s">"data/train-images-idx3-ubyte"</span><span class="o">,</span>
+  <span class="s">"label"</span> <span class="o">-&gt;</span> <span class="s">"data/train-labels-idx1-ubyte"</span><span class="o">,</span>
+  <span class="s">"data_shape"</span> <span class="o">-&gt;</span> <span class="s">"(1, 28, 28)"</span><span class="o">,</span>
+  <span class="s">"label_name"</span> <span class="o">-&gt;</span> <span class="s">"sm_label"</span><span class="o">,</span>
+  <span class="s">"batch_size"</span> <span class="o">-&gt;</span> <span class="s">"50"</span><span class="o">,</span>
+  <span class="s">"shuffle"</span> <span class="o">-&gt;</span> <span class="s">"1"</span><span class="o">,</span>
+  <span class="s">"flat"</span> <span class="o">-&gt;</span> <span class="s">"0"</span><span class="o">,</span>
+  <span class="s">"silent"</span> <span class="o">-&gt;</span> <span class="s">"0"</span><span class="o">,</span>
+  <span class="s">"seed"</span> <span class="o">-&gt;</span> <span class="s">"10"</span><span class="o">))</span>
+
+<span class="k">val</span> <span class="nv">valDataIter</span> <span class="k">=</span> <span class="nv">IO</span><span class="o">.</span><span class="py">MNISTIter</span><span class="o">(</span><span class="nc">Map</span><span class="o">(</span>
+  <span class="s">"image"</span> <span class="o">-&gt;</span> <span class="s">"data/t10k-images-idx3-ubyte"</span><span class="o">,</span>
+  <span class="s">"label"</span> <span class="o">-&gt;</span> <span class="s">"data/t10k-labels-idx1-ubyte"</span><span class="o">,</span>
+  <span class="s">"data_shape"</span> <span class="o">-&gt;</span> <span class="s">"(1, 28, 28)"</span><span class="o">,</span>
+  <span class="s">"label_name"</span> <span class="o">-&gt;</span> <span class="s">"sm_label"</span><span class="o">,</span>
+  <span class="s">"batch_size"</span> <span class="o">-&gt;</span> <span class="s">"50"</span><span class="o">,</span>
+  <span class="s">"shuffle"</span> <span class="o">-&gt;</span> <span class="s">"1"</span><span class="o">,</span>
+  <span class="s">"flat"</span> <span class="o">-&gt;</span> <span class="s">"0"</span><span class="o">,</span> <span class="s">"silent"</span> <span class="o">-&gt;</span> <span class="s">"0"</span><span class="o">))</span>
+</code></pre></div>
+<h2 id="train-the-model">Train the model</h2>
+
+<p>We can use the FeedForward builder to train our network:</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// setup model and fit the training data
+</span><span class="k">val</span> <span class="nv">model</span> <span class="k">=</span> <span class="nv">FeedForward</span><span class="o">.</span><span class="py">newBuilder</span><span class="o">(</span><span class="n">mlp</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">setContext</span><span class="o">(</span><span class="nv">Context</span><span class="o">.</span><span class="py">cpu</span><span class="o">())</span>
+      <span class="o">.</span><span class="py">setNumEpoch</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">setOptimizer</span><span class="o">(</span><span class="k">new</span> <span class="nc">SGD</span><span class="o">(</span><span class="n">learningRate</span> <span class="k">=</span> <span class="mf">0.1f</span><span class="o">,</span> <span class="n">momentum</span> <span class="k">=</span> <span class="mf">0.9f</span><span class="o">,</span> <span class="n">wd</span> <span class="k">=</span> <span class="mf">0.0001f</span><span class="o">))</span>
+      <span class="o">.</span><span class="py">setTrainData</span><span class="o">(</span><span class="n">trainDataIter</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">setEvalData</span><span class="o">(</span><span class="n">valDataIter</span><span class="o">)</span>
+      <span class="o">.</span><span class="py">build</span><span class="o">()</span>
+</code></pre></div>
+<h2 id="make-predictions">Make predictions</h2>
+
+<p>Finally, let&#39;s make predictions against the validation dataset and compare the predicted labels with the real labels.</p>
+<div class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="nv">probArrays</span> <span class="k">=</span> <span class="nv">model</span><span class="o">.</span><span class="py">predict</span><span class="o">(</span><span class="n">valDataIter</span><span class="o">)</span>
+<span class="c1">// in this case, we do not have multiple outputs
+</span><span class="nf">require</span><span class="o">(</span><span class="nv">probArrays</span><span class="o">.</span><span class="py">length</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">prob</span> <span class="k">=</span> <span class="nf">probArrays</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+
+<span class="c1">// get real labels
+</span><span class="k">import</span> <span class="nn">scala.collection.mutable.ListBuffer</span>
+<span class="nv">valDataIter</span><span class="o">.</span><span class="py">reset</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">labels</span> <span class="k">=</span> <span class="nv">ListBuffer</span><span class="o">.</span><span class="py">empty</span><span class="o">[</span><span class="kt">NDArray</span><span class="o">]</span>
+<span class="nf">while</span> <span class="o">(</span><span class="nv">valDataIter</span><span class="o">.</span><span class="py">hasNext</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">evalData</span> <span class="k">=</span> <span class="nv">valDataIter</span><span class="o">.</span><span class="py">next</span><span class="o">()</span>
+  <span class="n">labels</span> <span class="o">+=</span> <span class="nv">evalData</span><span class="o">.</span><span class="py">label</span><span class="o">(</span><span class="mi">0</span><span class="o">).</span><span class="py">copy</span><span class="o">()</span>
+<span class="o">}</span>
+<span class="k">val</span> <span class="nv">y</span> <span class="k">=</span> <span class="nv">NDArray</span><span class="o">.</span><span class="py">concatenate</span><span class="o">(</span><span class="n">labels</span><span class="o">)</span>
+
+<span class="c1">// get predicted labels
+</span><span class="k">val</span> <span class="nv">predictedY</span> <span class="k">=</span> <span class="nv">NDArray</span><span class="o">.</span><span class="py">argmax_channel</span><span class="o">(</span><span class="n">prob</span><span class="o">)</span>
+<span class="nf">require</span><span class="o">(</span><span class="nv">y</span><span class="o">.</span><span class="py">shape</span> <span class="o">==</span> <span class="nv">predictedY</span><span class="o">.</span><span class="py">shape</span><span class="o">)</span>
+
+<span class="c1">// calculate accuracy
+</span><span class="k">var</span> <span class="n">numCorrect</span> <span class="k">=</span> <span class="mi">0</span>
+<span class="k">var</span> <span class="n">numTotal</span> <span class="k">=</span> <span class="mi">0</span>
+<span class="nf">for</span> <span class="o">((</span><span class="n">labelElem</span><span class="o">,</span> <span class="n">predElem</span><span class="o">)</span> <span class="k">&lt;-</span> <span class="nv">y</span><span class="o">.</span><span class="py">toArray</span> <span class="n">zip</span> <span class="nv">predictedY</span><span class="o">.</span><span class="py">toArray</span><span class="o">)</span> <span class="o">{</span>
+  <span class="nf">if</span> <span class="o">(</span><span class="n">labelElem</span> <span class="o">==</span> <span class="n">predElem</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">numCorrect</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="o">}</span>
+  <span class="n">numTotal</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="o">}</span>
+<span class="k">val</span> <span class="nv">acc</span> <span class="k">=</span> <span class="nv">numCorrect</span><span class="o">.</span><span class="py">toFloat</span> <span class="o">/</span> <span class="n">numTotal</span>
+<span class="nf">println</span><span class="o">(</span><span class="n">s</span><span class="s">"Final accuracy = $acc"</span><span class="o">)</span>
+</code></pre></div>
+<p>Check out more MXNet Scala examples below.</p>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+<li><a href="/versions/1.9.0/api/scala">Scala API</a></li>
+<li><a href="https://github.com/apache/mxnet/tree/v1.x/scala-package/examples/">More Scala Examples</a></li>
+<li><a href="/versions/1.9.0/api">MXNet tutorials index</a></li>
+</ul>
+</div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.9.0/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/versions/1.9.0/community/contribute">Contribute To MXNet</a></li>
+                </ul>
+            </div>
+            <div class="col-3">
+                <h4 class="footer-category-title">Apache</h4>
+                <ul class="apache-list">
+                    <li><a href="https://www.apache.org/foundation/">Foundation</a></li>
+                    <li><a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                    <li><a href="/versions/1.9.0/api/faq/security.html">Security</a></li>
+                    <li><a href="https://www.apache.org/licenses/">License</a></li>
+                    <li><a href="https://www.apache.org/events/current-event">Events</a></li>
+                    <li><a href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                </ul>
+            </div>
+
+            <div class="col-3"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.0/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-3 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.9.0/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2022, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

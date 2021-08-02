@@ -336,79 +336,79 @@ $(function() {
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;<span class="stringliteral"></span> </div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="stringliteral"></span><span class="keyword">namespace </span>{</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160; </div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="keyword">inline</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> get_num_aligned_elements(<span class="keyword">const</span> <span class="keywordtype">void</span> *ptr, <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> lead_dim,</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                                        <span class="keyword">const</span> <span class="keywordtype">int</span> nvec, <span class="keyword">const</span> <span class="keywordtype">int</span> size) {</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;  <span class="keywordtype">size_t</span> ptr_as_number = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ptr);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;  <span class="keywordtype">int</span> alignment = (ptr_as_number % (nvec * size)) / size;</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;  <span class="keywordflow">return</span> (lead_dim + alignment + nvec - 1) / nvec;</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;}</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="keyword">enum class</span> Alignment {</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  SAME_ALIGNED,  <span class="comment">// All tensors aligned</span></div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;  SAME_UNALIGNED,  <span class="comment">// All tensors have the same misalignment</span></div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  DIFFERENT  <span class="comment">// Tensors have different alignment</span></div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;};</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> CalcAlignment(<span class="keyword">const</span> <span class="keywordtype">void</span> *ptr, <span class="keyword">const</span> <span class="keywordtype">int</span> size) {</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;  <span class="keywordtype">size_t</span> ptr_as_number = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ptr);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;  <span class="keywordflow">return</span> ptr_as_number % size;</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;}</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160; </div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="comment">/* \brief Check alignment of the inputs and outputs when using vectorized accesses.</span></div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;<span class="comment">   \param params Structure containing arrays with inputs&#39; and outputs&#39; pointers</span></div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="comment">   \param lead_dim Leading dimension of the tensors.</span></div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="comment">   \param other_dim The size of the other dimensions of the tensors.</span></div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="comment">   \param nvec Length of the vector.</span></div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="comment">   \param inputs Inputs to the operator.</span></div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="comment">   \param outputs Outputs of the operator.</span></div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="comment">*/</span></div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Params&gt;</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;Alignment CheckAlignment(<span class="keyword">const</span> Params&amp; params, <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> lead_dim,</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;                         <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> other_dim, <span class="keyword">const</span> <span class="keywordtype">int</span> nvec,</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;                         <span class="keyword">const</span> std::vector&lt;TBlob&gt; &amp;inputs,</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                         <span class="keyword">const</span> std::vector&lt;TBlob&gt; &amp;outputs) {</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;  <span class="keyword">using namespace </span>common;</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;  <span class="keywordtype">int</span> align = -1;</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;  <span class="keywordtype">size_t</span> i = 0;</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">void</span> *ptr : params.inputs) {</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <span class="keywordflow">if</span> (ptr != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;      <span class="keywordtype">int</span> new_align = CalcAlignment(ptr,</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;                                    <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">mshadow_type_info</a>(inputs[i].type_flag_).size * nvec);</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;      <span class="keywordflow">if</span> (align == -1) {</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        align = new_align;</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        <span class="keywordflow">if</span> (align != new_align) {</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;          <span class="keywordflow">return</span> Alignment::DIFFERENT;</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        }</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;      }</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    }</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    ++i;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;  }</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;  i = 0;</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">void</span> *ptr : params.outputs) {</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <span class="keywordflow">if</span> (ptr != <span class="keyword">nullptr</span>) {</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;      <span class="keywordtype">int</span> new_align = CalcAlignment(ptr,</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                                    <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">mshadow_type_info</a>(outputs[i].type_flag_).size * nvec);</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;      <span class="keywordflow">if</span> (align == -1) {</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        align = new_align;</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keywordflow">if</span> (align != new_align) {</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;          <span class="keywordflow">return</span> Alignment::DIFFERENT;</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        }</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      }</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    }</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    ++i;</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;  }</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160; </div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;  <span class="keywordflow">if</span> ((other_dim != 1) &amp;&amp;</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;      (lead_dim % nvec != 0)) {</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    <span class="keywordflow">return</span> Alignment::DIFFERENT;</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;  }</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;  <span class="keywordflow">if</span> ((align == 0) &amp;&amp;</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;      (lead_dim % nvec == 0)) {</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="keyword">inline</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> get_num_aligned_elements(<span class="keyword">const</span> <span class="keywordtype">void</span>* ptr,</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                                        <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> lead_dim,</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                                        <span class="keyword">const</span> <span class="keywordtype">int</span> nvec,</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                                        <span class="keyword">const</span> <span class="keywordtype">int</span> size) {</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;  <span class="keywordtype">size_t</span> ptr_as_number = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ptr);</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;  <span class="keywordtype">int</span> alignment        = (ptr_as_number % (nvec * size)) / size;</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;  <span class="keywordflow">return</span> (lead_dim + alignment + nvec - 1) / nvec;</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;}</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160; </div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="keyword">enum class</span> Alignment {</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;  SAME_ALIGNED,    <span class="comment">// All tensors aligned</span></div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;  SAME_UNALIGNED,  <span class="comment">// All tensors have the same misalignment</span></div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;  DIFFERENT        <span class="comment">// Tensors have different alignment</span></div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;};</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160; </div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">int</span> CalcAlignment(<span class="keyword">const</span> <span class="keywordtype">void</span>* ptr, <span class="keyword">const</span> <span class="keywordtype">int</span> size) {</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  <span class="keywordtype">size_t</span> ptr_as_number = <span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ptr);</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;  <span class="keywordflow">return</span> ptr_as_number % size;</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;}</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;<span class="comment">/* \brief Check alignment of the inputs and outputs when using vectorized accesses.</span></div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;<span class="comment">   \param params Structure containing arrays with inputs&#39; and outputs&#39; pointers</span></div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;<span class="comment">   \param lead_dim Leading dimension of the tensors.</span></div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;<span class="comment">   \param other_dim The size of the other dimensions of the tensors.</span></div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;<span class="comment">   \param nvec Length of the vector.</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="comment">   \param inputs Inputs to the operator.</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;<span class="comment">   \param outputs Outputs of the operator.</span></div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="comment">*/</span></div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Params&gt;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;Alignment CheckAlignment(<span class="keyword">const</span> Params&amp; params,</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;                         <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> lead_dim,</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;                         <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> other_dim,</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;                         <span class="keyword">const</span> <span class="keywordtype">int</span> nvec,</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;                         <span class="keyword">const</span> std::vector&lt;TBlob&gt;&amp; inputs,</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;                         <span class="keyword">const</span> std::vector&lt;TBlob&gt;&amp; outputs) {</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;  <span class="keyword">using namespace </span>common;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;  <span class="keywordtype">int</span> align = -1;</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;  <span class="keywordtype">size_t</span> i = 0;</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">void</span>* ptr : params.inputs) {</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    <span class="keywordflow">if</span> (ptr != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;      <span class="keywordtype">int</span> new_align = CalcAlignment(ptr, <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">mshadow_type_info</a>(inputs[i].type_flag_).size * nvec);</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;      <span class="keywordflow">if</span> (align == -1) {</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        align = new_align;</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        <span class="keywordflow">if</span> (align != new_align) {</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;          <span class="keywordflow">return</span> Alignment::DIFFERENT;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        }</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;      }</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    }</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;    ++i;</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;  }</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160; </div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;  i = 0;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">void</span>* ptr : params.outputs) {</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordflow">if</span> (ptr != <span class="keyword">nullptr</span>) {</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      <span class="keywordtype">int</span> new_align = CalcAlignment(ptr, <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">mshadow_type_info</a>(outputs[i].type_flag_).size * nvec);</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;      <span class="keywordflow">if</span> (align == -1) {</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        align = new_align;</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;        <span class="keywordflow">if</span> (align != new_align) {</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;          <span class="keywordflow">return</span> Alignment::DIFFERENT;</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        }</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;      }</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    }</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    ++i;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;  }</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160; </div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;  <span class="keywordflow">if</span> ((other_dim != 1) &amp;&amp; (lead_dim % nvec != 0)) {</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keywordflow">return</span> Alignment::DIFFERENT;</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;  }</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160; </div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;  <span class="keywordflow">if</span> ((align == 0) &amp;&amp; (lead_dim % nvec == 0)) {</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordflow">return</span> Alignment::SAME_ALIGNED;</div>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;  } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <span class="keywordflow">return</span> Alignment::SAME_UNALIGNED;</div>
@@ -420,128 +420,127 @@ $(function() {
 <div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;}  <span class="comment">// namespace</span></div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160; </div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Params&gt;</div>
-<div class="line"><a name="l00369"></a><span class="lineno"><a class="line" href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#af55f617654efc870d5cd468dd4cf98fd">  369</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#af55f617654efc870d5cd468dd4cf98fd">VectorizedKernelRTCLauncher</a>(<span class="keyword">const</span> std::string &amp;parameters,</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;                                 <span class="keyword">const</span> std::string &amp;kernel_name,</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;                                 <span class="keyword">const</span> std::string &amp;code,</div>
+<div class="line"><a name="l00369"></a><span class="lineno"><a class="line" href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#af55f617654efc870d5cd468dd4cf98fd">  369</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#af55f617654efc870d5cd468dd4cf98fd">VectorizedKernelRTCLauncher</a>(<span class="keyword">const</span> std::string&amp; parameters,</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;                                 <span class="keyword">const</span> std::string&amp; kernel_name,</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;                                 <span class="keyword">const</span> std::string&amp; code,</div>
 <div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;                                 <span class="keywordtype">int</span> nvec,</div>
 <div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                                 <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> lead_dim,</div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;                                 <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> other_dim,</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;                                 <a class="code" href="structmshadow_1_1Stream_3_01gpu_01_4.html">mshadow::Stream&lt;gpu&gt;</a> *s,</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;                                 <a class="code" href="structmshadow_1_1Stream_3_01gpu_01_4.html">mshadow::Stream&lt;gpu&gt;</a>* s,</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;                                 <span class="keyword">const</span> Params params,</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;                                 <span class="keyword">const</span> std::vector&lt;TBlob&gt; &amp;inputs,</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                                 <span class="keyword">const</span> std::vector&lt;TBlob&gt; &amp;outputs,</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;                                 <span class="keyword">const</span> std::vector&lt;TBlob&gt;&amp; inputs,</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                                 <span class="keyword">const</span> std::vector&lt;TBlob&gt;&amp; outputs,</div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;                                 <span class="keyword">const</span> <span class="keywordtype">int</span> dev_id,</div>
 <div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                                 <span class="keyword">const</span> <span class="keywordtype">int</span> lead_input_num = 0,</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                                 <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> blocks = 0) {</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                                 <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> blocks     = 0) {</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;  <span class="keyword">const</span> <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> N = lead_dim * other_dim;</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;  nvec = std::min(nvec, 4);  <span class="comment">// Use at most 4-wide vectors</span></div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;  nvec            = std::min(nvec, 4);  <span class="comment">// Use at most 4-wide vectors</span></div>
 <div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;  <span class="keywordflow">if</span> (N != 0) {</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    <span class="keyword">auto</span> align = CheckAlignment(params, lead_dim, other_dim,</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;                                nvec, inputs, outputs);</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    std::string kernel_builder;</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    kernel_builder.reserve(2560);</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160; </div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="comment">// Fill input types</span></div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordtype">int</span> counter = 0;</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; input : inputs) {</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span>&amp; type_info = <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">common::mshadow_type_info</a>(input.type_flag_);</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;      kernel_builder += <span class="stringliteral">&quot;using InputType&quot;</span>;</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;      kernel_builder += <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util.html#a3e5473012f581b0d19655d2f299b97fd">std::to_string</a>(counter);</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;      kernel_builder += <span class="stringliteral">&quot; = &quot;</span>;</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;      kernel_builder += type_info.name;</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;      kernel_builder += <span class="stringliteral">&quot;;\n&quot;</span>;</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;      ++counter;</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    }</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160; </div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;    <span class="comment">// Fill output types</span></div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;    counter = 0;</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; output : outputs) {</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span>&amp; type_info = <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">common::mshadow_type_info</a>(output.type_flag_);</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;      kernel_builder += <span class="stringliteral">&quot;using OutputType&quot;</span>;</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;      kernel_builder += <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util.html#a3e5473012f581b0d19655d2f299b97fd">std::to_string</a>(counter);</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;      kernel_builder += <span class="stringliteral">&quot; = &quot;</span>;</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;      kernel_builder += type_info.name;</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;      kernel_builder += <span class="stringliteral">&quot;;\n&quot;</span>;</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;      ++counter;</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    }</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160; </div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;    <span class="keywordflow">switch</span> (align) {</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;      <span class="keywordflow">case</span> Alignment::SAME_ALIGNED:</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        kernel_builder += <span class="stringliteral">&quot;const bool aligned = true;\n&quot;</span></div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;                          <span class="stringliteral">&quot;const int nvec = &quot;</span>;</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    <span class="keyword">auto</span> align = CheckAlignment(params, lead_dim, other_dim, nvec, inputs, outputs);</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    std::string kernel_builder;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    kernel_builder.reserve(2560);</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    <span class="comment">// Fill input types</span></div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    <span class="keywordtype">int</span> counter = 0;</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; input : inputs) {</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span>&amp; type_info = <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">common::mshadow_type_info</a>(input.type_flag_);</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;      kernel_builder += <span class="stringliteral">&quot;using InputType&quot;</span>;</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;      kernel_builder += <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util.html#a3e5473012f581b0d19655d2f299b97fd">std::to_string</a>(counter);</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;      kernel_builder += <span class="stringliteral">&quot; = &quot;</span>;</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;      kernel_builder += type_info.name;</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;      kernel_builder += <span class="stringliteral">&quot;;\n&quot;</span>;</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;      ++counter;</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;    }</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160; </div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    <span class="comment">// Fill output types</span></div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;    counter = 0;</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; output : outputs) {</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span>&amp; type_info = <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">common::mshadow_type_info</a>(output.type_flag_);</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;      kernel_builder += <span class="stringliteral">&quot;using OutputType&quot;</span>;</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;      kernel_builder += <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util.html#a3e5473012f581b0d19655d2f299b97fd">std::to_string</a>(counter);</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;      kernel_builder += <span class="stringliteral">&quot; = &quot;</span>;</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;      kernel_builder += type_info.name;</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;      kernel_builder += <span class="stringliteral">&quot;;\n&quot;</span>;</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;      ++counter;</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    }</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160; </div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <span class="keywordflow">switch</span> (align) {</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;      <span class="keywordflow">case</span> Alignment::SAME_ALIGNED:</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        kernel_builder +=</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            <span class="stringliteral">&quot;const bool aligned = true;\n&quot;</span></div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;            <span class="stringliteral">&quot;const int nvec = &quot;</span>;</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        kernel_builder += <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util.html#a3e5473012f581b0d19655d2f299b97fd">std::to_string</a>(nvec);</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        kernel_builder += <span class="stringliteral">&quot;;\n&quot;</span>;</div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;      <span class="keywordflow">case</span> Alignment::SAME_UNALIGNED:</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;        kernel_builder += <span class="stringliteral">&quot;const bool aligned = false;\n&quot;</span></div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;                          <span class="stringliteral">&quot;const int nvec = &quot;</span>;</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        kernel_builder += <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util.html#a3e5473012f581b0d19655d2f299b97fd">std::to_string</a>(nvec);</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        kernel_builder += <span class="stringliteral">&quot;;\n&quot;</span>;</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;      <span class="keywordflow">case</span> Alignment::DIFFERENT: {</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        <span class="comment">// If the pointers are aligned differently we cannot vectorize</span></div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        kernel_builder += <span class="stringliteral">&quot;const bool aligned = true;\n&quot;</span></div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;                          <span class="stringliteral">&quot;const int nvec = 1;\n&quot;</span>;</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        nvec = 1;</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;      }</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    }</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160; </div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    kernel_builder += parameters;</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;        kernel_builder +=</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;            <span class="stringliteral">&quot;const bool aligned = false;\n&quot;</span></div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;            <span class="stringliteral">&quot;const int nvec = &quot;</span>;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        kernel_builder += <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util.html#a3e5473012f581b0d19655d2f299b97fd">std::to_string</a>(nvec);</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;        kernel_builder += <span class="stringliteral">&quot;;\n&quot;</span>;</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;      <span class="keywordflow">case</span> Alignment::DIFFERENT: {</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;        <span class="comment">// If the pointers are aligned differently we cannot vectorize</span></div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        kernel_builder +=</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;            <span class="stringliteral">&quot;const bool aligned = true;\n&quot;</span></div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;            <span class="stringliteral">&quot;const int nvec = 1;\n&quot;</span>;</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        nvec = 1;</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;      }</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    }</div>
 <div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160; </div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> num_aligned_elements = get_num_aligned_elements(</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;                                    params.inputs[lead_input_num],</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;                                    lead_dim, nvec,</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;                                    <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">common::mshadow_type_info</a>(</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;                                      inputs[lead_input_num].type_flag_).<a class="code" href="structmxnet_1_1common_1_1MShadowTypeInfo.html#aab9c0fee891d8621ad5f24cef932c738">size</a>);</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    constexpr <span class="keywordtype">int</span> threads = vectorized_kernel_thread_num;</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> num_blocks;</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    <span class="keywordflow">if</span> (blocks != 0) {</div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;      num_blocks = blocks;</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      <span class="keywordtype">size_t</span> num_elements = other_dim * num_aligned_elements;</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      num_blocks = (num_elements + threads - 1) / threads;</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      constexpr <span class="keywordtype">int</span> max_blocks = 65535;</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      num_blocks = std::min(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(num_blocks), max_blocks);</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    }</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    std::vector&lt;const void*&gt; args = {&amp;params, &amp;lead_dim, &amp;other_dim,</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;                                     &amp;N, &amp;num_aligned_elements};</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    <span class="keyword">auto</span> <span class="keyword">function</span> = <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#aa376584cbd919b0c3cf23f22bbe948fd">common::cuda::rtc::get_function</a>(kernel_builder,</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;                                                    kernel_name,</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;                                                    code,</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;                                                    dev_id);</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160; </div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#a9732a1d386bd52d6e11f19ab02be34b1">common::cuda::rtc::launch</a>(<span class="keyword">function</span>,</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;                              {<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(num_blocks), 1, 1},</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;                              {<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(threads), 1, 1},</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;                              0, s, &amp;args);</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    kernel_builder += parameters;</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160; </div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> num_aligned_elements =</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;        get_num_aligned_elements(params.inputs[lead_input_num],</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;                                 lead_dim,</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;                                 nvec,</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;                                 <a class="code" href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">common::mshadow_type_info</a>(inputs[lead_input_num].type_flag_).<a class="code" href="structmxnet_1_1common_1_1MShadowTypeInfo.html#aab9c0fee891d8621ad5f24cef932c738">size</a>);</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    constexpr <span class="keywordtype">int</span> threads = vectorized_kernel_thread_num;</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <a class="code" href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">index_t</a> num_blocks;</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keywordflow">if</span> (blocks != 0) {</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      num_blocks = blocks;</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      <span class="keywordtype">size_t</span> num_elements      = other_dim * num_aligned_elements;</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      num_blocks               = (num_elements + threads - 1) / threads;</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;      constexpr <span class="keywordtype">int</span> max_blocks = 65535;</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;      num_blocks               = std::min(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(num_blocks), max_blocks);</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    }</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    std::vector&lt;const void*&gt; args = {&amp;params, &amp;lead_dim, &amp;other_dim, &amp;N, &amp;num_aligned_elements};</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;    <span class="keyword">auto</span> <span class="keyword">function</span> = <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#aa376584cbd919b0c3cf23f22bbe948fd">common::cuda::rtc::get_function</a>(kernel_builder, kernel_name, code, dev_id);</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160; </div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;    <a class="code" href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#a9732a1d386bd52d6e11f19ab02be34b1">common::cuda::rtc::launch</a>(<span class="keyword">function</span>,</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;                              {<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(num_blocks), 1, 1},</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;                              {<span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span><span class="keyword">&gt;</span>(threads), 1, 1},</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;                              0,</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;                              s,</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;                              &amp;args);</div>
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;  }</div>
 <div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;}</div>
 <div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160; </div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160; </div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;}  <span class="comment">// namespace rtc</span></div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;}  <span class="comment">// namespace cuda</span></div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;}  <span class="comment">// namespace common</span></div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;}  <span class="comment">// namespace mxnet</span></div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160; </div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;<span class="preprocessor">#endif  // MXNET_USE_CUDA</span></div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160; </div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="preprocessor">#endif  // MXNET_COMMON_CUDA_RTC_VECTORIZATION_INL_H_</span></div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;}  <span class="comment">// namespace rtc</span></div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;}  <span class="comment">// namespace cuda</span></div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;}  <span class="comment">// namespace common</span></div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;}  <span class="comment">// namespace mxnet</span></div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160; </div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;<span class="preprocessor">#endif  // MXNET_USE_CUDA</span></div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160; </div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;<span class="preprocessor">#endif  // MXNET_COMMON_CUDA_RTC_VECTORIZATION_INL_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="anamespacemxnet_html"><div class="ttname"><a href="namespacemxnet.html">mxnet</a></div><div class="ttdoc">namespace of mxnet</div><div class="ttdef"><b>Definition:</b> api_registry.h:33</div></div>
-<div class="ttc" id="astructmxnet_1_1common_1_1MShadowTypeInfo_html_aab9c0fee891d8621ad5f24cef932c738"><div class="ttname"><a href="structmxnet_1_1common_1_1MShadowTypeInfo.html#aab9c0fee891d8621ad5f24cef932c738">mxnet::common::MShadowTypeInfo::size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition:</b> utils.h:946</div></div>
+<div class="ttc" id="astructmxnet_1_1common_1_1MShadowTypeInfo_html_aab9c0fee891d8621ad5f24cef932c738"><div class="ttname"><a href="structmxnet_1_1common_1_1MShadowTypeInfo.html#aab9c0fee891d8621ad5f24cef932c738">mxnet::common::MShadowTypeInfo::size</a></div><div class="ttdeci">int size</div><div class="ttdef"><b>Definition:</b> utils.h:1091</div></div>
 <div class="ttc" id="anamespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util_html_a3e5473012f581b0d19655d2f299b97fd"><div class="ttname"><a href="namespacemxnet_1_1common_1_1cuda_1_1rtc_1_1util.html#a3e5473012f581b0d19655d2f299b97fd">mxnet::common::cuda::rtc::util::to_string</a></div><div class="ttdeci">std::string to_string(OpReqType req)</div><div class="ttdoc">Convert OpReqType to string.</div></div>
 <div class="ttc" id="anamespacemxnet_1_1common_1_1cuda_1_1rtc_html_af55f617654efc870d5cd468dd4cf98fd"><div class="ttname"><a href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#af55f617654efc870d5cd468dd4cf98fd">mxnet::common::cuda::rtc::VectorizedKernelRTCLauncher</a></div><div class="ttdeci">void VectorizedKernelRTCLauncher(const std::string &amp;parameters, const std::string &amp;kernel_name, const std::string &amp;code, int nvec, const index_t lead_dim, const index_t other_dim, mshadow::Stream&lt; gpu &gt; *s, const Params params, const std::vector&lt; TBlob &gt; &amp;inputs, const std::vector&lt; TBlob &gt; &amp;outputs, const int dev_id, const int lead_input_num=0, const index_t blocks=0)</div><div class="ttdoc">Launcher helper for the kernels using vectorization.</div><div class="ttdef"><b>Definition:</b> vectorization-inl.h:369</div></div>
 <div class="ttc" id="anamespacemxnet_1_1common_html_aa8a9546bbfefdbb83d23b9aa1e65778e"><div class="ttname"><a href="namespacemxnet_1_1common.html#aa8a9546bbfefdbb83d23b9aa1e65778e">mxnet::common::mshadow_type_info</a></div><div class="ttdeci">MShadowTypeInfo mshadow_type_info(const int type_flag)</div></div>
-<div class="ttc" id="astructmshadow_1_1Stream_3_01gpu_01_4_html"><div class="ttname"><a href="structmshadow_1_1Stream_3_01gpu_01_4.html">mshadow::Stream&lt; gpu &gt;</a></div><div class="ttdef"><b>Definition:</b> stream_gpu-inl.h:38</div></div>
+<div class="ttc" id="astructmshadow_1_1Stream_3_01gpu_01_4_html"><div class="ttname"><a href="structmshadow_1_1Stream_3_01gpu_01_4.html">mshadow::Stream&lt; gpu &gt;</a></div><div class="ttdef"><b>Definition:</b> stream_gpu-inl.h:37</div></div>
 <div class="ttc" id="anamespacemxnet_1_1common_1_1cuda_1_1rtc_html_aa376584cbd919b0c3cf23f22bbe948fd"><div class="ttname"><a href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#aa376584cbd919b0c3cf23f22bbe948fd">mxnet::common::cuda::rtc::get_function</a></div><div class="ttdeci">CUfunction get_function(const std::string &amp;parameters, const std::string &amp;kernel_name, const std::string &amp;code, int dev_id)</div><div class="ttdoc">Compile and get the GPU kernel. Uses cache in order to eliminate the overhead of compilation.</div></div>
-<div class="ttc" id="anamespacemxnet_html_abadedc1b42ee3e5b8852e63783b982ef"><div class="ttname"><a href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">mxnet::index_t</a></div><div class="ttdeci">mshadow::index_t index_t</div><div class="ttdoc">index type usually use unsigned</div><div class="ttdef"><b>Definition:</b> base.h:83</div></div>
+<div class="ttc" id="anamespacemxnet_html_abadedc1b42ee3e5b8852e63783b982ef"><div class="ttname"><a href="namespacemxnet.html#abadedc1b42ee3e5b8852e63783b982ef">mxnet::index_t</a></div><div class="ttdeci">mshadow::index_t index_t</div><div class="ttdoc">index type usually use unsigned</div><div class="ttdef"><b>Definition:</b> base.h:81</div></div>
 <div class="ttc" id="anamespacemxnet_1_1common_1_1cuda_1_1rtc_html_a9732a1d386bd52d6e11f19ab02be34b1"><div class="ttname"><a href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#a9732a1d386bd52d6e11f19ab02be34b1">mxnet::common::cuda::rtc::launch</a></div><div class="ttdeci">void launch(CUfunction function, const dim3 grid_dim, const dim3 block_dim, unsigned int shared_mem_bytes, mshadow::Stream&lt; gpu &gt; *stream, std::vector&lt; const void * &gt; *args)</div><div class="ttdoc">Launch a GPU kernel.</div></div>
 <div class="ttc" id="ainclude_2mxnet_2base_8h_html"><div class="ttname"><a href="include_2mxnet_2base_8h.html">base.h</a></div><div class="ttdoc">configuration of MXNet as well as basic data structure.</div></div>
 <div class="ttc" id="anamespacemxnet_1_1common_1_1cuda_1_1rtc_html_a85172c90f8071324eb159bc97c257264"><div class="ttname"><a href="namespacemxnet_1_1common_1_1cuda_1_1rtc.html#a85172c90f8071324eb159bc97c257264">mxnet::common::cuda::rtc::vectorization_support_string</a></div><div class="ttdeci">const char vectorization_support_string[]</div><div class="ttdef"><b>Definition:</b> vectorization-inl.h:40</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Aug 1 2021 20:32:48 for mxnet by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Nov 5 2022 01:16:57 for mxnet by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

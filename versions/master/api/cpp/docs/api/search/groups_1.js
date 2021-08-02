@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['reduction_11042',['Reduction',['../group__dnnl__api__reduction.html',1,'']]],
-  ['resampling_11043',['Resampling',['../group__dnnl__api__resampling.html',1,'']]]
+  ['floating_2dpoint_20math_20mode_10302',['Floating-point Math Mode',['../group__dnnl__api__mathmode.html',1,'']]]
 ];

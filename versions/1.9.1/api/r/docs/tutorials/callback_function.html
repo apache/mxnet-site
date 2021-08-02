@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+
+<!---
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/versions/1.9.1/assets/img/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Callback Function | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Callback Function" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.9.1/api/r/docs/tutorials/callback_function" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.9.1/api/r/docs/tutorials/callback_function" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"headline":"Callback Function","description":"A flexible and efficient library for deep learning.","url":"https://mxnet.apache.org/versions/1.9.1/api/r/docs/tutorials/callback_function","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/versions/1.9.1/assets/docsearch.min.css" /><link rel="stylesheet" href="/versions/1.9.1/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.9.1/feed.xml" title="Apache MXNet" /><!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  /* We explicitly disable cookie tracking to avoid privacy issues */
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.apache.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '23']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+<script src="/versions/1.9.1/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/versions/1.9.1/assets/js/docsearch.min.js"></script><script src="/versions/1.9.1/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.9.1/"><img
+            src="/versions/1.9.1/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.9.1</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.9.1/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.1/features">Features</a>
+        <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.9.1/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown" style="min-width:100px">
+          <span class="dropdown-header">Apache
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content" style="min-width:250px">
+            <a href="https://www.apache.org/foundation/">Apache Software Foundation</a>
+            <a href="https://incubator.apache.org/">Apache Incubator</a>
+            <a href="https://www.apache.org/licenses/">License</a>
+            <a href="/versions/1.9.1/api/faq/security.html">Security</a>
+            <a href="https://privacy.apache.org/policies/privacy-policy-public.html">Privacy</a>
+            <a href="https://www.apache.org/events/current-event">Events</a>
+            <a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
+            <a href="https://www.apache.org/foundation/thanks.html">Thanks</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.1
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.9.1/">1.9.1</a>
+            <a href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Callback Function</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="docs-card docs-side">
+            <ul>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.1/api/r"> <img src="/versions/1.9.1/assets/img/compass.svg"
+                                                                      class="docs-logo-docs">R Guide <span
+                            class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.1/api/r/docs/tutorials"> <img
+                            src="/versions/1.9.1/assets/img/video-tutorial.svg" class="docs-logo-docs">R
+                        Tutorials <span class="span-accented">›</span></a>
+                </div>
+                <div class="docs-action-btn">
+                    <a href="/versions/1.9.1/api/r/docs/api/R-package/build/mxnet-r-reference-manual.pdf"> <img src="/versions/1.9.1/assets/img/api.svg"
+                                                                    class="docs-logo-docs">R API Reference
+                        <span class="span-accented">›</span></a>
+                </div>
+
+                <!-- Let's show the list of tutorials -->
+                <br>
+                
+                <h3>Tutorials</h3>
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/callback_function">Callback Function</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/char_rnn_model">Char RNN Model</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/classify_real_image_with_pretrained_model">Classify Images with a PreTrained Model</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/custom_iterator">Custom Iterator Tutorial</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/custom_loss_function">Custom Loss Function</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/five_minutes_neural_network">Five Minutes Neural Network</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/mnist_competition">MNIST Competition</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/multi_dim_lstm">LSTM Time Series</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/ndarray">NDArray</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                
+                <li><a href="/versions/1.9.1/api/r/docs/tutorials/symbol">NDArray</a></li>
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                
+                  <!-- page-category -->
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                
+                   <!-- resource-p -->
+                  <!-- page -->
+                
+            </ul>
+        </div>
+        
+        
+        
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+        
+           <!-- resource-p -->
+          <!-- page -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="callback-function">Callback Function</h1>
+
+<p>This tutorial provides guidelines for using and writing callback functions,
+which can very useful in model training.</p>
+
+<h2 id="model-training-example">Model Training Example</h2>
+
+<p>Let&#39;s begin with a small example. We can build and train a model with the following code:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">library</span><span class="p">(</span><span class="n">mxnet</span><span class="p">)</span><span class="w">
+    </span><span class="n">data</span><span class="p">(</span><span class="n">BostonHousing</span><span class="p">,</span><span class="w"> </span><span class="n">package</span><span class="o">=</span><span class="s2">"mlbench"</span><span class="p">)</span><span class="w">
+    </span><span class="n">train.ind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">506</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w">
+    </span><span class="n">train.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data.matrix</span><span class="p">(</span><span class="n">BostonHousing</span><span class="p">[</span><span class="n">train.ind</span><span class="p">,</span><span class="w"> </span><span class="m">-14</span><span class="p">])</span><span class="w">
+    </span><span class="n">train.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BostonHousing</span><span class="p">[</span><span class="n">train.ind</span><span class="p">,</span><span class="w"> </span><span class="m">14</span><span class="p">]</span><span class="w">
+    </span><span class="n">test.x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data.matrix</span><span class="p">(</span><span class="n">BostonHousing</span><span class="p">[</span><span class="o">-</span><span class="n">train.ind</span><span class="p">,</span><span class="w"> </span><span class="m">-14</span><span class="p">])</span><span class="w">
+    </span><span class="n">test.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BostonHousing</span><span class="p">[</span><span class="o">-</span><span class="n">train.ind</span><span class="p">,</span><span class="w"> </span><span class="m">14</span><span class="p">]</span><span class="w">
+    </span><span class="n">data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.Variable</span><span class="p">(</span><span class="s2">"data"</span><span class="p">)</span><span class="w">
+    </span><span class="n">fc1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.FullyConnected</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">num_hidden</span><span class="o">=</span><span class="m">1</span><span class="p">)</span><span class="w">
+    </span><span class="n">lro</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.symbol.LinearRegressionOutput</span><span class="p">(</span><span class="n">fc1</span><span class="p">)</span><span class="w">
+    </span><span class="n">mx.set.seed</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="w">
+    </span><span class="n">model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.model.FeedForward.create</span><span class="p">(</span><span class="w">
+      </span><span class="n">lro</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">=</span><span class="n">train.x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">train.y</span><span class="p">,</span><span class="w">
+      </span><span class="n">eval.data</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">test.x</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="o">=</span><span class="n">test.y</span><span class="p">),</span><span class="w">
+      </span><span class="n">ctx</span><span class="o">=</span><span class="n">mx.cpu</span><span class="p">(),</span><span class="w"> </span><span class="n">num.round</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">array.batch.size</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w">
+      </span><span class="n">learning.rate</span><span class="o">=</span><span class="m">2e-6</span><span class="p">,</span><span class="w"> </span><span class="n">momentum</span><span class="o">=</span><span class="m">0.9</span><span class="p">,</span><span class="w"> </span><span class="n">eval.metric</span><span class="o">=</span><span class="n">mx.metric.rmse</span><span class="p">)</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## Auto detect layout of input matrix, use row major..
+    ## Start training with 1 devices
+    ## [1] Train-rmse=16.063282524034
+    ## [1] Validation-rmse=10.1766446093622
+    ## [2] Train-rmse=12.2792375712573
+    ## [2] Validation-rmse=12.4331776190813
+    ## [3] Train-rmse=11.1984634005885
+    ## [3] Validation-rmse=10.3303041888193
+    ## [4] Train-rmse=10.2645236892904
+    ## [4] Validation-rmse=8.42760407903415
+    ## [5] Train-rmse=9.49711005504284
+    ## [5] Validation-rmse=8.44557808483234
+    ## [6] Train-rmse=9.07733734175182
+    ## [6] Validation-rmse=8.33225500266177
+    ## [7] Train-rmse=9.07884450847991
+    ## [7] Validation-rmse=8.38827833418459
+    ## [8] Train-rmse=9.10463850277417
+    ## [8] Validation-rmse=8.37394452365264
+    ## [9] Train-rmse=9.03977049028532
+    ## [9] Validation-rmse=8.25927979725672
+    ## [10] Train-rmse=8.96870685004475
+    ## [10] Validation-rmse=8.19509291481822
+</code></pre></div>
+<p>We also provide two optional parameters, <code>batch.end.callback</code> and <code>epoch.end.callback</code>, which can provide great flexibility in model training.</p>
+
+<h2 id="how-to-use-callback-functions">How to Use Callback Functions</h2>
+
+<p>This package provides two callback functions:</p>
+
+<ul>
+<li><code>mx.callback.save.checkpoint</code> saves a checkpoint to files during each period iteration.</li>
+</ul>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">         </span><span class="n">model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.model.FeedForward.create</span><span class="p">(</span><span class="w">
+           </span><span class="n">lro</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">=</span><span class="n">train.x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">train.y</span><span class="p">,</span><span class="w">
+           </span><span class="n">eval.data</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">test.x</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="o">=</span><span class="n">test.y</span><span class="p">),</span><span class="w">
+           </span><span class="n">ctx</span><span class="o">=</span><span class="n">mx.cpu</span><span class="p">(),</span><span class="w"> </span><span class="n">num.round</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">array.batch.size</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w">
+           </span><span class="n">learning.rate</span><span class="o">=</span><span class="m">2e-6</span><span class="p">,</span><span class="w"> </span><span class="n">momentum</span><span class="o">=</span><span class="m">0.9</span><span class="p">,</span><span class="w"> </span><span class="n">eval.metric</span><span class="o">=</span><span class="n">mx.metric.rmse</span><span class="p">,</span><span class="w">
+           </span><span class="n">epoch.end.callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mx.callback.save.checkpoint</span><span class="p">(</span><span class="s2">"boston"</span><span class="p">))</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">          ## Auto detect layout of input matrix, use row major..
+          ## Start training with 1 devices
+          ## [1] Train-rmse=19.1621424021617
+          ## [1] Validation-rmse=20.721515592165
+          ## Model checkpoint saved to boston-0001.params
+          ## [2] Train-rmse=13.5127391952367
+          ## [2] Validation-rmse=14.1822123675007
+          ## Model checkpoint saved to boston-0002.params
+</code></pre></div>
+<ul>
+<li><code>mx.callback.log.train.metric</code> logs a training metric each period. You can use it either as a <code>batch.end.callback</code> or an
+<code>epoch.end.callback</code>.</li>
+</ul>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">         </span><span class="n">model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.model.FeedForward.create</span><span class="p">(</span><span class="w">
+           </span><span class="n">lro</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">=</span><span class="n">train.x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">train.y</span><span class="p">,</span><span class="w">
+           </span><span class="n">eval.data</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">test.x</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="o">=</span><span class="n">test.y</span><span class="p">),</span><span class="w">
+           </span><span class="n">ctx</span><span class="o">=</span><span class="n">mx.cpu</span><span class="p">(),</span><span class="w"> </span><span class="n">num.round</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">array.batch.size</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w">
+           </span><span class="n">learning.rate</span><span class="o">=</span><span class="m">2e-6</span><span class="p">,</span><span class="w"> </span><span class="n">momentum</span><span class="o">=</span><span class="m">0.9</span><span class="p">,</span><span class="w"> </span><span class="n">eval.metric</span><span class="o">=</span><span class="n">mx.metric.rmse</span><span class="p">,</span><span class="w">
+           </span><span class="n">batch.end.callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mx.callback.log.train.metric</span><span class="p">(</span><span class="m">5</span><span class="p">))</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">         ## Auto detect layout of input matrix, use row major..
+         ## Start training with 1 devices
+         ## Batch [5] Train-rmse=17.6514558545416
+         ## [1] Train-rmse=15.2879610219001
+         ## [1] Validation-rmse=12.3332062820921
+         ## Batch [5] Train-rmse=11.939392828565
+         ## [2] Train-rmse=11.4382242547217
+         ## [2] Validation-rmse=9.91176550103181
+         ............
+</code></pre></div>
+<p>You also can save the training and evaluation errors for later use by passing a reference class:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">logger</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.metric.logger</span><span class="o">$</span><span class="n">new</span><span class="p">()</span><span class="w">
+    </span><span class="n">model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.model.FeedForward.create</span><span class="p">(</span><span class="w">
+      </span><span class="n">lro</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">=</span><span class="n">train.x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">train.y</span><span class="p">,</span><span class="w">
+      </span><span class="n">eval.data</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">test.x</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="o">=</span><span class="n">test.y</span><span class="p">),</span><span class="w">
+      </span><span class="n">ctx</span><span class="o">=</span><span class="n">mx.cpu</span><span class="p">(),</span><span class="w"> </span><span class="n">num.round</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">array.batch.size</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w">
+      </span><span class="n">learning.rate</span><span class="o">=</span><span class="m">2e-6</span><span class="p">,</span><span class="w"> </span><span class="n">momentum</span><span class="o">=</span><span class="m">0.9</span><span class="p">,</span><span class="w"> </span><span class="n">eval.metric</span><span class="o">=</span><span class="n">mx.metric.rmse</span><span class="p">,</span><span class="w">
+      </span><span class="n">epoch.end.callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mx.callback.log.train.metric</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">logger</span><span class="p">))</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## Auto detect layout of input matrix, use row major..
+    ## Start training with 1 devices
+    ## [1] Train-rmse=19.1083228733256
+    ## [1] Validation-rmse=12.7150687428974
+    ## [2] Train-rmse=15.7684378116157
+    ## [2] Validation-rmse=14.8105319420491
+    ............
+</code></pre></div><div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">head</span><span class="p">(</span><span class="n">logger</span><span class="o">$</span><span class="n">train</span><span class="p">)</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## [1] 19.108323 15.768438 13.531470 11.386050  9.555477  9.351324
+</code></pre></div><div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">head</span><span class="p">(</span><span class="n">logger</span><span class="o">$</span><span class="n">eval</span><span class="p">)</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## [1] 12.715069 14.810532 15.840361 10.898733  9.349706  9.363087
+</code></pre></div>
+<h2 id="how-to-write-your-own-callback-functions">How to Write Your Own Callback Functions</h2>
+
+<p>You can find the source code for the two callback functions on <a href="https://github.com/apache/mxnet/blob/v1.x/R-package/R/callback.R">GitHub</a> and use it as a template:</p>
+
+<p>Basically, all callback functions follow the following structure:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">mx.callback.fun</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="k">function</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="w"> </span><span class="n">nbatch</span><span class="p">,</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>The following <code>mx.callback.save.checkpoint</code> function is stateless. It gets the model from the environment and saves it:.</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">mx.callback.save.checkpoint</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span><span class="w"> </span><span class="n">period</span><span class="o">=</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="k">function</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="w"> </span><span class="n">nbatch</span><span class="p">,</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iteration</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="n">period</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">mx.model.save</span><span class="p">(</span><span class="n">env</span><span class="o">$</span><span class="n">model</span><span class="p">,</span><span class="w"> </span><span class="n">prefix</span><span class="p">,</span><span class="w"> </span><span class="n">iteration</span><span class="p">)</span><span class="w">
+      </span><span class="n">cat</span><span class="p">(</span><span class="n">sprintf</span><span class="p">(</span><span class="s2">"Model checkpoint saved to %s-%04d.params\n"</span><span class="p">,</span><span class="w"> </span><span class="n">prefix</span><span class="p">,</span><span class="w"> </span><span class="n">iteration</span><span class="p">))</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="nf">return</span><span class="p">(</span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>The <code>mx.callback.log.train.metric</code> is a little more complex. It holds a reference class and updates it during the training
+process:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">    </span><span class="n">mx.callback.log.train.metric</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">period</span><span class="p">,</span><span class="w"> </span><span class="n">logger</span><span class="o">=</span><span class="kc">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="k">function</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="w"> </span><span class="n">nbatch</span><span class="p">,</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nbatch</span><span class="w"> </span><span class="o">%%</span><span class="w"> </span><span class="n">period</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="nf">is.null</span><span class="p">(</span><span class="n">env</span><span class="o">$</span><span class="n">metric</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">result</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">env</span><span class="o">$</span><span class="n">metric</span><span class="o">$</span><span class="n">get</span><span class="p">(</span><span class="n">env</span><span class="o">$</span><span class="n">train.metric</span><span class="p">)</span><span class="w">
+      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nbatch</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w">
+        </span><span class="n">cat</span><span class="p">(</span><span class="n">paste0</span><span class="p">(</span><span class="s2">"Batch ["</span><span class="p">,</span><span class="w"> </span><span class="n">nbatch</span><span class="p">,</span><span class="w"> </span><span class="s2">"] Train-"</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s2">"="</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="o">$</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">))</span><span class="w">
+      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">is.null</span><span class="p">(</span><span class="n">logger</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nf">class</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s2">"mx.metric.logger"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">stop</span><span class="p">(</span><span class="s2">"Invalid mx.metric.logger."</span><span class="p">)</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="n">logger</span><span class="o">$</span><span class="n">train</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">logger</span><span class="o">$</span><span class="n">train</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="o">$</span><span class="n">value</span><span class="p">)</span><span class="w">
+        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">is.null</span><span class="p">(</span><span class="n">env</span><span class="o">$</span><span class="n">eval.metric</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="n">result</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">env</span><span class="o">$</span><span class="n">metric</span><span class="o">$</span><span class="n">get</span><span class="p">(</span><span class="n">env</span><span class="o">$</span><span class="n">eval.metric</span><span class="p">)</span><span class="w">
+          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nbatch</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w">
+            </span><span class="n">cat</span><span class="p">(</span><span class="n">paste0</span><span class="p">(</span><span class="s2">"Batch ["</span><span class="p">,</span><span class="w"> </span><span class="n">nbatch</span><span class="p">,</span><span class="w"> </span><span class="s2">"] Validation-"</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="o">$</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s2">"="</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="o">$</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="s2">"\n"</span><span class="p">))</span><span class="w">
+          </span><span class="n">logger</span><span class="o">$</span><span class="n">eval</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">logger</span><span class="o">$</span><span class="n">eval</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="o">$</span><span class="n">value</span><span class="p">)</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="nf">return</span><span class="p">(</span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>Now you might be curious why both callback functions <code>return(TRUE)</code>.</p>
+
+<p>Can we <code>return(FALSE)</code>?</p>
+
+<p>Yes! You can stop the training early with <code>return(FALSE)</code>. See the following examples.</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="w">     </span><span class="n">mx.callback.early.stop</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">eval.metric</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="k">function</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span><span class="w"> </span><span class="n">nbatch</span><span class="p">,</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">is.null</span><span class="p">(</span><span class="n">env</span><span class="o">$</span><span class="n">metric</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nf">is.null</span><span class="p">(</span><span class="n">eval.metric</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="n">result</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">env</span><span class="o">$</span><span class="n">metric</span><span class="o">$</span><span class="n">get</span><span class="p">(</span><span class="n">env</span><span class="o">$</span><span class="n">eval.metric</span><span class="p">)</span><span class="w">
+        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="o">$</span><span class="n">value</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">eval.metric</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nf">return</span><span class="p">(</span><span class="kc">FALSE</span><span class="p">)</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="nf">return</span><span class="p">(</span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="n">model</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mx.model.FeedForward.create</span><span class="p">(</span><span class="w">
+      </span><span class="n">lro</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="o">=</span><span class="n">train.x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">train.y</span><span class="p">,</span><span class="w">
+      </span><span class="n">eval.data</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">test.x</span><span class="p">,</span><span class="w"> </span><span class="n">label</span><span class="o">=</span><span class="n">test.y</span><span class="p">),</span><span class="w">
+      </span><span class="n">ctx</span><span class="o">=</span><span class="n">mx.cpu</span><span class="p">(),</span><span class="w"> </span><span class="n">num.round</span><span class="o">=</span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">array.batch.size</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w">
+      </span><span class="n">learning.rate</span><span class="o">=</span><span class="m">2e-6</span><span class="p">,</span><span class="w"> </span><span class="n">momentum</span><span class="o">=</span><span class="m">0.9</span><span class="p">,</span><span class="w"> </span><span class="n">eval.metric</span><span class="o">=</span><span class="n">mx.metric.rmse</span><span class="p">,</span><span class="w">
+      </span><span class="n">epoch.end.callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mx.callback.early.stop</span><span class="p">(</span><span class="m">10</span><span class="p">))</span><span class="w">
+</span></code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">    ## Auto detect layout of input matrix, use row major..
+    ## Start training with 1 devices
+    ## [1] Train-rmse=18.5897984387033
+    ## [1] Validation-rmse=13.5555213820571
+    ## [2] Train-rmse=12.5867564040256
+    ## [2] Validation-rmse=9.76304967080928
+</code></pre></div>
+<p>When the validation metric dips below the threshold we set, the training process stops.</p>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+<li><a href="/api/r/docs/tutorials/five_minutes_neural_network">Neural Networks with MXNet in Five Minutes</a></li>
+<li><a href="/api/r/docs/tutorials/classify_real_image_with_pretrained_model">Classify Real-World Images with a Pretrained Model</a></li>
+<li><a href="/api/r/docs/tutorials/mnist_competition">Handwritten Digits Classification Competition</a></li>
+<li><a href="/api/r/docs/tutorials/char_rnn_model">Character Language Model Using RNN</a></li>
+</ul>
+</div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.9.1/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
+                    <li><a href="https://discuss.mxnet.io">Forum</a></li>
+                    <li><a href="/versions/1.9.1/community/contribute">Contribute</a></li>
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.9.1/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2022, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>

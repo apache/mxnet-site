@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 1;
+        text-align: left;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-option:hover {
+        color: #FF4500;
+    }
+
+    .dropdown-option-active {
+        color: #FF4500;
+        font-weight: lighter;
+    }
+
+    .dropdown-option {
+        color: #000000;
+        font-weight: lighter;
+    }
+
+    .dropdown-header {
+        color: #FFFFFF;
+        display: inline-flex;
+    }
+
+    .dropdown-caret {
+        width: 18px;
+    }
+
+    .dropdown-caret-path {
+        fill: #FFFFFF;
+    }
+    </style>
+    
+    <title>Profiling MXNet Models &#8212; Apache MXNet  documentation</title>
+
+    <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mxnet.css" />
+    <link rel="stylesheet" href="../../../_static/material-design-lite-1.3.0/material.blue-deep_orange.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/sphinx_materialdesign_theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/fontawesome/all.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/fonts.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/feedback.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/google_analytics.js"></script>
+    <script src="../../../_static/autodoc.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="shortcut icon" href="../../../_static/mxnet-icon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Using AMP: Automatic Mixed Precision" href="amp.html" />
+    <link rel="prev" title="Use TVM" href="tvm.html" /> 
+  </head>
+<body><header class="site-header" role="banner">
+  <div class="wrapper">
+      <a class="site-title" rel="author" href="/versions/1.9.0/"><img
+            src="../../../_static/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/versions/1.9.0/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.0/blog">Blog</a>
+        <a class="page-link" href="/versions/1.9.0/features">Features</a>
+        <a class="page-link" href="/versions/1.9.0/ecosystem">Ecosystem</a>
+        <a class="page-link page-current" href="/versions/1.9.0/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.0/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.0
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a class="dropdown-option" href="/">master</a><br>
+            <a class="dropdown-option-active" href="/versions/1.9.0/">1.9.0</a><br>
+            <a class="dropdown-option" href="/versions/1.8.0/">1.8.0</a><br>
+            <a class="dropdown-option" href="/versions/1.7.0/">1.7.0</a><br>
+            <a class="dropdown-option" href="/versions/1.6.0/">1.6.0</a><br>
+            <a class="dropdown-option" href="/versions/1.5.0/">1.5.0</a><br>
+            <a class="dropdown-option" href="/versions/1.4.1/">1.4.1</a><br>
+            <a class="dropdown-option" href="/versions/1.3.1/">1.3.1</a><br>
+            <a class="dropdown-option" href="/versions/1.2.1/">1.2.1</a><br>
+            <a class="dropdown-option" href="/versions/1.1.0/">1.1.0</a><br>
+            <a class="dropdown-option" href="/versions/1.0.0/">1.0.0</a><br>
+            <a class="dropdown-option" href="/versions/0.12.1/">0.12.1</a><br>
+            <a class="dropdown-option" href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer"><header class="mdl-layout__header mdl-layout__header--waterfall ">
+    <div class="mdl-layout__header-row">
+        
+        <nav class="mdl-navigation breadcrumb">
+            <a class="mdl-navigation__link" href="../../index.html">Python Tutorials</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link" href="../index.html">Performance</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link" href="index.html">Accelerated Backend Tools</a><i class="material-icons">navigate_next</i>
+            <a class="mdl-navigation__link is-active">Profiling MXNet Models</a>
+        </nav>
+        <div class="mdl-layout-spacer"></div>
+        <nav class="mdl-navigation">
+        
+<form class="form-inline pull-sm-right" action="../../../search.html" method="get">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+        <label id="quick-search-icon" class="mdl-button mdl-js-button mdl-button--icon"  for="waterfall-exp">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" name="q"  id="waterfall-exp" placeholder="Search" />
+          <input type="hidden" name="check_keywords" value="yes" />
+          <input type="hidden" name="area" value="default" />
+        </div>
+      </div>
+      <div class="mdl-tooltip" data-mdl-for="quick-search-icon">
+      Quick search
+      </div>
+</form>
+        
+<a id="button-show-source"
+    class="mdl-button mdl-js-button mdl-button--icon"
+    href="../../../_sources/tutorials/performance/backend/profiler.ipynb" rel="nofollow">
+  <i class="material-icons">code</i>
+</a>
+<div class="mdl-tooltip" data-mdl-for="button-show-source">
+Show Source
+</div>
+        </nav>
+    </div>
+    <div class="mdl-layout__header-row header-links">
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+      </nav>
+    </div>
+</header><header class="mdl-layout__drawer">      
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Python Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/crash-course/index.html">Crash Course</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/1-ndarray.html">Manipulate data with <code class="docutils literal notranslate"><span class="pre">ndarray</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/2-nn.html">Create a neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/3-autograd.html">Automatic differentiation with <code class="docutils literal notranslate"><span class="pre">autograd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/4-train.html">Train the neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/5-predict.html">Predict with a pre-trained model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/6-use_gpus.html">Use GPUs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/to-mxnet/index.html">Moving to MXNet from Other Frameworks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/to-mxnet/pytorch.html">PyTorch vs Apache MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/gluon_from_experiment_to_deployment.html">Gluon: from experiment to deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/logistic_regression_explained.html">Logistic regression explained</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html">MNIST</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../packages/index.html">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/autograd/index.html">Automatic Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/gluon/index.html">Gluon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/blocks/index.html">Blocks</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/custom-layer.html">Custom Layers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/custom_layer_beginners.html">Customer Layers (Beginners)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/hybridize.html">Hybridize</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/init.html">Initialization</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/naming.html">Parameter and Block Naming</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/nn.html">Layers and Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/parameters.html">Parameter Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/save_load_params.html">Saving and Loading Gluon Models</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/activations/activations.html">Activation Blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/data/index.html">Data Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/data_augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/data_augmentation.html#Spatial-Augmentation">Spatial Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/data_augmentation.html#Color-Augmentation">Color Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/data_augmentation.html#Composed-Augmentations">Composed Augmentations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/datasets.html">Gluon <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/datasets.html#Using-own-data-with-included-Datasets">Using own data with included <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/datasets.html#Using-own-data-with-custom-Datasets">Using own data with custom <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/datasets.html#Appendix:-Upgrading-from-Module-DataIter-to-Gluon-DataLoader">Appendix: Upgrading from Module <code class="docutils literal notranslate"><span class="pre">DataIter</span></code> to Gluon <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/image/index.html">Image Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/image/image-augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/image/info_gan.html">Image similarity search with InfoGAN</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/image/mnist.html">Handwritten Digit Recognition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/image/pretrained_models.html">Using pre-trained models in MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/loss/index.html">Losses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/loss/custom-loss.html">Custom Loss Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/loss/kl_divergence.html">Kullback-Leibler (KL) Divergence</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/loss/loss.html">Loss functions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/text/index.html">Text Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/text/gnmt.html">Google Neural Machine Translation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/text/transformer.html">Machine Translation with Transformer</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/training/index.html">Training</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/training/fit_api_tutorial.html">MXNet Gluon Fit API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/training/trainer.html">Trainer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/training/learning_rates/index.html">Learning Rates</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../packages/gluon/training/learning_rates/learning_rate_finder.html">Learning Rate Finder</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../packages/gluon/training/learning_rates/learning_rate_schedules.html">Learning Rate Schedules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../packages/gluon/training/learning_rates/learning_rate_schedules_advanced.html">Advanced Learning Rate Schedules</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/training/normalization/index.html">Normalization Blocks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/kvstore/index.html">KVStore</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/kvstore/kvstore.html">Distributed Key-Value Store</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/ndarray/index.html">NDArray</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/01-ndarray-intro.html">An Intro: Manipulate Data the MXNet Way with NDArray</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/02-ndarray-operations.html">NDArray Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/03-ndarray-contexts.html">NDArray Contexts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/gotchas_numpy_in_mxnet.html">Gotchas using NumPy in Apache MXNet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/sparse/index.html">Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/ndarray/sparse/csr.html">CSRNDArray - NDArray in Compressed Sparse Row Storage Format</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/ndarray/sparse/row_sparse.html">RowSparseNDArray - NDArray for Sparse Gradient Updates</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/ndarray/sparse/train.html">Train a Linear Regression Model with Sparse Symbols</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/ndarray/sparse/train_gluon.html">Sparse NDArrays with Gluon</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/onnx/index.html">ONNX</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/onnx/fine_tuning_gluon.html">Fine-tuning an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/onnx/inference_on_onnx_model.html">Running inference on MXNet/Gluon from an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/onnx/super_resolution.html">Importing an ONNX model into MXNet</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/deploy/export/onnx.html">Export ONNX Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/optimizer/index.html">Optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/viz/index.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/visualize_graph">Visualize networks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../compression/index.html">Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../compression/int8.html">Deploy with int-8</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/float16">Float16</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/gradient_compression">Gradient Compression</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/int8_inference.html">GluonCV with Quantized Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Accelerated Backend Tools</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mkldnn/index.html">Intel MKL-DNN</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="mkldnn/mkldnn_quantization.html">Quantize with MKL-DNN backend</a></li>
+<li class="toctree-l5"><a class="reference internal" href="mkldnn/mkldnn_quantization.html#Improving-accuracy-with-Intel®-Neural-Compressor">Improving accuracy with Intel® Neural Compressor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="mkldnn/mkldnn_readme.html">Install MXNet with MKL-DNN</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="tensorrt/index.html">TensorRT</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="tensorrt/tensorrt.html">Optimizing Deep Learning Computation Graphs with TensorRT</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="tvm.html">Use TVM</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Profiling MXNet Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amp.html">Using AMP: Automatic Mixed Precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../deploy/index.html">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/export/index.html">Export</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/export/onnx.html">Exporting to ONNX format</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/export_network.html">Export Gluon CV Models</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/blocks/save_load_params.html">Save / Load Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/inference/index.html">Inference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/inference/cpp.html">Deploy into C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/inference/image_classification_jetson.html">Image Classication using pretrained ResNet-50 model on Jetson module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/inference/scala.html">Deploy into a Java or Scala Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/inference/wine_detector.html">Real-time Object Detection with MXNet On The Raspberry Pi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/run-on-aws/index.html">Run on AWS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/run-on-aws/use_ec2.html">Run on an EC2 Instance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/run-on-aws/use_sagemaker.html">Run on Amazon SageMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/run-on-aws/cloud.html">MXNet on the Cloud</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/index.html">Extend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../extend/custom_layer.html">Custom Layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../extend/customop.html">Custom Numpy Operators</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/new_op">New Operator Creation</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/add_op_in_backend">New Operator in MXNet Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ndarray/index.html">mxnet.ndarray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/ndarray.html">ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/contrib/index.html">ndarray.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/image/index.html">ndarray.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/linalg/index.html">ndarray.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/op/index.html">ndarray.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/random/index.html">ndarray.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/register/index.html">ndarray.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/sparse/index.html">ndarray.sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/utils/index.html">ndarray.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/gluon/index.html">mxnet.gluon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/block.html">gluon.Block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/hybrid_block.html">gluon.HybridBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/symbol_block.html">gluon.SymbolBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/constant.html">gluon.Constant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/parameter.html">gluon.Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/parameter_dict.html">gluon.ParameterDict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/trainer.html">gluon.Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/contrib/index.html">gluon.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/data/index.html">gluon.data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/gluon/data/vision/index.html">data.vision</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api/gluon/data/vision/datasets/index.html">vision.datasets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api/gluon/data/vision/transforms/index.html">vision.transforms</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/loss/index.html">gluon.loss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/model_zoo/index.html">gluon.model_zoo.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/nn/index.html">gluon.nn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/rnn/index.html">gluon.rnn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/utils/index.html">gluon.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/autograd/index.html">mxnet.autograd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/initializer/index.html">mxnet.initializer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/optimizer/index.html">mxnet.optimizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lr_scheduler/index.html">mxnet.lr_scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/metric/index.html">mxnet.metric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/kvstore/index.html">mxnet.kvstore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/symbol/index.html">mxnet.symbol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/symbol.html">symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/contrib/index.html">symbol.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/image/index.html">symbol.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/linalg/index.html">symbol.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/op/index.html">symbol.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/random/index.html">symbol.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/register/index.html">symbol.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/sparse/index.html">symbol.sparse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/module/index.html">mxnet.module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/contrib/index.html">mxnet.contrib</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/autograd/index.html">contrib.autograd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/io/index.html">contrib.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/ndarray/index.html">contrib.ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/onnx/index.html">contrib.onnx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/quantization/index.html">contrib.quantization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/symbol/index.html">contrib.symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/tensorboard/index.html">contrib.tensorboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/tensorrt/index.html">contrib.tensorrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/text/index.html">contrib.text</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/mxnet/index.html">mxnet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/attribute/index.html">mxnet.attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/base/index.html">mxnet.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/callback/index.html">mxnet.callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/context/index.html">mxnet.context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/engine/index.html">mxnet.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/executor/index.html">mxnet.executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/executor_manager/index.html">mxnet.executor_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/image/index.html">mxnet.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/io/index.html">mxnet.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/kvstore_server/index.html">mxnet.kvstore_server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/libinfo/index.html">mxnet.libinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/log/index.html">mxnet.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/model/index.html">mxnet.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/monitor/index.html">mxnet.monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/name/index.html">mxnet.name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/notebook/index.html">mxnet.notebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/operator/index.html">mxnet.operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/profiler/index.html">mxnet.profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/random/index.html">mxnet.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/recordio/index.html">mxnet.recordio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/registry/index.html">mxnet.registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/rtc/index.html">mxnet.rtc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/runtime/index.html">mxnet.runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/test_utils/index.html">mxnet.test_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/torch/index.html">mxnet.torch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/util/index.html">mxnet.util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/visualization/index.html">mxnet.visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+        <main class="mdl-layout__content" tabIndex="0">
+
+        <script type="text/javascript" src="../../../_static/sphinx_materialdesign_theme.js "></script>
+        <script type="text/javascript" src="../../../_static/feedback.js"></script>
+    <header class="mdl-layout__drawer">      
+    
+      <div class="globaltoc">
+        <span class="mdl-layout-title toc">Table Of Contents</span>
+        
+        
+            
+            <nav class="mdl-navigation">
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Python Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../getting-started/index.html">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/crash-course/index.html">Crash Course</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/1-ndarray.html">Manipulate data with <code class="docutils literal notranslate"><span class="pre">ndarray</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/2-nn.html">Create a neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/3-autograd.html">Automatic differentiation with <code class="docutils literal notranslate"><span class="pre">autograd</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/4-train.html">Train the neural network</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/5-predict.html">Predict with a pre-trained model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/crash-course/6-use_gpus.html">Use GPUs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/to-mxnet/index.html">Moving to MXNet from Other Frameworks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../getting-started/to-mxnet/pytorch.html">PyTorch vs Apache MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/gluon_from_experiment_to_deployment.html">Gluon: from experiment to deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../getting-started/logistic_regression_explained.html">Logistic regression explained</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/image/mnist.html">MNIST</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../packages/index.html">Packages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/autograd/index.html">Automatic Differentiation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/gluon/index.html">Gluon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/blocks/index.html">Blocks</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/custom-layer.html">Custom Layers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/custom_layer_beginners.html">Customer Layers (Beginners)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/hybridize.html">Hybridize</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/init.html">Initialization</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/naming.html">Parameter and Block Naming</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/nn.html">Layers and Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/parameters.html">Parameter Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/save_load_params.html">Saving and Loading Gluon Models</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/blocks/activations/activations.html">Activation Blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/data/index.html">Data Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/data_augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/data_augmentation.html#Spatial-Augmentation">Spatial Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/data_augmentation.html#Color-Augmentation">Color Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/data_augmentation.html#Composed-Augmentations">Composed Augmentations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/datasets.html">Gluon <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/datasets.html#Using-own-data-with-included-Datasets">Using own data with included <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/datasets.html#Using-own-data-with-custom-Datasets">Using own data with custom <code class="docutils literal notranslate"><span class="pre">Dataset</span></code>s</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/data/datasets.html#Appendix:-Upgrading-from-Module-DataIter-to-Gluon-DataLoader">Appendix: Upgrading from Module <code class="docutils literal notranslate"><span class="pre">DataIter</span></code> to Gluon <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/image/index.html">Image Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/image/image-augmentation.html">Image Augmentation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/image/info_gan.html">Image similarity search with InfoGAN</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/image/mnist.html">Handwritten Digit Recognition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/image/pretrained_models.html">Using pre-trained models in MXNet</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/loss/index.html">Losses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/loss/custom-loss.html">Custom Loss Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/loss/kl_divergence.html">Kullback-Leibler (KL) Divergence</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/loss/loss.html">Loss functions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/text/index.html">Text Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/text/gnmt.html">Google Neural Machine Translation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/text/transformer.html">Machine Translation with Transformer</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/gluon/training/index.html">Training</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/training/fit_api_tutorial.html">MXNet Gluon Fit API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/training/trainer.html">Trainer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/training/learning_rates/index.html">Learning Rates</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../packages/gluon/training/learning_rates/learning_rate_finder.html">Learning Rate Finder</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../packages/gluon/training/learning_rates/learning_rate_schedules.html">Learning Rate Schedules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../packages/gluon/training/learning_rates/learning_rate_schedules_advanced.html">Advanced Learning Rate Schedules</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/gluon/training/normalization/index.html">Normalization Blocks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/kvstore/index.html">KVStore</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/kvstore/kvstore.html">Distributed Key-Value Store</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/ndarray/index.html">NDArray</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/01-ndarray-intro.html">An Intro: Manipulate Data the MXNet Way with NDArray</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/02-ndarray-operations.html">NDArray Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/03-ndarray-contexts.html">NDArray Contexts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/gotchas_numpy_in_mxnet.html">Gotchas using NumPy in Apache MXNet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/ndarray/sparse/index.html">Tutorials</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/ndarray/sparse/csr.html">CSRNDArray - NDArray in Compressed Sparse Row Storage Format</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/ndarray/sparse/row_sparse.html">RowSparseNDArray - NDArray for Sparse Gradient Updates</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/ndarray/sparse/train.html">Train a Linear Regression Model with Sparse Symbols</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../packages/ndarray/sparse/train_gluon.html">Sparse NDArrays with Gluon</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/onnx/index.html">ONNX</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/onnx/fine_tuning_gluon.html">Fine-tuning an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/onnx/inference_on_onnx_model.html">Running inference on MXNet/Gluon from an ONNX model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../packages/onnx/super_resolution.html">Importing an ONNX model into MXNet</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/deploy/export/onnx.html">Export ONNX Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/optimizer/index.html">Optimizers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../packages/viz/index.html">Visualization</a><ul>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/visualize_graph">Visualize networks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Performance</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../compression/index.html">Compression</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../compression/int8.html">Deploy with int-8</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/float16">Float16</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/faq/gradient_compression">Gradient Compression</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/int8_inference.html">GluonCV with Quantized Models</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Accelerated Backend Tools</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mkldnn/index.html">Intel MKL-DNN</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="mkldnn/mkldnn_quantization.html">Quantize with MKL-DNN backend</a></li>
+<li class="toctree-l5"><a class="reference internal" href="mkldnn/mkldnn_quantization.html#Improving-accuracy-with-Intel®-Neural-Compressor">Improving accuracy with Intel® Neural Compressor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="mkldnn/mkldnn_readme.html">Install MXNet with MKL-DNN</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="tensorrt/index.html">TensorRT</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="tensorrt/tensorrt.html">Optimizing Deep Learning Computation Graphs with TensorRT</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="tvm.html">Use TVM</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Profiling MXNet Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amp.html">Using AMP: Automatic Mixed Precision</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../deploy/index.html">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/export/index.html">Export</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/export/onnx.html">Exporting to ONNX format</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://gluon-cv.mxnet.io/build/examples_deployment/export_network.html">Export Gluon CV Models</a></li>
+<li class="toctree-l4"><a class="reference external" href="https://mxnet.apache.org/api/python/docs/tutorials/packages/gluon/blocks/save_load_params.html">Save / Load Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/inference/index.html">Inference</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/inference/cpp.html">Deploy into C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/inference/image_classification_jetson.html">Image Classication using pretrained ResNet-50 model on Jetson module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/inference/scala.html">Deploy into a Java or Scala Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/inference/wine_detector.html">Real-time Object Detection with MXNet On The Raspberry Pi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../deploy/run-on-aws/index.html">Run on AWS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/run-on-aws/use_ec2.html">Run on an EC2 Instance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/run-on-aws/use_sagemaker.html">Run on Amazon SageMaker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../deploy/run-on-aws/cloud.html">MXNet on the Cloud</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../extend/index.html">Extend</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../extend/custom_layer.html">Custom Layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../extend/customop.html">Custom Numpy Operators</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/new_op">New Operator Creation</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://mxnet.apache.org/api/faq/add_op_in_backend">New Operator in MXNet Backend</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">Python API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/ndarray/index.html">mxnet.ndarray</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/ndarray.html">ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/contrib/index.html">ndarray.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/image/index.html">ndarray.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/linalg/index.html">ndarray.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/op/index.html">ndarray.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/random/index.html">ndarray.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/register/index.html">ndarray.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/sparse/index.html">ndarray.sparse</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/ndarray/utils/index.html">ndarray.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/gluon/index.html">mxnet.gluon</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/block.html">gluon.Block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/hybrid_block.html">gluon.HybridBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/symbol_block.html">gluon.SymbolBlock</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/constant.html">gluon.Constant</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/parameter.html">gluon.Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/parameter_dict.html">gluon.ParameterDict</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/trainer.html">gluon.Trainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/contrib/index.html">gluon.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/data/index.html">gluon.data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/gluon/data/vision/index.html">data.vision</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../api/gluon/data/vision/datasets/index.html">vision.datasets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../api/gluon/data/vision/transforms/index.html">vision.transforms</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/loss/index.html">gluon.loss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/model_zoo/index.html">gluon.model_zoo.vision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/nn/index.html">gluon.nn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/rnn/index.html">gluon.rnn</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gluon/utils/index.html">gluon.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/autograd/index.html">mxnet.autograd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/initializer/index.html">mxnet.initializer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/optimizer/index.html">mxnet.optimizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/lr_scheduler/index.html">mxnet.lr_scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/metric/index.html">mxnet.metric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/kvstore/index.html">mxnet.kvstore</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/symbol/index.html">mxnet.symbol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/symbol.html">symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/contrib/index.html">symbol.contrib</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/image/index.html">symbol.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/linalg/index.html">symbol.linalg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/op/index.html">symbol.op</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/random/index.html">symbol.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/register/index.html">symbol.register</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/symbol/sparse/index.html">symbol.sparse</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/module/index.html">mxnet.module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/contrib/index.html">mxnet.contrib</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/autograd/index.html">contrib.autograd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/io/index.html">contrib.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/ndarray/index.html">contrib.ndarray</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/onnx/index.html">contrib.onnx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/quantization/index.html">contrib.quantization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/symbol/index.html">contrib.symbol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/tensorboard/index.html">contrib.tensorboard</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/tensorrt/index.html">contrib.tensorrt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/contrib/text/index.html">contrib.text</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/mxnet/index.html">mxnet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/attribute/index.html">mxnet.attribute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/base/index.html">mxnet.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/callback/index.html">mxnet.callback</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/context/index.html">mxnet.context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/engine/index.html">mxnet.engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/executor/index.html">mxnet.executor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/executor_manager/index.html">mxnet.executor_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/image/index.html">mxnet.image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/io/index.html">mxnet.io</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/kvstore_server/index.html">mxnet.kvstore_server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/libinfo/index.html">mxnet.libinfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/log/index.html">mxnet.log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/model/index.html">mxnet.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/monitor/index.html">mxnet.monitor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/name/index.html">mxnet.name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/notebook/index.html">mxnet.notebook</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/operator/index.html">mxnet.operator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/profiler/index.html">mxnet.profiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/random/index.html">mxnet.random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/recordio/index.html">mxnet.recordio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/registry/index.html">mxnet.registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/rtc/index.html">mxnet.rtc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/runtime/index.html">mxnet.runtime</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/test_utils/index.html">mxnet.test_utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/torch/index.html">mxnet.torch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/util/index.html">mxnet.util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/mxnet/visualization/index.html">mxnet.visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        
+        </div>
+    
+</header>
+
+    <div class="document">
+        <div class="page-content" role="main">
+        
+  <!--- Licensed to the Apache Software Foundation (ASF) under one --><!--- or more contributor license agreements.  See the NOTICE file --><!--- distributed with this work for additional information --><!--- regarding copyright ownership.  The ASF licenses this file --><!--- to you under the Apache License, Version 2.0 (the --><!--- "License"); you may not use this file except in compliance --><!--- with the License.  You may obtain a copy of the License at --><!---   http://www.apache.org/licenses/LICENSE-2.0 --><!--- Unless required by applicable law or agreed to in writing, --><!--- software distributed under the License is distributed on an --><!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY --><!--- KIND, either express or implied.  See the License for the --><!--- specific language governing permissions and limitations --><!--- under the License. --><div class="section" id="Profiling-MXNet-Models">
+<h1>Profiling MXNet Models<a class="headerlink" href="#Profiling-MXNet-Models" title="Permalink to this headline">¶</a></h1>
+<p>It is often helpful to check the execution time of each operation in a neural network. You can then determine where to focus your effort to speed up model training or inference. In this tutorial, we will learn how to profile MXNet models to measure their running time and memory consumption using the MXNet profiler.</p>
+<div class="section" id="The-incorrect-way-to-profile">
+<h2>The incorrect way to profile<a class="headerlink" href="#The-incorrect-way-to-profile" title="Permalink to this headline">¶</a></h2>
+<p>If you have just started to use MXNet, you might be tempted to measure the execution time of your model using Python’s <code class="docutils literal notranslate"><span class="pre">time</span></code> module like shown below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">autograd</span><span class="p">,</span> <span class="n">nd</span>
+<span class="kn">import</span> <span class="nn">mxnet</span> <span class="k">as</span> <span class="nn">mx</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="mi">2000</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time for matrix multiplication: </span><span class="si">%f</span><span class="s1"> sec</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">y_np</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">asnumpy</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time for converting to numpy: </span><span class="si">%f</span><span class="s1"> sec&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Time for matrix multiplication: 0.005051 sec</strong></p>
+<p><strong>Time for converting to numpy: 0.167693 sec</strong></p>
+<p>From the timings above, it seems as if converting to numpy takes lot more time than multiplying two large matrices. That doesn’t seem right.</p>
+<p>This is because, in MXNet, all operations are executed asynchronously. So, when <code class="docutils literal notranslate"><span class="pre">nd.dot(x,</span> <span class="pre">x)</span></code> returns, the matrix multiplication is not complete, it has only been queued for execution. However, <a class="reference external" href="https://mxnet.apache.org/api/python/ndarray/ndarray.html?highlight=asnumpy#mxnet.ndarray.NDArray.asnumpy">asnumpy</a> has to wait for the result to be calculated in order to convert it to numpy array on CPU, hence taking a longer time. Other examples of ‘blocking’ operations include
+<a class="reference external" href="https://mxnet.apache.org/api/python/ndarray/ndarray.html?highlight=asscalar#mxnet.ndarray.NDArray.asscalar">asscalar</a> and <a class="reference external" href="https://mxnet.apache.org/api/python/ndarray/ndarray.html?highlight=wait_to_read#mxnet.ndarray.NDArray.wait_to_read">wait_to_read</a>.</p>
+<p>While it is possible to use <a class="reference external" href="https://mxnet.apache.org/api/python/ndarray/ndarray.html?highlight=waitall#mxnet.ndarray.waitall">NDArray.waitall()</a> before and after operations to get running time of operations, it is not a scalable method to measure running time of multiple sets of operations, especially in a <a class="reference external" href="https://mxnet.apache.org/api/python/gluon/gluon.html?highlight=sequential#mxnet.gluon.nn.Sequential">Sequential</a> or hybridized network.</p>
+</div>
+<div class="section" id="The-correct-way-to-profile">
+<h2>The correct way to profile<a class="headerlink" href="#The-correct-way-to-profile" title="Permalink to this headline">¶</a></h2>
+<p>The correct way to measure running time of MXNet models is to use MXNet profiler. In the rest of this tutorial, we will learn how to use the MXNet profiler to measure the running time and memory consumption of MXNet models. You can import the profiler and configure it from Python code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">profiler</span>
+
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_config</span><span class="p">(</span><span class="n">profile_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">aggregate_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">continuous_dump</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;profile_output.json&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">profile_all</span></code> enables all types of profiling. You can also individually enable the following types of profiling:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">profile_symbolic</span></code> (boolean): whether to profile symbolic operators</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">profile_imperative</span></code> (boolean): whether to profile imperative operators</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">profile_memory</span></code> (boolean): whether to profile memory usage</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">profile_api</span></code> (boolean): whether to profile the C API</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">aggregate_stats</span></code> aggregates statistics in memory which can then be printed to console by calling <code class="docutils literal notranslate"><span class="pre">profiler.dumps()</span></code>.</p>
+<div class="section" id="Setup:-Build-a-model">
+<h3>Setup: Build a model<a class="headerlink" href="#Setup:-Build-a-model" title="Permalink to this headline">¶</a></h3>
+<p>Let’s build a small convolutional neural network that we can use to demonstrate profiling.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mxnet</span> <span class="kn">import</span> <span class="n">gluon</span>
+
+<span class="n">net</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">HybridSequential</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">net</span><span class="o">.</span><span class="n">name_scope</span><span class="p">():</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">channels</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">())</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">))</span>
+    <span class="n">net</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">gluon</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We need data that we can run through the network for profiling. We’ll use the MNIST dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mxnet.gluon.data.vision</span> <span class="kn">import</span> <span class="n">transforms</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vision</span><span class="o">.</span><span class="n">MNIST</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">transform_first</span><span class="p">(</span><span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">())</span>
+<span class="n">dataloader</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s define a function that will run a single training iteration given <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">label</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use GPU if available</span>
+<span class="k">if</span> <span class="n">mx</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">num_gpus</span><span class="p">():</span>
+    <span class="n">ctx</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">ctx</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+
+<span class="c1"># Initialize the parameters with random weights</span>
+<span class="n">net</span><span class="o">.</span><span class="n">collect_params</span><span class="p">()</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">init</span><span class="o">.</span><span class="n">Xavier</span><span class="p">(),</span> <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
+
+<span class="c1"># Use SGD optimizer</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">collect_params</span><span class="p">(),</span> <span class="s1">&#39;sgd&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">})</span>
+
+<span class="c1"># Softmax Cross Entropy is a frequently used loss function for multi-class classification</span>
+<span class="n">softmax_cross_entropy</span> <span class="o">=</span> <span class="n">gluon</span><span class="o">.</span><span class="n">loss</span><span class="o">.</span><span class="n">SoftmaxCrossEntropyLoss</span><span class="p">()</span>
+
+<span class="c1"># A helper function to run one training iteration</span>
+<span class="k">def</span> <span class="nf">run_training_iteration</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+    <span class="c1"># Load data and label is the right context</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">as_in_context</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="c1"># Run the forward pass</span>
+    <span class="k">with</span> <span class="n">autograd</span><span class="o">.</span><span class="n">record</span><span class="p">():</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">softmax_cross_entropy</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+    <span class="c1"># Run the backward pass</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="c1"># Apply changes to parameters</span>
+    <span class="n">trainer</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Starting-and-stopping-the-profiler-from-Python">
+<h3>Starting and stopping the profiler from Python<a class="headerlink" href="#Starting-and-stopping-the-profiler-from-Python" title="Permalink to this headline">¶</a></h3>
+<p>When the first forward pass is run on a network, MXNet does a number of housekeeping tasks including inferring the shapes of various parameters, allocating memory for intermediate and final outputs, etc. For these reasons, profiling the first iteration doesn’t provide representative results for the rest of training. We will, therefore, skip the first iteration.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the first iteration without profiling</span>
+<span class="n">itr</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">dataloader</span><span class="p">)</span>
+<span class="n">run_training_iteration</span><span class="p">(</span><span class="o">*</span><span class="nb">next</span><span class="p">(</span><span class="n">itr</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We’ll run the next iteration with the profiler turned on.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">itr</span><span class="p">)</span>
+
+<span class="c1"># Ask the profiler to start recording</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">&#39;run&#39;</span><span class="p">)</span>
+
+<span class="n">run_training_iteration</span><span class="p">(</span><span class="o">*</span><span class="nb">next</span><span class="p">(</span><span class="n">itr</span><span class="p">))</span>
+
+<span class="c1"># Make sure all operations have completed</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">waitall</span><span class="p">()</span>
+<span class="c1"># Ask the profiler to stop recording</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">)</span>
+<span class="c1"># Dump all results to log file before download</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Between running and stopping the profiler, you can also pause and resume the profiler using <code class="docutils literal notranslate"><span class="pre">profiler.pause()</span></code> and <code class="docutils literal notranslate"><span class="pre">profiler.resume()</span></code> respectively to profile only parts of the code you want to profile.</p>
+</div>
+<div class="section" id="Starting-the-profiler-automatically-using-an-environment-variable">
+<h3>Starting the profiler automatically using an environment variable<a class="headerlink" href="#Starting-the-profiler-automatically-using-an-environment-variable" title="Permalink to this headline">¶</a></h3>
+<p>The method described above requires code changes to start and stop the profiler. You can also start the profiler automatically and profile the entire code without any code changes using the <code class="docutils literal notranslate"><span class="pre">MXNET_PROFILER_AUTOSTART</span></code> environment variable.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">MXNET_PROFILER_AUTOSTART=1</span> <span class="pre">python</span> <span class="pre">my_script.py</span></code></p>
+<p>MXNet will start the profiler automatically if you run your code with the environment variable <code class="docutils literal notranslate"><span class="pre">MXNET_PROFILER_AUTOSTART</span></code> set to <code class="docutils literal notranslate"><span class="pre">1</span></code>. The profiler output is stored in <code class="docutils literal notranslate"><span class="pre">profile.json</span></code> inside the current directory.</p>
+<p>Note that the profiler output could be large depending on your code. It might be helpful to profile only sections of your code using the <code class="docutils literal notranslate"><span class="pre">set_state</span></code> API described in the previous section.</p>
+</div>
+<div class="section" id="Increasing-granularity-of-the-profiler-output">
+<h3>Increasing granularity of the profiler output<a class="headerlink" href="#Increasing-granularity-of-the-profiler-output" title="Permalink to this headline">¶</a></h3>
+<p>MXNet executes computation graphs in ‘bulk mode’ which reduces kernel launch gaps in between symbolic operators for faster execution. This could reduce the granularity of the profiler output. If you need profiling result of every operator, please set the environment variables <code class="docutils literal notranslate"><span class="pre">MXNET_EXEC_BULK_EXEC_INFERENCE</span></code> and <code class="docutils literal notranslate"><span class="pre">MXNET_EXEC_BULK_EXEC_TRAIN</span></code> to <code class="docutils literal notranslate"><span class="pre">0</span></code> to disable the bulk execution mode.</p>
+<p>When working with networks created using the Gluon API, you will get a more granular profiling outputs if you profile networks that haven’t been hybridized. Operations can appear fused together in the profiling outputs after hybridization, which can make debugging tricky.</p>
+</div>
+<div class="section" id="Viewing-profiler-output">
+<h3>Viewing profiler output<a class="headerlink" href="#Viewing-profiler-output" title="Permalink to this headline">¶</a></h3>
+<p>There are a few ways to view the information collected by the profiler. You can view it in the console, you can view a more graphical version in a browser, or you can use a vendor tool such as Intel VTune or Nvidia NVProf to view output. For most scenarios the information you need can be obtained with MXNet’s built in profiler support, but if you want to investigate the performance of operators alongside extra context about your hardware (e.g. cache hit rates, or CUDA kernel timings) then
+profiling jointly with vendor tools is recommended.</p>
+<div class="section" id="1.-View-in-console">
+<h4>1. View in console<a class="headerlink" href="#1.-View-in-console" title="Permalink to this headline">¶</a></h4>
+<p>You can use the <code class="docutils literal notranslate"><span class="pre">profiler.dumps()</span></code> method to view the information collected by the profiler in the console. The collected information contains time taken by each operator, time taken by each C API and memory consumed in both CPU and GPU.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">&#39;run&#39;</span><span class="p">)</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">profiler</span><span class="o">.</span><span class="n">dumps</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><img alt="Profile Statistics" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/tutorials/python/profiler/profile_stats.png" /></p>
+</div>
+<div class="section" id="2.-View-in-browser">
+<h4>2. View in browser<a class="headerlink" href="#2.-View-in-browser" title="Permalink to this headline">¶</a></h4>
+<p>You can also dump the information collected by the profiler into a <code class="docutils literal notranslate"><span class="pre">json</span></code> file using the <code class="docutils literal notranslate"><span class="pre">profiler.dump()</span></code> function and view it in a browser.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">profiler</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">finished</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">dump()</span></code> creates a <code class="docutils literal notranslate"><span class="pre">json</span></code> file which can be viewed using a trace consumer like <code class="docutils literal notranslate"><span class="pre">chrome://tracing</span></code> in the Chrome browser. Here is a snapshot that shows the output of the profiling we did above. Note that setting the <code class="docutils literal notranslate"><span class="pre">finished</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">False</span></code> will prevent the profiler from finishing dumping to file. If you just use <code class="docutils literal notranslate"><span class="pre">profiler.dump()</span></code>, you will no longer be able to profile the remaining sections of your model.</p>
+<img alt="Tracing Screenshot" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/tutorials/python/profiler/profiler_output_chrome.png" />
+<p>Let’s zoom in to check the time taken by operators</p>
+<img alt="Operator profiling" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/tutorials/python/profiler/profile_operators.png" />
+<p>The above picture visualizes the sequence in which the operators were executed and the time taken by each operator.</p>
+</div>
+</div>
+<div class="section" id="Profiling-MKLDNN-Operators">
+<h3>Profiling MKLDNN Operators<a class="headerlink" href="#Profiling-MKLDNN-Operators" title="Permalink to this headline">¶</a></h3>
+<p>Reagrding MKLDNN operators, the library has already provided the internal profiling tool. Firstly, you need set <code class="docutils literal notranslate"><span class="pre">MKLDNN_VERBOSE=1</span></code> to enable internal profiler.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">MKLDNN_VERBOSE=1</span> <span class="pre">python</span> <span class="pre">my_script.py</span> <span class="pre">&gt;</span> <span class="pre">mkldnn_verbose.log</span></code></p>
+<p>Now, the detailed profiling insights of each mkldnn prmitive are saved into <code class="docutils literal notranslate"><span class="pre">mkldnn_verbose.log</span></code> (like below).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">info</span><span class="p">,</span><span class="n">DNNL</span> <span class="n">v1</span><span class="mf">.1.2</span> <span class="p">(</span><span class="n">commit</span> <span class="n">cb2cc7ac17ff4e2ef50805c7048d33256d82be4d</span><span class="p">)</span>
+<span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">info</span><span class="p">,</span><span class="n">Detected</span> <span class="n">ISA</span> <span class="ow">is</span> <span class="n">Intel</span> <span class="n">AVX</span><span class="o">-</span><span class="mi">512</span> <span class="k">with</span> <span class="n">Intel</span> <span class="n">DL</span> <span class="n">Boost</span>
+<span class="n">dnnl_verbose</span><span class="p">,</span><span class="n">exec</span><span class="p">,</span><span class="n">cpu</span><span class="p">,</span><span class="n">convolution</span><span class="p">,</span><span class="n">jit</span><span class="p">:</span><span class="n">avx512_common</span><span class="p">,</span><span class="n">forward_inference</span><span class="p">,</span><span class="n">src_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">aBcd16b</span><span class="p">:</span><span class="n">f0</span> <span class="n">wei_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">ABcd16b16a</span><span class="p">:</span><span class="n">f0</span> <span class="n">bia_undef</span><span class="p">::</span><span class="n">undef</span><span class="p">::</span><span class="n">f0</span> <span class="n">dst_f32</span><span class="p">::</span><span class="n">blocked</span><span class="p">:</span><span class="n">aBcd16b</span><span class="p">:</span><span class="n">f0</span><span class="p">,,</span><span class="n">alg</span><span class="p">:</span><span class="n">convolution_direct</span><span class="p">,</span><span class="n">mb32_ic32oc32_ih256oh256kh3sh1dh0ph1_iw256ow256kw3sw1dw0pw1</span><span class="p">,</span><span class="mf">20.7539</span>
+</pre></div>
+</div>
+<p>For example, if you want to calculate the total executing time of <code class="docutils literal notranslate"><span class="pre">convolution</span></code> primitive, you can just run:</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">cat</span> <span class="pre">mkldnn_verbose.log</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">&quot;exec,cpu,convolution&quot;</span> <span class="pre">|</span> <span class="pre">awk</span> <span class="pre">'BEGIN{FS=&quot;,&quot;}</span> <span class="pre">{SUM+=$11}</span> <span class="pre">END</span> <span class="pre">{print</span> <span class="pre">SUM}'</span></code></p>
+<p>Moreover, you can set <code class="docutils literal notranslate"><span class="pre">MKLDNN_VERBOSE=2</span></code> to collect both creating and executing time of each primitive.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">cat</span> <span class="pre">mkldnn_verbose.log</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">&quot;create,cpu,convolution&quot;</span> <span class="pre">|</span> <span class="pre">awk</span> <span class="pre">'BEGIN{FS=&quot;,&quot;}</span> <span class="pre">{SUM+=$11}</span> <span class="pre">END</span> <span class="pre">{print</span> <span class="pre">SUM}'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">cat</span> <span class="pre">mkldnn_verbose.log</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">&quot;exec,cpu,convolution&quot;</span> <span class="pre">|</span> <span class="pre">awk</span> <span class="pre">'BEGIN{FS=&quot;,&quot;}</span> <span class="pre">{SUM+=$11}</span> <span class="pre">END</span> <span class="pre">{print</span> <span class="pre">SUM}'</span></code></p>
+</div>
+<div class="section" id="Profiling-Custom-Operators">
+<h3>Profiling Custom Operators<a class="headerlink" href="#Profiling-Custom-Operators" title="Permalink to this headline">¶</a></h3>
+<p>Should the existing NDArray operators fail to meet all your model’s needs, MXNet supports <a class="reference external" href="/api/python/docs/tutorials/extend/customop.html">Custom Operators</a> that you can define in Python. In <code class="docutils literal notranslate"><span class="pre">forward()</span></code> and <code class="docutils literal notranslate"><span class="pre">backward()</span></code> of a custom operator, there are two kinds of code: “pure Python” code (NumPy operators included) and “sub-operators” (NDArray operators called within <code class="docutils literal notranslate"><span class="pre">forward()</span></code> and <code class="docutils literal notranslate"><span class="pre">backward()</span></code>). With that said, MXNet can profile the execution time of both kinds without additional
+setup. Specifically, the MXNet profiler will break a single custom operator call into a pure Python event and several sub-operator events if there are any. Furthermore, all of those events will have a prefix in their names, which is, conveniently, the name of the custom operator you called.</p>
+<p>Let’s try profiling custom operators with the following code example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyAddOne</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">CustomOp</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_train</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">in_data</span><span class="p">,</span> <span class="n">out_data</span><span class="p">,</span> <span class="n">aux</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">out_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">req</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">in_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">out_grad</span><span class="p">,</span> <span class="n">in_data</span><span class="p">,</span> <span class="n">out_data</span><span class="p">,</span> <span class="n">in_grad</span><span class="p">,</span> <span class="n">aux</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">in_grad</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">req</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">out_grad</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="nd">@mx</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s1">&#39;MyAddOne&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CustomAddOneProp</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">operator</span><span class="o">.</span><span class="n">CustomOpProp</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CustomAddOneProp</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">need_top_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">list_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">infer_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_shape</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">in_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">in_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">create_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">,</span> <span class="n">shapes</span><span class="p">,</span> <span class="n">dtypes</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MyAddOne</span><span class="p">()</span>
+
+
+<span class="n">inp</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">))</span>
+
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_config</span><span class="p">(</span><span class="n">profile_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">continuous_dump</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> \
+                    <span class="n">aggregate_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">&#39;run&#39;</span><span class="p">)</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">nd</span><span class="o">.</span><span class="n">Custom</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">op_type</span><span class="o">=</span><span class="s2">&quot;MyAddOne&quot;</span><span class="p">)</span>
+
+<span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">waitall</span><span class="p">()</span>
+
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">profiler</span><span class="o">.</span><span class="n">dumps</span><span class="p">())</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">finished</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, we have created a custom operator called <code class="docutils literal notranslate"><span class="pre">MyAddOne</span></code>, and within its <code class="docutils literal notranslate"><span class="pre">forward()</span></code> function, we simply add one to the input. We can visualize the dump file in <code class="docutils literal notranslate"><span class="pre">chrome://tracing/</span></code>:</p>
+<img alt="Custom Operator Profiling Screenshot" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/tutorials/python/profiler/profiler_output_custom_operator_chrome.png" />
+<p>As shown by the screenshot, in the <strong>Custom Operator</strong> domain where all the custom operator-related events fall into, we can easily visualize the execution time of each segment of <code class="docutils literal notranslate"><span class="pre">MyAddOne</span></code>. We can tell that <code class="docutils literal notranslate"><span class="pre">MyAddOne::pure_python</span></code> is executed first. We also know that <code class="docutils literal notranslate"><span class="pre">CopyCPU2CPU</span></code> and <code class="docutils literal notranslate"><span class="pre">_plus_scalr</span></code> are two “sub-operators” of <code class="docutils literal notranslate"><span class="pre">MyAddOne</span></code> and the sequence in which they are executed.</p>
+<p>Please note that: to be able to see the previously described information, you need to set <code class="docutils literal notranslate"><span class="pre">profile_imperative</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> even when you are using custom operators in <a class="reference external" href="https://mxnet.apache.org/versions/master/tutorials/basic/symbol.html">symbolic mode</a> (refer to the code snippet below, which is the symbolic-mode equivelent of the code example above). The reason is that within custom operators, pure python code and sub-operators are still called imperatively.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set profile_all to True</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_config</span><span class="p">(</span><span class="n">profile_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">aggregate_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">continuous_dump</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># OR, Explicitly Set profile_symbolic and profile_imperative to True</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_config</span><span class="p">(</span><span class="n">profile_symbolic</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">profile_imperative</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> \
+                    <span class="n">aggregate_stats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">continuous_dump</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">&#39;run&#39;</span><span class="p">)</span>
+<span class="c1"># Use Symbolic Mode</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">Custom</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">op_type</span><span class="o">=</span><span class="s1">&#39;MyAddOne&#39;</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">mx</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="n">inp</span><span class="p">})</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">forward</span><span class="p">()</span>
+<span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">waitall</span><span class="p">()</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">profiler</span><span class="o">.</span><span class="n">dumps</span><span class="p">())</span>
+<span class="n">profiler</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Some-Rules-to-Pay-Attention-to">
+<h3>Some Rules to Pay Attention to<a class="headerlink" href="#Some-Rules-to-Pay-Attention-to" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Always use <code class="docutils literal notranslate"><span class="pre">profiler.dump(finished=False)</span></code> if you do not intend to finish dumping to file. Otherwise, calling <code class="docutils literal notranslate"><span class="pre">profiler.dump()</span></code> in the middle of your model may lead to unexpected behaviors; and if you subsequently call <code class="docutils literal notranslate"><span class="pre">profiler.set_config()</span></code>, the program will error out.</p></li>
+<li><p>You can only dump to one file. Do not change the target file by calling <code class="docutils literal notranslate"><span class="pre">profiler.set_config(filename='new_name.json')</span></code> in the middle of your model. This will lead to incomplete dump outputs.</p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="Advanced:-Using-NVIDIA-Profiling-Tools">
+<h2>Advanced: Using NVIDIA Profiling Tools<a class="headerlink" href="#Advanced:-Using-NVIDIA-Profiling-Tools" title="Permalink to this headline">¶</a></h2>
+<p>MXNet’s Profiler is the recommended starting point for profiling MXNet code, but NVIDIA also provides a couple of tools for low-level profiling of CUDA code: <a class="reference external" href="https://devblogs.nvidia.com/cuda-pro-tip-nvprof-your-handy-universal-gpu-profiler/">NVProf</a>, <a class="reference external" href="https://developer.nvidia.com/nvidia-visual-profiler">Visual Profiler</a> and <a class="reference external" href="https://developer.nvidia.com/nsight-compute">Nsight Compute</a>. You can use these tools to profile all kinds of executables, so they can be used for profiling Python
+scripts running MXNet. And you can use these in conjunction with the MXNet Profiler to see high-level information from MXNet alongside the low-level CUDA kernel information.</p>
+<p>NVProf and Visual Profiler are available in CUDA 9 and CUDA 10 toolkits. You can get a timeline view of CUDA kernel executions, and also analyse the profiling results to get automated recommendations. It is useful for profiling end-to-end training but the interface can sometimes become slow and unresponsive.</p>
+<p>You can initiate the profiling directly from inside Visual Profiler or from the command line with <code class="docutils literal notranslate"><span class="pre">nvprof</span></code> which wraps the execution of your Python script. If it’s not on your path already, you can find <code class="docutils literal notranslate"><span class="pre">nvprof</span></code> inside your CUDA directory. See <a class="reference external" href="https://discuss.mxnet.io/t/using-nvidia-profiling-tools-visual-profiler-and-nsight-compute/">this discussion post</a> for more details on setup.</p>
+<p><code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">nvprof</span> <span class="pre">-o</span> <span class="pre">my_profile.nvvp</span> <span class="pre">python</span> <span class="pre">my_profiler_script.py</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">==11588==</span> <span class="pre">NVPROF</span> <span class="pre">is</span> <span class="pre">profiling</span> <span class="pre">process</span> <span class="pre">11588,</span> <span class="pre">command:</span> <span class="pre">python</span> <span class="pre">my_profiler_script.py</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">==11588==</span> <span class="pre">Generated</span> <span class="pre">result</span> <span class="pre">file:</span> <span class="pre">/home/user/Development/incubator-mxnet/ci/my_profile.nvvp</span></code></p>
+<p>We specified an output file called <code class="docutils literal notranslate"><span class="pre">my_profile.nvvp</span></code> and this will be annotated with NVTX ranges (for MXNet operations) that will be displayed alongside the standard NVProf timeline. This can be very useful when you’re trying to find patterns between operators run by MXNet, and their associated CUDA kernel calls.</p>
+<p>You can open this file in Visual Profiler to visualize the results.</p>
+<img alt="Operator profiling" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/tutorials/python/profiler/profiler_nvprof.png" />
+<p>At the top of the plot we have CPU tasks such as driver operations, memory copy calls, MXNet engine operator invocations, and imperative MXNet API calls. Below we see the kernels active on the GPU during the same time period.</p>
+<img alt="Operator profiling" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/tutorials/python/profiler/profiler_nvprof_zoomed.png" />
+<p>Zooming in on a backwards convolution operator we can see that it is in fact made up of a number of different GPU kernel calls, including a cuDNN winograd convolution call, and a fast-fourier transform call.</p>
+<img alt="Operator profiling" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/tutorials/python/profiler/profiler_winograd.png" />
+<p>Selecting any of these kernel calls (the winograd convolution call shown here) will get you some interesting GPU performance information such as occupancy rates (vs theoretical), shared memory usage and execution duration.</p>
+<p>Nsight Compute is available in CUDA 10 toolkit, but can be used to profile code running CUDA 9. You don’t get a timeline view, but you get many low level statistics about each individual kernel executed and can compare multiple runs (i.e. create a baseline).</p>
+<img alt="Nsight Compute" src="https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/tutorials/python/profiler/profile_nsight_compute.png" />
+<div class="section" id="Further-reading">
+<h3>Further reading<a class="headerlink" href="#Further-reading" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/master/example/profiler">Examples using MXNet profiler.</a></p></li>
+<li><p><a class="reference external" href="https://mxnet.apache.org/api/faq/perf">Some tips for improving MXNet performance.</a></p></li>
+</ul>
+<!-- INSERT SOURCE DOWNLOAD BUTTONS --></div>
+</div>
+</div>
+
+
+        <hr class="feedback-hr-top" />
+<div class="feedback-container">
+    <div class="feedback-question">Did this page help you?</div>
+    <div class="feedback-answer-container">
+        <div class="feedback-answer yes-link" data-response="yes">Yes</div>
+        <div class="feedback-answer no-link" data-response="no">No</div>
+    </div>
+    <div class="feedback-thank-you">Thanks for your feedback!</div>
+</div>
+<hr class="feedback-hr-bottom" />
+        </div>
+        <div class="side-doc-outline">
+            <div class="side-doc-outline--content"> 
+<div class="localtoc">
+    <p class="caption">
+      <span class="caption-text">Table Of Contents</span>
+    </p>
+    <ul>
+<li><a class="reference internal" href="#">Profiling MXNet Models</a><ul>
+<li><a class="reference internal" href="#The-incorrect-way-to-profile">The incorrect way to profile</a></li>
+<li><a class="reference internal" href="#The-correct-way-to-profile">The correct way to profile</a><ul>
+<li><a class="reference internal" href="#Setup:-Build-a-model">Setup: Build a model</a></li>
+<li><a class="reference internal" href="#Starting-and-stopping-the-profiler-from-Python">Starting and stopping the profiler from Python</a></li>
+<li><a class="reference internal" href="#Starting-the-profiler-automatically-using-an-environment-variable">Starting the profiler automatically using an environment variable</a></li>
+<li><a class="reference internal" href="#Increasing-granularity-of-the-profiler-output">Increasing granularity of the profiler output</a></li>
+<li><a class="reference internal" href="#Viewing-profiler-output">Viewing profiler output</a><ul>
+<li><a class="reference internal" href="#1.-View-in-console">1. View in console</a></li>
+<li><a class="reference internal" href="#2.-View-in-browser">2. View in browser</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Profiling-MKLDNN-Operators">Profiling MKLDNN Operators</a></li>
+<li><a class="reference internal" href="#Profiling-Custom-Operators">Profiling Custom Operators</a></li>
+<li><a class="reference internal" href="#Some-Rules-to-Pay-Attention-to">Some Rules to Pay Attention to</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Advanced:-Using-NVIDIA-Profiling-Tools">Advanced: Using NVIDIA Profiling Tools</a><ul>
+<li><a class="reference internal" href="#Further-reading">Further reading</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+            </div>
+        </div>                    
+
+      <div class="clearer"></div>
+    </div><div class="pagenation">
+     <a id="button-prev" href="tvm.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="P">
+         <i class="pagenation-arrow-L fas fa-arrow-left fa-lg"></i>
+         <div class="pagenation-text">
+            <span class="pagenation-direction">Previous</span>
+            <div>Use TVM</div>
+         </div>
+     </a>
+     <a id="button-next" href="amp.html" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--colored" role="botton" accesskey="N">
+         <i class="pagenation-arrow-R fas fa-arrow-right fa-lg"></i>
+        <div class="pagenation-text">
+            <span class="pagenation-direction">Next</span>
+            <div>Using AMP: Automatic Mixed Precision</div>
+        </div>
+     </a>
+  </div>
+            <footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a class="u-email" href="mailto:dev@mxnet.apache.org">Dev list</a></li>
+                    <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://discuss.mxnet.io">MXNet Discuss forum</a></li>
+                    <li><a href="/community/contribute">Contribute To MXNet</a></li>
+
+                </ul>
+            </div>
+            <div class="col-3">
+                <h4 class="footer-category-title">Apache</h4>
+                <ul class="apache-list">
+                    <li><a href="https://www.apache.org/foundation/">Foundation</a></li>
+                    <li><a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a></li>
+                    <li><a href="/api/faq/security.html">Security</a></li>
+                    <li><a href="https://www.apache.org/licenses/">License</a></li>
+                    <li><a href="https://www.apache.org/events/current-event">Events</a></li>
+                    <li><a href="https://www.apache.org/foundation/thanks.html">Thanks</a></li>
+                </ul>
+            </div>
+
+            <div class="col-3"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-3 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="../../../_static/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2018, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+  </body>
+</html>

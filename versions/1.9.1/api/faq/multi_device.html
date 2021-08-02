@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+<!---
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+
+<html lang=" en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/versions/1.9.1/assets/img/mxnet-icon.png" rel="icon" type="image/png"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Data Parallelism with Multiple CPU/GPUs on MXNet | Apache MXNet</title>
+<meta name="generator" content="Jekyll v3.8.6" />
+<meta property="og:title" content="Data Parallelism with Multiple CPU/GPUs on MXNet" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A flexible and efficient library for deep learning." />
+<meta property="og:description" content="A flexible and efficient library for deep learning." />
+<link rel="canonical" href="https://mxnet.apache.org/versions/1.9.1/api/faq/multi_device" />
+<meta property="og:url" content="https://mxnet.apache.org/versions/1.9.1/api/faq/multi_device" />
+<meta property="og:site_name" content="Apache MXNet" />
+<script type="application/ld+json">
+{"headline":"Data Parallelism with Multiple CPU/GPUs on MXNet","description":"A flexible and efficient library for deep learning.","url":"https://mxnet.apache.org/versions/1.9.1/api/faq/multi_device","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/versions/1.9.1/assets/docsearch.min.css" /><link rel="stylesheet" href="/versions/1.9.1/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://mxnet.apache.org/versions/1.9.1/feed.xml" title="Apache MXNet" /><!-- Matomo -->
+<script>
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  /* We explicitly disable cookie tracking to avoid privacy issues */
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.apache.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '23']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+<script src="/versions/1.9.1/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/versions/1.9.1/assets/js/docsearch.min.js"></script><script src="/versions/1.9.1/assets/js/globalSearch.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/clipboard.js" defer></script>
+  <script src="/versions/1.9.1/assets/js/copycode.js" defer></script></head>
+<body><header class="site-header" role="banner">
+
+  <script>
+    $(document).ready(function () {
+
+      // HEADER OPACITY LOGIC
+
+      function opacity_header() {
+        var value = "rgba(4,140,204," + ($(window).scrollTop() / 300 + 0.4) + ")"
+        $('.site-header').css("background-color", value)
+      }
+
+      $(window).scroll(function () {
+        opacity_header()
+      })
+      opacity_header();
+
+      // MENU SELECTOR LOGIC
+      $('.page-link').each( function () {
+        if (window.location.href.includes(this.href)) {
+          $(this).addClass("page-current");
+        }
+      });
+    })
+  </script>
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/versions/1.9.1/"><img
+            src="/versions/1.9.1/assets/img/mxnet_logo.png" class="site-header-logo"></a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger"/>
+      <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+      </label>
+      <div class="gs-search-border">
+        <div id="gs-search-icon"></div>
+        <form id="global-search-form">
+          <input id="global-search" type="text" title="Search" placeholder="Search" />
+          <div id="global-search-dropdown-container">
+            <button class="gs-current-version btn" type="button" data-toggle="dropdown">
+                <span id="gs-current-version-label">1.9.1</span>
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+          <span id="global-search-close">x</span>
+        </form>
+      </div>
+      <div class="trigger">
+        <div id="global-search-mobile-border">
+          <div id="gs-search-icon-mobile"></div>
+          <input id="global-search-mobile" placeholder="Search..." type="text"/>
+          <div id="global-search-dropdown-container-mobile">
+            <button class="gs-current-version-mobile btn" type="button" data-toggle="dropdown">
+                <svg class="gs-dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true">
+                    <path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path>
+                </svg>
+            </button>
+            <ul class="gs-opt-group gs-version-dropdown-mobile">
+              
+                
+                  <li class="gs-opt gs-versions">master</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions active">1.9.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.8.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.7.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.6.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.5.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.4.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.3.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.2.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.1.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">1.0.0</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.12.1</li>
+                
+              
+                
+                  <li class="gs-opt gs-versions">0.11.0</li>
+                
+              
+            </ul>
+        </div>
+        </div>
+        <a class="page-link" href="/versions/1.9.1/get_started">Get Started</a>
+        <a class="page-link" href="/versions/1.9.1/features">Features</a>
+        <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
+        <a class="page-link" href="/versions/1.9.1/api">Docs & Tutorials</a>
+        <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
+        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <div class="dropdown" style="min-width:100px">
+          <span class="dropdown-header">Apache
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content" style="min-width:250px">
+            <a href="https://www.apache.org/foundation/">Apache Software Foundation</a>
+            <a href="https://incubator.apache.org/">Apache Incubator</a>
+            <a href="https://www.apache.org/licenses/">License</a>
+            <a href="/versions/1.9.1/api/faq/security.html">Security</a>
+            <a href="https://privacy.apache.org/policies/privacy-policy-public.html">Privacy</a>
+            <a href="https://www.apache.org/events/current-event">Events</a>
+            <a href="https://www.apache.org/foundation/sponsorship.html">Sponsorship</a>
+            <a href="https://www.apache.org/foundation/thanks.html">Thanks</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-header">1.9.1
+            <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a href="/">master</a>
+            <a class="dropdown-option-active" href="/versions/1.9.1/">1.9.1</a>
+            <a href="/versions/1.8.0/">1.8.0</a>
+            <a href="/versions/1.7.0/">1.7.0</a>
+            <a href="/versions/1.6.0/">1.6.0</a>
+            <a href="/versions/1.5.0/">1.5.0</a>
+            <a href="/versions/1.4.1/">1.4.1</a>
+            <a href="/versions/1.3.1/">1.3.1</a>
+            <a href="/versions/1.2.1/">1.2.1</a>
+            <a href="/versions/1.1.0/">1.1.0</a>
+            <a href="/versions/1.0.0/">1.0.0</a>
+            <a href="/versions/0.12.1/">0.12.1</a>
+            <a href="/versions/0.11.0/">0.11.0</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+    <script>
+
+</script>
+<article class="post">
+
+    <header class="post-header wrapper">
+        <h1 class="post-title">Data Parallelism with Multiple CPU/GPUs on MXNet</h1>
+        <h3></h3></header>
+
+    <div class="post-content">
+        <div class="wrapper">
+            <div class="row">
+    <div class="col-3 docs-side-bar">
+        <h3 style="text-transform: capitalize; padding-left:10px">faq</h3>
+        <ul>
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/add_op_in_backend">A Beginner's Guide to Implementing Operators in MXNet Backend</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/caffe">Convert from Caffe to MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/cloud">MXNet on the Cloud</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/distributed_training">Distributed Training in MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/env_var">Environment Variables</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/float16">Float16</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/large_tensor_support">Using MXNet with Large Tensor Support</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/model_parallel_lstm">Model Parallel</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/multi_device">Data Parallelism with Multiple CPU/GPUs on MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/new_op">Create New Operators</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/nnpack">NNPACK for Multi-Core CPU Support in MXNet</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/perf">Some Tips for Improving MXNet Performance</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/recordio">Create a Dataset Using RecordIO</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/s3_integration">Use data from S3 for training</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/security">MXNet Security Best Practices</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/smart_device">Deep Learning at the Edge</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/visualize_graph">Visualize Neural Networks</a></li>
+              <!-- page-category -->
+            
+            
+            <li><a href="/versions/1.9.1/api/faq/why_mxnet">Why MXNet came to be?</a></li>
+              <!-- page-category -->
+            
+              <!-- page-category -->
+            
+              <!-- page-category -->
+               <!-- resource-p -->
+        </ul>
+    </div>
+    <div class="col-9">
+        <!--- Licensed to the Apache Software Foundation (ASF) under one -->
+
+<!--- or more contributor license agreements.  See the NOTICE file -->
+
+<!--- distributed with this work for additional information -->
+
+<!--- regarding copyright ownership.  The ASF licenses this file -->
+
+<!--- to you under the Apache License, Version 2.0 (the -->
+
+<!--- "License"); you may not use this file except in compliance -->
+
+<!--- with the License.  You may obtain a copy of the License at -->
+
+<!---   http://www.apache.org/licenses/LICENSE-2.0 -->
+
+<!--- Unless required by applicable law or agreed to in writing, -->
+
+<!--- software distributed under the License is distributed on an -->
+
+<!--- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY -->
+
+<!--- KIND, either express or implied.  See the License for the -->
+
+<!--- specific language governing permissions and limitations -->
+
+<!--- under the License. -->
+
+<h1 id="run-mxnet-on-multiple-cpu-gpus-with-data-parallelism">Run MXNet on Multiple CPU/GPUs with Data Parallelism</h1>
+
+<p><em>MXNet</em> supports training with multiple CPUs and GPUs, which may be located on different physical machines.</p>
+
+<h2 id="data-parallelism-vs-model-parallelism">Data Parallelism vs Model Parallelism</h2>
+
+<p>By default, <em>MXNet</em> uses data parallelism to partition the workload over multiple
+devices.
+Assume there are <em>n</em> devices.
+Then each one will receive a copy of the complete model
+and train it on <em>1/n</em> of the data.
+The results such as gradients and
+updated model are communicated across these devices.</p>
+
+<p>MXNet also supports model parallelism.
+In this approach, each device holds onto only part of the model.
+This proves useful when the model is too large to fit onto a single device.
+As an example, see the following <a href="./model_parallel_lstm.md">tutorial</a>
+which shows how to use model parallelism for training a multi-layer LSTM model.
+In this tutorial, we&#39;ll focus on data parallelism.</p>
+
+<h2 id="multiple-gpus-within-a-single-machine">Multiple GPUs within a Single Machine</h2>
+
+<h3 id="workload-partitioning">Workload Partitioning</h3>
+
+<p>By default, <em>MXNet</em> partitions a data batch evenly among the available GPUs.
+Assume a batch size <em>b</em> and assume there are <em>k</em> GPUs, then in one iteration
+each GPU will perform forward and backward on <em>b/k</em> examples. The
+gradients are then summed over all GPUs before updating the model.</p>
+
+<h3 id="how-to-use">How to Use</h3>
+
+<blockquote>
+<p>To use GPUs, we need to compile MXNet with GPU support. For
+example, set <code>USE_CUDA=1</code> in <code>config.mk</code> before <code>make</code>. (see
+<a href="/get_started">MXNet installation guide</a> for more options).</p>
+</blockquote>
+
+<p>If a machine has one or more GPU cards installed,
+then each card is labeled by a number starting from 0.
+To use a particular GPU, one can either
+specify the context <code>context</code> in code
+or pass <code>--gpus</code> at the command line.
+For example, to use GPU 0 and 2 in python,
+one can typically create a module with
+<code>python
+import mxnet as mx
+module = mx.module.Module(context=[mx.gpu(0), mx.gpu(2)], ...)
+</code>
+while if the program accepts a <code>--gpus</code> flag (as seen in
+<a href="https://github.com/apache/mxnet/tree/v1.x/example/image-classification">example/image-classification</a>),
+then we can try
+<code>bash
+python train_mnist.py --gpus 0,2 ...
+</code></p>
+
+<h3 id="advanced-usage">Advanced Usage</h3>
+
+<p>If the available GPUs are not all equally powerful,
+we can partition the workload accordingly.
+For example, if GPU 0 is 3 times faster than GPU 2,
+then we might use the workload option <code>work_load_list=[3, 1]</code>,
+see <a href="/api/python/docs/api/module/index.html">Module</a>
+for more details.</p>
+
+<p>Training with multiple GPUs should yield the same results
+as training on a single GPU if all other hyper-parameters are the same.
+In practice, the results may exhibit small differences,
+owing to the randomness of I/O (random order or other augmentations),
+weight initialization with different seeds, and CUDNN.</p>
+
+<p>We can control on which devices the gradient is aggregated
+and on which device the model is updated via <a href="/api/python/docs/api/kvstore/index.html"><code>KVStore</code></a>,
+the <em>MXNet</em> module that supports data communication.
+One can either use <code>mx.kvstore.create(type)</code> to get an instance
+or use the program flag <code>--kv-store type</code>.</p>
+
+<p>There are two commonly used types,</p>
+
+<ul>
+<li><code>local</code>: all gradients are copied to CPU memory and weights are updated there.</li>
+<li><code>device</code>: both gradient aggregation and weight updates are run on GPUs.
+With this setting, the <code>KVStore</code> also attempts to use GPU peer-to-peer communication,
+potentially accelerating the communication.
+Note that this option may result in higher GPU memory usage.</li>
+</ul>
+
+<p>When using a large number of GPUs, e.g. &gt;=4, we suggest using <code>device</code> for better performance.</p>
+
+<h2 id="distributed-training-with-multiple-machines">Distributed Training with Multiple Machines</h2>
+
+<p><code>KVStore</code> also supports a number of options for running on multiple machines.</p>
+
+<ul>
+<li><code>dist_sync</code> behaves similarly to <code>local</code> but exhibits one major difference.
+With <code>dist_sync</code>, <code>batch-size</code> now means the batch size used on each machine.
+So if there are <em>n</em> machines and we use batch size <em>b</em>,
+then <code>dist_sync</code> behaves like <code>local</code> with batch size <em>n*b</em>.</li>
+<li><code>dist_device_sync</code> is similar to <code>dist_sync</code>. The difference between them is that
+<code>dist_device_sync</code> aggregates gradients and updates weight on GPUs
+while <code>dist_sync</code> does so on CPU memory.</li>
+<li><code>dist_async</code>  performs asynchronous updates.
+The weight is updated whenever gradients are received from any machine.
+The update is atomic, i.e., no two updates happen on the same weight at the same time.
+However, the order is not guaranteed.</li>
+</ul>
+
+<h3 id="how-to-launch-a-job">How to Launch a Job</h3>
+
+<blockquote>
+<p>To use distributed training, we need to compile with <code>USE_DIST_KVSTORE=1</code>
+(see <a href="/get_started">MXNet installation guide</a> for more options).</p>
+</blockquote>
+
+<p>Launching a distributed job is a bit different from running on a single
+machine. MXNet provides
+<a href="https://github.com/apache/mxnet/blob/v1.x/tools/launch.py">tools/launch.py</a> to
+start a job by using <code>ssh</code>, <code>mpi</code>, <code>sge</code>, or <code>yarn</code>.</p>
+
+<p>An easy way to set up a cluster of EC2 instances for distributed deep learning
+is using an <a href="https://github.com/awslabs/deeplearning-cfn">AWS CloudFormation template</a>.
+If you do not have a cluster, you can check the repository before you continue.</p>
+
+<p>Assume we are at the directory <code>mxnet/example/image-classification</code>
+and want to train LeNet to classify MNIST images, as demonstrated here:
+<a href="https://github.com/apache/mxnet/blob/v1.x/example/image-classification/train_mnist.py">train_mnist.py</a>.</p>
+
+<p>On a single machine, we can run:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">python train_mnist.py <span class="nt">--network</span> lenet
+</code></pre></div>
+<p>Now, say we are given two ssh-able machines and <em>MXNet</em> is installed on both machines.
+We want to train LeNet on these two machines.
+First, we save the IPs (or hostname) of these two machines in file <code>hosts</code>, e.g.</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">$ </span><span class="nb">cat </span>hosts
+172.30.0.172
+172.30.0.171
+</code></pre></div>
+<p>Next, if the mxnet folder is accessible from both machines, e.g. on a
+<a href="https://help.ubuntu.com/lts/serverguide/network-file-system.html">network filesystem</a>,
+then we can run:</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">python ../../tools/launch.py <span class="nt">-n</span> 2 <span class="nt">--launcher</span> ssh <span class="nt">-H</span> hosts python train_mnist.py <span class="nt">--network</span> lenet <span class="nt">--kv-store</span> dist_sync
+</code></pre></div>
+<p>Note that here we</p>
+
+<ul>
+<li>use <code>launch.py</code> to submit the job.</li>
+<li>provide launcher, <code>ssh</code> if all machines are ssh-able, <code>mpi</code> if <code>mpirun</code> is
+available, <code>sge</code> for Sun Grid Engine, and <code>yarn</code> for Apache Yarn.</li>
+<li><code>-n</code> number of worker nodes to run on</li>
+<li><code>-H</code> the host file which is required by <code>ssh</code> and <code>mpi</code></li>
+<li><code>--kv-store</code> use either <code>dist_sync</code> or <code>dist_async</code></li>
+</ul>
+
+<h3 id="synchronize-directory">Synchronize Directory</h3>
+
+<p>Now consider if the mxnet folder is not accessible.
+We can first copy the <code>MXNet</code> library to this folder by
+<code>bash
+cp -r ../../python/mxnet .
+cp -r ../../lib/libmxnet.so mxnet
+</code></p>
+
+<p>then ask <code>launch.py</code> to synchronize the current directory to all machines&#39;
+ <code>/tmp/mxnet</code> directory with <code>--sync-dst-dir</code></p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">python ../../tools/launch.py <span class="nt">-n</span> 2 <span class="nt">-H</span> hosts <span class="nt">--sync-dst-dir</span> /tmp/mxnet <span class="se">\</span>
+   python train_mnist.py <span class="nt">--network</span> lenet <span class="nt">--kv-store</span> dist_sync
+</code></pre></div>
+<h3 id="use-a-particular-network-interface">Use a Particular Network Interface</h3>
+
+<p><em>MXNet</em> often chooses the first available network interface.
+But for machines that have multiple interfaces,
+we can specify which network interface to use for data
+communication by the environment variable <code>DMLC_INTERFACE</code>.
+For example, to use the interface <code>eth0</code>, we can</p>
+<div class="highlight"><pre><code class="language-" data-lang="">export DMLC_INTERFACE=eth0; python ../../tools/launch.py ...
+</code></pre></div>
+<h3 id="debug-connection">Debug Connection</h3>
+
+<p>Set<code>PS_VERBOSE=1</code> to see the debug logging, e.g
+<code>
+export PS_VERBOSE=1; python ../../tools/launch.py ...
+</code></p>
+
+<h3 id="more">More</h3>
+
+<ul>
+<li>See more launch options by <code>python ../../tools/launch.py -h</code></li>
+<li>See more options of <a href="http://ps-lite.readthedocs.org/en/latest/how_to.html">ps-lite</a></li>
+</ul>
+
+    </div>
+</div>
+
+        </div>
+    </div>
+
+</article>
+
+</main><footer class="site-footer h-card">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-4">
+                <h4 class="footer-category-title">Resources</h4>
+                <ul class="contact-list">
+                    <li><a href="/versions/1.9.1/community/contribute#mxnet-dev-communications">Mailing lists</a></li>
+                    <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
+                    <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
+                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
+                    <li><a href="https://discuss.mxnet.io">Forum</a></li>
+                    <li><a href="/versions/1.9.1/community/contribute">Contribute</a></li>
+                </ul>
+            </div>
+
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="/versions/1.9.1/assets/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+</div>
+
+            <div class="col-4 footer-text">
+                <p>A flexible and efficient library for deep learning.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<footer class="site-footer2">
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-3">
+                <img src="/versions/1.9.1/assets/img/apache_incubator_logo.png" class="footer-logo col-2">
+            </div>
+            <div class="footer-bottom-warning col-9">
+                <p>Apache MXNet is an effort undergoing incubation at <a href="http://www.apache.org/">The Apache Software Foundation</a> (ASF), <span
+                        style="font-weight:bold">sponsored by the <i>Apache Incubator</i></span>. Incubation is required
+                    of all newly accepted projects until a further review indicates that the infrastructure,
+                    communications, and decision making process have stabilized in a manner consistent with other
+                    successful ASF projects. While incubation status is not necessarily a reflection of the completeness
+                    or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.
+                </p><p>"Copyright © 2017-2022, The Apache Software Foundation Apache MXNet, MXNet, Apache, the Apache
+                    feather, and the Apache MXNet project logo are either registered trademarks or trademarks of the
+                    Apache Software Foundation."</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</body>
+
+</html>
