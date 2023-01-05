@@ -101,7 +101,7 @@
         <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
         <a class="page-link page-current" href="/versions/1.9.1/api">Docs & Tutorials</a>
         <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
-        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <a class="page-link" href="https://github.com/apache/mxnet">GitHub</a>
         <div class="dropdown" style="min-width:100px">
           <span class="dropdown-header">Apache
             <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
@@ -757,177 +757,6 @@ Show Source
         
   <div class="section" id="gluon-trainer">
 <h1>gluon.Trainer<a class="headerlink" href="#gluon-trainer" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="mxnet.gluon.Trainer">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.</code><code class="sig-name descname">Trainer</code><span class="sig-paren">(</span><em class="sig-param">params</em>, <em class="sig-param">optimizer</em>, <em class="sig-param">optimizer_params=None</em>, <em class="sig-param">kvstore='device'</em>, <em class="sig-param">compression_params=None</em>, <em class="sig-param">update_on_kvstore=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mxnet/gluon/trainer.html#Trainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Trainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Applies an <cite>Optimizer</cite> on a set of Parameters. Trainer should
-be used together with <cite>autograd</cite>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For the following cases, updates will always happen on kvstore,
-i.e., you cannot set update_on_kvstore=False.</p>
-<ul class="simple">
-<li><p>dist kvstore with sparse weights or sparse gradients</p></li>
-<li><p>dist async kvstore</p></li>
-<li><p><cite>optimizer.lr_scheduler</cite> is not None</p></li>
-</ul>
-</div>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.Trainer.allreduce_grads" title="mxnet.gluon.Trainer.allreduce_grads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">allreduce_grads</span></code></a>()</p></td>
-<td><p>For each parameter, reduce the gradients from different contexts.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.Trainer.load_states" title="mxnet.gluon.Trainer.load_states"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_states</span></code></a>(fname)</p></td>
-<td><p>Loads trainer states (e.g.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.Trainer.save_states" title="mxnet.gluon.Trainer.save_states"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_states</span></code></a>(fname)</p></td>
-<td><p>Saves trainer states (e.g.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.Trainer.set_learning_rate" title="mxnet.gluon.Trainer.set_learning_rate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_learning_rate</span></code></a>(lr)</p></td>
-<td><p>Sets a new learning rate of the optimizer.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.Trainer.step" title="mxnet.gluon.Trainer.step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></a>(batch_size[, ignore_stale_grad])</p></td>
-<td><p>Makes one step of parameter update.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.Trainer.update" title="mxnet.gluon.Trainer.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(batch_size[, ignore_stale_grad])</p></td>
-<td><p>Makes one step of parameter update.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>params</strong> (<a class="reference internal" href="parameter_dict.html#mxnet.gluon.ParameterDict" title="mxnet.gluon.ParameterDict"><em>ParameterDict</em></a>) – The set of parameters to optimize.</p></li>
-<li><p><strong>optimizer</strong> (<em>str</em><em> or </em><a class="reference internal" href="../optimizer/index.html#mxnet.optimizer.Optimizer" title="mxnet.optimizer.Optimizer"><em>Optimizer</em></a>) – The optimizer to use. See
-<a class="reference external" href="https://mxnet.apache.org/api/python/docs/api/optimizer/index.html#mxnet.optimizer.Optimizer">help</a>
-on Optimizer for a list of available optimizers.</p></li>
-<li><p><strong>optimizer_params</strong> (<em>dict</em>) – Key-word arguments to be passed to optimizer constructor. For example,
-<cite>{‘learning_rate’: 0.1}</cite>. All optimizers accept learning_rate, wd (weight decay),
-clip_gradient, and lr_scheduler. See each optimizer’s
-constructor for a list of additional supported arguments.</p></li>
-<li><p><strong>kvstore</strong> (<em>str</em><em> or </em><em>KVStore</em>) – kvstore type for multi-gpu and distributed training. See help on
-<code class="xref any docutils literal notranslate"><span class="pre">mxnet.kvstore.create</span></code> for more information.</p></li>
-<li><p><strong>compression_params</strong> (<em>dict</em>) – Specifies type of gradient compression and additional arguments depending
-on the type of compression being used. For example, 2bit compression requires a threshold.
-Arguments would then be {‘type’:’2bit’, ‘threshold’:0.5}
-See mxnet.KVStore.set_gradient_compression method for more details on gradient compression.</p></li>
-<li><p><strong>update_on_kvstore</strong> (<em>bool</em><em>, </em><em>default None</em>) – Whether to perform parameter updates on kvstore. If None, then trainer will choose the more
-suitable option depending on the type of kvstore. If the <cite>update_on_kvstore</cite> argument is
-provided, environment variable <cite>MXNET_UPDATE_ON_KVSTORE</cite> will be ignored.</p></li>
-<li><p><strong>Properties</strong> – </p></li>
-<li><p><strong>----------</strong> – </p></li>
-<li><p><strong>learning_rate</strong> (<em>float</em>) – The current learning rate of the optimizer. Given an Optimizer object
-optimizer, its learning rate can be accessed as optimizer.learning_rate.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.Trainer.allreduce_grads">
-<code class="sig-name descname">allreduce_grads</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mxnet/gluon/trainer.html#Trainer.allreduce_grads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Trainer.allreduce_grads" title="Permalink to this definition">¶</a></dt>
-<dd><p>For each parameter, reduce the gradients from different contexts.</p>
-<p>Should be called after <cite>autograd.backward()</cite>, outside of <cite>record()</cite> scope,
-and before <cite>trainer.update()</cite>.</p>
-<p>For normal parameter updates, <cite>step()</cite> should be used, which internally calls
-<cite>allreduce_grads()</cite> and then <cite>update()</cite>. However, if you need to get the reduced
-gradients to perform certain transformation, such as in gradient clipping, then
-you may want to manually call <cite>allreduce_grads()</cite> and <cite>update()</cite> separately.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="mxnet.gluon.Trainer.load_states">
-<code class="sig-name descname">load_states</code><span class="sig-paren">(</span><em class="sig-param">fname</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mxnet/gluon/trainer.html#Trainer.load_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Trainer.load_states" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads trainer states (e.g. optimizer, momentum) from a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – Path to input states file.</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><cite>optimizer.param_dict</cite>, which contains Parameter information (such as
-<cite>lr_mult</cite> and <cite>wd_mult</cite>) will not be loaded from the file, but rather set
-based on current Trainer’s parameters.</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="mxnet.gluon.Trainer.save_states">
-<code class="sig-name descname">save_states</code><span class="sig-paren">(</span><em class="sig-param">fname</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mxnet/gluon/trainer.html#Trainer.save_states"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Trainer.save_states" title="Permalink to this definition">¶</a></dt>
-<dd><p>Saves trainer states (e.g. optimizer, momentum) to a file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – Path to output states file.</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><cite>optimizer.param_dict</cite>, which contains Parameter information (such as
-<cite>lr_mult</cite> and <cite>wd_mult</cite>) will not be saved.</p>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="mxnet.gluon.Trainer.set_learning_rate">
-<code class="sig-name descname">set_learning_rate</code><span class="sig-paren">(</span><em class="sig-param">lr</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mxnet/gluon/trainer.html#Trainer.set_learning_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Trainer.set_learning_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets a new learning rate of the optimizer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>lr</strong> (<em>float</em>) – The new learning rate of the optimizer.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="mxnet.gluon.Trainer.step">
-<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param">batch_size</em>, <em class="sig-param">ignore_stale_grad=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mxnet/gluon/trainer.html#Trainer.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Trainer.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes one step of parameter update. Should be called after
-<cite>autograd.backward()</cite> and outside of <cite>record()</cite> scope.</p>
-<p>For normal parameter updates, <cite>step()</cite> should be used, which internally calls
-<cite>allreduce_grads()</cite> and then <cite>update()</cite>. However, if you need to get the reduced
-gradients to perform certain transformation, such as in gradient clipping, then
-you may want to manually call <cite>allreduce_grads()</cite> and <cite>update()</cite> separately.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size of data processed. Gradient will be normalized by <cite>1/batch_size</cite>.
-Set this to 1 if you normalized loss manually with <cite>loss = mean(loss)</cite>.</p></li>
-<li><p><strong>ignore_stale_grad</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default=False</em>) – If true, ignores Parameters with stale gradient (gradient that has not
-been updated by <cite>backward</cite> after last step) and skip update.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="mxnet.gluon.Trainer.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">batch_size</em>, <em class="sig-param">ignore_stale_grad=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mxnet/gluon/trainer.html#Trainer.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.Trainer.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes one step of parameter update.</p>
-<p>Should be called after <cite>autograd.backward()</cite> and outside of <cite>record()</cite> scope,
-and after <cite>trainer.update()</cite>.</p>
-<p>For normal parameter updates, <cite>step()</cite> should be used, which internally calls
-<cite>allreduce_grads()</cite> and then <cite>update()</cite>. However, if you need to get the reduced
-gradients to perform certain transformation, such as in gradient clipping, then
-you may want to manually call <cite>allreduce_grads()</cite> and <cite>update()</cite> separately.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size of data processed. Gradient will be normalized by <cite>1/batch_size</cite>.
-Set this to 1 if you normalized loss manually with <cite>loss = mean(loss)</cite>.</p></li>
-<li><p><strong>ignore_stale_grad</strong> (<em>bool</em><em>, </em><em>optional</em><em>, </em><em>default=False</em>) – If true, ignores Parameters with stale gradient (gradient that has not
-been updated by <cite>backward</cite> after last step) and skip update.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -974,7 +803,7 @@ been updated by <cite>backward</cite> after last step) and skip update.</p></li>
                     <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
                     <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
                     <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
-                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://github.com/apache/mxnet/labels/Roadmap">Github Roadmap</a></li>
                     <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
                     <li><a href="https://discuss.mxnet.io">Forum</a></li>
                     <li><a href="/community/contribute">Contribute</a></li>
@@ -982,7 +811,7 @@ been updated by <cite>backward</cite> after last step) and skip update.</p></li>
                 </ul>
             </div>
 
-            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/mxnet"><svg class="svg-icon"><use xlink:href="../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
 </div>
 
             <div class="col-4 footer-text">

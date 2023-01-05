@@ -101,7 +101,7 @@
         <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
         <a class="page-link page-current" href="/versions/1.9.1/api">Docs & Tutorials</a>
         <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
-        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <a class="page-link" href="https://github.com/apache/mxnet">GitHub</a>
         <div class="dropdown" style="min-width:100px">
           <span class="dropdown-header">Apache
             <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
@@ -757,76 +757,14 @@ Show Source
         
   <div class="section" id="gluon-model-zoo-vision">
 <h1>gluon.model_zoo.vision<a class="headerlink" href="#gluon-model-zoo-vision" title="Permalink to this headline">¶</a></h1>
-<p>Module for pre-defined neural network models.</p>
-<p>This module contains definitions for the following model architectures:
--  <a class="reference external" href="https://arxiv.org/abs/1404.5997">AlexNet</a>
--  <a class="reference external" href="https://arxiv.org/abs/1608.06993">DenseNet</a>
--  <a class="reference external" href="http://arxiv.org/abs/1512.00567">Inception V3</a>
--  <a class="reference external" href="https://arxiv.org/abs/1512.03385">ResNet V1</a>
--  <a class="reference external" href="https://arxiv.org/abs/1603.05027">ResNet V2</a>
--  <a class="reference external" href="https://arxiv.org/abs/1602.07360">SqueezeNet</a>
--  <a class="reference external" href="https://arxiv.org/abs/1409.1556">VGG</a>
--  <a class="reference external" href="https://arxiv.org/abs/1704.04861">MobileNet</a>
--  <a class="reference external" href="https://arxiv.org/abs/1801.04381">MobileNetV2</a></p>
-<p>You can construct a model with random weights by calling its constructor:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mxnet.gluon.model_zoo</span> <span class="kn">import</span> <span class="n">vision</span>
-<span class="n">resnet18</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">resnet18_v1</span><span class="p">()</span>
-<span class="n">alexnet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">alexnet</span><span class="p">()</span>
-<span class="n">squeezenet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">squeezenet1_0</span><span class="p">()</span>
-<span class="n">densenet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">densenet_161</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>We provide pre-trained models for all the listed models.
-These models can constructed by passing <code class="docutils literal notranslate"><span class="pre">pretrained=True</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mxnet.gluon.model_zoo</span> <span class="kn">import</span> <span class="n">vision</span>
-<span class="n">resnet18</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">resnet18_v1</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">alexnet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">alexnet</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>All pre-trained models expect input images normalized in the same way,
-i.e. mini-batches of 3-channel RGB images of shape (N x 3 x H x W),
-where N is the batch size, and H and W are expected to be at least 224.
-The images have to be loaded in to a range of [0, 1] and then normalized
-using <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">=</span> <span class="pre">[0.485,</span> <span class="pre">0.456,</span> <span class="pre">0.406]</span></code> and <code class="docutils literal notranslate"><span class="pre">std</span> <span class="pre">=</span> <span class="pre">[0.229,</span> <span class="pre">0.224,</span> <span class="pre">0.225]</span></code>.
-The transformation should preferrably happen at preprocessing. You can use
-<code class="docutils literal notranslate"><span class="pre">mx.image.color_normalize</span></code> for such transformation:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">/</span><span class="mi">255</span>
-<span class="n">normalized</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">color_normalize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span>
-                                      <span class="n">mean</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">]),</span>
-                                      <span class="n">std</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">]))</span>
-</pre></div>
-</div>
-<dl class="function">
-<dt>
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">get_model</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision.html#get_model"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Returns a pre-defined model by name</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Name of the model.</p></li>
-<li><p><strong>pretrained</strong> (<em>bool</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>classes</strong> (<em>int</em>) – Number of classes for the output layer.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The model.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../hybrid_block.html#mxnet.gluon.HybridBlock" title="mxnet.gluon.HybridBlock">gluon.HybridBlock</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.get_model" title="mxnet.gluon.model_zoo.vision.get_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model</span></code></a>(name, **kwargs)</p></td>
-<td><p>Returns a pre-defined model by name</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -838,43 +776,35 @@ The transformation should preferrably happen at preprocessing. You can use
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet18_v1" title="mxnet.gluon.model_zoo.vision.resnet18_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet18_v1</span></code></a>(**kwargs)</p></td>
-<td><p>ResNet-18 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet18_v1</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet34_v1" title="mxnet.gluon.model_zoo.vision.resnet34_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet34_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-34 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet34_v1</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet50_v1" title="mxnet.gluon.model_zoo.vision.resnet50_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet50_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-50 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet50_v1</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet101_v1" title="mxnet.gluon.model_zoo.vision.resnet101_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet101_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-101 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet101_v1</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet152_v1" title="mxnet.gluon.model_zoo.vision.resnet152_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet152_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-152 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet152_v1</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet18_v2" title="mxnet.gluon.model_zoo.vision.resnet18_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet18_v2</span></code></a>(**kwargs)</p></td>
-<td><p>ResNet-18 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet18_v2</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet34_v2" title="mxnet.gluon.model_zoo.vision.resnet34_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet34_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-34 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet34_v2</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet50_v2" title="mxnet.gluon.model_zoo.vision.resnet50_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet50_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-50 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet50_v2</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet101_v2" title="mxnet.gluon.model_zoo.vision.resnet101_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet101_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-101 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet101_v2</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet152_v2" title="mxnet.gluon.model_zoo.vision.resnet152_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet152_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-152 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet152_v2</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -884,75 +814,61 @@ The transformation should preferrably happen at preprocessing. You can use
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.ResNetV1" title="mxnet.gluon.model_zoo.vision.ResNetV1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNetV1</span></code></a>(block, layers, channels[, classes, …])</p></td>
-<td><p><p>ResNet V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNetV1</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.ResNetV2" title="mxnet.gluon.model_zoo.vision.ResNetV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNetV2</span></code></a>(block, layers, channels[, classes, …])</p></td>
-<td><p><p>ResNet V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNetV2</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BasicBlockV1" title="mxnet.gluon.model_zoo.vision.BasicBlockV1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BasicBlockV1</span></code></a>(channels, stride[, downsample, …])</p></td>
-<td><p><p>BasicBlock V1 from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.This is used for ResNet V1 for 18, 34 layers..</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BasicBlockV1</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BasicBlockV2" title="mxnet.gluon.model_zoo.vision.BasicBlockV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BasicBlockV2</span></code></a>(channels, stride[, downsample, …])</p></td>
-<td><p><p>BasicBlock V2 from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.This is used for ResNet V2 for 18, 34 layers..</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BasicBlockV2</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BottleneckV1" title="mxnet.gluon.model_zoo.vision.BottleneckV1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BottleneckV1</span></code></a>(channels, stride[, downsample, …])</p></td>
-<td><p><p>Bottleneck V1 from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.This is used for ResNet V1 for 50, 101, 152 layers..</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BottleneckV1</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BottleneckV2" title="mxnet.gluon.model_zoo.vision.BottleneckV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BottleneckV2</span></code></a>(channels, stride[, downsample, …])</p></td>
-<td><p><p>Bottleneck V2 from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.This is used for ResNet V2 for 50, 101, 152 layers..</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BottleneckV2</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.get_resnet" title="mxnet.gluon.model_zoo.vision.get_resnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_resnet</span></code></a>(version, num_layers[, …])</p></td>
-<td><p><p>ResNet V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.ResNet V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper..</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_resnet</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="id17">
-<h2>VGG<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="vgg">
+<h2>VGG<a class="headerlink" href="#vgg" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg11" title="mxnet.gluon.model_zoo.vision.vgg11"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg11</span></code></a>(**kwargs)</p></td>
-<td><p>VGG-11 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg11</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg13" title="mxnet.gluon.model_zoo.vision.vgg13"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg13</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-13 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg13</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg16" title="mxnet.gluon.model_zoo.vision.vgg16"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg16</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-16 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg16</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg19" title="mxnet.gluon.model_zoo.vision.vgg19"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg19</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-19 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg19</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg11_bn" title="mxnet.gluon.model_zoo.vision.vgg11_bn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg11_bn</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-11 model with batch normalization from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg11_bn</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg13_bn" title="mxnet.gluon.model_zoo.vision.vgg13_bn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg13_bn</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-13 model with batch normalization from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg13_bn</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg16_bn" title="mxnet.gluon.model_zoo.vision.vgg16_bn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg16_bn</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-16 model with batch normalization from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg16_bn</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg19_bn" title="mxnet.gluon.model_zoo.vision.vgg19_bn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg19_bn</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-19 model with batch normalization from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg19_bn</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -962,27 +878,25 @@ The transformation should preferrably happen at preprocessing. You can use
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.VGG" title="mxnet.gluon.model_zoo.vision.VGG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VGG</span></code></a>(layers, filters[, classes, batch_norm])</p></td>
-<td><p><p>VGG model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">VGG</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.get_vgg" title="mxnet.gluon.model_zoo.vision.get_vgg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vgg</span></code></a>(num_layers[, pretrained, ctx, root])</p></td>
-<td><p><p>VGG model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vgg</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="id27">
-<h2>Alexnet<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="alexnet">
+<h2>Alexnet<a class="headerlink" href="#alexnet" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.alexnet" title="mxnet.gluon.model_zoo.vision.alexnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">alexnet</span></code></a>([pretrained, ctx, root])</p></td>
-<td><p>AlexNet model from the <a class="reference external" href="https://arxiv.org/abs/1404.5997">“One weird trick…”</a> paper.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">alexnet</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -992,64 +906,31 @@ The transformation should preferrably happen at preprocessing. You can use
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.AlexNet" title="mxnet.gluon.model_zoo.vision.AlexNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlexNet</span></code></a>([classes])</p></td>
-<td><p><p>AlexNet model from the <a class="reference external" href="https://arxiv.org/abs/1404.5997">“One weird trick…”</a> paper.</p>
-</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="id29">
-<h2>DenseNet<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.densenet121" title="mxnet.gluon.model_zoo.vision.densenet121"><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet121</span></code></a>(**kwargs)</p></td>
-<td><p>Densenet-BC 121-layer model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.densenet161" title="mxnet.gluon.model_zoo.vision.densenet161"><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet161</span></code></a>(**kwargs)</p></td>
-<td><p><p>Densenet-BC 161-layer model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.densenet169" title="mxnet.gluon.model_zoo.vision.densenet169"><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet169</span></code></a>(**kwargs)</p></td>
-<td><p><p>Densenet-BC 169-layer model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.densenet201" title="mxnet.gluon.model_zoo.vision.densenet201"><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet201</span></code></a>(**kwargs)</p></td>
-<td><p><p>Densenet-BC 201-layer model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
-</tr>
-</tbody>
-</table>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.DenseNet" title="mxnet.gluon.model_zoo.vision.DenseNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DenseNet</span></code></a>(num_init_features, growth_rate, …)</p></td>
-<td><p><p>Densenet-BC model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlexNet</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="id34">
-<h2>SqueezeNet<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="densenet">
+<h2>DenseNet<a class="headerlink" href="#densenet" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.squeezenet1_0" title="mxnet.gluon.model_zoo.vision.squeezenet1_0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">squeezenet1_0</span></code></a>(**kwargs)</p></td>
-<td><p>SqueezeNet 1.0 model from the <a class="reference external" href="https://arxiv.org/abs/1602.07360">“SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size”</a> paper.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet121</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.squeezenet1_1" title="mxnet.gluon.model_zoo.vision.squeezenet1_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">squeezenet1_1</span></code></a>(**kwargs)</p></td>
-<td><p>SqueezeNet 1.1 model from the <a class="reference external" href="https://github.com/DeepScale/SqueezeNet/tree/master/SqueezeNet_v1.1">official SqueezeNet repo</a>.SqueezeNet 1.1 has 2.4x less computation and slightly fewer parameters than SqueezeNet 1.0, without sacrificing accuracy..</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet161</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet169</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet201</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -1059,9 +940,36 @@ The transformation should preferrably happen at preprocessing. You can use
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.SqueezeNet" title="mxnet.gluon.model_zoo.vision.SqueezeNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SqueezeNet</span></code></a>(version[, classes])</p></td>
-<td><p><p>SqueezeNet model from the <a class="reference external" href="https://arxiv.org/abs/1602.07360">“SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size”</a> paper.SqueezeNet 1.1 model from the <a class="reference external" href="https://github.com/DeepScale/SqueezeNet/tree/master/SqueezeNet_v1.1">official SqueezeNet repo</a>.SqueezeNet 1.1 has 2.4x less computation and slightly fewer parameters than SqueezeNet 1.0, without sacrificing accuracy..</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DenseNet</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="squeezenet">
+<h2>SqueezeNet<a class="headerlink" href="#squeezenet" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">squeezenet1_0</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">squeezenet1_1</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SqueezeNet</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -1074,8 +982,8 @@ The transformation should preferrably happen at preprocessing. You can use
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.inception_v3" title="mxnet.gluon.model_zoo.vision.inception_v3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inception_v3</span></code></a>([pretrained, ctx, root])</p></td>
-<td><p>Inception v3 model from <a class="reference external" href="http://arxiv.org/abs/1512.00567">“Rethinking the Inception Architecture for Computer Vision”</a> paper.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inception_v3</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -1085,50 +993,43 @@ The transformation should preferrably happen at preprocessing. You can use
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.Inception3" title="mxnet.gluon.model_zoo.vision.Inception3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Inception3</span></code></a>([classes])</p></td>
-<td><p><p>Inception v3 model from <a class="reference external" href="http://arxiv.org/abs/1512.00567">“Rethinking the Inception Architecture for Computer Vision”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Inception3</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="id38">
-<h2>MobileNet<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mobilenet">
+<h2>MobileNet<a class="headerlink" href="#mobilenet" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet1_0" title="mxnet.gluon.model_zoo.vision.mobilenet1_0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet1_0</span></code></a>(**kwargs)</p></td>
-<td><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 1.0.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet1_0</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet0_75" title="mxnet.gluon.model_zoo.vision.mobilenet0_75"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_75</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.75.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_75</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet0_5" title="mxnet.gluon.model_zoo.vision.mobilenet0_5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_5</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.5.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_5</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet0_25" title="mxnet.gluon.model_zoo.vision.mobilenet0_25"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_25</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.25.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_25</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_1_0" title="mxnet.gluon.model_zoo.vision.mobilenet_v2_1_0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_1_0</span></code></a>(**kwargs)</p></td>
-<td><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_1_0</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_75" title="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_75"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_75</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_75</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_5" title="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_5</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_5</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_25" title="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_25"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_25</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_25</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -1138,1473 +1039,17 @@ The transformation should preferrably happen at preprocessing. You can use
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.MobileNet" title="mxnet.gluon.model_zoo.vision.MobileNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MobileNet</span></code></a>([multiplier, classes])</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper.</p>
-</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MobileNet</span></code></p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.MobileNetV2" title="mxnet.gluon.model_zoo.vision.MobileNetV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MobileNetV2</span></code></a>([multiplier, classes])</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">MobileNetV2</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="module-mxnet.gluon.model_zoo.vision">
-<span id="api-reference"></span><h2>API Reference<a class="headerlink" href="#module-mxnet.gluon.model_zoo.vision" title="Permalink to this headline">¶</a></h2>
-<p>Module for pre-defined neural network models.</p>
-<p>This module contains definitions for the following model architectures:
--  <a class="reference external" href="https://arxiv.org/abs/1404.5997">AlexNet</a>
--  <a class="reference external" href="https://arxiv.org/abs/1608.06993">DenseNet</a>
--  <a class="reference external" href="http://arxiv.org/abs/1512.00567">Inception V3</a>
--  <a class="reference external" href="https://arxiv.org/abs/1512.03385">ResNet V1</a>
--  <a class="reference external" href="https://arxiv.org/abs/1603.05027">ResNet V2</a>
--  <a class="reference external" href="https://arxiv.org/abs/1602.07360">SqueezeNet</a>
--  <a class="reference external" href="https://arxiv.org/abs/1409.1556">VGG</a>
--  <a class="reference external" href="https://arxiv.org/abs/1704.04861">MobileNet</a>
--  <a class="reference external" href="https://arxiv.org/abs/1801.04381">MobileNetV2</a></p>
-<p>You can construct a model with random weights by calling its constructor:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mxnet.gluon.model_zoo</span> <span class="kn">import</span> <span class="n">vision</span>
-<span class="n">resnet18</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">resnet18_v1</span><span class="p">()</span>
-<span class="n">alexnet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">alexnet</span><span class="p">()</span>
-<span class="n">squeezenet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">squeezenet1_0</span><span class="p">()</span>
-<span class="n">densenet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">densenet_161</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>We provide pre-trained models for all the listed models.
-These models can constructed by passing <code class="docutils literal notranslate"><span class="pre">pretrained=True</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mxnet.gluon.model_zoo</span> <span class="kn">import</span> <span class="n">vision</span>
-<span class="n">resnet18</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">resnet18_v1</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">alexnet</span> <span class="o">=</span> <span class="n">vision</span><span class="o">.</span><span class="n">alexnet</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>All pre-trained models expect input images normalized in the same way,
-i.e. mini-batches of 3-channel RGB images of shape (N x 3 x H x W),
-where N is the batch size, and H and W are expected to be at least 224.
-The images have to be loaded in to a range of [0, 1] and then normalized
-using <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">=</span> <span class="pre">[0.485,</span> <span class="pre">0.456,</span> <span class="pre">0.406]</span></code> and <code class="docutils literal notranslate"><span class="pre">std</span> <span class="pre">=</span> <span class="pre">[0.229,</span> <span class="pre">0.224,</span> <span class="pre">0.225]</span></code>.
-The transformation should preferrably happen at preprocessing. You can use
-<code class="docutils literal notranslate"><span class="pre">mx.image.color_normalize</span></code> for such transformation:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">/</span><span class="mi">255</span>
-<span class="n">normalized</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">color_normalize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span>
-                                      <span class="n">mean</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">]),</span>
-                                      <span class="n">std</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">nd</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">]))</span>
-</pre></div>
-</div>
-<p><strong>Classes</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.AlexNet" title="mxnet.gluon.model_zoo.vision.AlexNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlexNet</span></code></a>([classes])</p></td>
-<td><p><p>AlexNet model from the <a class="reference external" href="https://arxiv.org/abs/1404.5997">“One weird trick…”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BasicBlockV1" title="mxnet.gluon.model_zoo.vision.BasicBlockV1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BasicBlockV1</span></code></a>(channels, stride[, downsample, …])</p></td>
-<td><p><p>BasicBlock V1 from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BasicBlockV2" title="mxnet.gluon.model_zoo.vision.BasicBlockV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BasicBlockV2</span></code></a>(channels, stride[, downsample, …])</p></td>
-<td><p><p>BasicBlock V2 from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BottleneckV1" title="mxnet.gluon.model_zoo.vision.BottleneckV1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BottleneckV1</span></code></a>(channels, stride[, downsample, …])</p></td>
-<td><p><p>Bottleneck V1 from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BottleneckV2" title="mxnet.gluon.model_zoo.vision.BottleneckV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BottleneckV2</span></code></a>(channels, stride[, downsample, …])</p></td>
-<td><p><p>Bottleneck V2 from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.DenseNet" title="mxnet.gluon.model_zoo.vision.DenseNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DenseNet</span></code></a>(num_init_features, growth_rate, …)</p></td>
-<td><p><p>Densenet-BC model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.Inception3" title="mxnet.gluon.model_zoo.vision.Inception3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Inception3</span></code></a>([classes])</p></td>
-<td><p><p>Inception v3 model from <a class="reference external" href="http://arxiv.org/abs/1512.00567">“Rethinking the Inception Architecture for Computer Vision”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.MobileNet" title="mxnet.gluon.model_zoo.vision.MobileNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MobileNet</span></code></a>([multiplier, classes])</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.MobileNetV2" title="mxnet.gluon.model_zoo.vision.MobileNetV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MobileNetV2</span></code></a>([multiplier, classes])</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.ResNetV1" title="mxnet.gluon.model_zoo.vision.ResNetV1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNetV1</span></code></a>(block, layers, channels[, classes, …])</p></td>
-<td><p><p>ResNet V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.ResNetV2" title="mxnet.gluon.model_zoo.vision.ResNetV2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ResNetV2</span></code></a>(block, layers, channels[, classes, …])</p></td>
-<td><p><p>ResNet V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.SqueezeNet" title="mxnet.gluon.model_zoo.vision.SqueezeNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SqueezeNet</span></code></a>(version[, classes])</p></td>
-<td><p><p>SqueezeNet model from the <a class="reference external" href="https://arxiv.org/abs/1602.07360">“SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.VGG" title="mxnet.gluon.model_zoo.vision.VGG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VGG</span></code></a>(layers, filters[, classes, batch_norm])</p></td>
-<td><p><p>VGG model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Functions</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.alexnet" title="mxnet.gluon.model_zoo.vision.alexnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">alexnet</span></code></a>([pretrained, ctx, root])</p></td>
-<td><p><p>AlexNet model from the <a class="reference external" href="https://arxiv.org/abs/1404.5997">“One weird trick…”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.densenet121" title="mxnet.gluon.model_zoo.vision.densenet121"><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet121</span></code></a>(**kwargs)</p></td>
-<td><p><p>Densenet-BC 121-layer model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.densenet161" title="mxnet.gluon.model_zoo.vision.densenet161"><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet161</span></code></a>(**kwargs)</p></td>
-<td><p><p>Densenet-BC 161-layer model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.densenet169" title="mxnet.gluon.model_zoo.vision.densenet169"><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet169</span></code></a>(**kwargs)</p></td>
-<td><p><p>Densenet-BC 169-layer model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.densenet201" title="mxnet.gluon.model_zoo.vision.densenet201"><code class="xref py py-obj docutils literal notranslate"><span class="pre">densenet201</span></code></a>(**kwargs)</p></td>
-<td><p><p>Densenet-BC 201-layer model from the <a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.get_mobilenet" title="mxnet.gluon.model_zoo.vision.get_mobilenet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mobilenet</span></code></a>(multiplier[, pretrained, ctx, …])</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.get_mobilenet_v2" title="mxnet.gluon.model_zoo.vision.get_mobilenet_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mobilenet_v2</span></code></a>(multiplier[, pretrained, …])</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.get_model" title="mxnet.gluon.model_zoo.vision.get_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model</span></code></a>(name, **kwargs)</p></td>
-<td><p>Returns a pre-defined model by name</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.get_resnet" title="mxnet.gluon.model_zoo.vision.get_resnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_resnet</span></code></a>(version, num_layers[, …])</p></td>
-<td><p><p>ResNet V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.get_vgg" title="mxnet.gluon.model_zoo.vision.get_vgg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vgg</span></code></a>(num_layers[, pretrained, ctx, root])</p></td>
-<td><p><p>VGG model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.inception_v3" title="mxnet.gluon.model_zoo.vision.inception_v3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inception_v3</span></code></a>([pretrained, ctx, root])</p></td>
-<td><p><p>Inception v3 model from <a class="reference external" href="http://arxiv.org/abs/1512.00567">“Rethinking the Inception Architecture for Computer Vision”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet0_25" title="mxnet.gluon.model_zoo.vision.mobilenet0_25"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_25</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.25.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet0_5" title="mxnet.gluon.model_zoo.vision.mobilenet0_5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_5</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.5.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet0_75" title="mxnet.gluon.model_zoo.vision.mobilenet0_75"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet0_75</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.75.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet1_0" title="mxnet.gluon.model_zoo.vision.mobilenet1_0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet1_0</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNet model from the <a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 1.0.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_25" title="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_25"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_25</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_5" title="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_5</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_75" title="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_75"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_0_75</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_1_0" title="mxnet.gluon.model_zoo.vision.mobilenet_v2_1_0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mobilenet_v2_1_0</span></code></a>(**kwargs)</p></td>
-<td><p><p>MobileNetV2 model from the <a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet101_v1" title="mxnet.gluon.model_zoo.vision.resnet101_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet101_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-101 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet101_v2" title="mxnet.gluon.model_zoo.vision.resnet101_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet101_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-101 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet152_v1" title="mxnet.gluon.model_zoo.vision.resnet152_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet152_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-152 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet152_v2" title="mxnet.gluon.model_zoo.vision.resnet152_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet152_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-152 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet18_v1" title="mxnet.gluon.model_zoo.vision.resnet18_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet18_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-18 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet18_v2" title="mxnet.gluon.model_zoo.vision.resnet18_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet18_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-18 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet34_v1" title="mxnet.gluon.model_zoo.vision.resnet34_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet34_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-34 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet34_v2" title="mxnet.gluon.model_zoo.vision.resnet34_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet34_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-34 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet50_v1" title="mxnet.gluon.model_zoo.vision.resnet50_v1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet50_v1</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-50 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.resnet50_v2" title="mxnet.gluon.model_zoo.vision.resnet50_v2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resnet50_v2</span></code></a>(**kwargs)</p></td>
-<td><p><p>ResNet-50 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.squeezenet1_0" title="mxnet.gluon.model_zoo.vision.squeezenet1_0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">squeezenet1_0</span></code></a>(**kwargs)</p></td>
-<td><p><p>SqueezeNet 1.0 model from the <a class="reference external" href="https://arxiv.org/abs/1602.07360">“SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and &lt;0.5MB model size”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.squeezenet1_1" title="mxnet.gluon.model_zoo.vision.squeezenet1_1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">squeezenet1_1</span></code></a>(**kwargs)</p></td>
-<td><p><p>SqueezeNet 1.1 model from the <a class="reference external" href="https://github.com/DeepScale/SqueezeNet/tree/master/SqueezeNet_v1.1">official SqueezeNet repo</a>.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg11" title="mxnet.gluon.model_zoo.vision.vgg11"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg11</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-11 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg11_bn" title="mxnet.gluon.model_zoo.vision.vgg11_bn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg11_bn</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-11 model with batch normalization from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg13" title="mxnet.gluon.model_zoo.vision.vgg13"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg13</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-13 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg13_bn" title="mxnet.gluon.model_zoo.vision.vgg13_bn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg13_bn</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-13 model with batch normalization from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg16" title="mxnet.gluon.model_zoo.vision.vgg16"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg16</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-16 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg16_bn" title="mxnet.gluon.model_zoo.vision.vgg16_bn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg16_bn</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-16 model with batch normalization from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg19" title="mxnet.gluon.model_zoo.vision.vgg19"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg19</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-19 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.vgg19_bn" title="mxnet.gluon.model_zoo.vision.vgg19_bn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vgg19_bn</span></code></a>(**kwargs)</p></td>
-<td><p><p>VGG-19 model with batch normalization from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.AlexNet">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">AlexNet</code><span class="sig-paren">(</span><em class="sig-param">classes=1000</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/alexnet.html#AlexNet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.AlexNet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.AlexNet.hybrid_forward" title="mxnet.gluon.model_zoo.vision.AlexNet.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>AlexNet model from the <a class="reference external" href="https://arxiv.org/abs/1404.5997">“One weird trick…”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classes for the output layer.</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.AlexNet.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/alexnet.html#AlexNet.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.AlexNet.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.BasicBlockV1">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">BasicBlockV1</code><span class="sig-paren">(</span><em class="sig-param">channels</em>, <em class="sig-param">stride</em>, <em class="sig-param">downsample=False</em>, <em class="sig-param">in_channels=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#BasicBlockV1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.BasicBlockV1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BasicBlockV1.hybrid_forward" title="mxnet.gluon.model_zoo.vision.BasicBlockV1.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>BasicBlock V1 from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.
-This is used for ResNet V1 for 18, 34 layers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>channels</strong> (<em>int</em>) – Number of output channels.</p></li>
-<li><p><strong>stride</strong> (<em>int</em>) – Stride size.</p></li>
-<li><p><strong>downsample</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to downsample the input.</p></li>
-<li><p><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – Number of input channels. Default is 0, to infer from the graph.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.BasicBlockV1.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#BasicBlockV1.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.BasicBlockV1.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.BasicBlockV2">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">BasicBlockV2</code><span class="sig-paren">(</span><em class="sig-param">channels</em>, <em class="sig-param">stride</em>, <em class="sig-param">downsample=False</em>, <em class="sig-param">in_channels=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#BasicBlockV2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.BasicBlockV2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BasicBlockV2.hybrid_forward" title="mxnet.gluon.model_zoo.vision.BasicBlockV2.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>BasicBlock V2 from
-<a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.
-This is used for ResNet V2 for 18, 34 layers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>channels</strong> (<em>int</em>) – Number of output channels.</p></li>
-<li><p><strong>stride</strong> (<em>int</em>) – Stride size.</p></li>
-<li><p><strong>downsample</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to downsample the input.</p></li>
-<li><p><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – Number of input channels. Default is 0, to infer from the graph.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.BasicBlockV2.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#BasicBlockV2.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.BasicBlockV2.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.BottleneckV1">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">BottleneckV1</code><span class="sig-paren">(</span><em class="sig-param">channels</em>, <em class="sig-param">stride</em>, <em class="sig-param">downsample=False</em>, <em class="sig-param">in_channels=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#BottleneckV1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.BottleneckV1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BottleneckV1.hybrid_forward" title="mxnet.gluon.model_zoo.vision.BottleneckV1.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Bottleneck V1 from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.
-This is used for ResNet V1 for 50, 101, 152 layers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>channels</strong> (<em>int</em>) – Number of output channels.</p></li>
-<li><p><strong>stride</strong> (<em>int</em>) – Stride size.</p></li>
-<li><p><strong>downsample</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to downsample the input.</p></li>
-<li><p><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – Number of input channels. Default is 0, to infer from the graph.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.BottleneckV1.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#BottleneckV1.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.BottleneckV1.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.BottleneckV2">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">BottleneckV2</code><span class="sig-paren">(</span><em class="sig-param">channels</em>, <em class="sig-param">stride</em>, <em class="sig-param">downsample=False</em>, <em class="sig-param">in_channels=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#BottleneckV2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.BottleneckV2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.BottleneckV2.hybrid_forward" title="mxnet.gluon.model_zoo.vision.BottleneckV2.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Bottleneck V2 from
-<a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.
-This is used for ResNet V2 for 50, 101, 152 layers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>channels</strong> (<em>int</em>) – Number of output channels.</p></li>
-<li><p><strong>stride</strong> (<em>int</em>) – Stride size.</p></li>
-<li><p><strong>downsample</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to downsample the input.</p></li>
-<li><p><strong>in_channels</strong> (<em>int</em><em>, </em><em>default 0</em>) – Number of input channels. Default is 0, to infer from the graph.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.BottleneckV2.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#BottleneckV2.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.BottleneckV2.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.DenseNet">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">DenseNet</code><span class="sig-paren">(</span><em class="sig-param">num_init_features</em>, <em class="sig-param">growth_rate</em>, <em class="sig-param">block_config</em>, <em class="sig-param">bn_size=4</em>, <em class="sig-param">dropout=0</em>, <em class="sig-param">classes=1000</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/densenet.html#DenseNet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.DenseNet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.DenseNet.hybrid_forward" title="mxnet.gluon.model_zoo.vision.DenseNet.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Densenet-BC model from the
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_init_features</strong> (<em>int</em>) – Number of filters to learn in the first convolution layer.</p></li>
-<li><p><strong>growth_rate</strong> (<em>int</em>) – Number of filters to add each layer (<cite>k</cite> in the paper).</p></li>
-<li><p><strong>block_config</strong> (<em>list of int</em>) – List of integers for numbers of layers in each pooling block.</p></li>
-<li><p><strong>bn_size</strong> (<em>int</em><em>, </em><em>default 4</em>) – Multiplicative factor for number of bottle neck layers.
-(i.e. bn_size * k features in the bottleneck layer)</p></li>
-<li><p><strong>dropout</strong> (<em>float</em><em>, </em><em>default 0</em>) – Rate of dropout after each dense layer.</p></li>
-<li><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classification classes.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.DenseNet.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/densenet.html#DenseNet.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.DenseNet.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.Inception3">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">Inception3</code><span class="sig-paren">(</span><em class="sig-param">classes=1000</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/inception.html#Inception3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.Inception3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.Inception3.hybrid_forward" title="mxnet.gluon.model_zoo.vision.Inception3.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>Inception v3 model from
-<a class="reference external" href="http://arxiv.org/abs/1512.00567">“Rethinking the Inception Architecture for Computer Vision”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classification classes.</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.Inception3.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/inception.html#Inception3.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.Inception3.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.MobileNet">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">MobileNet</code><span class="sig-paren">(</span><em class="sig-param">multiplier=1.0</em>, <em class="sig-param">classes=1000</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#MobileNet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.MobileNet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.MobileNet.hybrid_forward" title="mxnet.gluon.model_zoo.vision.MobileNet.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>MobileNet model from the
-<a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>multiplier</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – The width multiplier for controling the model size. Only multipliers that are no
-less than 0.25 are supported. The actual number of channels is equal to the original
-channel size multiplied by this multiplier.</p></li>
-<li><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classes for the output layer.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.MobileNet.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#MobileNet.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.MobileNet.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.MobileNetV2">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">MobileNetV2</code><span class="sig-paren">(</span><em class="sig-param">multiplier=1.0</em>, <em class="sig-param">classes=1000</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#MobileNetV2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.MobileNetV2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.MobileNetV2.hybrid_forward" title="mxnet.gluon.model_zoo.vision.MobileNetV2.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>MobileNetV2 model from the
-<a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks:
-Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>multiplier</strong> (<em>float</em><em>, </em><em>default 1.0</em>) – The width multiplier for controling the model size. The actual number of channels
-is equal to the original channel size multiplied by this multiplier.</p></li>
-<li><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classes for the output layer.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.MobileNetV2.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#MobileNetV2.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.MobileNetV2.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.ResNetV1">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">ResNetV1</code><span class="sig-paren">(</span><em class="sig-param">block</em>, <em class="sig-param">layers</em>, <em class="sig-param">channels</em>, <em class="sig-param">classes=1000</em>, <em class="sig-param">thumbnail=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#ResNetV1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.ResNetV1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.ResNetV1.hybrid_forward" title="mxnet.gluon.model_zoo.vision.ResNetV1.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>ResNet V1 model from
-<a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>block</strong> (<a class="reference internal" href="../hybrid_block.html#mxnet.gluon.HybridBlock" title="mxnet.gluon.HybridBlock"><em>gluon.HybridBlock</em></a>) – Class for the residual block. Options are BasicBlockV1, BottleneckV1.</p></li>
-<li><p><strong>layers</strong> (<em>list of int</em>) – Numbers of layers in each block</p></li>
-<li><p><strong>channels</strong> (<em>list of int</em>) – Numbers of channels in each block. Length should be one larger than layers list.</p></li>
-<li><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classification classes.</p></li>
-<li><p><strong>thumbnail</strong> (<em>bool</em><em>, </em><em>default False</em>) – Enable thumbnail.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.ResNetV1.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#ResNetV1.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.ResNetV1.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.ResNetV2">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">ResNetV2</code><span class="sig-paren">(</span><em class="sig-param">block</em>, <em class="sig-param">layers</em>, <em class="sig-param">channels</em>, <em class="sig-param">classes=1000</em>, <em class="sig-param">thumbnail=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#ResNetV2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.ResNetV2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.ResNetV2.hybrid_forward" title="mxnet.gluon.model_zoo.vision.ResNetV2.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>ResNet V2 model from
-<a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>block</strong> (<a class="reference internal" href="../hybrid_block.html#mxnet.gluon.HybridBlock" title="mxnet.gluon.HybridBlock"><em>gluon.HybridBlock</em></a>) – Class for the residual block. Options are BasicBlockV1, BottleneckV1.</p></li>
-<li><p><strong>layers</strong> (<em>list of int</em>) – Numbers of layers in each block</p></li>
-<li><p><strong>channels</strong> (<em>list of int</em>) – Numbers of channels in each block. Length should be one larger than layers list.</p></li>
-<li><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classification classes.</p></li>
-<li><p><strong>thumbnail</strong> (<em>bool</em><em>, </em><em>default False</em>) – Enable thumbnail.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.ResNetV2.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#ResNetV2.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.ResNetV2.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.SqueezeNet">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">SqueezeNet</code><span class="sig-paren">(</span><em class="sig-param">version</em>, <em class="sig-param">classes=1000</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/squeezenet.html#SqueezeNet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.SqueezeNet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.SqueezeNet.hybrid_forward" title="mxnet.gluon.model_zoo.vision.SqueezeNet.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>SqueezeNet model from the <a class="reference external" href="https://arxiv.org/abs/1602.07360">“SqueezeNet: AlexNet-level accuracy with 50x fewer parameters
-and &lt;0.5MB model size”</a> paper.
-SqueezeNet 1.1 model from the <a class="reference external" href="https://github.com/DeepScale/SqueezeNet/tree/master/SqueezeNet_v1.1">official SqueezeNet repo</a>.
-SqueezeNet 1.1 has 2.4x less computation and slightly fewer parameters
-than SqueezeNet 1.0, without sacrificing accuracy.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>version</strong> (<em>str</em>) – Version of squeezenet. Options are ‘1.0’, ‘1.1’.</p></li>
-<li><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classification classes.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.SqueezeNet.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/squeezenet.html#SqueezeNet.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.SqueezeNet.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="mxnet.gluon.model_zoo.vision.VGG">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">VGG</code><span class="sig-paren">(</span><em class="sig-param">layers</em>, <em class="sig-param">filters</em>, <em class="sig-param">classes=1000</em>, <em class="sig-param">batch_norm=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#VGG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.VGG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">mxnet.gluon.block.HybridBlock</span></code></p>
-<p><strong>Methods</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.model_zoo.vision.VGG.hybrid_forward" title="mxnet.gluon.model_zoo.vision.VGG.hybrid_forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybrid_forward</span></code></a>(F, x)</p></td>
-<td><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p></td>
-</tr>
-</tbody>
-</table>
-<p>VGG model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>layers</strong> (<em>list of int</em>) – Numbers of layers in each feature block.</p></li>
-<li><p><strong>filters</strong> (<em>list of int</em>) – Numbers of filters in each feature block. List length should match the layers.</p></li>
-<li><p><strong>classes</strong> (<em>int</em><em>, </em><em>default 1000</em>) – Number of classification classes.</p></li>
-<li><p><strong>batch_norm</strong> (<em>bool</em><em>, </em><em>default False</em>) – Use batch normalization.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="mxnet.gluon.model_zoo.vision.VGG.hybrid_forward">
-<code class="sig-name descname">hybrid_forward</code><span class="sig-paren">(</span><em class="sig-param">F</em>, <em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#VGG.hybrid_forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.VGG.hybrid_forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overrides to construct symbolic graph for this <cite>Block</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><em>Symbol</em></a><em> or </em><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – The first input tensor.</p></li>
-<li><p><strong>*args</strong> (<em>list of Symbol</em><em> or </em><em>list of NDArray</em>) – Additional input tensors.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.alexnet">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">alexnet</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">ctx=cpu(0)</em>, <em class="sig-param">root='/home/jenkins_slave/.mxnet/models'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/alexnet.html#alexnet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.alexnet" title="Permalink to this definition">¶</a></dt>
-<dd><p>AlexNet model from the <a class="reference external" href="https://arxiv.org/abs/1404.5997">“One weird trick…”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default $MXNET_HOME/models</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.densenet121">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">densenet121</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/densenet.html#densenet121"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.densenet121" title="Permalink to this definition">¶</a></dt>
-<dd><p>Densenet-BC 121-layer model from the
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.densenet161">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">densenet161</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/densenet.html#densenet161"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.densenet161" title="Permalink to this definition">¶</a></dt>
-<dd><p>Densenet-BC 161-layer model from the
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.densenet169">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">densenet169</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/densenet.html#densenet169"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.densenet169" title="Permalink to this definition">¶</a></dt>
-<dd><p>Densenet-BC 169-layer model from the
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.densenet201">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">densenet201</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/densenet.html#densenet201"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.densenet201" title="Permalink to this definition">¶</a></dt>
-<dd><p>Densenet-BC 201-layer model from the
-<a class="reference external" href="https://arxiv.org/pdf/1608.06993.pdf">“Densely Connected Convolutional Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.get_mobilenet">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">get_mobilenet</code><span class="sig-paren">(</span><em class="sig-param">multiplier</em>, <em class="sig-param">pretrained=False</em>, <em class="sig-param">ctx=cpu(0)</em>, <em class="sig-param">root='/home/jenkins_slave/.mxnet/models'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#get_mobilenet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.get_mobilenet" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNet model from the
-<a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>multiplier</strong> (<em>float</em>) – The width multiplier for controling the model size. Only multipliers that are no
-less than 0.25 are supported. The actual number of channels is equal to the original
-channel size multiplied by this multiplier.</p></li>
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default $MXNET_HOME/models</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.get_mobilenet_v2">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">get_mobilenet_v2</code><span class="sig-paren">(</span><em class="sig-param">multiplier</em>, <em class="sig-param">pretrained=False</em>, <em class="sig-param">ctx=cpu(0)</em>, <em class="sig-param">root='/home/jenkins_slave/.mxnet/models'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#get_mobilenet_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.get_mobilenet_v2" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNetV2 model from the
-<a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks:
-Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>multiplier</strong> (<em>float</em>) – The width multiplier for controling the model size. Only multipliers that are no
-less than 0.25 are supported. The actual number of channels is equal to the original
-channel size multiplied by this multiplier.</p></li>
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default $MXNET_HOME/models</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.get_model">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">get_model</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision.html#get_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.get_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a pre-defined model by name</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Name of the model.</p></li>
-<li><p><strong>pretrained</strong> (<em>bool</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>classes</strong> (<em>int</em>) – Number of classes for the output layer.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The model.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../hybrid_block.html#mxnet.gluon.HybridBlock" title="mxnet.gluon.HybridBlock">gluon.HybridBlock</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.get_resnet">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">get_resnet</code><span class="sig-paren">(</span><em class="sig-param">version</em>, <em class="sig-param">num_layers</em>, <em class="sig-param">pretrained=False</em>, <em class="sig-param">ctx=cpu(0)</em>, <em class="sig-param">root='/home/jenkins_slave/.mxnet/models'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#get_resnet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.get_resnet" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.
-ResNet V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>version</strong> (<em>int</em>) – Version of ResNet. Options are 1, 2.</p></li>
-<li><p><strong>num_layers</strong> (<em>int</em>) – Numbers of layers. Options are 18, 34, 50, 101, 152.</p></li>
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default $MXNET_HOME/models</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.get_vgg">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">get_vgg</code><span class="sig-paren">(</span><em class="sig-param">num_layers</em>, <em class="sig-param">pretrained=False</em>, <em class="sig-param">ctx=cpu(0)</em>, <em class="sig-param">root='/home/jenkins_slave/.mxnet/models'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#get_vgg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.get_vgg" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_layers</strong> (<em>int</em>) – Number of layers for the variant of densenet. Options are 11, 13, 16, 19.</p></li>
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default $MXNET_HOME/models</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.inception_v3">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">inception_v3</code><span class="sig-paren">(</span><em class="sig-param">pretrained=False</em>, <em class="sig-param">ctx=cpu(0)</em>, <em class="sig-param">root='/home/jenkins_slave/.mxnet/models'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/inception.html#inception_v3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.inception_v3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Inception v3 model from
-<a class="reference external" href="http://arxiv.org/abs/1512.00567">“Rethinking the Inception Architecture for Computer Vision”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default $MXNET_HOME/models</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.mobilenet0_25">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">mobilenet0_25</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#mobilenet0_25"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.mobilenet0_25" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNet model from the
-<a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.25.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.mobilenet0_5">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">mobilenet0_5</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#mobilenet0_5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.mobilenet0_5" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNet model from the
-<a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.5.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.mobilenet0_75">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">mobilenet0_75</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#mobilenet0_75"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.mobilenet0_75" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNet model from the
-<a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 0.75.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.mobilenet1_0">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">mobilenet1_0</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#mobilenet1_0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.mobilenet1_0" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNet model from the
-<a class="reference external" href="https://arxiv.org/abs/1704.04861">“MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications”</a> paper, with width multiplier 1.0.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_25">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">mobilenet_v2_0_25</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#mobilenet_v2_0_25"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_25" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNetV2 model from the
-<a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks:
-Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_5">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">mobilenet_v2_0_5</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#mobilenet_v2_0_5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_5" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNetV2 model from the
-<a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks:
-Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.mobilenet_v2_0_75">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">mobilenet_v2_0_75</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#mobilenet_v2_0_75"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_0_75" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNetV2 model from the
-<a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks:
-Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.mobilenet_v2_1_0">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">mobilenet_v2_1_0</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/mobilenet.html#mobilenet_v2_1_0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.mobilenet_v2_1_0" title="Permalink to this definition">¶</a></dt>
-<dd><p>MobileNetV2 model from the
-<a class="reference external" href="https://arxiv.org/abs/1801.04381">“Inverted Residuals and Linear Bottlenecks:
-Mobile Networks for Classification, Detection and Segmentation”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet101_v1">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet101_v1</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet101_v1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet101_v1" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-101 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet101_v2">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet101_v2</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet101_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet101_v2" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-101 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet152_v1">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet152_v1</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet152_v1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet152_v1" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-152 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet152_v2">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet152_v2</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet152_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet152_v2" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-152 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet18_v1">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet18_v1</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet18_v1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet18_v1" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-18 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet18_v2">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet18_v2</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet18_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet18_v2" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-18 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet34_v1">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet34_v1</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet34_v1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet34_v1" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-34 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet34_v2">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet34_v2</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet34_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet34_v2" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-34 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet50_v1">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet50_v1</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet50_v1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet50_v1" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-50 V1 model from <a class="reference external" href="http://arxiv.org/abs/1512.03385">“Deep Residual Learning for Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.resnet50_v2">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">resnet50_v2</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/resnet.html#resnet50_v2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.resnet50_v2" title="Permalink to this definition">¶</a></dt>
-<dd><p>ResNet-50 V2 model from <a class="reference external" href="https://arxiv.org/abs/1603.05027">“Identity Mappings in Deep Residual Networks”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.squeezenet1_0">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">squeezenet1_0</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/squeezenet.html#squeezenet1_0"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.squeezenet1_0" title="Permalink to this definition">¶</a></dt>
-<dd><p>SqueezeNet 1.0 model from the <a class="reference external" href="https://arxiv.org/abs/1602.07360">“SqueezeNet: AlexNet-level accuracy with 50x fewer parameters
-and &lt;0.5MB model size”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.squeezenet1_1">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">squeezenet1_1</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/squeezenet.html#squeezenet1_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.squeezenet1_1" title="Permalink to this definition">¶</a></dt>
-<dd><p>SqueezeNet 1.1 model from the <a class="reference external" href="https://github.com/DeepScale/SqueezeNet/tree/master/SqueezeNet_v1.1">official SqueezeNet repo</a>.
-SqueezeNet 1.1 has 2.4x less computation and slightly fewer parameters
-than SqueezeNet 1.0, without sacrificing accuracy.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.vgg11">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">vgg11</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#vgg11"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.vgg11" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG-11 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.vgg11_bn">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">vgg11_bn</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#vgg11_bn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.vgg11_bn" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG-11 model with batch normalization from the
-<a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.vgg13">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">vgg13</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#vgg13"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.vgg13" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG-13 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.vgg13_bn">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">vgg13_bn</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#vgg13_bn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.vgg13_bn" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG-13 model with batch normalization from the
-<a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.vgg16">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">vgg16</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#vgg16"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.vgg16" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG-16 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.vgg16_bn">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">vgg16_bn</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#vgg16_bn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.vgg16_bn" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG-16 model with batch normalization from the
-<a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.vgg19">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">vgg19</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#vgg19"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.vgg19" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG-19 model from the <a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.model_zoo.vision.vgg19_bn">
-<code class="sig-prename descclassname">mxnet.gluon.model_zoo.vision.</code><code class="sig-name descname">vgg19_bn</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/model_zoo/vision/vgg.html#vgg19_bn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.model_zoo.vision.vgg19_bn" title="Permalink to this definition">¶</a></dt>
-<dd><p>VGG-19 model with batch normalization from the
-<a class="reference external" href="https://arxiv.org/abs/1409.1556">“Very Deep Convolutional Networks for Large-Scale Image Recognition”</a> paper.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>default False</em>) – Whether to load the pretrained weights for model.</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em>, </em><em>default CPU</em>) – The context in which to load the pretrained weights.</p></li>
-<li><p><strong>root</strong> (<em>str</em><em>, </em><em>default '$MXNET_HOME/models'</em>) – Location for keeping the model parameters.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+<div class="section" id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -2629,13 +1074,13 @@ than SqueezeNet 1.0, without sacrificing accuracy.</p>
     <ul>
 <li><a class="reference internal" href="#">gluon.model_zoo.vision</a><ul>
 <li><a class="reference internal" href="#resnet">ResNet</a></li>
-<li><a class="reference internal" href="#id17">VGG</a></li>
-<li><a class="reference internal" href="#id27">Alexnet</a></li>
-<li><a class="reference internal" href="#id29">DenseNet</a></li>
-<li><a class="reference internal" href="#id34">SqueezeNet</a></li>
+<li><a class="reference internal" href="#vgg">VGG</a></li>
+<li><a class="reference internal" href="#alexnet">Alexnet</a></li>
+<li><a class="reference internal" href="#densenet">DenseNet</a></li>
+<li><a class="reference internal" href="#squeezenet">SqueezeNet</a></li>
 <li><a class="reference internal" href="#inception">Inception</a></li>
-<li><a class="reference internal" href="#id38">MobileNet</a></li>
-<li><a class="reference internal" href="#module-mxnet.gluon.model_zoo.vision">API Reference</a></li>
+<li><a class="reference internal" href="#mobilenet">MobileNet</a></li>
+<li><a class="reference internal" href="#api-reference">API Reference</a></li>
 </ul>
 </li>
 </ul>
@@ -2671,7 +1116,7 @@ than SqueezeNet 1.0, without sacrificing accuracy.</p>
                     <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
                     <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
                     <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
-                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://github.com/apache/mxnet/labels/Roadmap">Github Roadmap</a></li>
                     <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
                     <li><a href="https://discuss.mxnet.io">Forum</a></li>
                     <li><a href="/community/contribute">Contribute</a></li>
@@ -2679,7 +1124,7 @@ than SqueezeNet 1.0, without sacrificing accuracy.</p>
                 </ul>
             </div>
 
-            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
 </div>
 
             <div class="col-4 footer-text">

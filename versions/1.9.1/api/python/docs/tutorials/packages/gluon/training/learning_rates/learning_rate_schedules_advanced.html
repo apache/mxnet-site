@@ -101,7 +101,7 @@
         <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
         <a class="page-link page-current" href="/versions/1.9.1/api">Docs & Tutorials</a>
         <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
-        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <a class="page-link" href="https://github.com/apache/mxnet">GitHub</a>
         <div class="dropdown" style="min-width:100px">
           <span class="dropdown-header">Apache
             <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
@@ -789,7 +789,7 @@ Show Source
 <p>One adjustment proposed by <a class="reference external" href="https://arxiv.org/abs/1801.06146">Jeremy Howard, Sebastian Ruder (2018)</a> was to change the ratio between the increasing and decreasing stages, instead of the 50:50 split. Changing the increasing fraction (<code class="docutils literal notranslate"><span class="pre">inc_fraction!=0.5</span></code>) leads to a <strong>“slanted triangular”</strong> schedule. Using <code class="docutils literal notranslate"><span class="pre">inc_fraction&lt;0.5</span></code> tends to give better results.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TriangularSchedule</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lr</span><span class="p">,</span> <span class="n">max_lr</span><span class="p">,</span> <span class="n">cycle_length</span><span class="p">,</span> <span class="n">inc_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        min_lr: lower bound for learning rate (float)</span>
 <span class="sd">        max_lr: upper bound for learning rate (float)</span>
 <span class="sd">        cycle_length: iterations between start and finish (int)</span>
@@ -823,7 +823,7 @@ Show Source
 <p>Continuing with the idea that smooth decay profiles give improved performance over stepwise decay, <a class="reference external" href="https://arxiv.org/abs/1608.03983">Ilya Loshchilov, Frank Hutter (2016)</a> used <strong>“cosine annealing”</strong> schedules to good effect. As with triangular schedules, the original idea was that this should be used as part of a cyclical schedule, but we begin by implementing the cosine annealing component before the full Stochastic Gradient Descent with Warm Restarts (SGDR) method later in the tutorial.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CosineAnnealingSchedule</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_lr</span><span class="p">,</span> <span class="n">max_lr</span><span class="p">,</span> <span class="n">cycle_length</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        min_lr: lower bound for learning rate (float)</span>
 <span class="sd">        max_lr: upper bound for learning rate (float)</span>
 <span class="sd">        cycle_length: iterations between start and finish (int)</span>
@@ -859,7 +859,7 @@ Stochastic Gradient Descent with Warm Restarts” by Ilya Loshchilov, Frank Hutt
 <p>Using the idea of linear warm-up of the learning rate proposed in <a class="reference external" href="https://arxiv.org/abs/1706.02677">“Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour” by Priya Goyal et al. (2017)</a>, we implement a wrapper class that adds warm-up to an existing schedule. Going from <code class="docutils literal notranslate"><span class="pre">start_lr</span></code> to the initial learning rate of the <code class="docutils literal notranslate"><span class="pre">schedule</span></code> over <code class="docutils literal notranslate"><span class="pre">length</span></code> iterations, this adjustment is useful when training with large batch sizes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LinearWarmUp</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule</span><span class="p">,</span> <span class="n">start_lr</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        schedule: a pre-initialized schedule (e.g. TriangularSchedule(min_lr=0.5, max_lr=2, cycle_length=500))</span>
 <span class="sd">        start_lr: learning rate used at start of the warm-up (float)</span>
 <span class="sd">        length: number of iterations used for the warm-up (int)</span>
@@ -891,7 +891,7 @@ Stochastic Gradient Descent with Warm Restarts” by Ilya Loshchilov, Frank Hutt
 <p>Similarly, we could add a linear cool-down period to our schedule and this is used in the “1-Cycle” schedule proposed by <a class="reference external" href="https://arxiv.org/abs/1708.07120">Leslie N. Smith, Nicholay Topin (2017)</a> to train neural networks very quickly in certain circumstances (coined “super-convergence”). We reduce the learning rate from its value at <code class="docutils literal notranslate"><span class="pre">start_idx</span></code> of <code class="docutils literal notranslate"><span class="pre">schedule</span></code> to <code class="docutils literal notranslate"><span class="pre">finish_lr</span></code> over a period of <code class="docutils literal notranslate"><span class="pre">length</span></code>, and then maintain <code class="docutils literal notranslate"><span class="pre">finish_lr</span></code> thereafter.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LinearCoolDown</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule</span><span class="p">,</span> <span class="n">finish_lr</span><span class="p">,</span> <span class="n">start_idx</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        schedule: a pre-initialized schedule (e.g. TriangularSchedule(min_lr=0.5, max_lr=2, cycle_length=500))</span>
 <span class="sd">        finish_lr: learning rate used at end of the cool-down (float)</span>
 <span class="sd">        start_idx: iteration to start the cool-down (int)</span>
@@ -927,7 +927,7 @@ Stochastic Gradient Descent with Warm Restarts” by Ilya Loshchilov, Frank Hutt
 <p>So we can implement the “1-Cycle” schedule proposed by <a class="reference external" href="https://arxiv.org/abs/1708.07120">Leslie N. Smith, Nicholay Topin (2017)</a> we use a single and symmetric cycle of the triangular schedule above (i.e. <code class="docutils literal notranslate"><span class="pre">inc_fraction=0.5</span></code>), followed by a cool-down period of <code class="docutils literal notranslate"><span class="pre">cooldown_length</span></code> iterations.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">OneCycleSchedule</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_lr</span><span class="p">,</span> <span class="n">max_lr</span><span class="p">,</span> <span class="n">cycle_length</span><span class="p">,</span> <span class="n">cooldown_length</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">finish_lr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        start_lr: lower bound for learning rate in triangular cycle (float)</span>
 <span class="sd">        max_lr: upper bound for learning rate in triangular cycle (float)</span>
 <span class="sd">        cycle_length: iterations between start and finish of triangular cycle: 2x &#39;stepsize&#39; (int)</span>
@@ -961,7 +961,7 @@ Stochastic Gradient Descent with Warm Restarts” by Ilya Loshchilov, Frank Hutt
 is to vary the <code class="docutils literal notranslate"><span class="pre">cycle_length</span></code> over time as seen in <a class="reference external" href="https://arxiv.org/abs/1608.03983">Ilya Loshchilov, Frank Hutter (2016)</a> using <code class="docutils literal notranslate"><span class="pre">cycle_length_decay</span></code>. Another feature is the ability to decay the cycle magnitude over time with <code class="docutils literal notranslate"><span class="pre">cycle_magnitude_decay</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">CyclicalSchedule</span><span class="p">():</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule_class</span><span class="p">,</span> <span class="n">cycle_length</span><span class="p">,</span> <span class="n">cycle_length_decay</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cycle_magnitude_decay</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        schedule_class: class of schedule, expected to take `cycle_length` argument</span>
 <span class="sd">        cycle_length: iterations used for initial cycle (int)</span>
 <span class="sd">        cycle_length_decay: factor multiplied to cycle_length each cycle (float)</span>
@@ -1075,7 +1075,7 @@ is to vary the <code class="docutils literal notranslate"><span class="pre">cycl
                     <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
                     <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
                     <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
-                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://github.com/apache/mxnet/labels/Roadmap">Github Roadmap</a></li>
                     <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
                     <li><a href="https://discuss.mxnet.io">Forum</a></li>
                     <li><a href="/community/contribute">Contribute</a></li>
@@ -1083,7 +1083,7 @@ is to vary the <code class="docutils literal notranslate"><span class="pre">cycl
                 </ul>
             </div>
 
-            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/mxnet"><svg class="svg-icon"><use xlink:href="../../../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
 </div>
 
             <div class="col-4 footer-text">

@@ -101,7 +101,7 @@
         <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
         <a class="page-link page-current" href="/versions/1.9.1/api">Docs & Tutorials</a>
         <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
-        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <a class="page-link" href="https://github.com/apache/mxnet">GitHub</a>
         <div class="dropdown" style="min-width:100px">
           <span class="dropdown-header">Apache
             <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
@@ -755,9 +755,8 @@ Show Source
     <div class="document">
         <div class="page-content" role="main">
         
-  <div class="section" id="module-mxnet.contrib.tensorboard">
-<span id="contrib-tensorboard"></span><h1>contrib.tensorboard<a class="headerlink" href="#module-mxnet.contrib.tensorboard" title="Permalink to this headline">¶</a></h1>
-<p>TensorBoard functions that can be used to log various status during epoch.</p>
+  <div class="section" id="contrib-tensorboard">
+<h1>contrib.tensorboard<a class="headerlink" href="#contrib-tensorboard" title="Permalink to this headline">¶</a></h1>
 <p><strong>Classes</strong></p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -765,48 +764,11 @@ Show Source
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.contrib.tensorboard.LogMetricsCallback" title="mxnet.contrib.tensorboard.LogMetricsCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogMetricsCallback</span></code></a>(logging_dir[, prefix])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogMetricsCallback</span></code>(logging_dir[, prefix])</p></td>
 <td><p>Log metrics periodically in TensorBoard.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="class">
-<dt id="mxnet.contrib.tensorboard.LogMetricsCallback">
-<em class="property">class </em><code class="sig-prename descclassname">mxnet.contrib.tensorboard.</code><code class="sig-name descname">LogMetricsCallback</code><span class="sig-paren">(</span><em class="sig-param">logging_dir</em>, <em class="sig-param">prefix=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/contrib/tensorboard.html#LogMetricsCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.contrib.tensorboard.LogMetricsCallback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Log metrics periodically in TensorBoard.
-This callback works almost same as <cite>callback.Speedometer</cite>, but write TensorBoard event file
-for visualization. For more usage, please refer <a class="reference external" href="https://github.com/dmlc/tensorboard">https://github.com/dmlc/tensorboard</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logging_dir</strong> (<em>str</em>) – TensorBoard event file directory.
-After that, use <cite>tensorboard –logdir=path/to/logs</cite> to launch TensorBoard visualization.</p></li>
-<li><p><strong>prefix</strong> (<em>str</em>) – Prefix for a metric name of <cite>scalar</cite> value.
-You might want to use this param to leverage TensorBoard plot feature,
-where TensorBoard plots different curves in one graph when they have same <cite>name</cite>.
-The follow example shows the usage(how to compare a train and eval metric in a same graph).</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># log train and eval metrics under different directories.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">training_log</span> <span class="o">=</span> <span class="s1">&#39;logs/train&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">evaluation_log</span> <span class="o">=</span> <span class="s1">&#39;logs/eval&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># in this case, each training and evaluation metric pairs has same name,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># you can add a prefix to make it separate.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">batch_end_callbacks</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">tensorboard</span><span class="o">.</span><span class="n">LogMetricsCallback</span><span class="p">(</span><span class="n">training_log</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">eval_end_callbacks</span> <span class="o">=</span> <span class="p">[</span><span class="n">mx</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">tensorboard</span><span class="o">.</span><span class="n">LogMetricsCallback</span><span class="p">(</span><span class="n">evaluation_log</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># run</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="o">...</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">batch_end_callback</span> <span class="o">=</span> <span class="n">batch_end_callbacks</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">eval_end_callback</span>  <span class="o">=</span> <span class="n">eval_end_callbacks</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Then use `tensorboard --logdir=logs/` to launch TensorBoard visualization.</span>
-</pre></div>
-</div>
-</dd></dl>
-
 </div>
 
 
@@ -853,7 +815,7 @@ The follow example shows the usage(how to compare a train and eval metric in a s
                     <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
                     <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
                     <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
-                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://github.com/apache/mxnet/labels/Roadmap">Github Roadmap</a></li>
                     <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
                     <li><a href="https://discuss.mxnet.io">Forum</a></li>
                     <li><a href="/community/contribute">Contribute</a></li>
@@ -861,7 +823,7 @@ The follow example shows the usage(how to compare a train and eval metric in a s
                 </ul>
             </div>
 
-            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
 </div>
 
             <div class="col-4 footer-text">

@@ -101,7 +101,7 @@
         <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
         <a class="page-link page-current" href="/versions/1.9.1/api">Docs & Tutorials</a>
         <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
-        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <a class="page-link" href="https://github.com/apache/mxnet">GitHub</a>
         <div class="dropdown" style="min-width:100px">
           <span class="dropdown-header">Apache
             <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
@@ -755,168 +755,8 @@ Show Source
     <div class="document">
         <div class="page-content" role="main">
         
-  <div class="section" id="module-mxnet.gluon.utils">
-<span id="gluon-utils"></span><h1>gluon.utils<a class="headerlink" href="#module-mxnet.gluon.utils" title="Permalink to this headline">¶</a></h1>
-<p>Parallelization utility optimizer.</p>
-<p><strong>Functions</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.utils.split_data" title="mxnet.gluon.utils.split_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_data</span></code></a>(data, num_slice[, batch_axis, …])</p></td>
-<td><p>Splits an NDArray into <cite>num_slice</cite> slices along <cite>batch_axis</cite>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.utils.split_and_load" title="mxnet.gluon.utils.split_and_load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_and_load</span></code></a>(data, ctx_list[, batch_axis, …])</p></td>
-<td><p>Splits an NDArray into <cite>len(ctx_list)</cite> slices along <cite>batch_axis</cite> and loads each slice to one context in <cite>ctx_list</cite>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.utils.clip_global_norm" title="mxnet.gluon.utils.clip_global_norm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clip_global_norm</span></code></a>(arrays, max_norm[, …])</p></td>
-<td><p>Rescales NDArrays so that the sum of their 2-norm is smaller than <cite>max_norm</cite>.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.utils.check_sha1" title="mxnet.gluon.utils.check_sha1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_sha1</span></code></a>(filename, sha1_hash)</p></td>
-<td><p>Check whether the sha1 hash of the file content matches the expected hash.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.gluon.utils.download" title="mxnet.gluon.utils.download"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download</span></code></a>(url[, path, overwrite, sha1_hash, …])</p></td>
-<td><p>Download a given URL</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.gluon.utils.replace_file" title="mxnet.gluon.utils.replace_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_file</span></code></a>(src, dst)</p></td>
-<td><p>Implement atomic os.replace with linux and OSX.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="function">
-<dt id="mxnet.gluon.utils.split_data">
-<code class="sig-prename descclassname">mxnet.gluon.utils.</code><code class="sig-name descname">split_data</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">num_slice</em>, <em class="sig-param">batch_axis=0</em>, <em class="sig-param">even_split=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/utils.html#split_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.utils.split_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Splits an NDArray into <cite>num_slice</cite> slices along <cite>batch_axis</cite>.
-Usually used for data parallelism where each slices is sent
-to one device (i.e. GPU).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a>) – A batch of data.</p></li>
-<li><p><strong>num_slice</strong> (<em>int</em>) – Number of desired slices.</p></li>
-<li><p><strong>batch_axis</strong> (<em>int</em><em>, </em><em>default 0</em>) – The axis along which to slice.</p></li>
-<li><p><strong>even_split</strong> (<em>bool</em><em>, </em><em>default True</em>) – Whether to force all slices to have the same number of elements.
-If <cite>True</cite>, an error will be raised when <cite>num_slice</cite> does not evenly
-divide <cite>data.shape[batch_axis]</cite>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Return value is a list even if <cite>num_slice</cite> is 1.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of NDArray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.utils.split_and_load">
-<code class="sig-prename descclassname">mxnet.gluon.utils.</code><code class="sig-name descname">split_and_load</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">ctx_list</em>, <em class="sig-param">batch_axis=0</em>, <em class="sig-param">even_split=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/utils.html#split_and_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.utils.split_and_load" title="Permalink to this definition">¶</a></dt>
-<dd><p>Splits an NDArray into <cite>len(ctx_list)</cite> slices along <cite>batch_axis</cite> and loads
-each slice to one context in <cite>ctx_list</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><em>NDArray</em></a><em> or </em><em>ndarray</em>) – A batch of data.</p></li>
-<li><p><strong>ctx_list</strong> (<em>list of Context</em>) – A list of Contexts.</p></li>
-<li><p><strong>batch_axis</strong> (<em>int</em><em>, </em><em>default 0</em>) – The axis along which to slice.</p></li>
-<li><p><strong>even_split</strong> (<em>bool</em><em>, </em><em>default True</em>) – Whether to force all slices to have the same number of elements.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Each corresponds to a context in <cite>ctx_list</cite>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list of NDArrays or ndarrays</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.utils.clip_global_norm">
-<code class="sig-prename descclassname">mxnet.gluon.utils.</code><code class="sig-name descname">clip_global_norm</code><span class="sig-paren">(</span><em class="sig-param">arrays</em>, <em class="sig-param">max_norm</em>, <em class="sig-param">check_isfinite=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/utils.html#clip_global_norm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.utils.clip_global_norm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rescales NDArrays so that the sum of their 2-norm is smaller than <cite>max_norm</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<em>list of NDArray</em>) – </p></li>
-<li><p><strong>max_norm</strong> (<em>float</em>) – </p></li>
-<li><p><strong>check_isfinite</strong> (<em>bool</em><em>, </em><em>default True</em>) – If True, check that the total_norm is finite (not nan or inf). This
-requires a blocking .asscalar() call.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Total norm. Return type is NDArray of shape (1,) if check_isfinite is
-False. Otherwise a float is returned.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray">NDArray</a> or float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.utils.check_sha1">
-<code class="sig-prename descclassname">mxnet.gluon.utils.</code><code class="sig-name descname">check_sha1</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">sha1_hash</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/utils.html#check_sha1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.utils.check_sha1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether the sha1 hash of the file content matches the expected hash.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>str</em>) – Path to the file.</p></li>
-<li><p><strong>sha1_hash</strong> (<em>str</em>) – Expected sha1 hash in hexadecimal digits.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Whether the file content matches the expected hash.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.utils.download">
-<code class="sig-prename descclassname">mxnet.gluon.utils.</code><code class="sig-name descname">download</code><span class="sig-paren">(</span><em class="sig-param">url</em>, <em class="sig-param">path=None</em>, <em class="sig-param">overwrite=False</em>, <em class="sig-param">sha1_hash=None</em>, <em class="sig-param">retries=5</em>, <em class="sig-param">verify_ssl=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/utils.html#download"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.utils.download" title="Permalink to this definition">¶</a></dt>
-<dd><p>Download a given URL</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>url</strong> (<em>str</em>) – URL to download</p></li>
-<li><p><strong>path</strong> (<em>str</em><em>, </em><em>optional</em>) – Destination path to store downloaded file. By default stores to the
-current directory with same name as in url.</p></li>
-<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to overwrite destination file if already exists.</p></li>
-<li><p><strong>sha1_hash</strong> (<em>str</em><em>, </em><em>optional</em>) – Expected sha1 hash in hexadecimal digits. Will ignore existing file when hash is specified
-but doesn’t match.</p></li>
-<li><p><strong>retries</strong> (<em>integer</em><em>, </em><em>default 5</em>) – The number of times to attempt the download in case of failure or non 200 return codes</p></li>
-<li><p><strong>verify_ssl</strong> (<em>bool</em><em>, </em><em>default True</em>) – Verify SSL certificates.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The file path of the downloaded file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.gluon.utils.replace_file">
-<code class="sig-prename descclassname">mxnet.gluon.utils.</code><code class="sig-name descname">replace_file</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dst</em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/mxnet/gluon/utils.html#replace_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#mxnet.gluon.utils.replace_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implement atomic os.replace with linux and OSX.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>src</strong> (<em>source file path</em>) – </p></li>
-<li><p><strong>dst</strong> (<em>destination file path</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+  <div class="section" id="gluon-utils">
+<h1>gluon.utils<a class="headerlink" href="#gluon-utils" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -963,7 +803,7 @@ but doesn’t match.</p></li>
                     <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
                     <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
                     <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
-                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://github.com/apache/mxnet/labels/Roadmap">Github Roadmap</a></li>
                     <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
                     <li><a href="https://discuss.mxnet.io">Forum</a></li>
                     <li><a href="/community/contribute">Contribute</a></li>
@@ -971,7 +811,7 @@ but doesn’t match.</p></li>
                 </ul>
             </div>
 
-            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
 </div>
 
             <div class="col-4 footer-text">

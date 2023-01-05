@@ -101,7 +101,7 @@
         <a class="page-link" href="/versions/1.9.1/ecosystem">Ecosystem</a>
         <a class="page-link page-current" href="/versions/1.9.1/api">Docs & Tutorials</a>
         <a class="page-link" href="/versions/1.9.1/trusted_by">Trusted By</a>
-        <a class="page-link" href="https://github.com/apache/incubator-mxnet">GitHub</a>
+        <a class="page-link" href="https://github.com/apache/mxnet">GitHub</a>
         <div class="dropdown" style="min-width:100px">
           <span class="dropdown-header">Apache
             <svg class="dropdown-caret" viewBox="0 0 32 32" class="icon icon-caret-bottom" aria-hidden="true"><path class="dropdown-caret-path" d="M24 11.305l-7.997 11.39L8 11.305z"></path></svg>
@@ -755,136 +755,8 @@ Show Source
     <div class="document">
         <div class="page-content" role="main">
         
-  <div class="section" id="module-mxnet.contrib.onnx">
-<span id="contrib-onnx"></span><h1>contrib.onnx<a class="headerlink" href="#module-mxnet.contrib.onnx" title="Permalink to this headline">¶</a></h1>
-<p>Module for ONNX model format support for Apache MXNet.</p>
-<p><strong>Functions</strong></p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.contrib.onnx.export_model_" title="mxnet.contrib.onnx.export_model_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">export_model_</span></code></a>(sym, params[, in_shapes, …])</p></td>
-<td><p>Exports the MXNet model file, passed as a parameter, into ONNX model.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.contrib.onnx.get_model_metadata_" title="mxnet.contrib.onnx.get_model_metadata_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_model_metadata_</span></code></a>(model_file)</p></td>
-<td><p>Returns the name and shape information of input and output tensors of the given ONNX model file.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mxnet.contrib.onnx.import_model_" title="mxnet.contrib.onnx.import_model_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_model_</span></code></a>(model_file)</p></td>
-<td><p>Imports the ONNX model file, passed as a parameter, into MXNet symbol and parameters.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#mxnet.contrib.onnx.import_to_gluon_" title="mxnet.contrib.onnx.import_to_gluon_"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_to_gluon_</span></code></a>(model_file, ctx)</p></td>
-<td><p>Imports the ONNX model files, passed as a parameter, into Gluon SymbolBlock object.</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="function">
-<dt id="mxnet.contrib.onnx.export_model_">
-<code class="sig-prename descclassname">mxnet.contrib.onnx.</code><code class="sig-name descname">export_model_</code><span class="sig-paren">(</span><em class="sig-param">sym</em>, <em class="sig-param">params</em>, <em class="sig-param">in_shapes=None</em>, <em class="sig-param">in_types=&lt;class 'numpy.float32'&gt;</em>, <em class="sig-param">onnx_file_path='model.onnx'</em>, <em class="sig-param">verbose=False</em>, <em class="sig-param">dynamic=False</em>, <em class="sig-param">dynamic_input_shapes=None</em>, <em class="sig-param">run_shape_inference=False</em>, <em class="sig-param">input_type=None</em>, <em class="sig-param">input_shape=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.contrib.onnx.export_model_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exports the MXNet model file, passed as a parameter, into ONNX model.
-Accepts both symbol,parameter objects as well as json and params filepaths as input.
-Operator support and coverage -
-<a class="reference external" href="https://github.com/apache/incubator-mxnet/tree/v1.x/python/mxnet/onnx#operator-support-matrix">https://github.com/apache/incubator-mxnet/tree/v1.x/python/mxnet/onnx#operator-support-matrix</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sym</strong> (<em>str</em><em> or </em><em>symbol object</em>) – Path to the json file or Symbol object</p></li>
-<li><p><strong>params</strong> (<em>str</em><em> or </em><em>dict</em><em> or </em><em>list of dict</em>) – str - Path to the params file
-dict - params dictionary (Including both arg_params and aux_params)
-list - list of length 2 that contains arg_params and aux_params</p></li>
-<li><p><strong>in_shapes</strong> (<em>List of tuple</em>) – Input shape of the model e.g [(1,3,224,224)]</p></li>
-<li><p><strong>in_types</strong> (<em>data type</em><em> or </em><em>list of data types</em>) – Input data type e.g. np.float32, or [np.float32, np.int32]</p></li>
-<li><p><strong>onnx_file_path</strong> (<em>str</em>) – Path where to save the generated onnx file</p></li>
-<li><p><strong>verbose</strong> (<em>Boolean</em>) – If True will print logs of the model conversion</p></li>
-<li><p><strong>dynamic</strong> (<em>Boolean</em>) – If True will allow for dynamic input shapes to the model</p></li>
-<li><p><strong>dynamic_input_shapes</strong> (<em>list of tuple</em>) – Specifies the dynamic input_shapes. If None then all dimensions are set to None</p></li>
-<li><p><strong>run_shape_inference</strong> (<em>Boolean</em>) – If True will run shape inference on the model</p></li>
-<li><p><strong>input_type</strong> (<em>data type</em><em> or </em><em>list of data types</em>) – This is the old name of in_types. We keep this parameter name for backward compatibility</p></li>
-<li><p><strong>input_shape</strong> (<em>List of tuple</em>) – This is the old name of in_shapes. We keep this parameter name for backward compatibility</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>onnx_file_path</strong> – Onnx file path</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This method is available when you <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">mxnet.onnx</span></code></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.contrib.onnx.get_model_metadata_">
-<code class="sig-prename descclassname">mxnet.contrib.onnx.</code><code class="sig-name descname">get_model_metadata_</code><span class="sig-paren">(</span><em class="sig-param">model_file</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.contrib.onnx.get_model_metadata_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the name and shape information of input and output tensors of the given ONNX model file.</p>
-<p class="rubric">Notes</p>
-<p>This method is available when you <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">mxnet.contrib.onnx</span></code></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>model_file</strong> (<em>str</em>) – ONNX model file name</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><p><strong>model_metadata</strong> – A dictionary object mapping various metadata to its corresponding value.
-The dictionary will have the following template:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;input_tensor_data&#39;</span> <span class="p">:</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">tuples</span> <span class="n">representing</span> <span class="n">the</span> <span class="n">shape</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">paramters</span>
-<span class="s1">&#39;output_tensor_data&#39;</span> <span class="p">:</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">tuples</span> <span class="n">representing</span> <span class="n">the</span> <span class="n">shape</span> <span class="n">of</span> <span class="n">the</span> <span class="n">output</span> <span class="n">of</span> <span class="n">the</span> <span class="n">model</span>
-</pre></div>
-</div>
-</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.contrib.onnx.import_model_">
-<code class="sig-prename descclassname">mxnet.contrib.onnx.</code><code class="sig-name descname">import_model_</code><span class="sig-paren">(</span><em class="sig-param">model_file</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.contrib.onnx.import_model_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Imports the ONNX model file, passed as a parameter, into MXNet symbol and parameters.
-Operator support and coverage -
-<a class="reference external" href="https://cwiki.apache.org/confluence/display/MXNET/ONNX+Operator+Coverage">https://cwiki.apache.org/confluence/display/MXNET/ONNX+Operator+Coverage</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>model_file</strong> (<em>str</em>) – ONNX model file name</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>sym</strong> (<a class="reference internal" href="../../symbol/symbol.html#mxnet.symbol.Symbol" title="mxnet.symbol.Symbol"><code class="xref py py-class docutils literal notranslate"><span class="pre">Symbol</span></code></a>) – MXNet symbol object</p></li>
-<li><p><strong>arg_params</strong> (dict of <code class="docutils literal notranslate"><span class="pre">str</span></code> to <a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">NDArray</span></code></a>) – Dict of converted parameters stored in <code class="docutils literal notranslate"><span class="pre">mxnet.ndarray.NDArray</span></code> format</p></li>
-<li><p><strong>aux_params</strong> (dict of <code class="docutils literal notranslate"><span class="pre">str</span></code> to <a class="reference internal" href="../../ndarray/ndarray.html#mxnet.ndarray.NDArray" title="mxnet.ndarray.NDArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">NDArray</span></code></a>) – Dict of converted parameters stored in <code class="docutils literal notranslate"><span class="pre">mxnet.ndarray.NDArray</span></code> format</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This method is available when you <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">mxnet.contrib.onnx</span></code></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mxnet.contrib.onnx.import_to_gluon_">
-<code class="sig-prename descclassname">mxnet.contrib.onnx.</code><code class="sig-name descname">import_to_gluon_</code><span class="sig-paren">(</span><em class="sig-param">model_file</em>, <em class="sig-param">ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#mxnet.contrib.onnx.import_to_gluon_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Imports the ONNX model files, passed as a parameter, into Gluon SymbolBlock object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model_file</strong> (<em>str</em>) – ONNX model file name</p></li>
-<li><p><strong>ctx</strong> (<a class="reference internal" href="../../mxnet/context/index.html#mxnet.context.Context" title="mxnet.context.Context"><em>Context</em></a><em> or </em><em>list of Context</em>) – Loads the model into one or many context(s).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>sym_block</strong> – A SymbolBlock object representing the given model file.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="../../gluon/symbol_block.html#mxnet.gluon.SymbolBlock" title="mxnet.gluon.SymbolBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">SymbolBlock</span></code></a></p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>This method is available when you <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">mxnet.contrib.onnx</span></code></p>
-</dd></dl>
-
+  <div class="section" id="contrib-onnx">
+<h1>contrib.onnx<a class="headerlink" href="#contrib-onnx" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -931,7 +803,7 @@ Operator support and coverage -
                     <li><a class="u-email" href="mailto:user@mxnet.apache.org">User mailing list</a></li>
                     <li><a href="https://cwiki.apache.org/confluence/display/MXNET/Apache+MXNet+Home">Developer Wiki</a></li>
                     <li><a href="https://issues.apache.org/jira/projects/MXNET/issues">Jira Tracker</a></li>
-                    <li><a href="https://github.com/apache/incubator-mxnet/labels/Roadmap">Github Roadmap</a></li>
+                    <li><a href="https://github.com/apache/mxnet/labels/Roadmap">Github Roadmap</a></li>
                     <li><a href="https://medium.com/apache-mxnet">Blog</a></li>
                     <li><a href="https://discuss.mxnet.io">Forum</a></li>
                     <li><a href="/community/contribute">Contribute</a></li>
@@ -939,7 +811,7 @@ Operator support and coverage -
                 </ul>
             </div>
 
-            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/incubator-mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/incubator-mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
+            <div class="col-4"><ul class="social-media-list"><li><a href="https://github.com/apache/mxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#github"></use></svg> <span class="username">apache/mxnet</span></a></li><li><a href="https://www.twitter.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#twitter"></use></svg> <span class="username">apachemxnet</span></a></li><li><a href="https://youtube.com/apachemxnet"><svg class="svg-icon"><use xlink:href="../../../_static/minima-social-icons.svg#youtube"></use></svg> <span class="username">apachemxnet</span></a></li></ul>
 </div>
 
             <div class="col-4 footer-text">
